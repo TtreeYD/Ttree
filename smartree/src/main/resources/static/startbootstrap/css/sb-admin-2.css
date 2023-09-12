@@ -10676,6 +10676,10 @@ a:focus {
   background-color: #dddfeb;
 }
 
+#sidebarToggle:hover{
+	background-color: rgba(0,0,0,0) !important;
+}
+
 .sidebar-dark .sidebar-brand {
   color: #fff;
 }
