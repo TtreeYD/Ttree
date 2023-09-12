@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.yedam.smartree.business.mapper.BusinessMapper">
+  	<select id="selectOrderList" resultType="BusinessVO">
+  		select o.order_code , b.bp_code , b.bp_name , o.order_date , o.dod_date , o.dod_state , o.order_manager
+  		  from orders o join business_partner b
+  		  				on o.bp_code = b.bp_code
+  	</select>
+  
+  </mapper>

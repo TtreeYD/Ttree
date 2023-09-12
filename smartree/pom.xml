@@ -67,6 +67,15 @@
 	        <artifactId>jasypt-spring-boot-starter</artifactId>
 	        <version>3.0.5</version>
 		</dependency>
+		<!-- layout -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<dependency>
+		    <groupId>nz.net.ultraq.thymeleaf</groupId>
+		    <artifactId>thymeleaf-layout-dialect</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
