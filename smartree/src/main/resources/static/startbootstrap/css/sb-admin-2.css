@@ -10716,9 +10716,6 @@ a:focus {
   color: #fff;
 }
 
-.sidebar-dark #sidebarToggle {
-  background-color: rgba(255, 255, 255, 0.2);
-}
 
 .sidebar-dark #sidebarToggle::after {
   color: rgba(255, 255, 255, 0.5);
