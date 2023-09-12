@@ -12,10 +12,6 @@ class SmartreeApplicationTests {
 	@Test
 	void contextLoads() {
 		String[] datas = {
-				"oracle.jdbc.OracleDriver"
-				,"jdbc:oracle:thin:@43.201.167.53/xe"
-				,"ttree"
-				,"ttree"
 		};
 		for(String data : datas) {
 			String enyData = jasyptStringEncryptor.encrypt(data);
