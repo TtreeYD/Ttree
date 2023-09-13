@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>생산계획관리</title>
+</head> 
+<style>
+	
+</style>
+<body>
+	<div layout:fragment="content">
+		<div style="float:right; margin-bottom: 10px">
+			<div class="input-group" >
+				<div class="form-outline">
+					<input type="search" id="form1" class="form-control" placeholder="Search"/> 
+				</div>
+				<button type="button" class="btn btn-primary">
+					<i class="fas fa-search"></i>
+				</button>
+			</div>
+		</div>
+		<div id="grid" style="height: 400px;"></div>
+    
+    
+      <script>
+        var grid;
+        //const header = ['dtProdPlanCode','prdtName','prodPlanCnt','prodPlanName','prodRank','prodPlanDate','prodPlanSdate','prodPlanEdate']
+        window.onload=function(){
+
+	    const grid = new tui.Grid({
+	      el: document.getElementById('grid'),
+	      scrollX: false,
+	      scrollY: false,
+	      columns: [
+	        {
+	          header: '계획상세코드',
+	          name: 'dtProdPlanCode'
+	        },
+	        {
+	          header: '제품명',
+	          name: 'prdtName'
+	        },
+	        {
+	          header: '수량',
+	          name: 'prodPlanCnt'
+	        },
+	        {
+	          header: '계획담당자',
+	          name: 'prodPlanName'
+	        },
+	        {
+	          header: '순위',
+	          name: 'prodRank'
+	        },
+	        {
+	          header: '생산계획일자',
+	          name: 'prodPlanDate'
+	        },
+	        {
+	          header: '생산시작일자',
+	          name: 'prodPlanSdate'
+	        },
+	        {
+	          header: '생산종료일자',
+	          name: 'prodPlanEdate'
+	        },
+	      ]
+	    });
+	    
+		$.ajax({
+			url:'/prodPlanList',
+			method:'get',
+	    dataType:'json',
+			success:function(result){
+				grid.resetData(result);
+			},
+			error:function(err){
+				console.log(err);
+			}
+		})
+		
+	  }
+	  
+    </script>
+	</div>
+</body>
+</html>

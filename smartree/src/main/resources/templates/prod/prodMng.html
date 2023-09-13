@@ -22,7 +22,9 @@
 	<input type="text" >
 	<div class="btn-group" role="group" aria-label="Basic example" style="float : right; margin-bottom : 10px;">
 	  <button type="button" class="btn btn-primary">초기화</button>
-	  <button type="button" class="btn btn-primary">주문서</button>
+	  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+		  주문서
+	  </button>
 	  <button type="button" class="btn btn-primary">검색</button>
 	  <button type="button" class="btn btn-primary">저장</button>
 	  <button type="button" class="btn btn-primary">삭제</button>
@@ -37,11 +39,27 @@
 		</span>
 	</div>
     
-    
+    <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	      	<h4 class="modal-title">주문서 조회</h4>
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	      </div>
+	      <div class="modal-body">
+	        <div id="grid4"></div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Save changes</button>
+	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+
       <script>
-        var grid;
-        var grid2;
-        var grid3;
+        var grid, grid2, grid3, grid4;
+        
         window.onload=function(){
 
 	    const grid = new tui.Grid({
@@ -113,6 +131,41 @@
 		        },
 		      ]
 		    });
+	    const grid4 = new tui.Grid({
+		      el: document.getElementById('grid4'),
+		      scrollX: false,
+		      scrollY: false,
+		      columns: [{
+	              header: '주문코드',
+	              name: 'orderCode'
+	            },
+	            {
+	              header: '업체코드',
+	              name: 'bpCode'
+	            },
+	            {
+	              header: '업체명',
+	              name: 'bpName'
+	            },
+	            {
+	              header: '주문일자',
+	              name: 'orderDate'
+	            },
+	            {
+	              header: '납기일자',
+	              name: 'orderDate',
+
+	            },
+	            {
+	              header: '납기현황',
+	              name: 'dodState'
+	            },
+	            {
+	              header: '담당자',
+	              name: 'orderManager'
+	            }
+	          ]
+		    });
 		$.ajax({
 			url:'/',
 			method:'get',
@@ -126,7 +179,19 @@
 				console.log(err);
 			}
 		})
-		
+		$.ajax({
+			url:'/orders',
+			method:'get',
+	    dataType:'json',
+			success:function(result){
+				grid4.resetData(eval(result));
+				setTimeout(() => grid4.refreshLayout(), 800);
+				
+			},
+			error:function(err){
+				console.log(err);
+			}
+		})
 	  }
 	  
     </script>
