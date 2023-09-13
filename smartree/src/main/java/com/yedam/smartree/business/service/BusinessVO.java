@@ -19,5 +19,9 @@ public class BusinessVO {
 	private Date dodDate;
 	private String dodState;
 	
+	//주문상세
+	private String orderDtCode;
+	private String prdtName;
+	private int orderDtCnt;
 	
 }
