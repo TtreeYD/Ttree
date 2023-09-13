@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	
+   
   <aside th:fragment="aside">
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
@@ -36,12 +36,13 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">기준정보관리</h6>
                         <a class="collapse-item" href="#">공통코드관리</a>
-                        <a class="collapse-item" href="#">사원관리</a>
+                        <a class="collapse-item" href="/mdm/emp">사원관리</a>
                         <a class="collapse-item" href="#">제품정보관리</a>
                         <a class="collapse-item" href="#">자재정보관리</a>
                         <a class="collapse-item" href="#">거래처정보관리</a>
                         <a class="collapse-item" href="#">공정기준관리</a>
                         <a class="collapse-item" href="#">BOM&공정흐름관리</a>
+                        <a class="collapse-item" href="#">품질검사기준관리</a>
                     </div>
                 </div>
             </li>
@@ -74,7 +75,7 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">품질관리</h6>
-                        <a class="collapse-item" href="#">자재검사</a>
+                        <a class="collapse-item" href="mtlCheck">자재검사</a>
                         <a class="collapse-item" href="#">자재검사조회</a>
                         <a class="collapse-item" href="#">품질검사기준관리</a>
                         <a class="collapse-item" href="#">제품품질검사</a>
@@ -113,7 +114,7 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">자재관리</h6>
                         <a class="collapse-item" href="#">발주관리</a>
-                        <a class="collapse-item" href="#">발주조회</a>
+                        <a class="collapse-item" href="needList">발주조회</a>
                         <a class="collapse-item" href="#">재고조회</a>
                         <a class="collapse-item" href="#">입고관리</a>
                         <a class="collapse-item" href="#">출고조회</a>
