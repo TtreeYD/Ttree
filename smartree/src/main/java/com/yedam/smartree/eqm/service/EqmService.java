@@ -1,5 +1,7 @@
 package com.yedam.smartree.eqm.service;
 
-public interface EqmService {
+import java.util.List;
 
+public interface EqmService {
+	public List<EqmVO> selectEqmList();
 }
