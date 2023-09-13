@@ -5,46 +5,120 @@
 <head>
   <meta charset="UTF-8">
   <title>SMARTREE</title>
-  
+
 </head>
 
 <body>
   <div layout:fragment="content">
     <div id="grid"></div>
+	
+	  <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+	     <div  class="modal-dialog modal-dialog-centered modal-xl" role="document" >
+	       <div class="modal-content" style="height:500px" >
+	         <div class="modal-header">
 
+	         </div>
+	         <div class="modal-body">
+				<div id="grid2" ></div>					         	        	 
+	         </div>
+	         <div class="modal-footer">
+	         	<button type="button"  class="btn btn-default" data-dismiss="modal">Close</button>
+	         </div>
+	       </div><!-- /.modal-content -->
+	     </div><!-- /.modal-dialog -->
+   	</div><!-- /.modal -->
 
 
     <script>
-      
-
+    
       var grid;
+      const header = ['orderCode', 'bpCode', 'bpName', 'orderDate', 'orderDate', 'dodState', 'orderManager']
+      const dtheader =['orderDtCode','prdtName','orderDtCnt','dodDate']; 
       $(document).ready(function () {
-
-
+        
+    	  const grid2 = new tui.Grid({
+              el: document.getElementById('grid2'),
+              scrollX: false,
+              scrollY: false,
+              rowHeaders: ["rowNum"],
+              columns: [{
+                  header: '주문상세코드',
+                  name: 'orderDtCode',
+                  filter: { 
+               		  type: 'text', showApplyBtn: true, showClearBtn: true 
+               		  }
+                },
+                {
+                  header: '제품명',
+                  name: 'prdtName',
+                  filter: { 
+            		type: 'text', showApplyBtn: true, showClearBtn: true 
+            	  }
+                },
+                {
+                  header: '주문량',
+                  name: 'orderDtCnt'
+                },
+                {
+                  header: '납기일자',
+                  name: 'dodDate',
+                  filter: {
+                      type: 'date',showApplyBtn: true, showClearBtn: true,
+                      options: {
+                        format: 'yyyy-MM-dd'
+                      }
+                    }
+                }
+              ],
+              
+            });
         const grid = new tui.Grid({
           el: document.getElementById('grid'),
           scrollX: false,
           scrollY: false,
           rowHeaders: ["rowNum"],
+          
           columns: [{
               header: '주문코드',
-              name: 'orderCode'
+              name: 'orderCode',
+           	  filter: { 
+           		  type: 'text', showApplyBtn: true, showClearBtn: true 
+           		  }
+           	  
             },
             {
               header: '업체코드',
-              name: 'bpCode'
+              name: 'bpCode',
+            	  filter: { 
+               		  type: 'text', showApplyBtn: true, showClearBtn: true 
+               		  }
             },
             {
               header: '업체명',
-              name: 'bpName'
+              name: 'bpName',
+              filter: { 
+           		  type: 'text', showApplyBtn: true, showClearBtn: true 
+           		  }
             },
             {
               header: '주문일자',
-              name: 'orderDate'
+              name: 'orderDate',
+              filter: {
+                  type: 'date',showApplyBtn: true, showClearBtn: true,
+                  options: {
+                    format: 'yyyy-MM-dd'
+                  }
+                }
             },
             {
               header: '납기일자',
-              name: 'orderDate',
+              name: 'dodDate',
+              filter: {
+                  type: 'date',showApplyBtn: true, showClearBtn: true,
+                  options: {
+                    format: 'yyyy-MM-dd'
+                  }
+                }
 
             },
             {
@@ -57,54 +131,52 @@
             }
           ]
         });
-
-        const header = ['orderCode', 'bpCode', 'bpName', 'orderDate', 'orderDate', 'dodState', 'orderManager']
+    	
 
         // Orders List불러오기
+        
         $.ajax({
           url: '/orders',
           method: 'get',
           dataType: 'json',
           success: function (result) {
-            //날짜변환
-            $(result).each(function (idx, obj) {
-              for (let head of header) {
-
-                if (head.slice(-4).toLowerCase() == 'date') {
-                  obj[head] = getDate(obj[head]);
-                }
-              }
-            });
-            grid.resetData(eval(result));
+            grid.resetData(result);
           },
           error: function (err) {
             console.log(err);
           }
         })
+        
+        
+        
+        grid.on('click',(ev)=>{
+        	if(ev.rowKey==undefined){
+        		return;
+        	}
+        	let data = grid.getValue(ev.rowKey, 'orderCode');
+        		
+        	console.log(data)
+        	$.ajax({
+        		url:'/orderDtList',
+        		method:'GET',
+        		data:{
+        			orderCode: data
+        		},
+        		success:function(result){
+        			
+       	            grid2.resetData(result);
+       	            
+       	         	setTimeout(() => grid2.refreshLayout(), 200);
+       	            $("#myModal").modal('show');
+        		},
+        		error:function(err){
+        			
+        		console.log(err)
+        		}
+        	})
+        })
 
-
-        //주문상세조회 모달창
-        $(function() {
-        	  $('#grid').on('click', 'td', function(e) {
-        	    let target = $(this).parent().children().first().text();
-        	    console.log(target);
-        	    
-        	    $.ajax({
-        	    	url:'/orderDtList',
-        	    	method:'get',
-        	    	data:{
-        	    		orderCode: target
-        	    	},
-                dataType: 'json',
-        	    	suceess:result => {
-                  console.log(result)
-                },
-        	    	error:function(err){
-        	    		console.log(err);
-        	    	}
-        	    })
-        	  });
-        	});
+        
       })
     </script>
   </div>
