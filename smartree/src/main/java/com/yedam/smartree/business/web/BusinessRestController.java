@@ -18,4 +18,9 @@ public class BusinessRestController {
 	public List<BusinessVO> getOrders(){
 		return businessService.selectOrderList();
 	}
+	
+	@GetMapping("/orderDtList")
+	public List<BusinessVO> getDtOrders(){
+		return businessService.selectOrderDtList();
+	}
 }
