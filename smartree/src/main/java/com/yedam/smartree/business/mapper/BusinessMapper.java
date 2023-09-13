@@ -10,5 +10,5 @@ import com.yedam.smartree.business.service.BusinessVO;
 public interface BusinessMapper {
 
 	public List<BusinessVO> selectOrderList();
-	public List<BusinessVO> selectOrderDtList();
+	public List<BusinessVO> selectOrderDtList(BusinessVO businessVO);
 }
