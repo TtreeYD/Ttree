@@ -8,5 +8,14 @@
   	<select id="selectNeedList" resultType="MaterialVO">
   		select * from mtl_need
   	</select>
-  
+  	
+  	<!-- 재고목록 전체조회 -->
+  	<select id="selectMtlList" resultType="MaterialVO">
+  		select * from mtl_container
+  	</select>
+  	
+  	<!-- 출고목록 전체조회 -->
+    <select id="selectMtlOutList" resultType="MaterialVO">
+  		select * from mtl_out
+  	</select>
   </mapper>

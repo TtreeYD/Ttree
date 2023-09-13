@@ -20,4 +20,14 @@ public class MaterialServiceImpl implements MaterialService {
 		return materialMapper.selectNeedList();
 	}
 
+	@Override
+	public List<MaterialVO> selectMtlList() {
+		return materialMapper.selectMtlList();
+	}
+
+	@Override
+	public List<MaterialVO> selectMtlOutList() {
+		return materialMapper.selectMtlOutList();
+	}
+
 }
