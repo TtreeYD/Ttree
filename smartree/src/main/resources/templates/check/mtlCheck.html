@@ -1,57 +1,76 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>SMARTREE</title>
-</head> 
+<meta charset="UTF-8">
+<title>SMARTREE</title>
+</head>
 <style>
-
 </style>
 
 <body>
 	<div layout:fragment="content">
-		<div class="btn-group btn-right" role="group" aria-label="Basic example" style="float: right; padding-bottom: 10px;" >
+		<div class="btn-group btn-right" role="group"
+			aria-label="Basic example"
+			style="float: right; padding-bottom: 10px;">
 			<button type="reset" id="resetBtn" class="btn btn-primary">초기화</button>
-			<button type="button" id="searchBtn" class="btn btn-primary" data-toggle="modal" data-target="#myModal">검색</button>
+			<button type="button" id="searchBtn" class="btn btn-primary"
+				data-toggle="modal" data-target="#myModal">검색</button>
 			<button type="submit" id="addBtn" class="btn btn-primary">저장</button>
-			
-		  </div>
-	<div id="grid1"></div>
-    <div id="grid2"></div>
-    
-<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-      	<div>
-	      	<p>발주일자 <input type="text"></p>
-	      	<p>담당자 <input type="text"></p>
-      	</div>
-      	<div>
-	      	<p>자재 <input type="text"></p>
-	      	<p>거래처 <input type="text"></p>
-      	</div>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		</div>
-		<div style="display: flex; justify-content: center;" >
-		<button type="button" class="btn btn-primary" data-dismiss="modal" style="margin: 5px;">조회</button>
-	  	<button type="button" class="btn btn-primary" style="margin: 5px;">초기화</button>
-		</div>
-      <div class="modal-body">
-       <div id="grid3"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-        <button type="button" class="btn btn-primary">저장</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 
-    <script>
+		</div>
+		<div id="grid1"></div>
+		<div id="grid2"></div>
+
+		<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-lg" role="document">
+				<div class="modal-content">
+					<div class="container text-center">
+						<div class="modal-header row justify-content-evenly">
+							<div class="col-6">
+								<div>
+									<span>발주일자</span><input id="mtlDate" type="date">
+								</div>
+								<div>
+									<span>담당자</span><input id="mtlManager" type="text">
+								</div>
+							</div>
+							<div class="col-6">
+								<div>
+									<span>자재</span><input id="mtlCode" type="text">
+								</div>
+								<div>
+									<span>거래처</span><input id="bpCode" type="text">
+								</div>
+							</div>
+							<button type="button" class="close" data-dismiss="modal"
+								aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+					</div>
+					<div style="display: flex; justify-content: center;">
+						<button type="button" id="searchDataBtn" class="btn btn-primary"
+							 style="margin: 5px;">조회</button>
+						<button type="button" class="btn btn-primary" style="margin: 5px;">초기화</button>
+					</div>
+					<div class="modal-body">
+						<div id="grid3"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+						<button type="button" class="btn btn-primary">저장</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<script>
 		
         var grid;
       	var grid2;
@@ -118,28 +137,23 @@
 					rowHeaders:["rowNum"],
 					columns: [
 					{
-						header: '발주코드',
-						name: '',
-						width : 100
-					},
-					{
 						header: '자재',
-						name: '',
+						name: 'mtlCode',
 						width : 50
 					},
 						{
 						header: '거래처',
-						name: '',
+						name: 'bpCode',
 						width : 70
 					},
 						{
 						header: '발주일자',
-						name: '',
+						name: 'mtlDate',
 						width : 100
 					},
 					{
 						header: '담당자',
-						name: '',
+						name: 'mtlManager',
 						width : 50
 					},
 					]
@@ -150,7 +164,6 @@
 					method:'get',
 			    dataType:'json',
 					success:function(result){
-						
 						grid.resetData(result);
 						grid2.resetData(result);
 						//grid3.resetData(result);
@@ -162,6 +175,31 @@
 			    
 			  }
 
+			  //모달 조회 클릭이벤트
+			  $('#searchDataBtn').on('click', function() {
+				console.log($('#mtlDate').val());
+				$.ajax({
+					url: '/mtlcheck', 
+					method: 'post',
+					// dataType: 'json',
+					// contentType : 'application/json',
+					data : 
+					{
+						mtlDate : $('#mtlDate').val(),
+						bpCode : $('#bpCode').val(),
+						mtlCode : $('#mtlCode').val(),
+						mtlManager : $('#mtlManager').val()
+					}
+					,
+					success: function(result) {
+						console.log(result);
+						//grid3.resetData(result);
+					},
+					error: function(err) {
+						console.log(err);
+					}
+					});
+				});
     </script>
 
 	</div>
