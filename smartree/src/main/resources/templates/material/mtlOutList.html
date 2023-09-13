@@ -20,40 +20,28 @@
 					scrollY : false,
 					rowHeaders : [ "rowNum" ],
 					columns : [ {
+						header : '자재출고코드',
+						name : 'mtlOutCode'
+					}, {
+						header : '자재LOT',
+						name : 'mtlLotNum'
+					}, {
 						header : '자재코드',
 						name : 'mtlCode'
 					}, {
-						header : '자재발주일',
-						name : 'mtlDate'
+						header : '자재출고량',
+						name : 'mtlOutCnt'
 					}, {
-						header : '거래처코드',
-						name : 'bpCode'
-					}, {
-						header : '자재이름',
-						name : 'mtlName'
-					}, {
-						header : '수량',
-						name : 'mtlCnt'
-					}, {
-						header : '단위',
-						name : 'mtlUnit'
-					}, {
-						header : '담당자',
-						name : 'mtlManager'
-					}, {
-						header : '납기요청일',
-						name : 'mtlWishDate'
-					}, {
-						header : '상태',
-						name : 'mtlWhere'
-					}   ]
+						header : '공정실적코드',
+						name : 'prcsRsCode'
+					}		]
 				});
 				
-				const header = ['mtlCode', 'mtlDate', 'bpCode', 'mtlName', 'mtlCnt', 'mtlUnit', 'mtlManager','mtlWishDate','mtlWhere']
+				const header = ['mtlOutCode', 'mtlLotNum', 'mtlCode', 'mtlOutCnt', 'prcsRsCode']
 
 		        // Orders List불러오기
 		        $.ajax({
-		          url: '/mtlNeeds',
+		          url: '/mtlEmpty',
 		          method: 'get',
 		          dataType: 'json',
 		          success: function (result) {

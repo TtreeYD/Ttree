@@ -11,12 +11,23 @@ import com.yedam.smartree.material.service.MaterialVO;
 
 @RestController
 public class MaterialRestController {
-
+	
 	@Autowired
 	MaterialService materialService;
 	
+	// 조회기능 목록
 	@GetMapping("/mtlNeeds")
-	public List<MaterialVO> getneeds(){
+	public List<MaterialVO> getMtlNeeds(){
 		return materialService.selectNeedList();
+	}
+	
+	@GetMapping("/mtlExist")
+	public List<MaterialVO> getMtlExist(){
+		return materialService.selectMtlList();
+	}
+	
+	@GetMapping("/mtlEmpty")
+	public List<MaterialVO> getMtlEmpty(){
+		return materialService.selectMtlOutList();
 	}
 }
