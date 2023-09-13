@@ -19,7 +19,7 @@ public class EqmController {
 	
 
 	
-	@GetMapping("/eqmList")
+	@GetMapping("/eqm/eqmList")
 	public String selectAllEqm() {
 		
 		return "eqm/eqmList";
