@@ -22,12 +22,17 @@ public class CheckRestController {
 		return mtlcheckservice.Allselect();
 	}
 	
+	@GetMapping("/mtlcheck")
+	public List<MtlCheckVO> mtlgetcheck(MtlCheckVO vo){
+		return mtlcheckservice.mtlselect(vo);
+	}
+	
 	@PostMapping("/mtlcheck")
 	@ResponseBody
 	public List<MtlCheckVO> mtlcheck(MtlCheckVO vo){
 		
 	
-		System.out.println(vo);
+		System.out.println(vo.toString());
 		System.out.println(mtlcheckservice.mtlselect(vo));
 		return mtlcheckservice.mtlselect(vo);
 	}

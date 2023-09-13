@@ -15,7 +15,7 @@
 		<div class="btn-group btn-right" role="group"
 			aria-label="Basic example"
 			style="float: right; padding-bottom: 10px;">
-			<button type="reset" id="resetBtn" class="btn btn-primary">초기화</button>
+			<button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
 			<button type="button" id="searchBtn" class="btn btn-primary"
 				data-toggle="modal" data-target="#myModal">검색</button>
 			<button type="submit" id="addBtn" class="btn btn-primary">저장</button>
@@ -25,44 +25,48 @@
 		<div id="grid2"></div>
 
 		<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
-			<div class="modal-dialog modal-lg" role="document">
-				<div class="modal-content">
+			<div class="modal-dialog modal-xl" role="document">
+				<div class="modal-content" style="height: 500px">
 					<div class="container text-center">
 						<div class="modal-header row justify-content-evenly">
 							<div class="col-6">
-								<div>
-									<span>발주일자</span><input id="mtlDate" type="date">
-								</div>
-								<div>
-									<span>담당자</span><input id="mtlManager" type="text">
+								<div class="d-flex flex-column align-items-center">
+									<div class="mb-3">
+										<span>발주일자</span>
+										<input class="form-control" id="mtlDate" type="date" style="width: 350px;">
+									</div>
+									
+									<div>
+										<span>담당자</span>
+										<input class="form-control" id="mtlManager" type="text" style="width: 350px;">
+									</div>
 								</div>
 							</div>
 							<div class="col-6">
-								<div>
-									<span>자재</span><input id="mtlCode" type="text">
-								</div>
-								<div>
-									<span>거래처</span><input id="bpCode" type="text">
+								<div class="d-flex flex-column align-items-center">
+									<div class="mb-3">
+										<span>자재</span>
+										<input class="form-control" id="mtlCode" type="text" style="width: 350px;">
+									</div>
+									
+									<div>
+										<span>거래처</span>
+										<input class="form-control" id="bpCode" type="text" style="width: 350px;">
+									</div>
 								</div>
 							</div>
-							<button type="button" class="close" data-dismiss="modal"
-								aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
 						</div>
 					</div>
 					<div style="display: flex; justify-content: center;">
 						<button type="button" id="searchDataBtn" class="btn btn-primary"
-							 style="margin: 5px;">조회</button>
-						<button type="button" class="btn btn-primary" style="margin: 5px;">초기화</button>
+							style="margin: 5px;">조회</button>
+						<button type="button" id="resetModalBtn" class="btn btn-primary"
+							style="margin: 5px;">초기화</button>
 					</div>
 					<div class="modal-body">
 						<div id="grid3"></div>
 					</div>
-					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
-						<button type="button" class="btn btn-primary">저장</button>
-					</div>
+					
 				</div>
 				<!-- /.modal-content -->
 			</div>
@@ -84,11 +88,11 @@
 	        	      columns: [
 	        	        {
 	        	          header: '발주일자',
-	        	          name: ''
+	        	          name: 'mtlDate'
 	        	        },
 	        	        {
 	        	          header: '거래처',
-	        	          name: ''
+	        	          name: 'bpCode'
 	        	        }
 					]
 	        	    });
@@ -101,22 +105,21 @@
 			      columns: [
 			        {
 			          header: '자재명',
-			          name: ''
+			          name: 'mtlName'
 			        },
 			        {
 			          header: '자재코드',
-			          name: ''
+			          name: 'mtlCode'
 			        },
 			        {
 			          header: '검사량',
 			          name: 'mtlChkCnt',
 					  editor: 'text'
-		        	  
 			        },
 			        {
 			           header: '불량량',
 			           name: 'mtlErrorCnt',
-					 editor: 'text'
+					   editor: 'text'
 			        },
 			        {
 			           header: '합격량',
@@ -139,22 +142,18 @@
 					{
 						header: '자재',
 						name: 'mtlCode',
-						width : 50
 					},
 						{
 						header: '거래처',
 						name: 'bpCode',
-						width : 70
 					},
 						{
 						header: '발주일자',
 						name: 'mtlDate',
-						width : 100
 					},
 					{
 						header: '담당자',
 						name: 'mtlManager',
-						width : 50
 					},
 					]
 			    });
@@ -164,20 +163,20 @@
 					method:'get',
 			    dataType:'json',
 					success:function(result){
-						grid.resetData(result);
-						grid2.resetData(result);
+						//grid.resetData(result);
+						//grid2.resetData(result);
 						//grid3.resetData(result);
 					},
 					error:function(err){
 						console.log(err);
 					}
 				})
-			    
-			  }
+			    $('#searchBtn').on('click', function(){
+                     setTimeout(() => grid3.refreshLayout(), 200);
+                 })
 
 			  //모달 조회 클릭이벤트
 			  $('#searchDataBtn').on('click', function() {
-				console.log($('#mtlDate').val());
 				$.ajax({
 					url: '/mtlcheck', 
 					method: 'post',
@@ -193,13 +192,65 @@
 					,
 					success: function(result) {
 						console.log(result);
-						//grid3.resetData(result);
+						grid3.resetData(result);
+						setTimeout(() => grid3.refreshLayout(), 200);
 					},
 					error: function(err) {
 						console.log(err);
 					}
 					});
 				});
+
+				//페이지 초기화버튼
+				$('#resetBtn').on('click',function(){
+					var data = grid2.getData();
+
+					for (var i = 0; i < data.length; i++) {
+						data[i].mtlChkCnt = ''; 
+						data[i].mtlErrorCnt = ''; 
+						data[i].mtlPassCnt = ''; 
+						data[i].mtlChkManager = ''; 
+					}
+					grid2.resetData(data);
+				})
+
+
+				//모달초기화버튼
+				$('#resetModalBtn').on('click',function(){
+					 $('#mtlDate').val('');
+					 $('#bpCode').val('');
+					 $('#mtlCode').val('');
+					 $('#mtlManager').val('');
+				})
+
+				// 더블클릭
+				grid3.on('dblclick',(ev)=>{
+					if(ev.rowKey==undefined){
+		        		return;
+		        	}
+					let data = grid3.getValue(ev.rowKey,'mtlCode');
+		
+					console.log(data)
+					 	$.ajax({
+        		url:'/mtlcheck',
+        		method:'GET',
+        		data:{
+        			mtlCode: data
+        		},
+        		success:function(result){
+        			console.log(result);
+       	            $("#myModal").modal('hide');
+        			grid.resetData(result);
+       	            grid2.resetData(result);
+        		},
+        		error:function(err){
+        			
+        		console.log(err)
+        				}
+        			})
+				})
+			}
+
     </script>
 
 	</div>
