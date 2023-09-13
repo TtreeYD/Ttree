@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>자재발주목록</title>
+
+</head>
+<body>
+	<div layout:fragment="content">
+		<div id="grid"></div>
+		<script>
+			var grid;
+			window.onload = function() {
+				const grid = new tui.Grid({
+					el : document.getElementById('grid'),
+					scrollX : false,
+					scrollY : false,
+					rowHeaders : [ "rowNum" ],
+					columns : [ {
+						header : '자재코드',
+						name : 'mtlCode'
+					}, {
+						header : '자재발주일',
+						name : 'mtlDate'
+					}, {
+						header : '거래처코드',
+						name : 'bpCode'
+					}, {
+						header : '자재이름',
+						name : 'mtlName'
+					}, {
+						header : '수량',
+						name : 'mtlCnt'
+					}, {
+						header : '단위',
+						name : 'mtlUnit'
+					}, {
+						header : '담당자',
+						name : 'mtlManager'
+					}, {
+						header : '납기요청일',
+						name : 'mtlWishDate'
+					}, {
+						header : '상태',
+						name : 'mtlWhere'
+					}   ]
+				});
+
+				$.ajax({
+					url : '/mtlNeeds',
+					method : 'get',
+					dataType : 'json',
+					success : function(result) {
+						console.log(result);
+						grid.resetData(eval(result));
+					},
+					error : function(err) {
+						console.log(err);
+					}
+				})
+
+			}
+		</script>
+	</div>
+</body>
+</html>

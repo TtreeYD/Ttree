@@ -17,5 +17,10 @@ public class BusinessServiceImpl implements BusinessService{
 	public List<BusinessVO> selectOrderList() {
 		return businessmapper.selectOrderList();
 	}
+	@Override
+	public List<BusinessVO> selectOrderDtList(BusinessVO businessVO) {
+		return businessmapper.selectOrderDtList(businessVO);
+		
+	}
 
 }
