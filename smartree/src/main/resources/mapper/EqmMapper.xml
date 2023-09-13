@@ -6,7 +6,7 @@
   <mapper namespace="com.yedam.smartree.eqm.mapper.EqmMapper">
   	<select id="selectEqmList" resultType="EqmVO">
   		SELECT e.eqm_code,e.eqm_name,e.eqm_ucheck,e.insp_cycle,e.mfg_comp,e.mfg_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE
-		FROM eqm e join EQM_INSP i
+		FROM eqm e left join EQM_INSP i
   		  				ON e.eqm_code = i.eqm_code
   		ORDER BY eqm_code
   	</select>

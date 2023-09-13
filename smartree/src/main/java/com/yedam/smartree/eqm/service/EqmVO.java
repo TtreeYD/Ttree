@@ -22,5 +22,9 @@ public class EqmVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date mfgDate;
 	private String eqmImg;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date recentInspDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+ 	private Date nextInspDate;
 
 }
