@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<table>
+		<thead>
+			<tr>
+				<th>설비코드</th>
+				<th>설비명</th>
+				<th>사용여부</th>
+				<th>점검주기</th>
+				<th>최근점검일시</th>
+				<th>차기점검일시</th>
+				<th>제조업체</th>
+				<th>제조일시</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<tr th:each="eqm : ${eqmList}">
+				<td th:text="${eqm.eqmCode}"></td>
+				<td th:text="${eqm.eqmName}"></td>
+				<td th:text="${eqm.eqmUcheck}"></td>
+				<td th:text="${eqm.inspCycle}"></td>
+				<td th:text="${}"></td>
+				<td th:text="${}"></td>
+				<td th:text="${eqm.mfgComp}"></td>
+				<td th:text="${eqm.mfgDate}"></td>
+			</tr>
+		</tbody>
+	</table>
+</body>
+</html>

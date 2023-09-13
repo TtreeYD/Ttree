@@ -1,5 +1,12 @@
 package com.yedam.smartree.material.mapper;
 
-public class MaterialMapper {
+import java.util.List;
 
+import org.apache.ibatis.annotations.Mapper;
+
+import com.yedam.smartree.material.service.MaterialVO;
+
+@Mapper
+public interface MaterialMapper {
+	public List<MaterialVO> selectNeedList();
 }

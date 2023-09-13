@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>생산계획관리</title>
+</head> 
+<style>
+	
+</style>
+<body>
+	<div layout:fragment="content">
+	<label>계획명 : </label>
+	<input type="text" >
+	<label>생산계획일자 : </label>
+	<input type="text" >
+	<label>생산시작일자 : </label>
+	<input type="text" >
+	<label>생산종료일자 : </label>
+	<input type="text" >
+	<div class="btn-group" role="group" aria-label="Basic example" style="float : right; margin-bottom : 10px;">
+	  <button type="button" class="btn btn-primary">초기화</button>
+	  <button type="button" class="btn btn-primary">주문서</button>
+	  <button type="button" class="btn btn-primary">검색</button>
+	  <button type="button" class="btn btn-primary">저장</button>
+	  <button type="button" class="btn btn-primary">삭제</button>
+	</div>
+    <div id="grid" style="height: 400px;"></div>
+	<div style="display:flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
+		<span>
+			<div id="grid2" style="width: 600px;"></div>
+		</span>
+		<span>
+			<div id="grid3" style="width: 600px;"></div>
+		</span>
+	</div>
+    
+    
+      <script>
+        var grid;
+        var grid2;
+        var grid3;
+        window.onload=function(){
+
+	    const grid = new tui.Grid({
+	      el: document.getElementById('grid'),
+	      scrollX: false,
+	      scrollY: false,
+	      columns: [
+	        {
+	          header: '계획상세코드',
+	          name: 'dtProdPlanCode'
+	        },
+	        {
+	          header: '제품명',
+	          name: 'prdtName'
+	        },
+	        {
+	          header: '수량',
+	          name: 'prodPlanCnt'
+	        },
+	        {
+	          header: '계획담당자',
+	          name: 'prodPlanName'
+	        },
+	        {
+	          header: '순위',
+	          name: 'prodRank'
+	        },
+	        {
+	          header: '비고',
+	          name: 'prodPlanNote'
+	        },
+	      ]
+	    });
+	    const grid2 = new tui.Grid({
+		      el: document.getElementById('grid2'),
+		      scrollX: false,
+		      scrollY: false,
+		      columns: [
+		        {
+		          header: '제품코드',
+		          name: 'prdtCode'
+		        },
+		        {
+		          header: '제품명',
+		          name: 'prdtName'
+		        },
+		        {
+		          header: '수량',
+		          name: 'prdtSs'
+		        },
+		      ]
+		    });
+	    const grid3 = new tui.Grid({
+		      el: document.getElementById('grid3'),
+		      scrollX: false,
+		      scrollY: false,
+		      columns: [
+		        {
+		          header: '자재코드',
+		          name: ''
+		        },
+		        {
+		          header: '자재명',
+		          name: ''
+		        },
+		        {
+		          header: '재고수량',
+		          name: ''
+		        },
+		      ]
+		    });
+		$.ajax({
+			url:'/',
+			method:'get',
+	    dataType:'json',
+			success:function(result){
+				grid.resetData(eval(result));
+				grid2.resetData(eval(result));
+				grid3.resetData(eval(result));
+			},
+			error:function(err){
+				console.log(err);
+			}
+		})
+		
+	  }
+	  
+    </script>
+	</div>
+</body>
+</html>
