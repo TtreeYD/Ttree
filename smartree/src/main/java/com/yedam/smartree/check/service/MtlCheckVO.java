@@ -13,6 +13,7 @@ public class MtlCheckVO {
 	private Date mtlDate;
 	private String bpCode;
 	private String mtlCode;
+	private String mtlName;
 	private int mtlChkCnt;
 	private int mtlErrorCnt;
 	private int mtlPassCnt;
