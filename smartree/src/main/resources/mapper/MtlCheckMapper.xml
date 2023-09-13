@@ -9,4 +9,22 @@
 		on c.mtl_code = n.mtl_code
   	</select>
   
+  	<select id="mtlselect" resultType="MtlCheckVO">
+  		select *
+      	from mtl_need 
+        <where>
+          <if test="mtlDate != null">
+             TRUNC(mtl_date) = TO_DATE(#{mtlDate}, 'yy/MM/dd')
+          </if>
+          <if test="bpCode != null || !bpCode.equal('')" >
+              bp_code = #{bpCode}
+          </if>
+          <if test="mtlCode != null || !mtlCode.equal('')">
+            and mtl_code = #{mtlCode}
+          </if>
+          <if test="mtlManager != null || !mtlManager.equal('')">
+            and mtl_manager = #{mtlManager}
+          </if>
+      </where>
+  	</select>
   </mapper>
