@@ -95,9 +95,10 @@
         	    	data:{
         	    		orderCode: target
         	    	},
-        	    	suceess:function(result){
-        	    		console.log(result)
-        	    	},
+                dataType: 'json',
+        	    	suceess:result => {
+                  console.log(result)
+                },
         	    	error:function(err){
         	    		console.log(err);
         	    	}

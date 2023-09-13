@@ -6,5 +6,5 @@ public interface BusinessService {
 
 	public List<BusinessVO> selectOrderList();
 	
-	public List<BusinessVO> selectOrderDtList();
+	public List<BusinessVO> selectOrderDtList(BusinessVO businessVO);
 }

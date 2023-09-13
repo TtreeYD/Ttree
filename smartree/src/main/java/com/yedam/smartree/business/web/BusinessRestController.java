@@ -20,7 +20,9 @@ public class BusinessRestController {
 	}
 	
 	@GetMapping("/orderDtList")
-	public List<BusinessVO> getDtOrders(){
-		return businessService.selectOrderDtList();
+	public List<BusinessVO> getDtOrders(BusinessVO businessVO){
+		System.out.println(businessVO);
+		System.out.println(businessService.selectOrderDtList(businessVO));
+		return businessService.selectOrderDtList(businessVO);
 	}
 }
