@@ -9,6 +9,10 @@ import com.yedam.smartree.business.service.BusinessService;
 public class ProdController {
 	@Autowired
 	
+	@GetMapping("prodList")
+	public String selectAllProd() {
+		return "prod/prodList";
+	}
 	
 	@GetMapping("prodMng")
 	public String selectAllOrder() {
