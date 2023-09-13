@@ -1,5 +1,7 @@
 package com.yedam.smartree.material.service;
 
-public interface MaterialService {
+import java.util.List;
 
+public interface MaterialService {
+	public List<MaterialVO> selectNeedList();
 }

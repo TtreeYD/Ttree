@@ -1,7 +1,23 @@
 package com.yedam.smartree.material.service.impl;
 
-import com.yedam.smartree.material.service.MaterialService;
+import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.yedam.smartree.material.mapper.MaterialMapper;
+import com.yedam.smartree.material.service.MaterialService;
+import com.yedam.smartree.material.service.MaterialVO;
+
+@Service
 public class MaterialServiceImpl implements MaterialService {
+	
+	@Autowired
+	MaterialMapper materialMapper;
+	
+	@Override
+	public List<MaterialVO> selectNeedList() {
+		return materialMapper.selectNeedList();
+	}
 
 }

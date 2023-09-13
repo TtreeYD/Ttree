@@ -14,9 +14,10 @@ public class MaterialVO {
 	private Date mtlDate; // 자재발주일
 	private String bpCode; // 거래처코드
 	private String mtlName; // 자재이름
-	private int mtlCnt; // 갯수
+	private int mtlCnt; // 수량
 	private String mtlUnit; // 단위
 	private String mtlManager; // 담당자
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date mtlWishDate; // 납기요청일
 	private String mtlWhere; // 상태
 	
