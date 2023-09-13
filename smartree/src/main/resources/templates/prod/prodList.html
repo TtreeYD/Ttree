@@ -12,13 +12,22 @@
 </style>
 <body>
 	<div layout:fragment="content">
-
-	
-    <div id="grid" style="height: 400px;"></div>
+		<div style="float:right; margin-bottom: 10px">
+			<div class="input-group" >
+				<div class="form-outline">
+					<input type="search" id="form1" class="form-control" placeholder="Search"/> 
+				</div>
+				<button type="button" class="btn btn-primary">
+					<i class="fas fa-search"></i>
+				</button>
+			</div>
+		</div>
+		<div id="grid" style="height: 400px;"></div>
     
     
       <script>
         var grid;
+        //const header = ['dtProdPlanCode','prdtName','prodPlanCnt','prodPlanName','prodRank','prodPlanDate','prodPlanSdate','prodPlanEdate']
         window.onload=function(){
 
 	    const grid = new tui.Grid({
@@ -47,20 +56,26 @@
 	          name: 'prodRank'
 	        },
 	        {
-	          header: '비고',
-	          name: 'prodPlanNote'
+	          header: '생산계획일자',
+	          name: 'prodPlanDate'
+	        },
+	        {
+	          header: '생산시작일자',
+	          name: 'prodPlanSdate'
+	        },
+	        {
+	          header: '생산종료일자',
+	          name: 'prodPlanEdate'
 	        },
 	      ]
 	    });
 	    
 		$.ajax({
-			url:'/',
+			url:'/prodPlanList',
 			method:'get',
 	    dataType:'json',
 			success:function(result){
-				grid.resetData(eval(result));
-				grid2.resetData(eval(result));
-				grid3.resetData(eval(result));
+				grid.resetData(result);
 			},
 			error:function(err){
 				console.log(err);
