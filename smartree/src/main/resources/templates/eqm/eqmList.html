@@ -1,36 +1,94 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org">
+<html  xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
 <body>
-	<table>
-		<thead>
-			<tr>
-				<th>설비코드</th>
-				<th>설비명</th>
-				<th>사용여부</th>
-				<th>점검주기</th>
-				<th>최근점검일시</th>
-				<th>차기점검일시</th>
-				<th>제조업체</th>
-				<th>제조일시</th>
-			</tr>
-		</thead>
+<div layout:fragment="content">
+	<div > 
 		
-		<tbody>
-			<tr th:each="eqm : ${eqmList}">
-				<td th:text="${eqm.eqmCode}"></td>
-				<td th:text="${eqm.eqmName}"></td>
-				<td th:text="${eqm.eqmUcheck}"></td>
-				<td th:text="${eqm.inspCycle}"></td>
-				<td th:text="${}"></td>
-				<td th:text="${}"></td>
-				<td th:text="${eqm.mfgComp}"></td>
-				<td th:text="${eqm.mfgDate}"></td>
-			</tr>
-		</tbody>
-	</table>
+    <input type="radio" id="all" name="eqmUcheck" value="" checked />
+    <label for="all">전체</label>
+ 
+ 	<input type="radio" id="y" name="eqmUcheck" value="y" />
+    <label for="y">사용</label>
+    
+    <input type="radio" id="n" name="eqmUcheck" value="n"/>
+    <label for="n">미사용</label>
+	</div>
+	<div id="grid"></div>
+	
+	    <script>
+        var grid;
+        window.onload=function(){
+
+      
+        	
+        	
+        	
+        	
+    const grid = new tui.Grid({
+      el: document.getElementById('grid'),
+      scrollX: false,
+      scrollY: false,
+      rowHeaders:["rowNum"],
+      columns: [
+        {
+          header: '설비코드',
+          name: 'eqmCode'
+        },
+        {
+          header: '설비명',
+          name: 'eqmName'
+        },
+        {
+            header: '사용여부',
+            name: 'eqmUcheck'
+        },
+        {
+              header: '전송주기',
+              name: 'inspCycle'
+        },
+        {
+            header: '최근점검일시',
+            name: 'recentInspDate'
+        },
+        {
+            header: '차기점검일시',
+            name: 'nextInspDate'
+      },
+      {
+          header: '제조업체',
+          name: 'mfgComp'
+ 	   },
+ 	   {
+        header: '제조일자',
+        name: 'mfgDate'
+  }
+      ]
+    });
+    
+	$.ajax({
+		url:'/eqms',
+		method:'get',
+    dataType:'json',
+		success:function(result){
+			console.log(result);
+			grid.resetData(eval(result));
+		},
+		error:function(err){
+			console.log(err);
+		}
+	})
+    
+  }
+          
+    </script>
+	
+</div>
 </body>
 </html>
