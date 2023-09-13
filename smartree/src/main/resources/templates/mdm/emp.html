@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div>
+		<select>
+			<option>		
+		</select>
+		<input>
+		</div>
+		<div id="empList"></div>
+		<script>
+			const Grid = tui.Grid;
+			const instance = new Grid({
+				el : document.getElementById('empList'), // Container element
+				scrollX : false,
+				scrollY : false,
+				columns : [ {
+					header : '아이디',
+					name : 'empId'
+				}, {
+					header : '이름',
+					name : 'empName'
+				}, {
+					header : '부서',
+					name : 'empDept'
+				}, {
+					header : '직급',
+					name : 'empClass'
+				}, {
+					header : '연락처',
+					name : 'empPhone'
+				}, {
+					header : '초기화',
+					name : 'reset',
+					width : 50
+				} ],
+				data : []
+			});
+
+			instance.resetData(newData); // Call API of instance's public method
+
+			Grid.applyTheme('striped'); // Call API of static method
+		</script>
+	</div>
+</body>
+</html>
