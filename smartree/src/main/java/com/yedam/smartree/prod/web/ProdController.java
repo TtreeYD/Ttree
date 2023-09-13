@@ -1,5 +1,18 @@
 package com.yedam.smartree.prod.web;
 
-public class ProdController {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 
+import com.yedam.smartree.business.service.BusinessService;
+@Controller
+public class ProdController {
+	@Autowired
+	
+	
+	@GetMapping("prodMng")
+	public String selectAllOrder() {
+		
+		return "prod/prodMng";
+	}
 }
