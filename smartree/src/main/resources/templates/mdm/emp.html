@@ -3,52 +3,97 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layout/layout}">
+
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
+
 <body>
 	<div layout:fragment="content">
 		<div>
-		<select>
-			<option>		
-		</select>
-		<input>
+			<select id="deptInfo">
+				<option value="" selected>전체</option>
+			</select> <input>
+			<div id="empList"></div>
 		</div>
-		<div id="empList"></div>
+
 		<script>
-			const Grid = tui.Grid;
-			const instance = new Grid({
-				el : document.getElementById('empList'), // Container element
-				scrollX : false,
-				scrollY : false,
-				columns : [ {
-					header : '아이디',
-					name : 'empId'
-				}, {
-					header : '이름',
-					name : 'empName'
-				}, {
-					header : '부서',
-					name : 'empDept'
-				}, {
-					header : '직급',
-					name : 'empClass'
-				}, {
-					header : '연락처',
-					name : 'empPhone'
-				}, {
-					header : '초기화',
-					name : 'reset',
-					width : 50
-				} ],
-				data : []
+			$.ajax({
+				url: "/selectCommonCode",
+				data: {
+					codeType: 1
+				},
+				success: result => {
+					let selTag = $('#deptInfo');
+					$(result).each(function (idx, dept) {
+						if (dept['codeName'] == '관리자') return;
+						let optTag = $('<option/>');
+						optTag.val(dept['codeId']);
+						optTag.text(dept['codeName']);
+						selTag.append(optTag);
+					})
+				},
+				error: err => console.log(err)
+			})
+
+			var Grid = tui.Grid;
+
+			const grid = new Grid({
+				el: document.getElementById('empList'),
+				scrollX: false,
+		      scrollY: false,
+				columns: [
+					{
+						header: 'ID',
+						name: 'empId'
+					},
+					{
+						header: '이름',
+						name: 'empName'
+					},
+					{
+						header: '부서',
+						name: 'empDept'
+					},
+					{
+						header: '직급',
+						name: 'empClass'
+					},
+					{
+						header: '연락처',
+						name: 'empPhone'
+					},
+					{
+						header: '초기화',
+						name: '',
+						width: 100
+					},
+				],
 			});
+			getEmpList();
+			
+			$('#deptInfo').on('change', function(){
+				let dept = $('#deptInfo').val();
+				getEmpList(dept);
+			})
 
-			instance.resetData(newData); // Call API of instance's public method
-
-			Grid.applyTheme('striped'); // Call API of static method
+			function getEmpList(empDept){
+				$.ajax({
+					url: '/selectEmpList',
+					data: {
+						empDept: empDept
+					},
+					success: result => {
+						console.log(result)
+						 grid.resetData(eval(result));
+					},
+					error: err => console.log(err)
+				})
+			}
+			
 		</script>
 	</div>
 </body>
+
 </html>
