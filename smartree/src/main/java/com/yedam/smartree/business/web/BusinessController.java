@@ -19,4 +19,8 @@ public class BusinessController {
 		
 		return "business/orderList";
 	}
+	@GetMapping("orderForm")
+	public String selectOrderForm() {
+		return "business/orderForm";
+	}
 }
