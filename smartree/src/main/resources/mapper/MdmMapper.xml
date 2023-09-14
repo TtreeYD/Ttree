@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.smartree.mdm.mapper.MdmMapper">
+	<select id="selectCommonCodeList" resultType="CommonCodeVO">
+		SELECT code_id
+		, code_name
+		, code_use
+		FROM code_detail
+		WHERE code_type = #{codeType}
+	</select>
+
+	<select id="selectEmpList" resultType="EmpVO">
+		SELECT *
+		FROM emp_list
+		<where>
+			<if test="empDept !=null and !empDept.equals('')">
+				emp_dept = #{empDept}
+			</if>
+		</where>
+		ORDER BY emp_id
+	</select>
+</mapper>
