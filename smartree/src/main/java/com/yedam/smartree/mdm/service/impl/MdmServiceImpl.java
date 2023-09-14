@@ -19,7 +19,7 @@ public class MdmServiceImpl implements MdmService {
 	@Override
 	public List<CommonCodeVO> selectCommonCodeType() {
 		// TODO Auto-generated method stub
-		return null;
+		return mdmMapper.selectCommonCodeType();
 	}
 	
 	@Override

@@ -24,7 +24,7 @@ public class CommonRestController {
 	// 코드분류조회
 	@GetMapping("/selectCommonCodeType")
 	public List<CommonCodeVO> selectCommonCodeType() {
-		return null;
+		return mdmService.selectCommonCodeType();
 	}
 
 	// 코드상세조회
