@@ -32,7 +32,7 @@
   		  				ON e.eqm_code = i.eqm_code
   		<where>
   			<if test="eqmName != null and !eqmName.equals('')">
-  				eqm_name LIKE CONCAT('%',#{eqmName},'%')
+  				eqm_name LIKE '%'||#{eqmName}||'%'
   			</if>
   		</where>  				
   		 

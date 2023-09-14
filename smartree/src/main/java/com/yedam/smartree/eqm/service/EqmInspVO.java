@@ -22,7 +22,7 @@ public class EqmInspVO {
 	private Date nextInspDate;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date registerDate;
-	private String inptManager;
+	private String inspManager;
 	private String noperCode;
 	private String eqmName;
 	

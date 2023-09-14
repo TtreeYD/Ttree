@@ -24,4 +24,17 @@
   	 					 
   	ORDER BY eqm_code
   	</select>
+  	
+  	  	<select id="searchEqmInsp" resultType="EqmInspVO">
+  	 SELECT e.eqm_code,e.eqm_name,i.insp_manager,i.insp_judg,i.repair_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE,i.insp_dt,i.action_dt
+     FROM eqm e join EQM_INSP i
+  		  			ON e.eqm_code = i.eqm_code
+  		<where>
+  			<if test="eqmName != null and !eqmName.equals('')">
+  				eqm_name LIKE '%'||#{eqmName}||'%'
+  			</if>
+  		</where>  	
+  	 					 
+  	ORDER BY eqm_code
+  	</select>
   </mapper>
