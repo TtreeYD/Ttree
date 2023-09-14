@@ -11,9 +11,9 @@
 	<div layout:fragment="content">
 		<h2 style="height:0px">주문정보</h2>
 		<div class="btn-group" role="group" aria-label="Basic example" style="float : right;">
-			<button class="btn btn-primary" style="float:right" id="neworder">새주문서</button>
+			<button class="btn btn-primary" style="float:right" id="searchOrder">검색</button>
 			<button class="btn btn-primary" style="float:right">저장</button>
-			<button class="btn btn-primary" style="float:right">검색</button>
+			<button class="btn btn-primary" style="float:right">새주문서</button>
 			<button class="btn btn-primary" style="float:right">삭제</button>
 		</div>
 		<div id="order"></div>
@@ -57,7 +57,7 @@
 
 
 		<script>
-
+			let searchModalData;
 			$(document).ready(function () {
 				const order = new tui.Grid({
 					el: document.getElementById('order'),
@@ -75,6 +75,10 @@
 						{
 							header: '업체명',
 							name: 'bpName',
+						},
+						{
+							header: '주문일자',
+							name: 'orderDate',
 						},
 						{
 							header: '납기일자',
@@ -98,7 +102,7 @@
 						},
 						{
 							header: '제품명',
-							name: 'bpName',
+							name: 'prdtName',
 						},
 						{
 							header: '제품코드',
@@ -143,10 +147,14 @@
 						},
 					]
 				})
+				
 
-				$('#neworder').on('click', function () {
+				$('#searchOrder').on('click', function () {
+					$('#ordercd').val('');
+					$('#plsdate').val('');
+					$('#doddate').val('');
 					$("#myModal").modal('show');
-					$.ajax({
+					/* $.ajax({
 						url: '/orders',
 						method: 'get',
 						dataType: 'json',
@@ -161,9 +169,9 @@
 						error: function (err) {
 							console.log(err);
 						}
-					})
+					}) */
 				})
-				$('#searchDataBtn').on('click',function(ev){
+				$('#searchDataBtn').on('click',function(ev){		
 					$.ajax({
 						url:'/selectOrder',
 						method: 'POST',
@@ -174,7 +182,7 @@
 
 						},
 						success:function(result){
-							console.log(result);
+							searchModalData = result;
 							searchModal.resetData(result);
 					 		setTimeout(() => searchModal.refreshLayout(), 200);
 					 		
@@ -186,6 +194,35 @@
 					})
 						
 					})
+
+					searchModal.on('dblclick',(ev)=>{
+						if(ev.rowKey==undefined){
+			        		return;
+			        	}
+						let data = searchModal.getValue(ev.rowKey,'orderCode');
+						console.log(data);
+						
+						$.ajax({
+							url:'/orderDtList',
+							method:'GET',
+							data:{
+								orderCode:data
+							},
+							success:function(result){
+								console.log(result);
+								$('myModal').modal('hide');
+								console.log([searchModalData[ev.rowKey]])
+								order.resetData(eval([searchModalData[ev.rowKey]]));
+								dtOrder.resetData(result);
+							},
+							error:function(err){
+								console.log(err)
+							}
+							
+							
+						})
+					})
+
 				})
 
 			

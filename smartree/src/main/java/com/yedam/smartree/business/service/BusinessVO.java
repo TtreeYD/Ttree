@@ -15,7 +15,7 @@ public class BusinessVO {
 	private String bpCode;
 	private String bpName;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private Date orderDate;
 	private String orderManager;
 	@DateTimeFormat(pattern = "yyyy-MM-dd" )
@@ -26,6 +26,7 @@ public class BusinessVO {
 	//주문상세
 	private String orderDtCode;
 	private String prdtName;
+	private String prdtCode;
 	private int orderDtCnt;
 	
 }

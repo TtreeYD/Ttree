@@ -12,34 +12,27 @@
   	
   	<!-- 주문서상세조회 -->
   	<select id="selectOrderDtList" resultType="BusinessVO">
-	  	select d.order_dt_code , p.prdt_name , d.order_dt_cnt , o.dod_date 
+	  	select d.order_dt_code , p.prdt_name , p.prdt_code, d.order_dt_cnt , o.dod_date 
 		  from orders o join dt_order d on o.order_code = d.order_code
 		              join prdt_table p on d.prdt_code = p.prdt_code
 		 where o.order_code = #{orderCode}
   	</select>
   	
+  	<!-- 주문서 상세 함께조회 -->
+  	<!--  <select id="clickOrder" resultType="BusinessVO">
+  		select o.order_code , o.bp_code , b.bp_name , o.dod_date , o.order_manager , d.order_dt_code , d.prdt_code , p.prdt_name , d.order_dt_cnt
+		from orders o 
+		        join dt_order d 
+		            on o.order_code = d.order_code
+		        join business_partner b 
+		            on o.bp_code = b.bp_code
+		        join prdt_table p 
+		            on d.prdt_code = p.prdt_code
+		where o.order_code = #{orderCode}
+  	</select>-->
+  	
+  	
   	<!-- 제품검색 -->
-  	<!-- <select id="getOrder" resultType="BusinessVO">
-  	select o.order_code , o.bp_code , o.dod_date , o.order_manager , b.bp_name , d.order_dt_code , d.prdt_code , d.order_dt_cnt , p.prdt_name
-	  from orders o join dt_order d
-				on o.order_code = d.order_code
-			join business_partner b
-				on o.bp_code = b.bp_code
-			join prdt_table p
-				on d.prdt_code = p.prdt_code
-				
-	 <where>
-	 	<if test="orderCode != null">	 	
-	 		o.order_code like '%'||#{orderCode}||'%'
-	 	</if>
-	 	<if test="orderDate != null ">
-        	and o.order_date between #{orderDate} and #{orderDate}+1 
-	 	</if>
-        <if test="dodDate!= null ">
-        	and o.dod_date between #{dodDate} and #{dodDate}+1
-        </if>	
-	 </where>  
-  	</select> -->
   	
   	<select id="getOrder" resultType="BusinessVO">
   		select o.order_code , b.bp_code , b.bp_name , o.order_date , o.dod_date , o.order_manager
@@ -50,10 +43,10 @@
 		 		o.order_code like '%'||#{orderCode}||'%'
 		 	</if>
 		 	<if test="orderDate != null ">
-		       	and o.order_date between #{orderDate} and #{orderDate}+1 
+		       	and trunc(o.order_date) = trunc(#{orderDate})
 		 	</if>
 		       <if test="dodDate!= null ">
-		       	and o.dod_date between #{dodDate} and #{dodDate}+1
+		       	and trunc(o.dod_date) = trunc(#{dodDate}) 
 		       </if>	
 		</where>
   	</select>
