@@ -18,7 +18,7 @@ public class BusinessVO {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date orderDate;
 	private String orderManager;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@DateTimeFormat(pattern = "yyyy-MM-dd" )
 	@JsonFormat(pattern = "yyyy-MM-dd" , timezone = "Asia/Seoul")
 	private Date dodDate;
 	private String dodState;

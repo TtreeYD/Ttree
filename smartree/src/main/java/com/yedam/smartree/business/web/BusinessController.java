@@ -13,12 +13,13 @@ import com.yedam.smartree.business.service.BusinessService;
 public class BusinessController {
 	@Autowired
 	BusinessService businessService;
-	
+	//주문서조회페이지이동
 	@GetMapping("orderList")
 	public String selectAllOrder() {
 		
 		return "business/orderList";
 	}
+	//주문서관리페이지이동
 	@GetMapping("orderForm")
 	public String selectOrderForm() {
 		return "business/orderForm";

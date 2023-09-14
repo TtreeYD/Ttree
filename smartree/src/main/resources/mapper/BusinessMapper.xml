@@ -17,5 +17,45 @@
 		              join prdt_table p on d.prdt_code = p.prdt_code
 		 where o.order_code = #{orderCode}
   	</select>
+  	
+  	<!-- 제품검색 -->
+  	<!-- <select id="getOrder" resultType="BusinessVO">
+  	select o.order_code , o.bp_code , o.dod_date , o.order_manager , b.bp_name , d.order_dt_code , d.prdt_code , d.order_dt_cnt , p.prdt_name
+	  from orders o join dt_order d
+				on o.order_code = d.order_code
+			join business_partner b
+				on o.bp_code = b.bp_code
+			join prdt_table p
+				on d.prdt_code = p.prdt_code
+				
+	 <where>
+	 	<if test="orderCode != null">	 	
+	 		o.order_code like '%'||#{orderCode}||'%'
+	 	</if>
+	 	<if test="orderDate != null ">
+        	and o.order_date between #{orderDate} and #{orderDate}+1 
+	 	</if>
+        <if test="dodDate!= null ">
+        	and o.dod_date between #{dodDate} and #{dodDate}+1
+        </if>	
+	 </where>  
+  	</select> -->
+  	
+  	<select id="getOrder" resultType="BusinessVO">
+  		select o.order_code , b.bp_code , b.bp_name , o.order_date , o.dod_date , o.order_manager
+  		  from orders o join business_partner b
+  		  				on o.bp_code = b.bp_code
+		<where>
+		 	<if test="orderCode != null">	 	
+		 		o.order_code like '%'||#{orderCode}||'%'
+		 	</if>
+		 	<if test="orderDate != null ">
+		       	and o.order_date between #{orderDate} and #{orderDate}+1 
+		 	</if>
+		       <if test="dodDate!= null ">
+		       	and o.dod_date between #{dodDate} and #{dodDate}+1
+		       </if>	
+		</where>
+  	</select>
   
   </mapper>
