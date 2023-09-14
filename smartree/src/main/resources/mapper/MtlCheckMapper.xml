@@ -4,9 +4,27 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.yedam.smartree.check.mapper.MtlCheckMapper">
   	<select id="Allselect" resultType="MtlCheckVO">
-  		select c.mtl_date, n.mtl_code, n.bp_code, n.mtl_name, c.mtl_chk_cnt, c.mtl_error_cnt , c.mtl_pass_cnt, c.mtl_chk_manager
-		from mtl_chk c join mtl_need n
-		on c.mtl_code = n.mtl_code
+  		SELECT DISTINCT c.mtl_date, n.mtl_code, n.bp_code, n.mtl_name, c.mtl_chk_cnt, c.mtl_error_cnt , c.mtl_pass_cnt, c.mtl_chk_manager
+		FROM mtl_chk c 
+		JOIN mtl_need n ON c.mtl_code = n.mtl_code
   	</select>
   
+  	<select id="mtlselect" resultType="MtlCheckVO">
+  		select *
+      	from mtl_need 
+        <where>
+          <if test="mtlDate != null">
+             mtl_date BETWEEN #{mtlDate} AND #{mtlDate}+1
+          </if>
+          <if test="bpCode != null &amp;&amp; !bpCode.equals('')">
+            AND bp_code = #{bpCode}
+          </if>
+          <if test="mtlCode != null &amp;&amp; !mtlCode.equals('')">
+            AND mtl_code = #{mtlCode}
+          </if>
+          <if test="mtlManager != null &amp;&amp; !mtlManager.equals('')">
+            AND mtl_manager LIKE '%' || #{mtlManager} ||'%'
+          </if>
+      </where>
+  	</select>
   </mapper>

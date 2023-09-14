@@ -20,4 +20,9 @@ public class MtlCheckServiceImpl implements MtlCheckService{
 		return mtlcheckmapper.Allselect();
 	}
 
+	@Override
+	public List<MtlCheckVO> mtlselect(MtlCheckVO vo) {
+		return mtlcheckmapper.mtlselect(vo);
+	}
+
 }

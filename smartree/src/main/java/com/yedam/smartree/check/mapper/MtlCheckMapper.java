@@ -9,4 +9,5 @@ import com.yedam.smartree.check.service.MtlCheckVO;
 public interface MtlCheckMapper {
 
 	public List<MtlCheckVO> Allselect();
+	public List<MtlCheckVO> mtlselect(MtlCheckVO vo);
 }
