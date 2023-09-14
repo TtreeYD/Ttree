@@ -30,4 +30,9 @@ public class MtlCheckServiceImpl implements MtlCheckService{
 		return mtlcheckmapper.insertChkMtl(vo);
 	}
 
+	@Override
+	public List<MtlCheckVO> getMtl(MtlCheckVO vo) {
+		return mtlcheckmapper.getMtl(vo);
+	}
+
 }

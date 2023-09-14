@@ -21,12 +21,12 @@
 			<button type="submit" id="addBtn" class="btn btn-primary">저장</button>
 
 		</div>
-		<div id="grid1"></div>
+		<div style="margin-bottom: 150px;" id="grid1"></div>
 		<div id="grid2"></div>
 
 		<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
 			<div class="modal-dialog modal-xl" role="document">
-				<div class="modal-content" style="height: 500px">
+				<div class="modal-content" style="height: 700px">
 					<div class="container text-center">
 						<div class="modal-header row justify-content-evenly">
 							<div class="col-6">
@@ -66,7 +66,9 @@
 					<div class="modal-body">
 						<div id="grid3"></div>
 					</div>
-					
+					 <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
 				</div>
 				<!-- /.modal-content -->
 			</div>
@@ -76,14 +78,14 @@
 
 		<script>
 		
-        var grid;
-      	var grid2;
-      	var grid3;
+       let modalSearchData;
+	   let mtlDate;
         window.onload=function(){
 	        const grid = new tui.Grid({
 	        	      el: document.getElementById('grid1'),
 	        	      scrollX: false,
 	        	      scrollY: false,
+	        	      contextMenu: null,
 	        	      rowHeaders:["rowNum"],
 	        	      columns: [
 	        	        {
@@ -101,6 +103,7 @@
 			      el: document.getElementById('grid2'),
 			      scrollX: false,
 			      scrollY: false,
+			      contextMenu: null,
 			      rowHeaders:["rowNum"],
 			      columns: [
 			        {
@@ -130,6 +133,7 @@
 			            header: '검사자',
 			            name: 'mtlChkManager',
 					    editor: 'text'
+					   
 			          },
 			      ]
 				});
@@ -137,7 +141,12 @@
 					el: document.getElementById('grid3'),
 					scrollX: false,	
 					scrollY: false,
+					contextMenu: null,
 					rowHeaders:["rowNum"],
+					pageOptions: {
+			            perPage: 5,
+			            useClient: true,
+			          },
 					columns: [
 					{
 						header: '자재',
@@ -178,6 +187,10 @@
 
 			  //모달 조회 클릭이벤트
 			  $('#searchDataBtn').on('click', function() {
+				if(!($('#mtlDate').val())){
+					alert('날짜를 선택하세요')
+					return;
+				}
 				$.ajax({
 					url: '/mtlcheck', 
 					method: 'post',
@@ -192,7 +205,9 @@
 					}
 					,
 					success: function(result) {
-						console.log(result);
+						mtlDate = $('#mtlDate').val()
+						modalSearchData=result
+						console.log(modalSearchData)
 						grid3.resetData(result);
 						setTimeout(() => grid3.refreshLayout(), 200);
 					},
@@ -204,9 +219,9 @@
 
 				//페이지 초기화버튼
 				$('#resetBtn').on('click',function(){
-					var data = grid2.getData();
+					let data = grid2.getData();
 
-					for (var i = 0; i < data.length; i++) {
+					for (let i = 0; i < data.length; i++) {
 						data[i].mtlChkCnt = ''; 
 						data[i].mtlErrorCnt = ''; 
 						data[i].mtlPassCnt = ''; 
@@ -229,19 +244,21 @@
 					if(ev.rowKey==undefined){
 		        		return;
 		        	}
-					let data = grid3.getValue(ev.rowKey,'mtlCode');
+					let data = grid3.getValue(ev.rowKey,'bpCode');
 		
 					console.log(data)
-				$.ajax({
-        		url:'/mtlcheck',
+
+					 	$.ajax({
+        		url:'/mtlget',
         		method:'GET',
         		data:{
-        			mtlCode: data
+        			bpCode: data,
+					mtlDate: mtlDate
         		},
         		success:function(result){
         			console.log(result);
        	            $("#myModal").modal('hide');
-        			grid.resetData(result);
+        			grid.resetData(eval([modalSearchData[ev.rowKey]]));
        	            grid2.resetData(result);
         		},
         		error:function(err){
@@ -250,11 +267,23 @@
         				}
         			})
 				})
+				
+				let unsavedChanges = false;
+				
+				window.addEventListener('beforeunload', function(event) {
+				    if (unsavedChanges) {
+				        const confirmationMessage = '사이트에서 나가시겠습니까? 변경사항이 저장되지 않을 수 있습니다.';
+				        (event || window.event).returnValue = confirmationMessage; 
+				        return confirmationMessage; 
+				    }
+				});
+				grid2.on('beforeChange', function(event) {
+				    unsavedChanges = true;
+				});
 
 				// 저장버튼 이벤트
 				$('#addBtn').on('click',function(e){
-					var data = grid2.getData();
-					console.log(data);
+					let data = grid2.getData();
 					$.ajax({
 					url: '/mtlinsert', 
 					method: 'post',
@@ -263,8 +292,8 @@
 					data : JSON.stringify(data)
 					,
 					success: function(result) {
-						console.log(result);
-					//setTimeout(() => grid3.refreshLayout(), 200);
+						alert(result +" 건 저장완료");
+						unsavedChanges = false;
 					},
 					error: function(err) {
 						console.log(err);

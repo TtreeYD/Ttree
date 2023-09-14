@@ -12,7 +12,7 @@ public class MtlCheckVO {
 
 	private String mtlChkCode;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private Date mtlDate;
 	private String bpCode;
 	private String mtlCode;
@@ -21,7 +21,7 @@ public class MtlCheckVO {
 	private int mtlErrorCnt;
 	private int mtlPassCnt;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
 	private Date mtlChkDate;
 	private String mtlChkManager;
 	private String mtlManager;

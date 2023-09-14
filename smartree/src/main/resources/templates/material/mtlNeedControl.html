@@ -1,10 +1,112 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>자재발주관리</title>
+
 </head>
 <body>
-	<h1>발주관리</h1>
+	<div layout:fragment="content">
+	<h3>자재발주관리</h3>	
+		<a href="" style="margin:20px">안전재고미달목록<a>
+		<div id="mtllowGrid"></div>
+		<br>
+		<div id="mtlNeedGrid"></div>
+		<script>
+			
+			window.onload = function() {
+				// 안전재고미달 자재목록
+				const mtllowGrid = new tui.Grid({
+					el : document.getElementById('mtllowGrid'),
+					scrollX : false,
+					scrollY : true,
+					rowHeaders : [ "rowNum" ],
+					columns : [ {
+						header : '자재코드',
+						name : 'mtlCode'
+					}, {
+						header : '분류',
+						name : 'mtlType'
+					}, {
+						header : '자재이름',
+						name : 'mtlName'
+					}, {
+						header : '현재수량',
+						name : 'mtlCnt'
+					}, {
+						header : '안전재고수량',
+						name : 'mtlSs'
+					}, {
+						header : '수량차',
+						name : 'mtlNow'
+					}   ]
+				});
+				// 발주자재목록
+				const mtlNeedGrid = new tui.Grid({
+					el : document.getElementById('mtlNeedGrid'),
+					scrollX : false,
+					scrollY : true,
+					rowHeaders : [ "rowNum" ],
+					columns : [ {
+						header : '자재코드',
+						name : 'mtlCode'
+					}, {
+						header : '자재발주일',
+						name : 'mtlDate'
+					}, {
+						header : '거래처이름',
+						name : 'bpName'
+					}, {
+						header : '분류',
+						name : 'mtlType'
+					}, {
+						header : '자재이름',
+						name : 'mtlName'
+					}, {
+						header : '수량',
+						name : 'mtlCnt'
+					}, {
+						header : '단위',
+						name : 'mtlUnit'
+					}, {
+						header : '담당자',
+						name : 'mtlManager'
+					}, {
+						header : '납기요청일',
+						name : 'mtlWishDate'
+					}, {
+						header : '상태',
+						name : 'mtlWhere'
+					}   ]
+				});
+				
+				const header = ['mtlCode', 'mtlDate', 'bpName', 'mtlCode', 'mtlName', 'mtlCnt', 'mtlUnit', 'mtlManager','mtlWishDate','mtlWhere']
+
+		        $.ajax({
+		          url: '/mtlNeeds',
+		          method: 'get',
+		          dataType: 'json',
+		          success: function (result) {
+		            //날짜변환
+		            $(result).each(function (idx, obj) {
+		              for (let head of header) {
+
+		                if (head.slice(-4).toLowerCase() == 'date') {
+		                  obj[head] = getDate(obj[head]);
+		                }
+		              }
+		            });
+		            mtlNeedGrid.resetData(eval(result));
+		          },
+		          error: function (err) {
+		            console.log(err);
+		          }
+		        })
+			}
+		</script>
+	</div>
 </body>
 </html>

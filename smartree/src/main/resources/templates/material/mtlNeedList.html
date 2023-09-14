@@ -10,12 +10,32 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<div id="grid"></div>
+	<h3>자재발주목록</h3>	
+		<div>
+			<span>자재정보</span>
+			<select id="mtlPick">
+				<option value="" selected>자재이름</option>
+				<option value="" selected>자재코드</option>
+				<option value="" selected>-전체-</option>
+			</select>
+			<input id="mtlName" placeholder="">
+			<br>
+			<span>상태</span>
+			<select id="mtlStatus">
+				<option value="" selected>주문진행중</option>
+				<option value="" selected>검사완료</option>
+				<option value="" selected>입고완료</option>
+				<option value="" selected>-전체-</option>
+			</select>
+			<br>
+			<button type="button" id="searchBtn" class="btn btn-primary">조회</button>
+		</div>
+		<div id="mtlNeedgrid"></div>
 		<script>
 			var grid;
 			window.onload = function() {
-				const grid = new tui.Grid({
-					el : document.getElementById('grid'),
+				const mtlNeedgrid = new tui.Grid({
+					el : document.getElementById('mtlNeedgrid'),
 					scrollX : false,
 					scrollY : false,
 					rowHeaders : [ "rowNum" ],
@@ -54,7 +74,6 @@
 				
 				const header = ['mtlCode', 'mtlDate', 'bpName', 'mtlCode', 'mtlName', 'mtlCnt', 'mtlUnit', 'mtlManager','mtlWishDate','mtlWhere']
 
-		        // Orders List불러오기
 		        $.ajax({
 		          url: '/mtlNeeds',
 		          method: 'get',
@@ -63,13 +82,12 @@
 		            //날짜변환
 		            $(result).each(function (idx, obj) {
 		              for (let head of header) {
-
 		                if (head.slice(-4).toLowerCase() == 'date') {
 		                  obj[head] = getDate(obj[head]);
 		                }
 		              }
 		            });
-		            grid.resetData(eval(result));
+		            mtlNeedgrid.resetData(eval(result));
 		          },
 		          error: function (err) {
 		            console.log(err);

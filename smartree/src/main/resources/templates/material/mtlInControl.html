@@ -5,35 +5,47 @@
 	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>자재재고목록</title>
+<title>자재입고관리</title>
 
 </head>
 <body>
 	<div layout:fragment="content">
-		<h3>자재재고목록</h3>
-		<div>
-			<span>자재종류</span>
-			<select id="mtlPick">
-				<option value="" selected>원자재</option>
-				<option value="" selected>부자재</option>
-				<option value="" selected>-전체-</option>
-			</select>
-			<input id="mtlName" placeholder="">
-			<br>
-			<span>재고상황</span>
-			<select id="mtlStatus">
-				<option value="" selected>안전</option>
-				<option value="" selected>부족</option>
-				<option value="" selected>-전체-</option>
-			</select>
-			<br>
-			<button type="button" id="searchBtn" class="btn btn-primary">조회</button>
-		</div>
-		<div id="mtlGrid"></div>
+		<h3>자재입고관리</h3>
+		<a href="" style="margin:20px">검사완료 자재목록<a>
+		<div id="mtlCheckGrid"></div>
+		<br>
+		<div id="mtlInGrid"></div>
 		<script>
 			window.onload = function() {
-				const mtlGrid = new tui.Grid({
-					el : document.getElementById('mtlGrid'),
+				// 검사완료목록
+				const mtlCheckGrid = new tui.Grid({
+					el : document.getElementById('mtlCheckGrid'),
+					scrollX : false,
+					scrollY : false,
+					rowHeaders : [ "rowNum" ],
+					columns : [ {
+						header : '자재LOT',
+						name : 'mtlLotNum'
+					}, {
+						header : '자재코드',
+						name : 'mtlCode'
+					}, {
+						header : '자재입고수량',
+						name : 'mtlInCnt'
+					}, {
+						header : '검사완료일',
+						name : 'mtlChkDate'
+					}, {
+						header : '검수담당자',
+						name : 'mtlChkManager'
+					}, {
+						header : '자재검사코드',
+						name : 'mtlChkCode'
+					}   ]
+				});
+				// 아래 리스트
+				const mtlInGrid = new tui.Grid({
+					el : document.getElementById('mtlInGrid'),
 					scrollX : false,
 					scrollY : false,
 					rowHeaders : [ "rowNum" ],
@@ -78,7 +90,7 @@
 		                }
 		              }
 		            });
-		            mtlGrid.resetData(eval(result));
+		            mtlInGrid.resetData(eval(result));
 		          },
 		          error: function (err) {
 		            console.log(err);

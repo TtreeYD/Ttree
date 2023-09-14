@@ -25,4 +25,9 @@ public class EqmInspServiceImpl implements EqmInspService{
 		return eqminspmapper.selectEqmInspInspJudgList(inspJudg);
 	}
 
+	@Override
+	public List<EqmInspVO> searchEqmInsp(String eqmName) {
+		return eqminspmapper.searchEqmInsp(eqmName);
+	}
+
 }
