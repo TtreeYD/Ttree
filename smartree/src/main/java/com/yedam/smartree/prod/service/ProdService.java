@@ -9,4 +9,5 @@ public interface ProdService {
 	public List<BusinessVO> selectOrderAndPrdt();
 //	public List<BusinessVO> selectOneOrderAndPrdt(BusinessVO vo);
 	public int insertProdPlan(RequestVO<ProdVO> vo);
+	public List<ProdVO> searchProdList(ProdVO vo);
 }

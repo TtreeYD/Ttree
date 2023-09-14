@@ -17,7 +17,7 @@
 				<div class="form-outline">
 					<input type="search" id="form1" class="form-control" placeholder="Search"/> 
 				</div>
-				<button type="button" class="btn btn-primary">
+				<button type="button" class="btn btn-primary" id="searchBtn">
 					<i class="fas fa-search"></i>
 				</button>
 			</div>
@@ -26,7 +26,8 @@
     
     
       <script>
-        var grid;
+        let grid;
+        let searchData;
         //const header = ['dtProdPlanCode','prdtName','prodPlanCnt','prodPlanName','prodRank','prodPlanDate','prodPlanSdate','prodPlanEdate']
         window.onload=function(){
 
@@ -81,7 +82,23 @@
 				console.log(err);
 			}
 		})
-		
+		$('#searchBtn').on('click', function(e){
+			$.ajax({
+				url:'/searchProd',
+				method:'post',
+				data : {
+					dtProdPlanCode : $('#form1').val()
+				},
+				success:function(result){
+					searchData = result;
+					grid.resetData(result);
+					setTimeout(() => grid.refreshLayout(), 800);
+				},
+				error:function(err){
+					console.log(err);
+				}
+			})
+		})
 	  }
 	  
     </script>

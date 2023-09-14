@@ -13,7 +13,9 @@
 <body>
 	<div layout:fragment="content">
 	<label>계획명 : </label>
-	<input type="text" name="prodPlanName" id="prodPlanName">
+	<input type="text" name="prodPlanName" id="prodPlanName"><br>
+	<label>담당자 : </label>
+	<input type="text" name="prodName" id="prodName"><br>
 	<label>생산계획일자 : </label>
 	<input type="date" name="prodPlanDate" id="prodPlanDate">
 	<label>생산시작일자 : </label>
@@ -58,6 +60,7 @@
 	</div><!-- /.modal -->
 
       <script>
+      	let selectValue;
         let grid, grid2, grid3, grid4;
         const header = ['prodPlanName','prodPlanDate','prodPlanSdate','prodPlanEdate'];
         
@@ -81,11 +84,7 @@
 	          name: 'prodPlanCnt',
 	          editor : 'text'
 	        },
-	        {
-	          header: '계획담당자',
-	          name: 'prodName',
-	          editor : 'text'
-	        },
+	        
 	        {
 	          header: '순위',
 	          name: 'prodRank',
@@ -205,7 +204,8 @@
 					prodPlanName : $('#prodPlanName').val(),
 					prodPlanDate : $('#prodPlanDate').val(),
 					prodPlanSdate : $('#prodPlanSdate').val(),
-					prodPlanEdate : $('#prodPlanEdate').val()
+					prodPlanEdate : $('#prodPlanEdate').val(),
+					prodName : $('#prodName').val()
 			}
 			console.log(data);
 			
@@ -224,6 +224,7 @@
 	      			console.log(err)
 	      		}
     		})
+    		
 		})
 
 		// 주문서 모달창 더블클릭
@@ -244,8 +245,11 @@
       		},
       		success:function(result){
       			console.log(result);
+      			//selectValue = result;
    	            $("#myModal").modal('hide');
-   				grid.resetData(result);
+   	         	grid.resetData(result)
+   	         	//grid.resetData([selectValue[ev.rowKey]])
+   				
       		},
       		error:function(err){
       			
