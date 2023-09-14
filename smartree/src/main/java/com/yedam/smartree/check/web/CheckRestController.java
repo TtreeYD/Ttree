@@ -29,10 +29,6 @@ public class CheckRestController {
 		return mtlcheckservice.selectAll();
 	}
 	
-	@GetMapping("/mtlcheck")
-	public List<MtlCheckVO> mtlgetcheck(MtlCheckVO vo){
-		return mtlcheckservice.selectMtl(vo);
-	}
 	
 	@PostMapping("/mtlcheck")
 	@ResponseBody
@@ -42,10 +38,36 @@ public class CheckRestController {
 		return mtlcheckservice.selectMtl(vo);
 	}
 	
+	@GetMapping("/mtlget")
+	public List<MtlCheckVO> mtlgetcheck(MtlCheckVO vo){
+		return mtlcheckservice.selectMtl(vo);
+	}
+	
+	
 	@ResponseBody
 	@PostMapping("/mtlinsert")
-	public int mtlinsert(@RequestBody MtlCheckVO vo) {
-		
-		return mtlcheckservice.insertChkMtl(vo);
+	public int mtlinsert(@RequestBody List<MtlCheckVO> checkList) {
+		int cnt = 0;
+		System.out.println(checkList);
+		for(MtlCheckVO vo : checkList) {
+			int result = mtlcheckservice.insertChkMtl(vo);
+			if(result>0) cnt++;
+		}
+		return cnt;
 	}
+	
+	//다건 삭제
+	//   @PostMapping("empDelete")
+	 //  public List<String> empsDelete(@RequestBody List<EmpVO> empList){
+	   //   List<String> delList = new ArrayList<>();
+	     // 
+	     // for(EmpVO empVO : empList) {
+	      //   int result = empMapper.deleteEmpInfo(empVO);
+	       //  if(result > 0) {
+	        //    delList.add(empVO.getEmployeeId());
+	      //   }
+	     // }
+	      
+	    //  return delList;
+	  // }
 }
