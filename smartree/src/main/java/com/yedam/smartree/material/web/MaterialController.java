@@ -35,4 +35,14 @@ public class MaterialController {
 		
 		return "material/mtlOutList";
 	}
+	// 발주관리 
+	@GetMapping("/mtlNeedControl")
+	public String controlNeedList() {
+		return "material/mtlNeedControl";
+	}
+	// 입고관리 controlInList()
+	@GetMapping("/mtlInControl")
+	public String controlInList() {
+		return "material/mtlInControl";
+	}
 }

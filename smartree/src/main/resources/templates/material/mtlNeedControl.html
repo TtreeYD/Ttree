@@ -1,10 +1,82 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymeleaf.org/">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>자재발주관리</title>
+
 </head>
 <body>
-	<h1>발주관리</h1>
+	<div layout:fragment="content">
+		<div id="grid"></div>
+		<script>
+			var grid;
+			window.onload = function() {
+				const grid = new tui.Grid({
+					el : document.getElementById('grid'),
+					scrollX : false,
+					scrollY : false,
+					rowHeaders : [ "rowNum" ],
+					columns : [ {
+						header : '자재코드',
+						name : 'mtlCode'
+					}, {
+						header : '자재발주일',
+						name : 'mtlDate'
+					}, {
+						header : '거래처이름',
+						name : 'bpName'
+					}, {
+						header : '분류',
+						name : 'mtlType'
+					}, {
+						header : '자재이름',
+						name : 'mtlName'
+					}, {
+						header : '수량',
+						name : 'mtlCnt'
+					}, {
+						header : '단위',
+						name : 'mtlUnit'
+					}, {
+						header : '담당자',
+						name : 'mtlManager'
+					}, {
+						header : '납기요청일',
+						name : 'mtlWishDate'
+					}, {
+						header : '상태',
+						name : 'mtlWhere'
+					}   ]
+				});
+				
+				const header = ['mtlCode', 'mtlDate', 'bpName', 'mtlCode', 'mtlName', 'mtlCnt', 'mtlUnit', 'mtlManager','mtlWishDate','mtlWhere']
+
+		        // Orders List불러오기
+		        $.ajax({
+		          url: '/mtlNeeds',
+		          method: 'get',
+		          dataType: 'json',
+		          success: function (result) {
+		            //날짜변환
+		            $(result).each(function (idx, obj) {
+		              for (let head of header) {
+
+		                if (head.slice(-4).toLowerCase() == 'date') {
+		                  obj[head] = getDate(obj[head]);
+		                }
+		              }
+		            });
+		            grid.resetData(eval(result));
+		          },
+		          error: function (err) {
+		            console.log(err);
+		          }
+		        })
+			}
+		</script>
+	</div>
 </body>
 </html>

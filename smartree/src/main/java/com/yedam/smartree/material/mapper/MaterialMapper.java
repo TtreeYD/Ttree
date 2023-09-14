@@ -14,4 +14,8 @@ public interface MaterialMapper {
 	public List<MaterialVO> selectMtlList();
 	// 출고목록 전체조회
 	public List<MaterialVO> selectMtlOutList();
+	// 발주관리 전체출력
+	public List<MaterialVO> controlNeedList();
+	// 입고관리 전체출력
+	public List<MaterialVO> controlInList();
 }
