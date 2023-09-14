@@ -29,7 +29,7 @@
   		on o.bp_code = b.bp_code
   	</select>
   	
-  	<insert id="insertProdPlan" parameterType="ProdVO">
+  	<!-- <insert id="insertProdPlan" parameterType="ProdVO">
   		insert into prod_plan 
   		values (
   			'PPN' || LPAD(prod_plan_seq.NEXTVAL, 7, '0'),
@@ -38,7 +38,60 @@
   			#{prodPlanDate},
   			#{prodName},
   			#{prodPlanSdate},
-  			#{prodPlanEdate} )
+  			#{prodPlanEdate} )  			
+  		
   	</insert>
-  
+  	
+	<insert id="insertDtProdPlan" parameterType="ProdVO">
+		insert into dt_prod_plan
+  		values(
+  			'PPD' || LPAD(dt_prod_plan_seq.NEXTVAL, 7, '0'),
+  			#{prodPlanCode},
+  			#{prdtCode},
+  			#{prodPlanCnt},
+  			#{prodPlanNote},
+  			#{prodRank}
+  		)
+	</insert> -->
+	<insert id="insertProdPlan" parameterType="ProdVO">
+    <selectKey keyProperty="prodPlanCode" resultType="String" order="AFTER">
+        select 'PPN' || LPAD(prod_plan_seq.CURRVAL, 7, '0') as prodPlanCode from dual
+    </selectKey>
+    insert into prod_plan 
+    values (
+        'PPN' || LPAD(prod_plan_seq.NEXTVAL, 7, '0'),
+        #{orderCode},
+        #{prodPlanName},
+        #{prodPlanDate},
+        #{prodName},
+        #{prodPlanSdate},
+        #{prodPlanEdate}
+    )
+	</insert>
+	
+	<insert id="insertDtProdPlan" parameterType="ProdVO">
+	    insert into dt_prod_plan
+	    values(
+	        'PPD' || LPAD(dt_prod_plan_seq.NEXTVAL, 7, '0'),
+	        #{prodPlanCode},
+	        #{prdtCode},
+	        #{prodPlanCnt},
+	        #{prodPlanNote},
+	        #{prodRank}
+	    )
+	</insert>
+	
+  	<select id="searchProdPlan" resultType="ProdVO">
+  		select *
+		from dt_prod_plan dtp join prod_plan p 
+		on dtp.prod_plan_code = p.prod_plan_code
+		join  prdt_table pt
+		on dtp.prdt_code = pt.prdt_code
+		<where>
+			<if test="dtProdPlanCode != null">
+				dtp.dt_prod_plan_code like '%' || #{dtProdPlanCode} || '%'
+			</if> 
+			
+		</where>
+  	</select>
   </mapper>

@@ -18,4 +18,6 @@ public interface ProdMapper {
 	public int insertProdPlan(ProdVO vo);
 	
 	public int insertDtProdPlan(ProdVO vo);
+	
+	public List<ProdVO> searchProdPlan(ProdVO vo);
 }

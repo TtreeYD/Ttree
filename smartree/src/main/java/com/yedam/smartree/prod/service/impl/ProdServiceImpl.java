@@ -39,10 +39,16 @@ public class ProdServiceImpl implements ProdService {
 		
 		// 계획 상세 저장하는 for문
 		for(int i = 0; i < vo.getList().size(); i++) {
+			System.out.println(vo.getList().toString());
 			prodMapper.insertDtProdPlan(vo.getList().get(i));
 			cnt++;
 		}
 		return cnt;
+	}
+
+	@Override
+	public List<ProdVO> searchProdList(ProdVO vo) {
+		return prodMapper.searchProdPlan(vo);
 	}
 
 	
