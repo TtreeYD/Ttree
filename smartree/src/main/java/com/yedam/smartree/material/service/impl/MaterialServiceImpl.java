@@ -30,5 +30,15 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialVO> selectMtlOutList() {
 		return materialMapper.selectMtlOutList();
 	}
+	// 발주관리 전체출력
+	@Override
+	public List<MaterialVO> controlNeedList() {
+		return materialMapper.controlNeedList();
+	}
+	// 입고관리 전체출력
+	@Override
+	public List<MaterialVO> controlInList() {
+		return materialMapper.controlInList();
+	}
 
 }
