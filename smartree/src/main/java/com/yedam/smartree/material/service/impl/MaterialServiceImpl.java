@@ -15,16 +15,17 @@ public class MaterialServiceImpl implements MaterialService {
 	@Autowired
 	MaterialMapper materialMapper;
 	
+	//발주목록 전체조회
 	@Override
 	public List<MaterialVO> selectNeedList() {
 		return materialMapper.selectNeedList();
 	}
-
+	// 재고목록 전체조회
 	@Override
 	public List<MaterialVO> selectMtlList() {
 		return materialMapper.selectMtlList();
 	}
-
+	// 출고목록 전체조회
 	@Override
 	public List<MaterialVO> selectMtlOutList() {
 		return materialMapper.selectMtlOutList();

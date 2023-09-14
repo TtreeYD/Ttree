@@ -6,26 +6,30 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.yedam.smartree.material.service.MaterialService;
-
+/*
+	개발자   : 남태원
+	개발일자  : 2023/09/13
+			 자재관리
+*/
 @Controller
 @RequestMapping("/material")
 public class MaterialController {
 	@Autowired
 	MaterialService materialService;
 	
-	// 조회기능 목록
-	@GetMapping("/needList")
+	// 발주목록 전체조회
+	@GetMapping("/mtlNeedList")
 	public String selectNeedList() {
 		
-		return "material/needList";
+		return "material/mtlNeedList";
 	}
-	
+	// 재고목록 전체조회
 	@GetMapping("/mtlList")
 	public String selectMtlList() {
 		
 		return "material/mtlList";
 	}
-	
+	// 출고목록 전체조회
 	@GetMapping("/mtlOutList")
 	public String selectMtlOutList() {
 		
