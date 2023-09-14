@@ -171,6 +171,7 @@
 						console.log(err);
 					}
 				})
+				
 			    $('#searchBtn').on('click', function(){
                      setTimeout(() => grid3.refreshLayout(), 200);
                  })
@@ -248,6 +249,27 @@
         		console.log(err)
         				}
         			})
+				})
+
+				// 저장버튼 이벤트
+				$('#addBtn').on('click',function(e){
+					var data = grid2.getData();
+					console.log(data);
+					$.ajax({
+					url: '/mtlinsert', 
+					method: 'post',
+					dataType: 'json',
+					contentType : 'application/json',
+					data : JSON.stringify(data)
+					,
+					success: function(result) {
+						console.log(result);
+					//setTimeout(() => grid3.refreshLayout(), 200);
+					},
+					error: function(err) {
+						console.log(err);
+					}
+					});
 				})
 			}
 
