@@ -26,8 +26,11 @@
 						header : '자재발주일',
 						name : 'mtlDate'
 					}, {
-						header : '거래처코드',
-						name : 'bpCode'
+						header : '거래처이름',
+						name : 'bpName'
+					}, {
+						header : '분류',
+						name : 'mtlType'
 					}, {
 						header : '자재이름',
 						name : 'mtlName'
@@ -49,7 +52,7 @@
 					}   ]
 				});
 				
-				const header = ['mtlCode', 'mtlDate', 'bpCode', 'mtlName', 'mtlCnt', 'mtlUnit', 'mtlManager','mtlWishDate','mtlWhere']
+				const header = ['mtlCode', 'mtlDate', 'bpName', 'mtlCode', 'mtlName', 'mtlCnt', 'mtlUnit', 'mtlManager','mtlWishDate','mtlWhere']
 
 		        // Orders List불러오기
 		        $.ajax({
