@@ -1,23 +1,59 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{layout/layout}">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
 
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
 </head>
 
 <body>
 	<div layout:fragment="content">
 		<div>
 			<select id="deptInfo">
-				<option value="" selected>전체</option>
-			</select> <input>
-			<div id="empList"></div>
+				<option value="" selected>부서정보</option>
+			</select>
+			<input id="searchName" placeholder="이름">
+			<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
+			<button type="button" id="addBtn" class="btn btn-primary" style="float: right; margin-right:10px;"
+				data-toggle="modal" data-target="#empAddModal">사원등록</button>
 		</div>
+		<br>
+		<div id="empList"></div>
 
+
+		<div class="modal fade " id="empAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+			aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">사원등록</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<label>이름</label>
+						<input id="empName" name="empName">
+						<br>
+						<label>부서</label>
+						<select id="empDept" name="empDept">
+							<option value="" selected>부서정보</option>
+						</select>
+						<br>
+						<label>직급</label>
+						<input id="empClass" name="empClass">
+						<br>
+						<label>연락처</label>
+						<input id="empPhone" name="empPhone">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary">등록</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
 		<script>
 			$.ajax({
 				url: "/selectCommonCode",
@@ -25,13 +61,12 @@
 					codeType: 1
 				},
 				success: result => {
-					let selTag = $('#deptInfo');
 					$(result).each(function (idx, dept) {
 						if (dept['codeName'] == '관리자') return;
 						let optTag = $('<option/>');
 						optTag.val(dept['codeId']);
 						optTag.text(dept['codeName']);
-						selTag.append(optTag);
+						$('#deptInfo, #empDept').append(optTag);
 					})
 				},
 				error: err => console.log(err)
@@ -42,9 +77,7 @@
 			const grid = new Grid({
 				el: document.getElementById('empList'),
 				scrollX: false,
-		      scrollY: false,
-				columns: [
-					{
+				columns: [{
 						header: 'ID',
 						name: 'empId'
 					},
@@ -71,27 +104,48 @@
 					},
 				],
 			});
+
 			getEmpList();
-			
-			$('#deptInfo').on('change', function(){
-				let dept = $('#deptInfo').val();
-				getEmpList(dept);
+
+			$('#deptInfo').on('change', function () {
+				searchEmp();
 			})
 
-			function getEmpList(empDept){
+			$('#searchBtn').on('click', function () {
+				searchEmp();
+			})
+
+			$('#searchName').on('keypress', function (ev) {
+				if (ev.which == 13) {
+					event.preventDefault();
+					searchEmp();
+				}
+			})
+
+			function getEmpList(empDept, empName) {
 				$.ajax({
 					url: '/selectEmpList',
 					data: {
-						empDept: empDept
+						empDept: empDept,
+						empName: empName
 					},
 					success: result => {
 						console.log(result)
-						 grid.resetData(eval(result));
+						grid.resetData(eval(result));
 					},
 					error: err => console.log(err)
 				})
 			}
-			
+
+			function searchEmp() {
+				let dept = $('#deptInfo').val();
+				if ($('#searchName').val()) {
+					let empName = $('#searchName').val()
+					getEmpList(dept, empName);
+				} else {
+					getEmpList(dept);
+				}
+			}
 		</script>
 	</div>
 </body>

@@ -9,4 +9,6 @@ import com.yedam.smartree.eqm.service.EqmVO;
 @Mapper
 public interface EqmMapper {
 	public List<EqmVO> selectEqmList();
+	public List<EqmVO> selectEqmUcheckList(String eqmUcheck);
+	public List<EqmVO> searchEqm(String eqmName);
 }

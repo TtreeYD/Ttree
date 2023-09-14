@@ -1,41 +1,37 @@
 <!DOCTYPE html>
-<html  xmlns="http://www.w3.org/1999/xhtml"
+<html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>설비조회</title>
+<title>설비점검조회</title>
 </head>
 <body>
-
-
-<div layout:fragment="content">
-	<h2>설비조회</h2>
+	<div layout:fragment="content">
+	<h2>설비점검조회</h2>
 	
 	<div> 
 		
-    <input type="radio" id="all" name="eqmUcheck" value="" checked />
+    <input type="radio" id="all" name="inspJudg" value="" checked />
     <label for="all">전체</label>
  
- 	<input type="radio" id="y" name="eqmUcheck" value="y" />
-    <label for="y">사용</label>
+ 	<input type="radio" id="y" name="inspJudg" value="y" />
+    <label for="y">적합</label>
     
-    <input type="radio" id="n" name="eqmUcheck" value="n"/>
-    <label for="n">미사용</label>
+    <input type="radio" id="n" name="inspJudg" value="n"/>
+    <label for="n">부적합</label>
 	</div>
 	
 	<div style="padding-bottom: 10px;">
-	<form name="search-form">
 	<label>설비명  :  </label>
-	<input type= "text" name="eqmName">
-	<button type="button" onclick="getSearch()" id="searchBtn" class="btn btn-primary">검색</button>
-	</form>
+	<input type= "text">
+	<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
 	</div>
 	
 	<div id="grid"></div>
 	
-<script>
+	    <script>
         var grid;
         window.onload=function(){
    	
@@ -54,12 +50,16 @@
           name: 'eqmName'
         },
         {
-            header: '사용여부',
-            name: 'eqmUcheck'
+            header: '담당자',
+            name: 'inptManager'
         },
         {
-              header: '점검주기',
-              name: 'inspCycle'
+              header: '판정',
+              name: 'inspJudg'
+        },
+        {
+            header: '수리일시',
+            name: 'repairDate'
         },
         {
             header: '최근점검일시',
@@ -70,35 +70,35 @@
             name: 'nextInspDate'
       },
       {
-          header: '제조업체',
-          name: 'mfgComp'
+          header: '점검내역',
+          name: 'inspDt'
  	   },
  	   {
-        header: '제조일자',
-        name: 'mfgDate'
+        header: '조치내용',
+        name: 'actionDt'
   }
       ]
     });
-    getEqmList();
+    getEqmInspList();
 
 	
 	$('#all').on('click',function(){
 		
-		getEqmList();
+		getEqmInspList();
 	})
 	
 	$('#y').on('click',function(){
-		let ucheck= $('#y').val();
-		getEqmUcheckList(ucheck);
+		let judg= $('#y').val();
+		getEqmInspJudgList(judg);
 	})
 	$('#n').on('click',function(){
-		let ucheck= $('#n').val();
-		getEqmUcheckList(ucheck);
+		let judg= $('#n').val();
+		getEqmInspJudgList(judg);
 	})
 	
-    function getEqmList(){
+    function getEqmInspList(){
     	$.ajax({
-    		url:'/eqms',
+    		url:'/eqmInsps',
     		method:'get',
         dataType:'json',
     		success:function(result){
@@ -112,10 +112,10 @@
     }
 
 	
-	function getEqmUcheckList(eqmUcheck){
+	function getEqmInspJudgList(inspJudg){
 		$.ajax({
-			url:'/eqmUcheck',
-			data: {eqmUcheck:eqmUcheck},
+			url:'/eqmInspJudg',
+			data: {inspJudg:inspJudg},
 			success: result=>{
 				//console.log(eqmUcheck)
 				//console.log(result)
@@ -125,21 +125,10 @@
 		})
 	}
 	
-	function getSearch(){
-		$.ajax({
-			url:'/eqmName',
-			data: $("form[name=search-form]").serialize(),
-			success: result =>{
-				console.log(result);
-			},
-			error: err => console.log(err)
-		})
-	}
     
   }
           
     </script>
-	
-</div>
+	</div>
 </body>
 </html>

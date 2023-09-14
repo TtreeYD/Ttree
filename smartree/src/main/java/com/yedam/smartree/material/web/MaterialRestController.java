@@ -8,7 +8,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.material.service.MaterialService;
 import com.yedam.smartree.material.service.MaterialVO;
-
+/*
+개발자   : 남태원
+개발일자  : 2023/09/13
+		 자재관리
+*/
 @RestController
 public class MaterialRestController {
 	

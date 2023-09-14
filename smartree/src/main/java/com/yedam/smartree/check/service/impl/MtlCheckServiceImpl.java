@@ -16,13 +16,18 @@ public class MtlCheckServiceImpl implements MtlCheckService{
 	MtlCheckMapper mtlcheckmapper;
 	
 	@Override
-	public List<MtlCheckVO> Allselect() {
-		return mtlcheckmapper.Allselect();
+	public List<MtlCheckVO> selectAll() {
+		return mtlcheckmapper.selectAll();
 	}
 
 	@Override
-	public List<MtlCheckVO> mtlselect(MtlCheckVO vo) {
-		return mtlcheckmapper.mtlselect(vo);
+	public List<MtlCheckVO> selectMtl(MtlCheckVO vo) {
+		return mtlcheckmapper.selectMtl(vo);
+	}
+
+	@Override
+	public int insertChkMtl(MtlCheckVO vo) {
+		return mtlcheckmapper.insertChkMtl(vo);
 	}
 
 }

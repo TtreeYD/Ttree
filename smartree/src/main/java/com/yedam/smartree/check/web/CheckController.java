@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.yedam.smartree.check.service.MtlCheckService;
 
-/*
- 개발자:정호현
- 개발일자:23/09/14
- 영업관리
+
+
+ /* 자재관리
+ 개발일자 2023/09/14 
+ 개발자 안영진
  */
+
 @RequestMapping("/check")
 @Controller
 public class CheckController {

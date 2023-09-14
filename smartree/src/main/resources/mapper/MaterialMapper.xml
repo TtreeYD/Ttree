@@ -6,7 +6,12 @@
     
     <!-- 자재발주 전체조회 -->
   	<select id="selectNeedList" resultType="MaterialVO">
-  		select * from mtl_need
+  		SELECT n.mtl_code , n.mtl_date, b.bp_name , t.mtl_type , t.mtl_name , n.mtl_cnt , t.mtl_unit , n.mtl_manager , n.mtl_wish_date , n.mtl_where
+  		FROM mtl_need n
+        JOIN mtl_table t
+        ON n.mtl_code = t.mtl_code
+        JOIN business_partner b
+        ON n.bp_code = b.bp_code
   	</select>
   	
   	<!-- 재고목록 전체조회 -->

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="com.yedam.smartree.eqm.mapper.EqmInspMapper">
+  	<select id="selectEqmInspList" resultType="EqmInspVO">
+  	    SELECT e.eqm_code,e.eqm_name,i.insp_manager,i.insp_judg,i.repair_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE,i.insp_dt,i.action_dt
+		FROM eqm e join EQM_INSP i
+  		  				ON e.eqm_code = i.eqm_code
+  	 					 
+  		ORDER BY eqm_code
+  	</select>
+  	
+  	<select id="selectEqmInspInspJudgList" resultType="EqmInspVO">
+  	 SELECT e.eqm_code,e.eqm_name,i.insp_manager,i.insp_judg,i.repair_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE,i.insp_dt,i.action_dt
+     FROM eqm e join EQM_INSP i
+  		  			ON e.eqm_code = i.eqm_code
+  	 	<where>
+  			<if test="inspJudg != null and !inspJudg.equals('')">
+  				insp_judg = #{inspJudg}	
+  			</if>
+  		</where>  		
+  	 					 
+  	ORDER BY eqm_code
+  	</select>
+  </mapper>

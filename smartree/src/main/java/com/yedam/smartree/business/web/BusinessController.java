@@ -7,7 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.yedam.smartree.business.service.BusinessService;
-
+/*
+개발자:정호현
+개발일자:23/09/14
+영업관리
+*/
 @Controller
 @RequestMapping("/business")
 public class BusinessController {
