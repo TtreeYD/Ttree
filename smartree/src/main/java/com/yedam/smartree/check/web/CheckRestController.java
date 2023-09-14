@@ -56,5 +56,13 @@ public class CheckRestController {
 		return cnt;
 	}
 	
+	@GetMapping("/mtlName")
+	public List<MtlCheckVO> getMtlName(String mtlName){
+		return mtlcheckservice.searchMtl(mtlName);
+	}
+	@GetMapping("/mtlDate")
+	public List<MtlCheckVO> getMtlDate(String mtlDate){
+		return mtlcheckservice.searchMtlDate(mtlDate);
+	}
 	
 }

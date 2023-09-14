@@ -21,6 +21,11 @@ public class CheckController {
 	@Autowired
 	MtlCheckService mtlcheckservice;
 	
+	@GetMapping("/check")
+	public String selectMtlAllCheck() {
+		return "check/check";
+	}
+	
 	@GetMapping("mtlCheck")
 	public String selectAllCheck() {
 		
