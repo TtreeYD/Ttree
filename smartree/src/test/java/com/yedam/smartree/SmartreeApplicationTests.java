@@ -12,6 +12,8 @@ class SmartreeApplicationTests {
 	@Test
 	void contextLoads() {
 		String[] datas = {
+				"net.sf.log4jdbc.sql.jdbcapi.DriverSpy",
+				"jdbc:log4jdbc:oracle:thin:@43.201.167.53/xe"
 		};
 		for(String data : datas) {
 			String enyData = jasyptStringEncryptor.encrypt(data);
