@@ -22,5 +22,13 @@ public class BusinessServiceImpl implements BusinessService{
 		return businessmapper.selectOrderDtList(businessVO);
 		
 	}
+	@Override
+	public List<BusinessVO> getOrder(BusinessVO businessVO) {
+		return businessmapper.getOrder(businessVO);
+	}
+//	@Override
+//	public List<BusinessVO> clickOrder(BusinessVO businessVO) {
+//		return businessmapper.clickOrder(businessVO);
+//	}
 
 }
