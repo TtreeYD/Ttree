@@ -12,7 +12,8 @@
 		<h2 style="height:0px">주문정보</h2>
 		<div class="btn-group" role="group" aria-label="Basic example" style="float : right;">
 			<button class="btn btn-primary" style="float:right" id="searchOrder">검색</button>
-			<button class="btn btn-primary" style="float:right">저장</button>
+			<button class="btn btn-primary" style="float:right" id="resetBtn">초기화</button>
+			<button class="btn btn-primary" style="float:right" id="saveBtn">저장</button>
 			<button class="btn btn-primary" style="float:right">새주문서</button>
 			<button class="btn btn-primary" style="float:right">삭제</button>
 		</div>
@@ -42,7 +43,7 @@
 						<button type="button" id="searchDataBtn" class="btn btn-primary"
 							style="margin: 5px;">조회</button>
 						<button type="button" id="resetModalBtn" class="btn btn-primary"
-							style="margin: 4px;">초기화</button>
+							style="margin: 4px;" >초기화</button>
 					</div>
 					<div class="modal-body">
 						<div id="searchModal"></div>
@@ -58,7 +59,9 @@
 
 		<script>
 			let searchModalData;
+			
 			$(document).ready(function () {
+				//주문그리드
 				const order = new tui.Grid({
 					el: document.getElementById('order'),
 					scrollX: false,
@@ -79,17 +82,22 @@
 						{
 							header: '주문일자',
 							name: 'orderDate',
-						},
+							editor: 'datePicker'
+				        },
+						
 						{
 							header: '납기일자',
 							name: 'dodDate',
+							editor: 'datePicker'
 						},
 						{
 							header: '담당자',
 							name: 'orderManager',
+							editor: 'text'
 						},
 					]
 				})
+				//상세보기그리드
 				const dtOrder = new tui.Grid({
 					el: document.getElementById('dtOrder'),
 					scrollX: false,
@@ -107,15 +115,17 @@
 						{
 							header: '제품코드',
 							name: 'prdtCode',
+							
 						},
 						{
 							header: '수량',
 							name: 'orderDtCnt',
+							editor: 'text'
 						},
 
 					]
 				});
-
+				//모달그리드
 				const searchModal = new tui.Grid({
 					el: document.getElementById('searchModal'),
 					scrollX: false,
@@ -148,29 +158,15 @@
 					]
 				})
 				
-
+				//검색 클릭이벤트-모달띄우기
 				$('#searchOrder').on('click', function () {
 					$('#ordercd').val('');
 					$('#plsdate').val('');
 					$('#doddate').val('');
 					$("#myModal").modal('show');
-					/* $.ajax({
-						url: '/orders',
-						method: 'get',
-						dataType: 'json',
-						success: function (result) {
-							console.log(result);
-
-							searchModal.resetData(result);
-							setTimeout(() => searchModal.refreshLayout(), 200);
-							$("#myModal").modal('show');
-
-						},
-						error: function (err) {
-							console.log(err);
-						}
-					}) */
-				})
+					
+				});
+				//조회 처리이벤트
 				$('#searchDataBtn').on('click',function(ev){		
 					$.ajax({
 						url:'/selectOrder',
@@ -193,8 +189,9 @@
 						}
 					})
 						
-					})
-
+					});
+				
+					//해당열 더블클릭이벤트
 					searchModal.on('dblclick',(ev)=>{
 						if(ev.rowKey==undefined){
 			        		return;
@@ -209,11 +206,11 @@
 								orderCode:data
 							},
 							success:function(result){
-								console.log(result);
-								$('myModal').modal('hide');
-								console.log([searchModalData[ev.rowKey]])
+								$('#myModal').modal('hide');
 								order.resetData(eval([searchModalData[ev.rowKey]]));
 								dtOrder.resetData(result);
+								searchModalData = searchModalData[ev.rowKey];//불러온 해당 열 변수에 저장
+								
 							},
 							error:function(err){
 								console.log(err)
@@ -222,7 +219,39 @@
 							
 						})
 					})
-
+					//초기화 - 주문서 ,주문서상세 초기화
+					$('#resetBtn').on('click',function(){						
+						order.resetData([]);
+						dtOrder.resetData([]);
+					});
+					//모달창초기화 - 검색input창 초기화
+					$('#resetModalBtn').on('click',function(){	
+						searchModal.resetData([]);
+						$('#ordercd').val('');
+						$('#plsdate').val('');
+						$('#doddate').val('');
+					});
+					$('#saveBtn').on('click',function(){
+						let editdata={};
+						editdata.vo = order.getData();
+						editdata.list = dtOrder.getData();
+						console.log(editdata);
+						if(searchModalData.orderCode != ''){//수정
+							/* $.ajax({
+								url:'',
+								method:'POST',
+								dataType: 'json',
+								contentType : 'application/json',
+								data:JSON.stringify(){
+									
+								}
+							}) */
+						}else{//등록
+							
+						}
+						
+					});
+					
 				})
 
 			
