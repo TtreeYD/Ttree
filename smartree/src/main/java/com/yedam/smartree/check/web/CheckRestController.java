@@ -56,18 +56,5 @@ public class CheckRestController {
 		return cnt;
 	}
 	
-	//다건 삭제
-	//   @PostMapping("empDelete")
-	 //  public List<String> empsDelete(@RequestBody List<EmpVO> empList){
-	   //   List<String> delList = new ArrayList<>();
-	     // 
-	     // for(EmpVO empVO : empList) {
-	      //   int result = empMapper.deleteEmpInfo(empVO);
-	       //  if(result > 0) {
-	        //    delList.add(empVO.getEmployeeId());
-	      //   }
-	     // }
-	      
-	    //  return delList;
-	  // }
+	
 }
