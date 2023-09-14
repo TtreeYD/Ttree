@@ -6,12 +6,17 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.yedam.smartree.business.service.BusinessVO;
 
-@Mapper
+
 public interface BusinessMapper {
 
 	public List<BusinessVO> selectOrderList();
 	public List<BusinessVO> selectOrderDtList(BusinessVO businessVO);
 	public List<BusinessVO> getOrder(BusinessVO businessVO);
 	//public List<BusinessVO> clickOrder(BusinessVO businessVO);
+	
+	//주문 등록
+	public void insertOrder(BusinessVO vo);
+	//주문상세등록
+	public void insertDtOrder(BusinessVO businessVO);
 	
 }
