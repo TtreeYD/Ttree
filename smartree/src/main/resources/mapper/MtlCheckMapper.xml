@@ -16,13 +16,13 @@
           <if test="mtlDate != null">
              mtl_date BETWEEN #{mtlDate} AND #{mtlDate}+1
           </if>
-          <if test="bpCode != null &amp;&amp; !bpCode.equals('')">
+          <if test="bpCode != null and !bpCode.equals('')">
             AND bp_code = #{bpCode}
           </if>
-          <if test="mtlCode != null &amp;&amp; !mtlCode.equals('')">
+          <if test="mtlCode != null and !mtlCode.equals('')">
             AND mtl_code = #{mtlCode}
           </if>
-          <if test="mtlManager != null &amp;&amp; !mtlManager.equals('')">
+          <if test="mtlManager != null and !mtlManager.equals('')">
             AND mtl_manager LIKE '%' || #{mtlManager} ||'%'
           </if>
       </where>
