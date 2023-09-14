@@ -26,11 +26,11 @@
 	</div>
 	
 	<div style="padding-bottom: 10px;">
-	<form name="search-form">
+	
 	<label>설비명  :  </label>
-	<input type= "text" name="eqmName">
-	<button type="button" onclick="getSearch()" id="searchBtn" class="btn btn-primary">검색</button>
-	</form>
+	<input type= "text" id="searchName" placeholder="설비명을 입력하시오">
+	<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
+	
 	</div>
 	
 	<div id="grid"></div>
@@ -44,6 +44,10 @@
       scrollX: false,
       scrollY: false,
       rowHeaders:["rowNum"],
+      pageOptions: {
+          perPage: 5,
+          useClient: true,
+        },
       columns: [
         {
           header: '설비코드',
@@ -81,21 +85,35 @@
     });
     getEqmList();
 
-	
+    // 검색버튼 클릭시 
+    $('#searchBtn').on('click',function(){
+    	searchEqmName();
+    })
+    // 검색 - 엔터시
+    $('#searchName').on('keypress', function (ev) {
+		if (ev.which == 13) {
+			ev.preventDefault();
+			searchEqmName()
+		}
+	})
+	// 체크박스 - all 체크
 	$('#all').on('click',function(){
 		
 		getEqmList();
 	})
-	
+	// 체크박스 - y 체크
 	$('#y').on('click',function(){
+	
 		let ucheck= $('#y').val();
 		getEqmUcheckList(ucheck);
 	})
+	// 체크박스 - n 체크
 	$('#n').on('click',function(){
+	
 		let ucheck= $('#n').val();
 		getEqmUcheckList(ucheck);
 	})
-	
+	// 전체설비 조회
     function getEqmList(){
     	$.ajax({
     		url:'/eqms',
@@ -111,7 +129,7 @@
     	})
     }
 
-	
+	// 체크박스 조회
 	function getEqmUcheckList(eqmUcheck){
 		$.ajax({
 			url:'/eqmUcheck',
@@ -124,16 +142,30 @@
 			error: err => console.log(err)
 		})
 	}
-	
-	function getSearch(){
+	// 설비 이름 조회
+	function getEqmName(eqmName){
 		$.ajax({
 			url:'/eqmName',
-			data: $("form[name=search-form]").serialize(),
-			success: result =>{
-				console.log(result);
+			data: {
+				eqmName : eqmName
 			},
+			success: result => {
+				console.log(result);
+				grid.resetData(eval(result));
+			}
+			,
 			error: err => console.log(err)
 		})
+	}
+	// 설비 이름 조회 : input에 값
+	function searchEqmName(){
+	
+		$('#all').prop('checked',true)
+		if($('#searchName').val()){
+			let eqmName = $('#searchName').val();
+			getEqmName(eqmName);
+			
+		}
 	}
     
   }

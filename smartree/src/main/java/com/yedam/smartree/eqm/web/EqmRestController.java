@@ -38,4 +38,8 @@ public class EqmRestController {
 	public List<EqmVO> getEqmName(String eqmName){
 		return eqmservice.searchEqm(eqmName);
 	}
+	@GetMapping("/eqmInpsName")
+	public List<EqmInspVO> getEqmInspName(String eqmName){
+		return eqminspservice.searchEqmInsp(eqmName);
+	}
 }

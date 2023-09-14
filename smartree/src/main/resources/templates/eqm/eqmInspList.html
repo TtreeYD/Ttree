@@ -25,7 +25,7 @@
 	
 	<div style="padding-bottom: 10px;">
 	<label>설비명  :  </label>
-	<input type= "text">
+	<input type= "text" id="searchName" placeholder="설비명을 입력하시오">
 	<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
 	</div>
 	
@@ -40,6 +40,10 @@
       scrollX: false,
       scrollY: false,
       rowHeaders:["rowNum"],
+      pageOptions: {
+          perPage: 5,
+          useClient: true,
+        },
       columns: [
         {
           header: '설비코드',
@@ -51,7 +55,7 @@
         },
         {
             header: '담당자',
-            name: 'inptManager'
+            name: 'inspManager'
         },
         {
               header: '판정',
@@ -80,22 +84,38 @@
       ]
     });
     getEqmInspList();
+    
+    
+    // 검색버튼 클릭시 
+    $('#searchBtn').on('click',function(){
+    	searchEqmInspName();
+    })
+    // 검색 - 엔터시
+    $('#searchName').on('keypress', function (ev) {
+		if (ev.which == 13) {
+			ev.preventDefault();
+			searchEqmInspName()
+		}
+	})
+    
+    
 
-	
+ // 체크박스 - all 체크
 	$('#all').on('click',function(){
 		
 		getEqmInspList();
 	})
-	
+	// 체크박스 - y 체크
 	$('#y').on('click',function(){
 		let judg= $('#y').val();
 		getEqmInspJudgList(judg);
 	})
+	// 체크박스 - n 체크
 	$('#n').on('click',function(){
 		let judg= $('#n').val();
 		getEqmInspJudgList(judg);
 	})
-	
+	// 전체설비 조회
     function getEqmInspList(){
     	$.ajax({
     		url:'/eqmInsps',
@@ -111,7 +131,7 @@
     	})
     }
 
-	
+	// 체크박스 조회
 	function getEqmInspJudgList(inspJudg){
 		$.ajax({
 			url:'/eqmInspJudg',
@@ -124,8 +144,32 @@
 			error: err => console.log(err)
 		})
 	}
+	// 설비 이름 조회
+    function getEqmInspName(eqmName){
+    	$.ajax({
+			url:'/eqmInpsName',
+			data: {
+				eqmName : eqmName
+			},
+			success: result => {
+				console.log(result);
+				grid.resetData(eval(result));
+			}
+			,
+			error: err => console.log(err)
+		})
+	}
 	
-    
+	// 설비 이름 조회 : input에 값
+	function searchEqmInspName(){
+
+		$('#all').prop('checked',true)
+		if($('#searchName').val()){
+			let eqmName = $('#searchName').val();
+			getEqmInspName(eqmName);
+			
+		}
+	}
   }
           
     </script>
