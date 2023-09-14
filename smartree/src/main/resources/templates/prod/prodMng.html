@@ -13,20 +13,20 @@
 <body>
 	<div layout:fragment="content">
 	<label>계획명 : </label>
-	<input type="text" >
+	<input type="text" name="prodPlanName" id="prodPlanName">
 	<label>생산계획일자 : </label>
-	<input type="text" >
+	<input type="date" name="prodPlanDate" id="prodPlanDate">
 	<label>생산시작일자 : </label>
-	<input type="text" >
+	<input type="date" name="prodPlanSdate" id="prodPlanSdate">
 	<label>생산종료일자 : </label>
-	<input type="text" >
+	<input type="date" name="prodPlanEdate" id="prodPlanEdate">
 	<div class="btn-group" role="group" aria-label="Basic example" style="float : right; margin-bottom : 10px;">
-	  <button type="button" class="btn btn-primary">초기화</button>
+	  <button type="button" class="btn btn-primary" id="resetBtn">초기화</button>
 	  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
 		  주문서
 	  </button>
 	  <button type="button" class="btn btn-primary">검색</button>
-	  <button type="button" class="btn btn-primary">저장</button>
+	  <button type="button" class="btn btn-primary" id="saveBtn">저장</button>
 	  <button type="button" class="btn btn-primary">삭제</button>
 	</div>
     <div id="grid" style="height: 400px;"></div>
@@ -40,7 +40,7 @@
 	</div>
     
     <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
-	  <div class="modal-dialog" role="document">
+	  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
 	      	<h4 class="modal-title">주문서 조회</h4>
@@ -58,7 +58,8 @@
 	</div><!-- /.modal -->
 
       <script>
-        var grid, grid2, grid3, grid4;
+        let grid, grid2, grid3, grid4;
+        const header = ['prodPlanName','prodPlanDate','prodPlanSdate','prodPlanEdate'];
         
         window.onload=function(){
 
@@ -68,28 +69,32 @@
 	      scrollY: false,
 	      columns: [
 	        {
-	          header: '계획상세코드',
-	          name: 'dtProdPlanCode'
-	        },
-	        {
 	          header: '제품명',
 	          name: 'prdtName'
 	        },
 	        {
-	          header: '수량',
-	          name: 'prodPlanCnt'
+	          header: '주문수량',
+	          name: 'orderDtCnt'
+	        },
+	        {
+	          header: '계획수량',
+	          name: 'prodPlanCnt',
+	          editor : 'text'
 	        },
 	        {
 	          header: '계획담당자',
-	          name: 'prodPlanName'
+	          name: 'prodName',
+	          editor : 'text'
 	        },
 	        {
 	          header: '순위',
-	          name: 'prodRank'
+	          name: 'prodRank',
+	          editor : 'text'
 	        },
 	        {
 	          header: '비고',
-	          name: 'prodPlanNote'
+	          name: 'prodPlanNote',
+	          editor : 'text'
 	        },
 	      ]
 	    });
@@ -140,14 +145,6 @@
 	              name: 'orderCode'
 	            },
 	            {
-	              header: '업체코드',
-	              name: 'bpCode'
-	            },
-	            {
-	              header: '업체명',
-	              name: 'bpName'
-	            },
-	            {
 	              header: '주문일자',
 	              name: 'orderDate'
 	            },
@@ -155,10 +152,6 @@
 	              header: '납기일자',
 	              name: 'orderDate',
 
-	            },
-	            {
-	              header: '납기현황',
-	              name: 'dodState'
 	            },
 	            {
 	              header: '담당자',
@@ -171,9 +164,9 @@
 			method:'get',
 	    dataType:'json',
 			success:function(result){
-				grid.resetData(eval(result));
-				grid2.resetData(eval(result));
-				grid3.resetData(eval(result));
+				grid.resetData(result);
+				grid2.resetData(result);
+				grid3.resetData(result);
 			},
 			error:function(err){
 				console.log(err);
@@ -184,13 +177,81 @@
 			method:'get',
 	    dataType:'json',
 			success:function(result){
-				grid4.resetData(eval(result));
-				setTimeout(() => grid4.refreshLayout(), 800);
+				grid4.resetData(result);
+				setTimeout(() => grid4.refreshLayout(), 2000);
 				
 			},
 			error:function(err){
 				console.log(err);
 			}
+		})
+		//페이지 초기화버튼
+		$('#resetBtn').on('click',function(){
+			var data = grid.getData();
+
+			grid.resetData([]);
+			grid2.resetData([]);
+			grid3.resetData([]);
+			$('#prodPlanName').val('');
+			$('#prodPlanDate').val('');
+			$('#prodPlanSdate').val('');
+			$('#prodPlanEdate').val('');
+		})
+			// 저장 버튼
+		$('#saveBtn').on('click',function(){
+			var data = {};
+			data.list = grid.getData();
+			data.vo = {
+					prodPlanName : $('#prodPlanName').val(),
+					prodPlanDate : $('#prodPlanDate').val(),
+					prodPlanSdate : $('#prodPlanSdate').val(),
+					prodPlanEdate : $('#prodPlanEdate').val()
+			}
+			console.log(data);
+			
+
+			$.ajax({
+	      		url:'/insertProdPlan',
+	      		method: 'post',
+				dataType: 'json',
+				contentType : 'application/json',
+				data : JSON.stringify(data),
+				
+	      		success:function(result){
+	      			alert("저장완료");
+	      		},
+	      		error:function(err){
+	      			console.log(err)
+	      		}
+    		})
+		})
+
+		// 주문서 모달창 더블클릭
+		grid4.on('dblclick',(ev)=>{
+			if(ev.rowKey==undefined){
+        		return;
+        	}
+			let data = grid4.getValue(ev.rowKey,'orderDtCode');
+			let data1 = grid4.getValue(ev.rowKey,'orderCode');
+			
+			console.log(data)
+		 	$.ajax({
+      		url:'/orderDtList',
+      		method:'get',
+      		data : {
+      			orderDtCode : data,
+      			orderCode : data1
+      		},
+      		success:function(result){
+      			console.log(result);
+   	            $("#myModal").modal('hide');
+   				grid.resetData(result);
+      		},
+      		error:function(err){
+      			
+      		console.log(err)
+      				}
+    		})
 		})
 	  }
 	  
