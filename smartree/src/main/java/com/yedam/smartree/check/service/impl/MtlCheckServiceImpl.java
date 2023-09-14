@@ -35,4 +35,14 @@ public class MtlCheckServiceImpl implements MtlCheckService{
 		return mtlcheckmapper.getMtl(vo);
 	}
 
+	@Override
+	public List<MtlCheckVO> searchMtl(String mtlName) {
+		return mtlcheckmapper.searchMtl(mtlName);
+	}
+
+	@Override
+	public List<MtlCheckVO> searchMtlDate(String mtlDate) {
+		return mtlcheckmapper.searchMtlDate(mtlDate);
+	}
+
 }

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>SMARTREE</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div>
+			<div style="padding-bottom: 10px;">
+				<label>검색 옵션 : </label> <select id="searchOption">
+					<option value="mtlChkCode">검사코드</option>
+					<option value="mtlChkDate">검사일자</option>
+				</select> <input type="text" id="searchName" placeholder="검색어를 입력하시오">
+				<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
+				<button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
+				<button type="button" id="ExcelBtn" class="btn btn-primary">Excel</button>
+
+			</div>
+			<div style="margin-top: 30px;" id="grid"></div>
+
+			<script>
+        let grid;
+        window.onload=function(){
+   	
+        	
+        	
+    const grid = new tui.Grid({
+      el: document.getElementById('grid'),
+      scrollX: false,
+      scrollY: false,
+      contextMenu: null,
+      rowHeaders:["rowNum"],
+      pageOptions: {
+          perPage: 5,
+          useClient: true,
+        },
+        
+      columns: [
+        {
+          header: '검사코드',
+          name: 'mtlChkCode'
+        },
+        {
+          header: '제품명',
+          name: 'mtlName'
+        },
+        {
+          header: '제품코드',
+          name: 'mtlCode'
+        },
+        {
+          header: '검사량',
+          name: 'mtlChkCnt'
+        },
+        {
+          header: '불량량',
+          name: 'mtlErrorCnt'
+        },
+        {
+          header: '합격량',
+          name: 'mtlPassCnt'
+        },
+        {
+          header: '검사자',
+          name: 'mtlChkManager'
+ 	    },
+ 	    {
+          header: '검사일',
+          name: 'mtlChkDate'
+ 		 }
+ 	 ],
+    });
+  
+    getMtlCheckList();
+
+   
+   
+    // 엑셀버튼 다운
+    $('#ExcelBtn').on('click',function(){
+    	grid.export('xlsx');
+   })
+    
+    // 검색버튼 클릭시 
+    $('#searchBtn').on('click',function(){
+    	searchMtlName();
+   });
+    // 검색 - 엔터시
+    $('#searchName').on('keypress', function (ev) {
+    	if (ev.which == 13) {
+			ev.preventDefault();
+			searchMtlName()
+		}
+	});
+	
+	// 초기화 버튼 클릭 시
+      $('#resetBtn').on('click', function () {
+          $('#searchOption').val('mtlChkCode'); 
+          $('#searchName').val(''); 
+          getMtlCheckList(); 
+      });
+
+	// 전체 조회
+    function getMtlCheckList(){
+    	$.ajax({
+    		url:'/check',
+    		method:'get',
+       	 	dataType:'json',
+    		success:function(result){
+    			console.log(result);
+    			grid.resetData(result);
+    		},
+    		error:function(err){
+    			console.log(err);
+    		}
+    	})
+    }
+    
+ //  코드 조회
+	function getMtlName(mtlName){
+		$.ajax({
+			url:'/mtlName',
+			data: {
+				mtlName : mtlName
+			},
+			success: result => {
+				console.log(result);
+				grid.resetData(eval(result));
+			}
+			,
+			error: err => console.log(err)
+		})
+	}
+	
+	//  날짜 조회
+		function getMtlDate(mtlDate){
+			$.ajax({
+				url:'/mtlDate',
+				data: {
+					mtlDate : mtlDate
+				},
+				success: result => {
+					console.log(result);
+					grid.resetData(eval(result));
+				}
+				,
+				error: err => console.log(err)
+			})
+		}	
+ 
+	function searchMtlName(){
+	   const searchOption = $('#searchOption').val();
+	          if ($('#searchName').val()) {
+	              let mtlValue = $('#searchName').val();
+              if (searchOption === 'mtlChkCode') {
+                  getMtlName(mtlValue);
+              } else if (searchOption === 'mtlChkDate') {
+                  getMtlDate(mtlValue);
+			}
+		}
+	} 
+  }
+          
+    </script>
+		</div>
+	</div>
+
+</body>
+</html>

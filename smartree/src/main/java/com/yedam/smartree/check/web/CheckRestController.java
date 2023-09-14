@@ -56,18 +56,13 @@ public class CheckRestController {
 		return cnt;
 	}
 	
-	//다건 삭제
-	//   @PostMapping("empDelete")
-	 //  public List<String> empsDelete(@RequestBody List<EmpVO> empList){
-	   //   List<String> delList = new ArrayList<>();
-	     // 
-	     // for(EmpVO empVO : empList) {
-	      //   int result = empMapper.deleteEmpInfo(empVO);
-	       //  if(result > 0) {
-	        //    delList.add(empVO.getEmployeeId());
-	      //   }
-	     // }
-	      
-	    //  return delList;
-	  // }
+	@GetMapping("/mtlName")
+	public List<MtlCheckVO> getMtlName(String mtlName){
+		return mtlcheckservice.searchMtl(mtlName);
+	}
+	@GetMapping("/mtlDate")
+	public List<MtlCheckVO> getMtlDate(String mtlDate){
+		return mtlcheckservice.searchMtlDate(mtlDate);
+	}
+	
 }
