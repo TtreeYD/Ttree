@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,9 +44,8 @@ public class CheckRestController {
 	
 	@ResponseBody
 	@PostMapping("/mtlinsert")
-	public int mtlinsert(MtlCheckVO vo) {
+	public int mtlinsert(@RequestBody MtlCheckVO vo) {
 		
-		System.out.println(mtlcheckservice.insertChkMtl(vo));
 		return mtlcheckservice.insertChkMtl(vo);
 	}
 }

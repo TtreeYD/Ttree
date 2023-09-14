@@ -26,7 +26,7 @@
 
 		<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
 			<div class="modal-dialog modal-xl" role="document">
-				<div class="modal-content" style="height: 500px">
+				<div class="modal-content" style="height: 700px">
 					<div class="container text-center">
 						<div class="modal-header row justify-content-evenly">
 							<div class="col-6">
@@ -66,7 +66,9 @@
 					<div class="modal-body">
 						<div id="grid3"></div>
 					</div>
-					
+					 <div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
 				</div>
 				<!-- /.modal-content -->
 			</div>
@@ -76,9 +78,9 @@
 
 		<script>
 		
-        var grid;
-      	var grid2;
-      	var grid3;
+        let grid;
+      	let grid2;
+      	let grid3;
         window.onload=function(){
 	        const grid = new tui.Grid({
 	        	      el: document.getElementById('grid1'),
@@ -130,6 +132,7 @@
 			            header: '검사자',
 			            name: 'mtlChkManager',
 					    editor: 'text'
+					   
 			          },
 			      ]
 				});
@@ -138,6 +141,10 @@
 					scrollX: false,	
 					scrollY: false,
 					rowHeaders:["rowNum"],
+					pageOptions: {
+			            perPage: 5,
+			            useClient: true,
+			          },
 					columns: [
 					{
 						header: '자재',
@@ -204,9 +211,9 @@
 
 				//페이지 초기화버튼
 				$('#resetBtn').on('click',function(){
-					var data = grid2.getData();
+					let data = grid2.getData();
 
-					for (var i = 0; i < data.length; i++) {
+					for (let i = 0; i < data.length; i++) {
 						data[i].mtlChkCnt = ''; 
 						data[i].mtlErrorCnt = ''; 
 						data[i].mtlPassCnt = ''; 
@@ -250,11 +257,23 @@
         				}
         			})
 				})
+				
+				let unsavedChanges = false;
+				
+				window.addEventListener('beforeunload', function(event) {
+				    if (unsavedChanges) {
+				        const confirmationMessage = '사이트에서 나가시겠습니까? 변경사항이 저장되지 않을 수 있습니다.';
+				        (event || window.event).returnValue = confirmationMessage; 
+				        return confirmationMessage; 
+				    }
+				});
+				grid2.on('beforeChange', function(event) {
+				    unsavedChanges = true;
+				});
 
 				// 저장버튼 이벤트
 				$('#addBtn').on('click',function(e){
-					var data = grid2.getData();
-					console.log(data);
+					let data = grid2.getData()[0];
 					$.ajax({
 					url: '/mtlinsert', 
 					method: 'post',
@@ -263,8 +282,8 @@
 					data : JSON.stringify(data)
 					,
 					success: function(result) {
-						console.log(result);
-					//setTimeout(() => grid3.refreshLayout(), 200);
+						alert("저장완료");
+						unsavedChanges = false;
 					},
 					error: function(err) {
 						console.log(err);
