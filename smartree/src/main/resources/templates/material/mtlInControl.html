@@ -10,12 +10,42 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<div id="grid"></div>
+		<h3>자재입고관리</h3>
+		<a href="" style="margin:20px">검사완료 자재목록<a>
+		<div id="mtlCheckGrid"></div>
+		<br>
+		<div id="mtlInGrid"></div>
 		<script>
-			var grid;
 			window.onload = function() {
-				const grid = new tui.Grid({
-					el : document.getElementById('grid'),
+				// 검사완료목록
+				const mtlCheckGrid = new tui.Grid({
+					el : document.getElementById('mtlCheckGrid'),
+					scrollX : false,
+					scrollY : false,
+					rowHeaders : [ "rowNum" ],
+					columns : [ {
+						header : '자재LOT',
+						name : 'mtlLotNum'
+					}, {
+						header : '자재코드',
+						name : 'mtlCode'
+					}, {
+						header : '자재입고수량',
+						name : 'mtlInCnt'
+					}, {
+						header : '검사완료일',
+						name : 'mtlChkDate'
+					}, {
+						header : '검수담당자',
+						name : 'mtlChkManager'
+					}, {
+						header : '자재검사코드',
+						name : 'mtlChkCode'
+					}   ]
+				});
+				// 아래 리스트
+				const mtlInGrid = new tui.Grid({
+					el : document.getElementById('mtlInGrid'),
 					scrollX : false,
 					scrollY : false,
 					rowHeaders : [ "rowNum" ],
@@ -60,7 +90,7 @@
 		                }
 		              }
 		            });
-		            grid.resetData(eval(result));
+		            mtlInGrid.resetData(eval(result));
 		          },
 		          error: function (err) {
 		            console.log(err);
