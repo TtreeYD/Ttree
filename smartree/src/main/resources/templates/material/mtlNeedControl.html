@@ -10,14 +10,45 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<div id="grid"></div>
+	<h3>자재발주관리</h3>	
+		<a href="" style="margin:20px">안전재고미달목록<a>
+		<div id="mtllowGrid"></div>
+		<br>
+		<div id="mtlNeedGrid"></div>
 		<script>
-			var grid;
+			
 			window.onload = function() {
-				const grid = new tui.Grid({
-					el : document.getElementById('grid'),
+				// 안전재고미달 자재목록
+				const mtllowGrid = new tui.Grid({
+					el : document.getElementById('mtllowGrid'),
 					scrollX : false,
-					scrollY : false,
+					scrollY : true,
+					rowHeaders : [ "rowNum" ],
+					columns : [ {
+						header : '자재코드',
+						name : 'mtlCode'
+					}, {
+						header : '분류',
+						name : 'mtlType'
+					}, {
+						header : '자재이름',
+						name : 'mtlName'
+					}, {
+						header : '현재수량',
+						name : 'mtlCnt'
+					}, {
+						header : '안전재고수량',
+						name : 'mtlSs'
+					}, {
+						header : '수량차',
+						name : 'mtlNow'
+					}   ]
+				});
+				// 발주자재목록
+				const mtlNeedGrid = new tui.Grid({
+					el : document.getElementById('mtlNeedGrid'),
+					scrollX : false,
+					scrollY : true,
 					rowHeaders : [ "rowNum" ],
 					columns : [ {
 						header : '자재코드',
@@ -54,7 +85,6 @@
 				
 				const header = ['mtlCode', 'mtlDate', 'bpName', 'mtlCode', 'mtlName', 'mtlCnt', 'mtlUnit', 'mtlManager','mtlWishDate','mtlWhere']
 
-		        // Orders List불러오기
 		        $.ajax({
 		          url: '/mtlNeeds',
 		          method: 'get',
@@ -69,7 +99,7 @@
 		                }
 		              }
 		            });
-		            grid.resetData(eval(result));
+		            mtlNeedGrid.resetData(eval(result));
 		          },
 		          error: function (err) {
 		            console.log(err);
