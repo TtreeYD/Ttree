@@ -7,7 +7,15 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.yedam.smartree.eqm.service.EqmInspService;
 import com.yedam.smartree.eqm.service.EqmService;
+
+/*
+  개발자  : 이승준
+  개발일자 : 2023/09/14
+           설비조회,설비점검조회 
+  */
+
 
 
 @Controller
@@ -16,12 +24,17 @@ public class EqmController {
 	
 	@Autowired
 	EqmService eqmservice;	
+	@Autowired
+	EqmInspService 	eqminspservice;
 	
-
-	
-	@GetMapping("/eqm/eqmList")
+	@GetMapping("/eqmList")
 	public String selectAllEqm() {
 		
 		return "eqm/eqmList";
+	}
+	
+	@GetMapping("/eqmInspList")
+	public String selectAllEqmInsp() {
+		return "eqm/eqmInspList";
 	}
 }

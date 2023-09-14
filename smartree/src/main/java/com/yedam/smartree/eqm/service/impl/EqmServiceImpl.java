@@ -20,4 +20,16 @@ public class EqmServiceImpl implements EqmService {
 		return eqmmapper.selectEqmList();
 	}
 
+	@Override
+	public List<EqmVO> selectEqmUcheckList(String eqmUcheck) {
+		
+		return eqmmapper.selectEqmUcheckList(eqmUcheck);
+	}
+
+	@Override
+	public List<EqmVO> searchEqm(String eqmName) {
+		
+		return eqmmapper.searchEqm(eqmName);
+	}
+
 }

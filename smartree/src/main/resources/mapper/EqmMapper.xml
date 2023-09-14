@@ -8,6 +8,39 @@
   		SELECT e.eqm_code,e.eqm_name,e.eqm_ucheck,e.insp_cycle,e.mfg_comp,e.mfg_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE
 		FROM eqm e left join EQM_INSP i
   		  				ON e.eqm_code = i.eqm_code
+  	 					 
   		ORDER BY eqm_code
   	</select>
+  	
+  	<select id="selectEqmUcheckList" resultType="EqmVO">
+  		SELECT e.eqm_code,e.eqm_name,e.eqm_ucheck,e.insp_cycle,e.mfg_comp,e.mfg_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE
+		FROM eqm e left join EQM_INSP i
+  		  				ON e.eqm_code = i.eqm_code
+  		<where>
+  			<if test="eqmUcheck != null and !eqmUcheck.equals('')">
+  				eqm_ucheck = #{eqmUcheck}	
+  			</if>
+  		</where>  				
+  		 
+  		ORDER BY eqm_code
+  	</select>
+  	
+  	
+  	  <select id="searchEqm" resultType="EqmVO">
+  		SELECT e.eqm_code,e.eqm_name,e.eqm_ucheck,e.insp_cycle,e.mfg_comp,e.mfg_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE
+		FROM eqm e left join EQM_INSP i
+  		  				ON e.eqm_code = i.eqm_code
+  		<where>
+  			<if test="eqmName != null and !eqmName.equals('')">
+  				eqm_name LIKE CONCAT('%',#{eqmName},'%')
+  			</if>
+  		</where>  				
+  		 
+  		ORDER BY eqm_code
+  	</select>
+  	
+  	
+  	
+  	
+  	
   </mapper>
