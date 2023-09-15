@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<style>
+       #equipTable{
+            width:  1100px;
+            height: 400px;
+            border-collapse: collapse; 
+            margin-left: 10px;
+    		margin-top: 30px;         
+            
+        }
+
+        #equipTable th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #equipTable th {
+            background-color: #f2f2f2;
+        }
+        
+        #selectBtn , #buttons button {
+       
+            margin-right: 10px;
+            padding: 8px 16px;
+            background-color: #267bdb;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            cursor: pointer;
+        }
+        
+         #equipTable input[type="text"]{
+            width: 50;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+</style>
+</head>
+<body>
+	<div layout:fragment="content">
+		<h2>설비관리</h2>
+		
+		<div>
+			<form>
+			<button type="button" id="selectBtn" style="margin-right:300px; float:right;">설비조회</button>
+				<table id="equipTable">
+					<tr>
+						<th>설비코드</th>
+						<td>
+							<input type="text" name="eqmCode" id="eqmCode" style="background-color:#d3d3d3;" readonly>
+						</td>
+						<th>설비명</th>
+						<td>
+							<input type="text" name="eqmName" id="eqmName">
+						</td>
+					</tr>
+				
+					<tr>
+						<th>사용여부</th>
+						<td>
+							<label style="margin-left:10px; margin-right:40px;"><input type="radio" id="" name="eqmUcheck" value="y"> Yes </label>
+							<label><input type="radio" id="" name="eqmUcheck" value="n"> No </label>
+						</td>
+					</tr>
+					<tr>
+						<th>온도</th>
+						<td>
+							<input type="text" id="eqmMinTemp" name="eqmMinTemp" placeholder="최저"> ℃   ~
+							<input type="text" id="eqmMaxTemp" name="eqmMaxTemp" placeholder="최고"> ℃
+						</td>
+						
+						<th>관리인</th>
+						<td> <input type="text" id="eqmManager" name="eqmManager" > </td>
+					</tr>
+					<tr>
+						<th>점검주기</th>
+						<td>
+							<input type="text" name="inspCycle" id="inspCycle">일 
+						</td>
+						<th>이미지</th>
+						<td>
+							<input type="file" name="eqmImg" id="eqmImg">
+						</td>
+					</tr>
+					<tr>
+						<th>제조업체</th>
+						<td><input type="text" id="mfgComp" name="mfgComp" ></td>
+					</tr>
+					<tr>
+						<th>제조일자</th>
+						<td><input type="date" id="" name="mfgDate" ></td>
+					</tr>
+				</table>
+				
+				<div id="buttons" style="margin-right:300px; float:right;">
+					<button type="submit" id="">등록</button>
+					<button type="button" id="">취소</button>
+					<button type="button" id="">삭제</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</body>
+</html>

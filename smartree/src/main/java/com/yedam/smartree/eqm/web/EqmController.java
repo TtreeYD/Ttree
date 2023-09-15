@@ -37,4 +37,8 @@ public class EqmController {
 	public String selectAllEqmInsp() {
 		return "eqm/eqmInspList";
 	}
+	@GetMapping("/eqmForm")
+	public String registerEqmForm() {
+		return "eqm/eqmForm";
+	}
 }

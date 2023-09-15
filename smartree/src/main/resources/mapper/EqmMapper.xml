@@ -40,6 +40,36 @@
   	</select>
   	
   	
+  	<insert id="insertEqm" parameterType="EqmVO">
+  	INSERT INTO EQM
+  			 ( 
+  			    EQM_CODE
+  			   ,EQM_NAME
+  			   ,EQM_UCHECK
+  		  	   ,EQM_MIN_TEMP
+  			   ,EQM_MAX_TEMP
+  			   ,EQM_MANAGER
+  			   ,INSP_CYCLE
+  			   ,MFG_COMP
+  			   ,MFG_DATE
+  			   ,EQM_IMG
+  			)
+   values
+           ( 
+   				#{eqmCode}
+   			   ,#{eqmName}
+   			   ,#{eqmUcheck}
+   			   ,#{eqmMinTemp}
+   			   ,#{eqmMaxTemp}
+   			   ,#{eqmManager}
+   			   ,#{inspCycle}
+   			   ,#{mfgComp}
+   			   ,#{mfgDate}   
+   			   ,#{eqmImg} 
+           )
+  	
+  	
+  	</insert>
   	
   	
   	
