@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessVO;
 
 
@@ -18,5 +19,9 @@ public interface BusinessMapper {
 	public void insertOrder(BusinessVO vo);
 	//주문상세등록
 	public void insertDtOrder(BusinessVO businessVO);
+	//업체목록
+	public List<BpVO> selectBpList(BpVO bpVO);
+	//제품목록
+	public List<BpVO> selectPrdtList(BpVO bpVO);
 	
 }
