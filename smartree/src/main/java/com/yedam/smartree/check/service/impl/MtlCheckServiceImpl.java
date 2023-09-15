@@ -45,4 +45,9 @@ public class MtlCheckServiceImpl implements MtlCheckService{
 		return mtlcheckmapper.searchMtlDate(mtlDate);
 	}
 
+	@Override
+	public List<MtlCheckVO> selectChkAll() {
+		return mtlcheckmapper.selectChkAll();
+	}
+
 }

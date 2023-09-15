@@ -35,7 +35,7 @@
       contextMenu: null,
       rowHeaders:["rowNum"],
       pageOptions: {
-          perPage: 5,
+          perPage: 10,
           useClient: true,
         },
         
@@ -54,19 +54,19 @@
         },
         {
           header: '검사량',
-          name: 'mtlChkCnt'
+          name: 'mtlChkCnt',
         },
         {
           header: '불량량',
-          name: 'mtlErrorCnt'
+          name: 'mtlErrorCnt',
         },
         {
           header: '합격량',
-          name: 'mtlPassCnt'
+          name: 'mtlPassCnt',
         },
         {
           header: '검사자',
-          name: 'mtlChkManager'
+          name: 'mtlChkManager',
  	    },
  	    {
           header: '검사일',
@@ -163,7 +163,18 @@
 		}
 	} 
   }
-          
+
+        $.ajax({
+			url:'/mtlallchk',
+			method:'get',
+	    	dataType:'json',
+			success:function(result){
+				grid.resetData(result);
+			},
+			error:function(err){
+				console.log(err);
+			}
+		})
     </script>
 		</div>
 	</div>

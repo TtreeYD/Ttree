@@ -10,4 +10,5 @@ public interface MtlCheckService {
 	public int insertChkMtl(MtlCheckVO vo);
 	public List<MtlCheckVO> searchMtl(String mtlName);
 	public List<MtlCheckVO> searchMtlDate(String mtlDate);
+	public List<MtlCheckVO> selectChkAll();
 }

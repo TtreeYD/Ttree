@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,8 +40,8 @@ public class CheckRestController {
 	}
 	
 	@GetMapping("/mtlget")
-	public List<MtlCheckVO> mtlgetcheck(MtlCheckVO vo){
-		return mtlcheckservice.selectMtl(vo);
+	public List<MtlCheckVO> mtlgetcheck(@RequestParam(value = "vo", required=false) List<MtlCheckVO> vo){
+		return null;//mtlcheckservice.selectMtl(vo)
 	}
 	
 	
@@ -65,4 +66,8 @@ public class CheckRestController {
 		return mtlcheckservice.searchMtlDate(mtlDate);
 	}
 	
+	@GetMapping("/mtlallchk")
+	public List<MtlCheckVO> getMtlAllChk(){
+		return mtlcheckservice.selectChkAll();
+	}
 }

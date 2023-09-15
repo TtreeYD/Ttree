@@ -11,11 +11,15 @@
   	</select>
   
   	<select id="selectMtl" resultType="MtlCheckVO">
-  		select *
-      	from mtl_need 
+  		SELECT	mtl_date, 
+	  			mtl_code, 
+	  			bp_code, 
+	  			mtl_name, 
+	  			mtl_manager
+		FROM	mtl_need
         <where>
           <if test="mtlDate != null">
-             mtl_date BETWEEN #{mtlDate} AND #{mtlDate}+1
+             mtl_date >= #{mtlDate} AND mtl_date <![CDATA[<]]> #{mtlDate}+1
           </if>
           <if test="bpCode != null and !bpCode.equals('')">
             AND bp_code = #{bpCode}
@@ -30,8 +34,18 @@
   	</select>
   	
   	<select id="getMtl" resultType="MtlCheckVO">
-	  	select * 
-	  	from mtl_need
+	  	SELECT c.mtl_chk_code, 
+	  			c.mtl_chk_date, 
+	  			c.mtl_date, 
+	  			n.mtl_code, 
+	  			n.bp_code, 
+	  			n.mtl_name, 
+	  			c.mtl_chk_cnt, 
+	  			c.mtl_error_cnt , 
+	  			c.mtl_pass_cnt, 
+	  			c.mtl_chk_manager
+		FROM mtl_chk c 
+		JOIN mtl_need n ON c.mtl_code = n.mtl_code
 		where bp_code = #{bpCode}
 		and mtl_date BETWEEN #{mtlDate} AND #{mtlDate}+1
 	  	
@@ -79,7 +93,14 @@
   				mtl_chk_date LIKE '%'||#{mtlChkDate}||'%'
   			</if>
   		</where>  	
-		order by mtl_chk_code ASC	 
+		order by mtl_chk_code 	 
+  	</select>
+  	
+	<select id="selectChkAll" resultType="MtlCheckVO">
+		SELECT *
+		FROM mtl_chk c 
+		JOIN mtl_need n ON c.mtl_code = n.mtl_code
+		order by mtl_chk_code 
   	</select>
   	
   </mapper>
