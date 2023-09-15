@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.yedam.smartree.business.mapper.BusinessMapper;
 import com.yedam.smartree.business.service.BusinessService;
 import com.yedam.smartree.business.service.BusinessVO;
+import com.yedam.smartree.business.web.ReqVO;
 
 @Service
 public class BusinessServiceImpl implements BusinessService{
@@ -30,5 +31,16 @@ public class BusinessServiceImpl implements BusinessService{
 //	public List<BusinessVO> clickOrder(BusinessVO businessVO) {
 //		return businessmapper.clickOrder(businessVO);
 //	}
+	@Override
+	public int insertOrder(ReqVO<BusinessVO> businessvo) {
+		int cnt = 0;
+		businessmapper.insertOrder(businessvo.getVo());
+		
+		for(int i = 0 ; i< businessvo.getOrderDtList().size();i++) {
+			businessmapper.insertDtOrder(businessvo.getOrderDtList().get(i));
+			cnt++;
+		}
+		return cnt;
+	}
 
 }

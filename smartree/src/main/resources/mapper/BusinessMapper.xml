@@ -50,5 +50,16 @@
 		       </if>	
 		</where>
   	</select>
-  
+  	
+  	<!-- 주문등록 -->
+  	<insert id="insertOrder" parameterType="BusinessVO">
+  		insert into orders 
+  		values ()
+  	</insert>
+  	
+  	<!-- 주문상세등록 -->
+  	<insert id="" parameterType="BusinessVO">
+  		
+  	</insert>
+  	
   </mapper>
