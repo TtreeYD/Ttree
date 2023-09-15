@@ -23,4 +23,10 @@
     <select id="selectMtlOutList" resultType="MaterialVO">
   		select * from mtl_out
   	</select>
+  	
+  	<!-- 발주관리 안전재고 미달목록 출력 -->
+  	<select  id="selectMinusMtl" resultType="MaterialVO">
+  		
+  	</select>
+  	
   </mapper>

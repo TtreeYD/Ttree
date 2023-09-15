@@ -45,7 +45,7 @@ public class ProdRestController {
 	@PostMapping("/insertProdPlan")
 	@ResponseBody
 	public int insertProdPlan(@RequestBody RequestVO<ProdVO> vo) {
-		System.out.println(vo);
+//		System.out.println(vo);
 		 return service.insertProdPlan(vo);
 		 
 	}

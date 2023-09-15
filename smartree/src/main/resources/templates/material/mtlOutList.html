@@ -42,7 +42,9 @@
 						name : 'mtlOutCode'
 					}, {
 						header : '자재LOT',
-						name : 'mtlLotNum'
+						name : 'mtlLotNum',
+						sortable: true,
+					    sortingType: 'asc'
 					}, {
 						header : '자재코드',
 						name : 'mtlCode'
@@ -57,7 +59,6 @@
 				
 				const header = ['mtlOutCode', 'mtlLotNum', 'mtlCode', 'mtlOutCnt', 'prcsRsCode']
 
-		        // Orders List불러오기
 		        $.ajax({
 		          url: '/mtlEmpty',
 		          method: 'get',
