@@ -32,10 +32,11 @@ public class BusinessServiceImpl implements BusinessService{
 //	public List<BusinessVO> clickOrder(BusinessVO businessVO) {
 //		return businessmapper.clickOrder(businessVO);
 //	}
+	
 	@Override
 	public int insertOrder(ReqVO<BusinessVO> businessvo) {
 		int cnt = 0;
-		businessmapper.insertOrder(businessvo.getVo());
+		businessmapper.insertOrder(businessvo.getOrderList().get(0));
 		
 		for(int i = 0 ; i< businessvo.getOrderDtList().size();i++) {
 			businessmapper.insertDtOrder(businessvo.getOrderDtList().get(i));
