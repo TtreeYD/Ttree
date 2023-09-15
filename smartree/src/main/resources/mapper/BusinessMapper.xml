@@ -54,14 +54,22 @@
   	<!-- 주문등록 -->
   	<insert id="insertOrder" parameterType="BusinessVO">
   	<selectKey keyProperty="orderCode" resultType="String" order="BEFORE">
-  		select 'select 'ORD' || LPAD(prod_plan_seq.NEXTVAL, 7, '0') as prodPlanCode from dual'
+  		select 'ORD' || LPAD(order_code_seq.NEXTVAL, 7, '0') as orderCode from dual
   	</selectKey>
-  		insert into orders 
-  		values ()
+  		{call insert_order_dt(
+  			#{orderCode},
+  			#{bpCode},
+  			#{orderDate},
+  			#{orderManager},
+  			#{dodDate},
+  			#{orderDtCode},
+  			#{prdtCode},
+  			#{orderDtCnt}
+  			)}
   	</insert>
   	
   	<!-- 주문상세등록 -->
-  	<insert id="" parameterType="BusinessVO">
+  	<insert id="insertDtOrder" parameterType="BusinessVO">
   		
   	</insert>
   	<!-- 거래처목록 -->
