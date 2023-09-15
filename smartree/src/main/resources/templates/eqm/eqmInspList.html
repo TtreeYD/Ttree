@@ -47,39 +47,48 @@
       columns: [
         {
           header: '설비코드',
-          name: 'eqmCode'
+          name: 'eqmCode',
+          align: 'center'
         },
         {
           header: '설비명',
-          name: 'eqmName'
+          name: 'eqmName',
+          align: 'center'
         },
         {
             header: '담당자',
-            name: 'inspManager'
+            name: 'inspManager',
+            align: 'center'
         },
         {
               header: '판정',
-              name: 'inspJudg'
+              name: 'inspJudg',
+              align: 'center'
         },
         {
             header: '수리일시',
-            name: 'repairDate'
+            name: 'repairDate',
+            align: 'center'
         },
         {
             header: '최근점검일시',
-            name: 'recentInspDate'
+            name: 'recentInspDate',
+            align: 'center'
         },
         {
             header: '차기점검일시',
-            name: 'nextInspDate'
+            name: 'nextInspDate',
+            align: 'center'
       },
       {
           header: '점검내역',
-          name: 'inspDt'
+          name: 'inspDt',
+          align: 'center'
  	   },
  	   {
         header: '조치내용',
-        name: 'actionDt'
+        name: 'actionDt',
+  		align: 'center'
   }
       ]
     });
@@ -100,18 +109,26 @@
     
     
 
- // 체크박스 - all 체크
+ // radio - all 체크
 	$('#all').on('click',function(){
-		
+		if($('#searchName').val()){
+			$('#searchName').val('');
+		}
 		getEqmInspList();
 	})
-	// 체크박스 - y 체크
+	// radio - y 체크
 	$('#y').on('click',function(){
+		if($('#searchName').val()){
+			$('#searchName').val('');
+		}
 		let judg= $('#y').val();
 		getEqmInspJudgList(judg);
 	})
-	// 체크박스 - n 체크
+	// radio - n 체크
 	$('#n').on('click',function(){
+		if($('#searchName').val()){
+			$('#searchName').val('');
+		}
 		let judg= $('#n').val();
 		getEqmInspJudgList(judg);
 	})
