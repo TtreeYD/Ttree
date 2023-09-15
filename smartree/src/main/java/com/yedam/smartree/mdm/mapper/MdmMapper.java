@@ -13,4 +13,5 @@ public interface MdmMapper {
 	public List<CommonCodeVO> selectCommonCodeType();
 	public List<CommonCodeVO> selectCommonCodeList(String codeType);
 	public List<EmpVO> selectEmpList(@Param("empDept")String empDept, @Param("empName")String empName);
+	public int insertCommonCode(CommonCodeVO commonCodeVO);
 }

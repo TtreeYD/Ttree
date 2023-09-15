@@ -9,16 +9,26 @@
 		SELECT code_type, type_name
 		FROM common_code
 	</select>
-	
+
 	<!-- 코드상세 리스트 -->
 	<select id="selectCommonCodeList" resultType="CommonCodeVO">
 		SELECT code_id
 		, code_name
-		, code_use
+		,
+		code_use
 		FROM code_detail
 		WHERE code_type = #{codeType}
 	</select>
-	
+
+	<insert id="insertCommonCode" parameterType="CommonCodeVO">
+		<selectKey keyProperty="codeType" resultType="String" order="BEFORE">
+			SELECT LPAD( NVL ( MAX(code_type), 0) + 1, 3, '0')
+			FROM common_code
+		</selectKey>
+		INSERT INTO common_code
+		VALUES(#{codeType}, #{typeName})
+	</insert>
+
 	<!-- 사원 리스트 -->
 	<select id="selectEmpList" resultType="EmpVO">
 		SELECT *
@@ -33,5 +43,5 @@
 		</where>
 		ORDER BY emp_id
 	</select>
-	
+
 </mapper>

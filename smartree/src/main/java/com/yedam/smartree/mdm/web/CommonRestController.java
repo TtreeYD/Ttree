@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.mdm.service.CommonCodeVO;
@@ -33,14 +34,34 @@ public class CommonRestController {
 	public List<CommonCodeVO> selectCommonCode(String codeType) {
 		return mdmService.selectCommonCodeList(codeType);
 	}
-	
+
 	// 공통코드입력
 	@PostMapping("/insertCommonCode")
-	public String insertCommonCode(List<String> commonCodeList) {
-		for(String commonCode : commonCodeList) {
+	public String insertCommonCode(@RequestBody List<String> commonCodeList) {
+		int cnt = 0;
+		System.out.println(commonCodeList);
+		for (String commonCode : commonCodeList) {
+			CommonCodeVO vo = new CommonCodeVO();
+			vo.setTypeName(commonCode);
+			System.out.println(vo);
+			if(mdmService.insertCommonCode(vo)>0) {
+				cnt++;
+			};
 			System.out.println(commonCode);
 		}
-		return "ㅎㅎ";
+		String msg = "";
+		if (cnt > 0) {
+			msg = "성공";
+		} else {
+			msg = "실패";
+		}
+		return msg;
+	}
+	
+	// 상세코드입력
+	@PostMapping("/insertCodeDetail")
+	public String insertCodeDetail(@RequestBody List<String> codeDetailList) {
+		return null;
 	}
 
 	// 사원 조회
@@ -48,7 +69,7 @@ public class CommonRestController {
 	public List<EmpVO> selectEmpList(String empDept, String empName) {
 		return mdmService.selectEmpList(empDept, empName);
 	}
-	
+
 	//
 
 }
