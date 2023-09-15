@@ -74,4 +74,9 @@ public class MaterialVO {
 													// lot 번호
 	private String dtProdInstCode;					// 생산지시상세코드
 	private int holdingCnt;							// 자재수량
+	
+	// 발주관리-안전재고 미달목록
+	private int mtlSs;								// 자재 안전재고
+	private int mtlMinus;							// 자재 수량차
+	
 }
