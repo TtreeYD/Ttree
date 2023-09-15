@@ -61,7 +61,7 @@
 			let searchModalData = [];
 			let newOrder =[];
 			let newDtOrder =[];
-			let selectedData;
+			let selectedData; // 주문서에있는해당값 저장
 			$(document).ready(function () {
 				//주문그리드
 				const order = new tui.Grid({
@@ -106,10 +106,6 @@
 					scrollY: true,
 					rowHeaders: ['checkbox'],
 					columns: [
-						{
-							header: '주문상세코드',
-							name: 'orderDtCode',
-						},
 						{
 							header: '제품명',
 							name: 'prdtName',
@@ -236,12 +232,12 @@
 						$('#plsdate').val('');
 						$('#doddate').val('');
 					});
+					//새주문서클릭
 					$('#saveBtn').on('click',function(){
 						let editdata={};
 						editdata.vo = order.getData();
 						editdata.list = dtOrder.getData();
-						console.log(editdata);
-						if(searchModalData.orderCode != ''){//수정
+						 if(editdata.vo[0].orderCode != null){//수정
 							/* $.ajax({
 								url:'',
 								method:'POST',
@@ -251,13 +247,29 @@
 									
 								}
 							}) */
+							console.log('update');
 						}else{//등록
-							
-						}
+							console.log('insert');
+							 $.ajax({
+							url:'',
+							method:'POST',
+							dataType: 'json',
+							contentType : 'application/json',
+							data:JSON.stringify(){
+								
+								
+								}
+							}) 
+						
+						} 
 						
 					});
 					
 					$('#insertBtn').on('click',function(){
+						newOrder = [];
+						newDtOrder = [];
+						order.resetData([]);
+						dtOrder.resetData([]);
 						newOrder.push({
 							codeType:'',
 							typeName:''					
