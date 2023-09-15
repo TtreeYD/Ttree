@@ -10,63 +10,28 @@
 		join  prdt_table pt 
 		on dtp.prdt_code = pt.prdt_code
   	</select>
+  	
   	<select id="selectAllOrderAndPrdt" resultType="BusinessVO">
-  		select *
-		from orders o join dt_order dto
-		on dto.order_code = o.order_code
-		join prdt_table prdt
-		on prdt.prdt_code = dto.prdt_code
-  	</select>
-  	<select id="selectOrderAndPrdt" resultType="BusinessVO">
-  		<!-- select *
-		from orders o join dt_order dto
-		on dto.order_code = o.order_code
-		join prdt_table prdt
-		on prdt.prdt_code = dto.prdt_code
-  		where dto.order_dt_code = #{orderDtCode} -->
   		select o.order_code , b.bp_code , b.bp_name , o.order_date , o.dod_date , o.dod_state , o.order_manager
- 		from orders o join business_partner b
-  		on o.bp_code = b.bp_code
+  		from orders o join business_partner b
+ 		  				on o.bp_code = b.bp_code
+		  				where o.prod_plan_yn = 'n'
   	</select>
   	
-  	<!-- <insert id="insertProdPlan" parameterType="ProdVO">
-  		insert into prod_plan 
-  		values (
-  			'PPN' || LPAD(prod_plan_seq.NEXTVAL, 7, '0'),
-  			#{orderCode},
-  			#{prodPlanName},
-  			#{prodPlanDate},
-  			#{prodName},
-  			#{prodPlanSdate},
-  			#{prodPlanEdate} )  			
-  		
-  	</insert>
   	
-	<insert id="insertDtProdPlan" parameterType="ProdVO">
-		insert into dt_prod_plan
-  		values(
-  			'PPD' || LPAD(dt_prod_plan_seq.NEXTVAL, 7, '0'),
-  			#{prodPlanCode},
-  			#{prdtCode},
-  			#{prodPlanCnt},
-  			#{prodPlanNote},
-  			#{prodRank}
-  		)
-	</insert> -->
-	<insert id="insertProdPlan" parameterType="ProdVO">
-    <selectKey keyProperty="prodPlanCode" resultType="String" order="AFTER">
-        select 'PPN' || LPAD(prod_plan_seq.CURRVAL, 7, '0') as prodPlanCode from dual
+	<insert id="insertProdPlan" parameterType="ProdVO" statementType="CALLABLE">
+    <selectKey keyProperty="prodPlanCode" resultType="String" order="BEFORE">
+        select 'PPN' || LPAD(prod_plan_seq.NEXTVAL, 7, '0') as prodPlanCode from dual
     </selectKey>
-    insert into prod_plan 
-    values (
-        'PPN' || LPAD(prod_plan_seq.NEXTVAL, 7, '0'),
+    {call in_prod_up_order(
+        #{prodPlanCode},
         #{orderCode},
         #{prodPlanName},
         #{prodPlanDate},
         #{prodName},
         #{prodPlanSdate},
         #{prodPlanEdate}
-    )
+    )}
 	</insert>
 	
 	<insert id="insertDtProdPlan" parameterType="ProdVO">

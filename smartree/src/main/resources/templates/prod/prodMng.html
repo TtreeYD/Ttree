@@ -61,6 +61,7 @@
 
       <script>
       	let selectValue;
+      	let newProdList;
         let grid, grid2, grid3, grid4;
         const header = ['prodPlanName','prodPlanDate','prodPlanSdate','prodPlanEdate'];
         
@@ -70,6 +71,10 @@
 	      el: document.getElementById('grid'),
 	      scrollX: false,
 	      scrollY: false,
+	      pageOptions: {
+            perPage: 5,
+            useClient: true,
+          },
 	      columns: [
 	        {
 	          header: '제품명',
@@ -101,6 +106,10 @@
 		      el: document.getElementById('grid2'),
 		      scrollX: false,
 		      scrollY: false,
+		      pageOptions: {
+	            perPage: 5,
+	            useClient: true,
+	          },
 		      columns: [
 		        {
 		          header: '제품코드',
@@ -120,6 +129,10 @@
 		      el: document.getElementById('grid3'),
 		      scrollX: false,
 		      scrollY: false,
+		      pageOptions: {
+	            perPage: 5,
+	            useClient: true,
+	          },
 		      columns: [
 		        {
 		          header: '자재코드',
@@ -139,6 +152,10 @@
 		      el: document.getElementById('grid4'),
 		      scrollX: false,
 		      scrollY: false,
+		      pageOptions: {
+	            perPage: 5,
+	            useClient: true,
+	          },
 		      columns: [{
 	              header: '주문코드',
 	              name: 'orderCode'
@@ -177,10 +194,12 @@
 		
 		function loadOrders() {
 			$.ajax({
-				url:'/orders',
+				url:'/orderAndPrdt',
 				method:'get',
-		    dataType:'json',
+		    	dataType:'json',
 				success:function(result){
+					
+					
 					grid4.resetData(result);
 					$("#myModal").modal('show');
 					setTimeout(() => grid4.refreshLayout(), 200);
@@ -193,28 +212,33 @@
 		}
 		
 		//페이지 초기화버튼
-		$('#resetBtn').on('click',function(){
-			var data = grid.getData();
-
-			grid.resetData([]);
-			grid2.resetData([]);
-			grid3.resetData([]);
-			$('#prodPlanName').val('');
-			$('#prodPlanDate').val('');
-			$('#prodPlanSdate').val('');
-			$('#prodPlanEdate').val('');
-		})
-			// 저장 버튼
-		$('#saveBtn').on('click',function(){
-			var data = {};
-			data.list = grid.getData();
-			data.vo = {
-					prodPlanName : $('#prodPlanName').val(),
-					prodPlanDate : $('#prodPlanDate').val(),
-					prodPlanSdate : $('#prodPlanSdate').val(),
-					prodPlanEdate : $('#prodPlanEdate').val(),
-					prodName : $('#prodName').val()
+		$('#resetBtn').on('click', resetList)
+		
+			function resetList(){
+				var data = grid.getData();
+	
+				grid.resetData([]);
+				grid2.resetData([]);
+				grid3.resetData([]);
+				$('#prodPlanName').val('');
+				$('#prodPlanDate').val('');
+				$('#prodPlanSdate').val('');
+				$('#prodPlanEdate').val('');
+				$('#prodName').val('');
 			}
+		
+			// 저장 버튼
+			$('#saveBtn').on('click',function(){
+				var data = {};
+				data.list = grid.getData();
+				data.vo = {
+						prodPlanName : $('#prodPlanName').val(),
+						prodPlanDate : $('#prodPlanDate').val(),
+						prodPlanSdate : $('#prodPlanSdate').val(),
+						prodPlanEdate : $('#prodPlanEdate').val(),
+						prodName : $('#prodName').val(),
+						orderCode : data.list[0].orderCode
+				}
 			console.log(data);
 			
 
@@ -227,6 +251,7 @@
 				
 	      		success:function(result){
 	      			alert("저장완료");
+	      			resetList();
 	      		},
 	      		error:function(err){
 	      			console.log(err)
@@ -253,11 +278,13 @@
       		},
       		success:function(result){
       			console.log(result);
-      			//selectValue = result;
+      			selectValue = result;
    	            $("#myModal").modal('hide');
    	         	grid.resetData(result)
-   	         	//grid.resetData([selectValue[ev.rowKey]])
-   				
+   	         	for(let field of result){
+   	         	}
+   	         	newProdList = selectValue[ev.rowKey];
+   	         	console.log(newProdList);
       		},
       		error:function(err){
       			

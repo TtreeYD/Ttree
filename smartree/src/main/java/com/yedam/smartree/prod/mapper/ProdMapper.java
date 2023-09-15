@@ -12,8 +12,6 @@ public interface ProdMapper {
 	public List<ProdVO> selectProdList();
 
 	public List<BusinessVO> selectAllOrderAndPrdt();
-//	
-//	public List<BusinessVO> selectOrderAndPrdt(BusinessVO vo);
 	
 	public int insertProdPlan(ProdVO vo);
 	

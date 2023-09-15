@@ -28,24 +28,10 @@ public class ProdRestController {
 	public List<BusinessVO> getOrderAndPrdt(){
 		return service.selectOrderAndPrdt();
 	}
-//	
-//	@GetMapping("/OneOrderAndPrdt")
-//	public List<BusinessVO> getOneOrderAndPrdt(BusinessVO vo){
-//		System.out.println(vo.toString());
-//		return service.selectOneOrderAndPrdt(vo);
-//	}
-//	
-//	@PostMapping("/OneOrderAndPrdt")
-//	@ResponseBody
-//	public List<BusinessVO> getOneOrderAndPrdtResp(BusinessVO vo){
-////		System.out.println(vo.toString());
-//		return service.selectOneOrderAndPrdt(vo);
-//	}
 	
 	@PostMapping("/insertProdPlan")
 	@ResponseBody
 	public int insertProdPlan(@RequestBody RequestVO<ProdVO> vo) {
-//		System.out.println(vo);
 		 return service.insertProdPlan(vo);
 		 
 	}
