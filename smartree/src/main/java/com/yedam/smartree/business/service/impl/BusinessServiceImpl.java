@@ -9,7 +9,7 @@ import com.yedam.smartree.business.mapper.BusinessMapper;
 import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessService;
 import com.yedam.smartree.business.service.BusinessVO;
-import com.yedam.smartree.business.web.ReqVO;
+import com.yedam.smartree.business.service.ReqVO;
 
 @Service
 public class BusinessServiceImpl implements BusinessService{
@@ -35,13 +35,14 @@ public class BusinessServiceImpl implements BusinessService{
 	
 	@Override
 	public int insertOrder(ReqVO<BusinessVO> businessvo) {
-		int cnt = 0;
 		businessmapper.insertOrder(businessvo.getOrderList().get(0));
-		
-		for(int i = 0 ; i< businessvo.getOrderDtList().size();i++) {
-			businessmapper.insertDtOrder(businessvo.getOrderDtList().get(i));
-			cnt++;
-		}
+		int cnt = 0;
+		String orderCode = businessvo.getOrderList().get(0).getOrderCode();
+			for(int i = 0 ; i<businessvo.getOrderDtList().size();i++) {
+				businessvo.getOrderDtList().get(i).setOrderCode(orderCode);
+				businessmapper.insertDtOrder(businessvo.getOrderDtList().get(i));
+				cnt++;
+			}
 		return cnt;
 	}
 	

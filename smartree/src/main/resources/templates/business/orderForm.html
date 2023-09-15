@@ -280,7 +280,6 @@
 			        		return;
 			        	}
 						let data = searchModal.getValue(ev.rowKey,'orderCode');
-						console.log(data);
 						
 						$.ajax({
 							url:'/orderDtList',
@@ -322,7 +321,6 @@
 						let editdata={};
 						editdata.vo = order.getData();
 						editdata.list = dtOrder.getData();
-						console.log(editdata);
 						 if(editdata.vo[0].orderCode != null){//수정
 							/* $.ajax({
 								url:'',
@@ -339,8 +337,7 @@
 							
 							
 							newOrderData.orderList = order.getData();
-							newOrderData.orderDtList = dtOrder.getData();
-							console.log('등록데이터:',newOrderData);
+							newOrderData.orderDtList = dtOrder.getData() ;
 							$.ajax({
 								url:'/insertOrder',
 								method:'POST',
@@ -348,7 +345,11 @@
 								contentType : 'application/json',
 								data:JSON.stringify(newOrderData),
 								success:function(result){
-									console.log(result)
+									if(result > 0 ){
+										alert('등록되었습니다');
+										order.resetData([]);
+										dtOrder.resetData([]);
+									}
 								},
 								error:function(err){
 									console.log(err);
@@ -382,9 +383,13 @@
 					
 					//업체명 , 업체코드 클릭이벤트
 					order.on('click',(ev)=>{
-						if(ev.columnName != 'bpName' && ev.columnName !='bpCode'){
+						if(ev.columnName != 'bpName' && ev.columnName !='bpCode'){//업체코드와 업체명 아닐 시 return
 							return;	
 						}
+						/* else if(order.getValue(ev.rowKey,'bpCode')){//수정은 업체코드 , 업체명 수정은 불가하게 했다.
+							return;
+						} */
+						//ev.rowKey == 'undefined'
 						$.ajax({
 							url:'/partnerList',
 							method:'GET',
@@ -405,7 +410,6 @@
 			        		return;
 			        	}
 						let data = bpListModal.getValue(ev.rowKey,'bpCode');
-						console.log(data)
 						$.ajax({
 							url:'/partnerList',
 							method:'GET',
@@ -428,7 +432,6 @@
 						if(ev.columnName != 'prdtCode' && ev.columnName !='prdtName'){
 							return;	
 						}
-						console.log(ev.rowKey)
 						dtOrderRowNum = ev.rowKey
 						$.ajax({
 							url:'/prdtList',
@@ -473,6 +476,11 @@
 						 console.log(ev)
 			            let change = ev.changes
 			            newDtOrder[change[0].rowKey][change[0].columnName]=change[0].value
+			         })
+			         order.on('afterChange', ev=>{
+						 console.log(ev)
+			            let change = ev.changes
+			            newOrder[change[0].rowKey][change[0].columnName]=change[0].value
 			         })
 					
 				})
