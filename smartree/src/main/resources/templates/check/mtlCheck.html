@@ -12,16 +12,22 @@
 
 <body>
 	<div layout:fragment="content">
+		<label>검색 옵션 : </label> 
+		<select id="searchOption">
+			<option value="mtlChkCode">미검사조회</option>
+			<option value="mtlChkDate">검사조회</option>
+		</select> 
+		<input type="text" id="searchName" placeholder="검색어를 입력하시오">
 		<div class="btn-group btn-right" role="group"
 			aria-label="Basic example"
 			style="float: right; padding-bottom: 10px;">
 			<button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
 			<button type="button" id="searchBtn" class="btn btn-primary"
-				data-toggle="modal" data-target="#myModal">검색</button>
+				data-toggle="modal" data-target="#myModal">미검사조회</button>
 			<button type="submit" id="addBtn" class="btn btn-primary">저장</button>
 
 		</div>
-		<div style="margin-bottom: 150px;" id="grid1"></div>
+		
 		<div id="grid2"></div>
 
 		<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
@@ -32,26 +38,26 @@
 							<div class="col-6">
 								<div class="d-flex flex-column align-items-center">
 									<div class="mb-3">
-										<span>발주일자</span>
-										<input class="form-control" id="mtlDate" type="date" style="width: 350px;">
+										<span>발주일자</span> <input class="form-control" id="mtlDate"
+											type="date" style="width: 350px;">
 									</div>
-									
+
 									<div>
-										<span>담당자</span>
-										<input class="form-control" id="mtlManager" type="text" style="width: 350px;">
+										<span>담당자</span> <input class="form-control" id="mtlManager"
+											type="text" style="width: 350px;">
 									</div>
 								</div>
 							</div>
 							<div class="col-6">
 								<div class="d-flex flex-column align-items-center">
 									<div class="mb-3">
-										<span>자재</span>
-										<input class="form-control" id="mtlCode" type="text" style="width: 350px;">
+										<span>자재</span> <input class="form-control" id="mtlCode"
+											type="text" style="width: 350px;">
 									</div>
-									
+
 									<div>
-										<span>거래처</span>
-										<input class="form-control" id="bpCode" type="text" style="width: 350px;">
+										<span>거래처</span> <input class="form-control" id="bpCode"
+											type="text" style="width: 350px;">
 									</div>
 								</div>
 							</div>
@@ -66,8 +72,9 @@
 					<div class="modal-body">
 						<div id="grid3"></div>
 					</div>
-					 <div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<div class="modal-footer">
+						<button type="button" id="addModalBtn" class="btn btn-default">저장</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					</div>
 				</div>
 				<!-- /.modal-content -->
@@ -78,34 +85,28 @@
 
 		<script>
 		
+		
+		
        let modalSearchData;
 	   let mtlDate;
         window.onload=function(){
-	        const grid = new tui.Grid({
-	        	      el: document.getElementById('grid1'),
-	        	      scrollX: false,
-	        	      scrollY: false,
-	        	      contextMenu: null,
-	        	      rowHeaders:["rowNum"],
-	        	      columns: [
-	        	        {
-	        	          header: '발주일자',
-	        	          name: 'mtlDate'
-	        	        },
-	        	        {
-	        	          header: '거래처',
-	        	          name: 'bpCode'
-	        	        }
-					]
-	        	    });
-				
+	     
 		    const grid2 = new tui.Grid({
 			      el: document.getElementById('grid2'),
 			      scrollX: false,
 			      scrollY: false,
 			      contextMenu: null,
 			      rowHeaders:["rowNum"],
+			      bodyHeight: 400,
 			      columns: [
+	 	    	    {
+        	          header: '발주일자',
+        	          name: 'mtlDate'
+        	        },
+        	        {
+        	          header: '거래처',
+        	          name: 'bpCode'
+        	        },
 			        {
 			          header: '자재명',
 			          name: 'mtlName'
@@ -142,21 +143,21 @@
 					scrollX: false,	
 					scrollY: false,
 					contextMenu: null,
-					rowHeaders:["rowNum"],
+					rowHeaders:["checkbox"],
 					pageOptions: {
 			            perPage: 5,
 			            useClient: true,
-			          },
+		            },
 					columns: [
 					{
 						header: '자재',
 						name: 'mtlCode',
 					},
-						{
+					{
 						header: '거래처',
 						name: 'bpCode',
 					},
-						{
+					{
 						header: '발주일자',
 						name: 'mtlDate',
 					},
@@ -166,7 +167,7 @@
 					},
 					]
 			    });
-		 
+			
 				$.ajax({
 					url:'/check',
 					method:'get',
@@ -207,7 +208,6 @@
 					success: function(result) {
 						mtlDate = $('#mtlDate').val()
 						modalSearchData=result
-						console.log(modalSearchData)
 						grid3.resetData(result);
 						setTimeout(() => grid3.refreshLayout(), 200);
 					},
@@ -239,35 +239,17 @@
 					 $('#mtlManager').val('');
 				})
 
-				// 더블클릭
-				grid3.on('dblclick',(ev)=>{
-					if(ev.rowKey==undefined){
-		        		return;
-		        	}
-					let data = grid3.getValue(ev.rowKey,'bpCode');
-		
-					console.log(data)
+				// 모달창 저장버튼이벤트
+				 $('#addModalBtn').on('click', function () {
+					 if(ev.rowKey==undefined){
+							// 체크여부확인 경고창
+							alert("체크하세요");
+			        		return; 
+			        }
+					 	let datas = grid3.getCheckedRows();
+						grid2.appendRows(datas);
+		        });
 
-					 	$.ajax({
-        		url:'/mtlget',
-        		method:'GET',
-        		data:{
-        			bpCode: data,
-					mtlDate: mtlDate
-        		},
-        		success:function(result){
-        			console.log(result);
-       	            $("#myModal").modal('hide');
-        			grid.resetData(eval([modalSearchData[ev.rowKey]]));
-       	            grid2.resetData(result);
-        		},
-        		error:function(err){
-        			
-        		console.log(err)
-        				}
-        			})
-				})
-				
 				let unsavedChanges = false;
 				
 				window.addEventListener('beforeunload', function(event) {
@@ -300,6 +282,10 @@
 					}
 					});
 				})
+				
+				
+				
+				
 			}
 
     </script>
