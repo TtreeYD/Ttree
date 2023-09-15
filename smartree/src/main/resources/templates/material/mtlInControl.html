@@ -90,8 +90,30 @@
 					}   ]
 				});
 				
-				const header = ['mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode']
+				const header = ['mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode','mtlChkDate']
+				// 검사완료 자재목록
+				$.ajax({
+		          url: '/mtlChecked',
+		          method: 'get',
+		          dataType: 'json',
+		          success: function (result) {
+		            //날짜변환
+		            $(result).each(function (idx, obj) {
+		              for (let head of header) {
 
+		                if (head.slice(-4).toLowerCase() == 'date') {
+		                  obj[head] = getDate(obj[head]);
+		                }
+		              }
+		            });
+		            mtlInGrid.resetData(eval(result));
+		          },
+		          error: function (err) {
+		            console.log(err);
+		          }
+		        })
+				
+				// 입고 아래리스트
 		        $.ajax({
 		          url: '/mtlExist',
 		          method: 'get',
@@ -106,7 +128,7 @@
 		                }
 		              }
 		            });
-		            mtlInGrid.resetData(eval(result));
+		            mtlCheckGrid.resetData(eval(result));
 		          },
 		          error: function (err) {
 		            console.log(err);

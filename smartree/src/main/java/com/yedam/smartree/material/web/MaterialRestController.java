@@ -24,19 +24,25 @@ public class MaterialRestController {
 	public List<MaterialVO> getMtlNeeds(){
 		return materialService.selectNeedList();
 	}
-	
+	// 재고조회 목록
 	@GetMapping("/mtlExist")
 	public List<MaterialVO> getMtlExist(){
 		return materialService.selectMtlList();
 	}
-	
+	// 출고조회 목록
 	@GetMapping("/mtlEmpty")
 	public List<MaterialVO> getMtlEmpty(){
 		return materialService.selectMtlOutList();
 	}
-	
+	// 안전재고 미달 목록
 	@GetMapping("/mtlMinus")
 	public List<MaterialVO> getMtlMinus(){
 		return materialService.selectMinusMtl();
 	}
+	// 검사완료 조회 목록
+	@GetMapping("/mtlChecked")
+	public List<MaterialVO> getMtlChecked(){
+		return materialService.selectChkMtl();
+	}
+	
 }
