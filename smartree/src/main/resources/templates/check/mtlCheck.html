@@ -18,11 +18,12 @@
 			<option value="mtlChkDate">검사조회</option>
 		</select> 
 		<input type="text" id="searchName" placeholder="검색어를 입력하시오">
+		<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
 		<div class="btn-group btn-right" role="group"
 			aria-label="Basic example"
 			style="float: right; padding-bottom: 10px;">
 			<button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
-			<button type="button" id="searchBtn" class="btn btn-primary"
+			<button type="button" id="noChkBtn" class="btn btn-primary"
 				data-toggle="modal" data-target="#myModal">미검사조회</button>
 			<button type="submit" id="addBtn" class="btn btn-primary">저장</button>
 
@@ -90,7 +91,7 @@
        let modalSearchData;
 	   let mtlDate;
         window.onload=function(){
-	     
+        	 
 		    const grid2 = new tui.Grid({
 			      el: document.getElementById('grid2'),
 			      scrollX: false,
@@ -134,6 +135,10 @@
 			            header: '검사자',
 			            name: 'mtlChkManager',
 					    editor: 'text'
+			          },
+			          {
+			            header: '검사상태',
+			            name: 'mtlChkStatus',
 					   
 			          },
 			      ]
@@ -182,7 +187,7 @@
 					}
 				})
 				
-			    $('#searchBtn').on('click', function(){
+			    $('#noChkBtn').on('click', function(){
                      setTimeout(() => grid3.refreshLayout(), 200);
                  })
 
@@ -240,14 +245,15 @@
 				})
 
 				// 모달창 저장버튼이벤트
-				 $('#addModalBtn').on('click', function () {
-					 if(ev.rowKey==undefined){
+				 $('#addModalBtn').on('click', function (ev) {
+					 if(!ev.rowKey==undefined){
 							// 체크여부확인 경고창
 							alert("체크하세요");
 			        		return; 
 			        }
 					 	let datas = grid3.getCheckedRows();
 						grid2.appendRows(datas);
+						$("#myModal").modal('hide');
 		        });
 
 				let unsavedChanges = false;
@@ -283,8 +289,18 @@
 					});
 				})
 				
-				
-				
+
+			function searchMtlName(){
+				   const searchOption = $('#searchOption').val();
+				          if ($('#searchName').val()) {
+				              let mtlValue = $('#searchName').val();
+			              if (searchOption === 'mtlChkCode') {
+			                  getMtlName(mtlValue);
+			              } else if (searchOption === 'mtlChkDate') {
+			                  getMtlDate(mtlValue);
+						}
+					}
+				} 
 				
 			}
 

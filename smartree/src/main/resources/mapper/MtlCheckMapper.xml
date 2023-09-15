@@ -93,7 +93,14 @@
   				mtl_chk_date LIKE '%'||#{mtlChkDate}||'%'
   			</if>
   		</where>  	
-		order by mtl_chk_code ASC	 
+		order by mtl_chk_code 	 
+  	</select>
+  	
+	<select id="selectChkAll" resultType="MtlCheckVO">
+		SELECT *
+		FROM mtl_chk c 
+		JOIN mtl_need n ON c.mtl_code = n.mtl_code
+		order by mtl_chk_code 
   	</select>
   	
   </mapper>

@@ -25,4 +25,5 @@ public class MtlCheckVO {
 	private Date mtlChkDate;
 	private String mtlChkManager;
 	private String mtlManager;
+	private String mtlChkStatus;
 }

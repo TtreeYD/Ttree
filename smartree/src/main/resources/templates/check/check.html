@@ -163,7 +163,18 @@
 		}
 	} 
   }
-          
+
+        $.ajax({
+			url:'/mtlallchk',
+			method:'get',
+	    	dataType:'json',
+			success:function(result){
+				grid.resetData(result);
+			},
+			error:function(err){
+				console.log(err);
+			}
+		})
     </script>
 		</div>
 	</div>

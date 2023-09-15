@@ -66,4 +66,8 @@ public class CheckRestController {
 		return mtlcheckservice.searchMtlDate(mtlDate);
 	}
 	
+	@GetMapping("/mtlallchk")
+	public List<MtlCheckVO> getMtlAllChk(){
+		return mtlcheckservice.selectChkAll();
+	}
 }
