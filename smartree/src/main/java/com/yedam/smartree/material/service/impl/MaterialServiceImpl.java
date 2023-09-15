@@ -45,5 +45,9 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialVO> selectMinusMtl() {
 		return materialMapper.selectMinusMtl();
 	}
+	@Override
+	public List<MaterialVO> selectChkMtl() {
+		return materialMapper.selectChkMtl();
+	}
 
 }

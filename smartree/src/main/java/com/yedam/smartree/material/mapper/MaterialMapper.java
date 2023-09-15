@@ -20,4 +20,6 @@ public interface MaterialMapper {
 	public List<MaterialVO> selectMinusMtl();
 	// 입고관리 전체출력
 	public List<MaterialVO> controlInList();
+	// 입고관리 검사완료목록 출력
+	public List<MaterialVO> selectChkMtl();
 }

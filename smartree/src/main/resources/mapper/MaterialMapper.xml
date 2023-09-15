@@ -33,5 +33,10 @@
 		WHERE (c.mtl_lot_cnt - t.mtl_ss) < 0
 		]]>
   	</select>
+  	<!-- 입고관리 검사완료 목록 출력 -->
+  	<select id="selectChkMtl" resultType="MaterialVO">
+  		SELECT mtl_code, mtl_name, mtl_chk_date, mtl_chk_manager, mtl_chk_code, mtl_chk_status
+		FROM mtl_chk JOIN mtl_table USING(mtl_code)
+  	</select>
   	
   </mapper>

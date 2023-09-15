@@ -79,4 +79,5 @@ public class MaterialVO {
 	private int mtlSs;								// 자재 안전재고
 	private int mtlNow;							// 자재 수량차
 	
+	// 입고관리 - 검사완료 목록
 }
