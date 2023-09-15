@@ -35,17 +35,17 @@
 
 		<script>
 			var Grid = tui.Grid;
-			let commonCode=[];
-			let codeDetail=[];
+			let commonCode = [];
+			let codeDetail = [];
 			let codeType;
-			
-			let options =  {
-								  cell: {
-								    disabled: {
-								      text: '#000000'
-								    }
-								  }
-								}
+
+			let options = {
+				cell: {
+					disabled: {
+						text: '#000000'
+					}
+				}
+			}
 			tui.Grid.applyTheme('default', options);
 
 			const grid = new Grid({
@@ -60,13 +60,13 @@
 				}, {
 					header: '코드명',
 					name: 'typeName',
-					editor:{
-						type:'text'
+					editor: {
+						type: 'text'
 					}
 				}]
 			});
-			
-			
+
+
 			const grid2 = new Grid({
 				el: document.getElementById('codeDetailGrid'),
 				scrollX: false,
@@ -79,28 +79,33 @@
 				}, {
 					header: '상세코드명',
 					name: 'codeName',
-					editor:{
-						type:'text'
+					editor: {
+						type: 'text'
 					}
 				}, {
 					header: '사용여부',
 					name: 'codeUse',
 					editor: {
-		            type: 'select',
-		            options: {
-		              listItems: [
-		                { text: 'Y', value: 'Y' },
-		                { text: 'N', value: 'N' }
-		              ]
-		            }
-		          }
+						type: 'select',
+						options: {
+							listItems: [{
+									text: 'Y',
+									value: 'Y'
+								},
+								{
+									text: 'N',
+									value: 'N'
+								}
+							]
+						}
+					}
 				}]
 			});
-		
+
 			grid.on('click', function (ev) {
-				if(ev.rowKey==undefined){
-	        		return;
-	        	}
+				if (ev.rowKey == undefined) {
+					return;
+				}
 				codeType = grid.getValue(ev.rowKey, 'codeType')
 				$.ajax({
 					url: "/selectCommonCode",
@@ -115,15 +120,15 @@
 					error: err => console.log(err)
 				})
 			})
-			
-			grid.on('afterChange', ev=>{
+
+			grid.on('afterChange', ev => {
 				let change = ev.changes
-				commonCode[change[0].rowKey][change[0].columnName]=change[0].value
+				commonCode[change[0].rowKey][change[0].columnName] = change[0].value
 			})
-			
-			grid2.on('afterChange', ev=>{
+
+			grid2.on('afterChange', ev => {
 				let change = ev.changes
-				codeDetail[change[0].rowKey][change[0].columnName]=change[0].value
+				codeDetail[change[0].rowKey][change[0].columnName] = change[0].value
 			})
 
 			selCodeType();
@@ -139,14 +144,14 @@
 					error: err => console.log(err)
 				})
 			}
-			
+
 			$('#insertCommonCode').on('click', insertCommonCode)
-			
-			let commonCodeList=[];
-			
+
+			let commonCodeList = [];
+
 			function insertCommonCode() {
-				for(let data of commonCode){
-					if(!data.codeType){
+				for (let data of commonCode) {
+					if (!data.codeType && data.typeName) {
 						console.log(data.typeName)
 						commonCodeList.push(data.typeName)
 					}
@@ -154,18 +159,21 @@
 				console.log(commonCodeList)
 				$.ajax({
 					url: '/insertCommonCode',
-					method: 'post',
-					contentType: 'application/json',
-					data:{
-						commonCodeList: JSON.stringify(commonCodeList)
+					type: 'post',
+					headers: {
+						'Content-Type': 'application/json'
 					},
+					data: JSON.stringify(commonCodeList),
 					success: result => {
 						console.log(result)
+						selCodeType();
 					},
 					error: err => console.log(err)
 				})
+				commonCodeList = [];
 			}
-			
+
+
 			$(addCommonCode).on('click', function () {
 				commonCode.push({
 					codeType: '',
@@ -173,9 +181,9 @@
 				})
 				grid.resetData(commonCode)
 			})
-			
+
 			$(addCodeDetail).on('click', function () {
-				if(!codeType){
+				if (!codeType) {
 					alert('공통코드를 선택해주세요');
 					return;
 				}

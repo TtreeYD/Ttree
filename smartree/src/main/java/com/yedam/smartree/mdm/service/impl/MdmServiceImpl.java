@@ -31,4 +31,9 @@ public class MdmServiceImpl implements MdmService {
 	public List<EmpVO> selectEmpList(String empDept, String empName) {
 		return mdmMapper.selectEmpList(empDept,empName);
 	}
+
+	@Override
+	public int insertCommonCode(CommonCodeVO commonCodeVO) {
+		return mdmMapper.insertCommonCode(commonCodeVO);
+	}
 }
