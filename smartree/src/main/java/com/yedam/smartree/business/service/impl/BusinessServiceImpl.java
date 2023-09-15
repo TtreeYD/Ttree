@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yedam.smartree.business.mapper.BusinessMapper;
+import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessService;
 import com.yedam.smartree.business.service.BusinessVO;
 import com.yedam.smartree.business.web.ReqVO;
@@ -41,6 +42,21 @@ public class BusinessServiceImpl implements BusinessService{
 			cnt++;
 		}
 		return cnt;
+	}
+	
+	//업체목록
+	@Override
+	public List<BpVO> selectBpList(BpVO bpVO) {
+		
+		System.out.println(bpVO.getBpCode());
+		return businessmapper.selectBpList(bpVO);
+		
+	}
+	
+	//제품목록
+	@Override
+	public List<BpVO> selectPrdtList(BpVO bpVO) {
+		return businessmapper.selectPrdtList(bpVO);
 	}
 
 }

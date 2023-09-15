@@ -61,5 +61,25 @@
   	<insert id="" parameterType="BusinessVO">
   		
   	</insert>
+  	<!-- 거래처목록 -->
+  	<select id="selectBpList" resultType="BpVO">
+  		select bp_code , bp_name , bp_type , bp_main
+		  from business_partner
+		  <where>
+		  	<if test="bpCode != null">
+		  		bp_code = #{bpCode}
+		  	</if>
+		  </where>
+  	</select>
   	
+  	<!-- 제품목록 -->
+  	<select id="selectPrdtList" resultType="BpVO">
+  		select prdt_code , prdt_name , prdt_type , prdt_unit
+  		from prdt_table
+  		<where>
+  			<if test="prdtCode != null">
+  				prdt_code = #{prdtCode}
+  			</if>
+  		</where>
+  	</select>
   </mapper>

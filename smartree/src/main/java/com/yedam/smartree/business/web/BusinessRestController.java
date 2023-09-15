@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessService;
 import com.yedam.smartree.business.service.BusinessVO;
 /*
@@ -44,10 +45,21 @@ public class BusinessRestController {
 //		System.out.println(businessService.clickOrder(businessVO));
 //		return businessService.selectOrderDtList(businessVO);
 //	}
-	
+	//주문등록
 	@PostMapping("/insertOrder")
 	public int insertOrder(@RequestBody ReqVO<BusinessVO> businessvo) {
-		
+		System.out.println(businessvo);
 		return businessService.insertOrder(businessvo);
+	}
+	//업체목록 불러오기
+	@GetMapping("/partnerList")
+	public List<BpVO> getBpList(BpVO bpVO){
+		
+		return businessService.selectBpList(bpVO);
+	}
+	//제품목록 불러오기
+	@GetMapping("/prdtList")
+	public List<BpVO> getprdtList(BpVO bpVO){
+		return businessService.selectPrdtList(bpVO);
 	}
 }
