@@ -56,7 +56,7 @@ public class BusinessRestController {
 	public List<BpVO> getBpList(BpVO bpVO){
 		
 		return businessService.selectBpList(bpVO);
-	}
+	}	
 	//제품목록 불러오기
 	@GetMapping("/prdtList")
 	public List<BpVO> getprdtList(BpVO bpVO){
