@@ -25,22 +25,24 @@ public class ProdServiceImpl implements ProdService {
 	public List<BusinessVO> selectOrderAndPrdt() {
 		return prodMapper.selectAllOrderAndPrdt();
 	}
-//
-//	@Override
-//	public List<BusinessVO> selectOneOrderAndPrdt(BusinessVO vo) {
-//		return prodMapper.selectOrderAndPrdt(vo);
-//	}
-
+	
 	@Override
 	public int insertProdPlan(RequestVO<ProdVO> vo) {
 		int cnt = 0;
 		// get Header
+		//String orderCode = vo.getList().get(0).getOrderCode();
+		//vo.getVo().setOrderCode(orderCode);
 		prodMapper.insertProdPlan(vo.getVo());
 		String prodPlanCode = vo.getVo().getProdPlanCode();
+		
 		// 계획 상세 저장하는 for문
 		for(ProdVO pvo : vo.getList()) {
 			pvo.setProdPlanCode(prodPlanCode);
-//			System.out.println(pvo.toString());
+//			pvo.setOrderCode(orderCode);
+//			if(pvo.getProdPlanCnt() == 0) continue;
+		
+			System.out.println("7777777"+prodPlanCode);
+ 			System.out.println(pvo.toString());
 			prodMapper.insertDtProdPlan(pvo);
 			cnt++;
 		}

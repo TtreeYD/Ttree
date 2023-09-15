@@ -35,6 +35,10 @@
 	      el: document.getElementById('grid'),
 	      scrollX: false,
 	      scrollY: false,
+	      pageOptions: {
+            perPage: 10,
+            useClient: true,
+          },
 	      columns: [
 	        {
 	          header: '계획상세코드',
@@ -75,6 +79,7 @@
 			url:'/prodPlanList',
 			method:'get',
 	    dataType:'json',
+
 			success:function(result){
 				grid.resetData(result);
 			},
