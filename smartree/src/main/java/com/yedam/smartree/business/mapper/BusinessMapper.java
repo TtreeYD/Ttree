@@ -2,7 +2,6 @@ package com.yedam.smartree.business.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
 
 import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessVO;
@@ -23,5 +22,6 @@ public interface BusinessMapper {
 	public List<BpVO> selectBpList(BpVO bpVO);
 	//제품목록
 	public List<BpVO> selectPrdtList(BpVO bpVO);
+	
 	
 }

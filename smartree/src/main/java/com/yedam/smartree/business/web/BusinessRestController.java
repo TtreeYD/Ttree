@@ -6,11 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessService;
 import com.yedam.smartree.business.service.BusinessVO;
+import com.yedam.smartree.business.service.ReqVO;
 /*
 개발자:정호현
 개발일자:23/09/14
@@ -47,10 +49,12 @@ public class BusinessRestController {
 //	}
 	//주문등록
 	@PostMapping("/insertOrder")
+	@ResponseBody
 	public int insertOrder(@RequestBody ReqVO<BusinessVO> businessvo) {
-		System.out.println(businessvo);
 		return businessService.insertOrder(businessvo);
 	}
+	
+	
 	//업체목록 불러오기
 	@GetMapping("/partnerList")
 	public List<BpVO> getBpList(BpVO bpVO){

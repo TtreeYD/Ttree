@@ -56,22 +56,27 @@
   	<selectKey keyProperty="orderCode" resultType="String" order="BEFORE">
   		select 'ORD' || LPAD(order_code_seq.NEXTVAL, 7, '0') as orderCode from dual
   	</selectKey>
-  		{call insert_order_dt(
-  			#{orderCode},
-  			#{bpCode},
-  			#{orderDate},
-  			#{orderManager},
-  			#{dodDate},
-  			#{orderDtCode},
-  			#{prdtCode},
-  			#{orderDtCnt}
-  			)}
+  		insert into orders (order_code , bp_code , order_date , order_manager , dod_date )
+  		values(
+  			#{orderCode}
+  			,#{bpCode}
+  			,#{orderDate}
+  			,#{orderManager}
+  			,#{dodDate}
+  		)
   	</insert>
   	
   	<!-- 주문상세등록 -->
   	<insert id="insertDtOrder" parameterType="BusinessVO">
-  		
+  		insert into dt_order 
+  		values (
+  			'ODC'|| LPAD(order_dt_code_seq.NEXTVAL , 7 , '0')
+  			,#{prdtCode}
+  			,#{orderDtCnt}
+  			,#{orderCode}
+  		)
   	</insert>
+  	
   	<!-- 거래처목록 -->
   	<select id="selectBpList" resultType="BpVO">
   		select bp_code , bp_name , bp_type , bp_main
