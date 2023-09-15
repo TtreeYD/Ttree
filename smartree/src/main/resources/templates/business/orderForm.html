@@ -58,9 +58,10 @@
 
 
 		<script>
-			let searchModalData;
+			let searchModalData = [];
 			let newOrder =[];
 			let newDtOrder =[];
+			let selectedData;
 			$(document).ready(function () {
 				//주문그리드
 				const order = new tui.Grid({
@@ -210,7 +211,7 @@
 								$('#myModal').modal('hide');
 								order.resetData(eval([searchModalData[ev.rowKey]]));
 								dtOrder.resetData(result);
-								searchModalData = searchModalData[ev.rowKey];//불러온 해당 열 변수에 저장
+								selectedData = searchModalData[ev.rowKey];//불러온 해당 열 변수에 저장
 								newOrder = result;
 								newDtOrder = result;
 							},
@@ -222,7 +223,9 @@
 						})
 					})
 					//초기화 - 주문서 ,주문서상세 초기화
-					$('#resetBtn').on('click',function(){						
+					$('#resetBtn').on('click',function(){		
+						newOrder = [];
+						newDtOrder = [];
 						order.resetData([]);
 						dtOrder.resetData([]);
 					});
