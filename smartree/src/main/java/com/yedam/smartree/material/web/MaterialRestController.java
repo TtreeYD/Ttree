@@ -34,4 +34,9 @@ public class MaterialRestController {
 	public List<MaterialVO> getMtlEmpty(){
 		return materialService.selectMtlOutList();
 	}
+	
+	@GetMapping("/mtlMinus")
+	public List<MaterialVO> getMtlMinus(){
+		return materialService.selectMinusMtl();
+	}
 }

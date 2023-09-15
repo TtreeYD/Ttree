@@ -45,4 +45,5 @@ public class MaterialController {
 	public String controlInList() {
 		return "material/mtlInControl";
 	}
+	
 }
