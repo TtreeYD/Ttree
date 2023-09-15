@@ -40,5 +40,10 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialVO> controlInList() {
 		return materialMapper.controlInList();
 	}
+	// 안전재고 미달목록
+	@Override
+	public List<MaterialVO> selectMinusMtl() {
+		return materialMapper.selectMinusMtl();
+	}
 
 }

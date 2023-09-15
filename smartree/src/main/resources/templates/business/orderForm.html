@@ -14,14 +14,14 @@
 			<button class="btn btn-primary" style="float:right" id="searchOrder">검색</button>
 			<button class="btn btn-primary" style="float:right" id="resetBtn">초기화</button>
 			<button class="btn btn-primary" style="float:right" id="saveBtn">저장</button>
-			<button class="btn btn-primary" style="float:right">새주문서</button>
+			<button class="btn btn-primary" style="float:right" id="insertBtn">새주문서</button>
 			<button class="btn btn-primary" style="float:right">삭제</button>
 		</div>
 		<div id="order"></div>
 		<h2 style="height : 0px;margin-top:200px">주문상세정보</h2>
 		<div class="btn-group" role="group" aria-label="Basic example" style="float : right;">
-			<button class="btn btn-primary" style="float:right">추가</button>
-			<button class="btn btn-primary" style="float:right">저장</button>
+			<button class="btn btn-primary" style="float:right" id="insertDtBtn">추가</button>
+			<button class="btn btn-primary" style="float:right" id="deleteDtBtn">삭제</button>
 		</div>
 		<div id="dtOrder"></div>
 
@@ -54,11 +54,50 @@
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
 		</div><!-- /.modal -->
-
+		
+		
+		<!-- 업체모달 -->
+		<div class="modal fade" tabindex="-1" role="dialog" id="bpModal">
+			<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+				<div class="modal-content">
+					<h2 style="margin:30px">업체목록</h2>
+					
+					
+					<div class="modal-body">
+						<div id="bpListModal"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+		
+		<!-- 제품모달 -->
+		<div class="modal fade" tabindex="-1" role="dialog" id="prModal">
+			<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+				<div class="modal-content">
+					<h2 style="margin:30px">제품목록</h2>
+					
+					
+					<div class="modal-body">
+						<div id="prdtListModal"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
 
 
 		<script>
-			let searchModalData;
+			let searchModalData = [];
+			let newOrder =[];
+			let newDtOrder =[];
+			let selectedData; // 주문서에있는해당값 저장
+			let dtOrderRowNum;
+			let newOrderData={};//새주문서 data에 넣어줄 객체생성
 			
 			$(document).ready(function () {
 				//주문그리드
@@ -67,10 +106,7 @@
 					scrollX: false,
 					scrollY: true,
 					columns: [
-						{
-							header: '주문코드',
-							name: 'orderCode',
-						},
+						
 						{
 							header: '업체코드',
 							name: 'bpCode',
@@ -104,10 +140,6 @@
 					scrollY: true,
 					rowHeaders: ['checkbox'],
 					columns: [
-						{
-							header: '주문상세코드',
-							name: 'orderDtCode',
-						},
 						{
 							header: '제품명',
 							name: 'prdtName',
@@ -155,6 +187,57 @@
 							header: '담당자',
 							name: 'orderManager',
 						},
+					]
+				})
+				//업체리스트
+				const bpListModal = new tui.Grid({
+					el: document.getElementById('bpListModal'),
+					scrollX: false,
+					scrollY: true,
+					columns: [
+						{
+							header: '업체코드',
+							name: 'bpCode',
+						},
+						{
+							header: '업체명',
+							name: 'bpName',
+						},
+						{
+							header: '분류',
+							name: 'bpType',
+						},
+						{
+							header: '주거래',
+							name: 'bpMain',
+						}
+						
+					]
+				})
+				
+				//제품
+				const prdtListModal = new tui.Grid({
+					el: document.getElementById('prdtListModal'),
+					scrollX: false,
+					scrollY: true,
+					columns: [
+						{
+							header: '제품코드',
+							name: 'prdtCode',
+						},
+						{
+							header: '제품명',
+							name: 'prdtName',
+						},
+						{
+							header: '분류',
+							name: 'prdtType',
+						},
+						{
+							header: '단위',
+							name: 'prdtUnit',
+						}
+						
 					]
 				})
 				
@@ -209,8 +292,9 @@
 								$('#myModal').modal('hide');
 								order.resetData(eval([searchModalData[ev.rowKey]]));
 								dtOrder.resetData(result);
-								searchModalData = searchModalData[ev.rowKey];//불러온 해당 열 변수에 저장
-								
+								selectedData = searchModalData[ev.rowKey];//불러온 해당 열 변수에 저장
+								newOrder = result;
+								newDtOrder = result;
 							},
 							error:function(err){
 								console.log(err)
@@ -220,7 +304,9 @@
 						})
 					})
 					//초기화 - 주문서 ,주문서상세 초기화
-					$('#resetBtn').on('click',function(){						
+					$('#resetBtn').on('click',function(){		
+						newOrder = [];
+						newDtOrder = [];
 						order.resetData([]);
 						dtOrder.resetData([]);
 					});
@@ -231,12 +317,13 @@
 						$('#plsdate').val('');
 						$('#doddate').val('');
 					});
+					//새주문서클릭
 					$('#saveBtn').on('click',function(){
 						let editdata={};
 						editdata.vo = order.getData();
 						editdata.list = dtOrder.getData();
 						console.log(editdata);
-						if(searchModalData.orderCode != ''){//수정
+						 if(editdata.vo[0].orderCode != null){//수정
 							/* $.ajax({
 								url:'',
 								method:'POST',
@@ -246,14 +333,150 @@
 									
 								}
 							}) */
+							console.log('update');
 						}else{//등록
+							console.log('insert');
 							
-						}
+							
+							newOrderData.orderList = order.getData();
+							newOrderData.orderDtList = dtOrder.getData();
+							console.log('등록데이터:',newOrderData);
+							$.ajax({
+								url:'/insertOrder',
+								method:'POST',
+								dataType: 'json',
+								contentType : 'application/json',
+								data:JSON.stringify(newOrderData),
+								success:function(result){
+									console.log(result)
+								},
+								error:function(err){
+									console.log(err);
+								}
+									
+								
+							})
+						
+						} 
 						
 					});
 					
+					$('#insertBtn').on('click',function(){
+						newOrder = [];
+						newDtOrder = [];
+						order.resetData([]);
+						dtOrder.resetData([]);
+						newOrder.push({
+							codeType:'',
+							typeName:''					
+						})
+						order.resetData(newOrder);
+					})
+					$('#insertDtBtn').on('click',function(){
+						newDtOrder.push({
+							codeType:'',
+							typeName:''					
+						});
+						dtOrder.resetData(newDtOrder);
+					})
+					
+					//업체명 , 업체코드 클릭이벤트
+					order.on('click',(ev)=>{
+						if(ev.columnName != 'bpName' && ev.columnName !='bpCode'){
+							return;	
+						}
+						$.ajax({
+							url:'/partnerList',
+							method:'GET',
+							success:function(result){
+								bpListModal.resetData(result);
+								setTimeout(() => bpListModal.refreshLayout(), 200);
+								$('#bpModal').modal('show');
+								
+							},
+							error:function(err){
+								console.log(err);
+							}
+						})
+					})
+					//업체더블클릭 이벤트
+					bpListModal.on('dblclick',(ev)=>{
+						if(ev.rowKey==undefined){
+			        		return;
+			        	}
+						let data = bpListModal.getValue(ev.rowKey,'bpCode');
+						console.log(data)
+						$.ajax({
+							url:'/partnerList',
+							method:'GET',
+							data:{
+								bpCode: data
+							},
+							success:function(result){
+								$('#bpModal').modal('hide');
+								order.resetData(result);
+								
+							},
+							error:function(err){
+								console.log(err);
+							}
+						})
+					})
+					
+					//제품 클릭모달이벤트
+					dtOrder.on('click',(ev)=>{
+						if(ev.columnName != 'prdtCode' && ev.columnName !='prdtName'){
+							return;	
+						}
+						console.log(ev.rowKey)
+						dtOrderRowNum = ev.rowKey
+						$.ajax({
+							url:'/prdtList',
+							method:'GET',
+							success:function(result){
+								prdtListModal.resetData(result);
+								setTimeout(() => prdtListModal.refreshLayout(), 200);
+								$('#prModal').modal('show');
+								
+							},
+							error:function(err){
+								console.log(err)
+							}
+						})
+					})
+					
+					//제품 더블클릭 이벤트
+					prdtListModal.on('dblclick',(ev)=>{
+						if(ev.rowKey==undefined){
+			        		return;
+			        	}
+						let data = prdtListModal.getValue(ev.rowKey,'prdtCode');
+						$.ajax({
+							url:'/prdtList',
+							method:'GET',
+							data:{
+								prdtCode : data
+							},
+							success:function(result){
+								newDtOrder[dtOrderRowNum] = result[0]
+								dtOrder.resetData(newDtOrder);
+								$('#prModal').modal('hide');
+							},
+							error:function(err){
+								console.log(err)
+							}
+							
+						})
+					});
+					//주문상세 change 될때마다 newDtOrder에 저장해서 값 안사라지게하는이벤트
+					 dtOrder.on('afterChange', ev=>{
+						 console.log(ev)
+			            let change = ev.changes
+			            newDtOrder[change[0].rowKey][change[0].columnName]=change[0].value
+			         })
+					
 				})
-
+				
 			
 		</script>
 	</div>

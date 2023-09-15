@@ -29,4 +29,6 @@ public class BusinessVO {
 	private String prdtCode;
 	private int orderDtCnt;
 	
+	//거래처목록
+	
 }

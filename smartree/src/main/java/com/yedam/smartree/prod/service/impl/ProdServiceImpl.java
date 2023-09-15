@@ -36,11 +36,12 @@ public class ProdServiceImpl implements ProdService {
 		int cnt = 0;
 		// get Header
 		prodMapper.insertProdPlan(vo.getVo());
-		
+		String prodPlanCode = vo.getVo().getProdPlanCode();
 		// 계획 상세 저장하는 for문
-		for(int i = 0; i < vo.getList().size(); i++) {
-			System.out.println(vo.getList().toString());
-			prodMapper.insertDtProdPlan(vo.getList().get(i));
+		for(ProdVO pvo : vo.getList()) {
+			pvo.setProdPlanCode(prodPlanCode);
+//			System.out.println(pvo.toString());
+			prodMapper.insertDtProdPlan(pvo);
 			cnt++;
 		}
 		return cnt;

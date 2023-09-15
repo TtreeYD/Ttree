@@ -12,7 +12,7 @@
   	
   	<!-- 주문서상세조회 -->
   	<select id="selectOrderDtList" resultType="BusinessVO">
-	  	select d.order_dt_code , p.prdt_name , p.prdt_code, d.order_dt_cnt , o.dod_date 
+	  	select o.order_code , d.order_dt_code , p.prdt_name , p.prdt_code, d.order_dt_cnt , o.dod_date 
 		  from orders o join dt_order d on o.order_code = d.order_code
 		              join prdt_table p on d.prdt_code = p.prdt_code
 		 where o.order_code = #{orderCode}
@@ -50,5 +50,36 @@
 		       </if>	
 		</where>
   	</select>
-  
+  	
+  	<!-- 주문등록 -->
+  	<insert id="insertOrder" parameterType="BusinessVO">
+  		insert into orders 
+  		values ()
+  	</insert>
+  	
+  	<!-- 주문상세등록 -->
+  	<insert id="" parameterType="BusinessVO">
+  		
+  	</insert>
+  	<!-- 거래처목록 -->
+  	<select id="selectBpList" resultType="BpVO">
+  		select bp_code , bp_name , bp_type , bp_main
+		  from business_partner
+		  <where>
+		  	<if test="bpCode != null">
+		  		bp_code = #{bpCode}
+		  	</if>
+		  </where>
+  	</select>
+  	
+  	<!-- 제품목록 -->
+  	<select id="selectPrdtList" resultType="BpVO">
+  		select prdt_code , prdt_name , prdt_type , prdt_unit
+  		from prdt_table
+  		<where>
+  			<if test="prdtCode != null">
+  				prdt_code = #{prdtCode}
+  			</if>
+  		</where>
+  	</select>
   </mapper>

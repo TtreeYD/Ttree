@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.mdm.service.CommonCodeVO;
@@ -32,11 +33,22 @@ public class CommonRestController {
 	public List<CommonCodeVO> selectCommonCode(String codeType) {
 		return mdmService.selectCommonCodeList(codeType);
 	}
+	
+	// 공통코드입력
+	@PostMapping("/insertCommonCode")
+	public String insertCommonCode(List<String> commonCodeList) {
+		for(String commonCode : commonCodeList) {
+			System.out.println(commonCode);
+		}
+		return "ㅎㅎ";
+	}
 
 	// 사원 조회
 	@GetMapping("/selectEmpList")
 	public List<EmpVO> selectEmpList(String empDept, String empName) {
 		return mdmService.selectEmpList(empDept, empName);
 	}
+	
+	//
 
 }

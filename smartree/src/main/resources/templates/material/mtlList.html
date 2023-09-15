@@ -31,7 +31,9 @@
 		</div>
 		<div id="mtlGrid"></div>
 		<script>
+		
 			window.onload = function() {
+				
 				const mtlGrid = new tui.Grid({
 					el : document.getElementById('mtlGrid'),
 					scrollX : false,
@@ -43,7 +45,9 @@
 			          },
 					columns : [ {
 						header : '자재LOT',
-						name : 'mtlLotNum'
+						name : 'mtlLotNum',
+						sortable: true,
+					    sortingType: 'asc'
 					}, {
 						header : '자재코드',
 						name : 'mtlCode'
@@ -67,7 +71,6 @@
 				
 				const header = ['mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode']
 
-		        // Orders List불러오기
 		        $.ajax({
 		          url: '/mtlExist',
 		          method: 'get',

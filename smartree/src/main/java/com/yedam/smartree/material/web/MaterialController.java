@@ -40,9 +40,10 @@ public class MaterialController {
 	public String controlNeedList() {
 		return "material/mtlNeedControl";
 	}
-	// 입고관리 controlInList()
+	// 입고관리
 	@GetMapping("/mtlInControl")
 	public String controlInList() {
 		return "material/mtlInControl";
 	}
+	
 }

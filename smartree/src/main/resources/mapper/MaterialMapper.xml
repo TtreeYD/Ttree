@@ -23,4 +23,15 @@
     <select id="selectMtlOutList" resultType="MaterialVO">
   		select * from mtl_out
   	</select>
+  	
+  	<!-- 발주관리 안전재고 미달목록 출력 -->
+  	<select id="selectMinusMtl" resultType="MaterialVO">
+  		SELECT t.mtl_type, c.mtl_code, t.mtl_name, t.mtl_ss, c.mtl_lot_cnt, (c.mtl_lot_cnt - t.mtl_ss) AS "mtl_now"
+		FROM mtl_container c JOIN mtl_table t
+		ON c.mtl_code = t.mtl_code
+		<![CDATA[
+		WHERE (c.mtl_lot_cnt - t.mtl_ss) < 0
+		]]>
+  	</select>
+  	
   </mapper>
