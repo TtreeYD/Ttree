@@ -4,6 +4,8 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
 	layout:decorate="~{layout/layout}">
 <head>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <meta charset="UTF-8">
 <title>자재입고관리</title>
 
@@ -11,11 +13,16 @@
 <body>
 	<div layout:fragment="content">
 		<h3>자재입고관리</h3>
-		<a href="" style="margin:20px">검사완료 자재목록<a>
+		<a href="javascript:pop()" style="margin:20px">검사완료 자재목록<a>
 		<div id="mtlCheckGrid"></div>
 		<br>
 		<div id="mtlInGrid"></div>
 		<script>
+		// 검사완료 목록 출력/숨기기
+	    function pop(){
+    	    $('#mtlCheckGrid').toggle("size", 500);
+   	    }		
+		
 			window.onload = function() {
 				// 검사완료목록
 				const mtlCheckGrid = new tui.Grid({
@@ -59,7 +66,9 @@
 			          },
 					columns : [ {
 						header : '자재LOT',
-						name : 'mtlLotNum'
+						name : 'mtlLotNum',
+						sortable: true,
+					    sortingType: 'asc'
 					}, {
 						header : '자재코드',
 						name : 'mtlCode'
