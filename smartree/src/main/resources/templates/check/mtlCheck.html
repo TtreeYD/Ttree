@@ -196,8 +196,6 @@
 				$.ajax({
 					url: '/mtlcheck', 
 					method: 'post',
-					// dataType: 'json',
-					// contentType : 'application/json',
 					data : 
 					{
 						mtlDate : $('#mtlDate').val(),
@@ -278,6 +276,7 @@
 					success: function(result) {
 						alert(result +" 건 저장완료");
 						unsavedChanges = false;
+						grid2.resetData([]);
 					},
 					error: function(err) {
 						console.log(err);

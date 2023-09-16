@@ -18,8 +18,9 @@
 	  			mtl_manager
 		FROM	mtl_need
         <where>
+        	mtl_where = '주문완료'
           <if test="mtlDate != null">
-             mtl_date >= #{mtlDate} AND mtl_date <![CDATA[<]]> #{mtlDate}+1
+            AND mtl_date >= #{mtlDate} AND mtl_date <![CDATA[<]]> #{mtlDate}+1
           </if>
           <if test="bpCode != null and !bpCode.equals('')">
             AND bp_code = #{bpCode}
@@ -52,23 +53,21 @@
   	</select>
   	
   	
-  	
-  	<insert id="insertChkMtl" parameterType="MtlCheckVO">
-  		insert into mtl_chk(
-  		                mtl_chk_code,
-  		                mtl_code , 
-  		                mtl_chk_cnt,
-  		                mtl_error_cnt,
-  		                mtl_pass_cnt,
-  		                mtl_chk_manager)
-  		values  ( 'MTC' || LPAD(mtl_chk_seq.NEXTVAL, 5, '0')
-  				,#{mtlCode} 
-  				 ,#{mtlChkCnt} 
-  				 ,#{mtlErrorCnt}
-  				 ,#{mtlPassCnt}
-  				 ,#{mtlChkManager})
+  	<insert id="insertChkMtl" parameterType="MtlCheckVO" statementType="CALLABLE">
+  		<selectKey keyProperty="mtlChkCode" resultType="String" order="BEFORE">
+       	 	select 'MTL' || LPAD(mtl_chk_seq.NEXTVAL, 5, '0') as mtlChkCode from dual
+    	</selectKey>
+  	{call InsertAndUpdateMtlCheck(
+  		#{mtlChkCode},
+  		#{mtlCode},
+  		#{mtlChkCnt},
+  		#{mtlErrorCnt},
+  		#{mtlPassCnt},
+  		#{mtlChkManager}
+  	)}
   	</insert>
-  	
+  
+
   <select id="searchMtl" resultType="MtlCheckVO">
   	 SELECT c.mtl_chk_code, c.mtl_chk_date, c.mtl_date, n.mtl_code, n.bp_code, n.mtl_name, c.mtl_chk_cnt, c.mtl_error_cnt , c.mtl_pass_cnt, c.mtl_chk_manager
 		FROM mtl_chk c 
@@ -87,7 +86,6 @@
   	 SELECT c.mtl_chk_code, c.mtl_chk_date, c.mtl_date, n.mtl_code, n.bp_code, n.mtl_name, c.mtl_chk_cnt, c.mtl_error_cnt , c.mtl_pass_cnt, c.mtl_chk_manager
 		FROM mtl_chk c 
 		JOIN mtl_need n ON c.mtl_code = n.mtl_code
-		
   		<where>
   			<if test="mtlChkDate != null and !mtlChkDate.equals('')">
   				mtl_chk_date LIKE '%'||#{mtlChkDate}||'%'
@@ -102,5 +100,7 @@
 		JOIN mtl_need n ON c.mtl_code = n.mtl_code
 		order by mtl_chk_code 
   	</select>
+  	
+  	
   	
   </mapper>
