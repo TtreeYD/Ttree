@@ -6,6 +6,8 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.yedam.smartree.check.service.MtlCheckVO;
 
+import groovyjarjarantlr4.v4.parse.GrammarTreeVisitor.mode_return;
+
 public interface MtlCheckMapper {
 
 	public List<MtlCheckVO> selectAll();
@@ -15,4 +17,5 @@ public interface MtlCheckMapper {
 	public List<MtlCheckVO> searchMtl(String mtlName);
 	public List<MtlCheckVO> searchMtlDate(String mtlDate);
 	public List<MtlCheckVO> selectChkAll();
+
 }
