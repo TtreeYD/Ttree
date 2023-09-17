@@ -49,11 +49,34 @@ public class BusinessRestController {
 //	}
 	//주문등록
 	@PostMapping("/insertOrder")
-	@ResponseBody
 	public int insertOrder(@RequestBody ReqVO<BusinessVO> businessvo) {
 		return businessService.insertOrder(businessvo);
 	}
+	//주문수정
+	@PostMapping("/updateOrder")
+	public int updateOrder(@RequestBody ReqVO<BusinessVO> businessvo) {
+		System.out.println(businessvo);
+		return businessService.updateOrder(businessvo);
+	}
 	
+	//주문수정중 상세주문 추가로 등록하는경우 
+	@PostMapping("/plusDtOrder")
+	public int plusDtOrder(@RequestBody ReqVO<BusinessVO> businessvo) {
+		System.out.println("111111111111111111111"+businessvo);
+		return businessService.plusDtOrder(businessvo);
+	}
+	
+	//주문서삭제
+	@PostMapping("/deleteOrder")
+	public int deleteOrder(@RequestBody ReqVO<BusinessVO> businessvo) {
+		return businessService.deleteOrder(businessvo);
+	}
+	
+	//주문서상세삭제
+	@PostMapping("/deleteDtOrder")
+	public int deleteDtOrder(@RequestBody ReqVO<BusinessVO> businessvo) {
+		return businessService.deleteDtOrder(businessvo);
+	}
 	
 	//업체목록 불러오기
 	@GetMapping("/partnerList")
