@@ -25,11 +25,10 @@ public class CheckRestController {
 	@Autowired
 	MtlCheckService mtlcheckservice;
 	
-	@GetMapping("/check")
-	public List<MtlCheckVO> getcheck(){
-		return mtlcheckservice.selectAll();
+	@GetMapping("/mtlcheck")
+	public List<MtlCheckVO> getmtlcheck(MtlCheckVO vo){
+		return mtlcheckservice.selectMtl(vo);
 	}
-	
 	
 	@PostMapping("/mtlcheck")
 	@ResponseBody
@@ -37,11 +36,6 @@ public class CheckRestController {
 
 		System.out.println(mtlcheckservice.selectMtl(vo));
 		return mtlcheckservice.selectMtl(vo);
-	}
-	
-	@GetMapping("/mtlget")
-	public List<MtlCheckVO> mtlgetcheck(@RequestParam(value = "vo", required=false) List<MtlCheckVO> vo){
-		return null;//mtlcheckservice.selectMtl(vo)
 	}
 	
 	
@@ -69,5 +63,10 @@ public class CheckRestController {
 	@GetMapping("/mtlallchk")
 	public List<MtlCheckVO> getMtlAllChk(){
 		return mtlcheckservice.selectChkAll();
+	}
+	
+	@PostMapping("/updatemtlchk")
+	public int mtlupdate(MtlCheckVO vo) {
+		return mtlcheckservice.updateChkMtl(vo);
 	}
 }
