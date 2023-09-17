@@ -286,24 +286,24 @@
 				// 저장버튼 이벤트
 				$('#addBtn').on('click',function(e){
 					let data = grid2.getData();
-					/* // 입력된 값이 있는 행만 필터링
+					 // 입력된 값이 있는 행만 필터링
 					 let filteredData = data.filter(row => (
-						(typeof row.mtlChkCnt == 'number' && !isNaN(row.mtlChkCnt)) ||
-						(typeof row.mtlErrorCnt == 'number' && !isNaN(row.mtlErrorCnt)) ||
-						(typeof row.mtlPassCnt == 'number' && !isNaN(row.mtlPassCnt)) ||
-					    (row.mtlChkManager && row.mtlChkManager.trim() != '')
-					  )); */
+					    (row.mtlChkCnt && row.mtlChkCnt.trim() !== '') ||
+					    (row.mtlErrorCnt && row.mtlErrorCnt.trim() !== '') ||
+					    (row.mtlPassCnt && row.mtlPassCnt.trim() !== '') ||
+					    (row.mtlChkManager && row.mtlChkManager.trim() !== '')
+					  )); 
 					  
-					/*   if (data.length == 0) {
+					   if (filteredData.length == 0) {
 					    alert("저장할 데이터가 없습니다. 입력된 값을 확인하세요.");
 					    return; 
-					  } */
+					  } 
 					$.ajax({
 					url: '/mtlinsert', 
 					method: 'post',
 					dataType: 'json',
 					contentType : 'application/json',
-					data : JSON.stringify(data)
+					data : JSON.stringify(filteredData)
 					,
 					success: function(result) {
 						alert(result +" 건 저장완료");
