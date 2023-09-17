@@ -15,7 +15,7 @@
 			<button class="btn btn-primary" style="float:right" id="resetBtn">초기화</button>
 			<button class="btn btn-primary" style="float:right" id="saveBtn">저장</button>
 			<button class="btn btn-primary" style="float:right" id="insertBtn">새주문서</button>
-			<button class="btn btn-primary" style="float:right">삭제</button>
+			<button class="btn btn-primary" style="float:right"id="deleteBtn">삭제</button>
 		</div>
 		<div id="order"></div>
 		<h2 style="height : 0px;margin-top:200px">주문상세정보</h2>
@@ -98,7 +98,7 @@
 			let selectedData; // 주문서에있는해당값 저장
 			let dtOrderRowNum;
 			let newOrderData={};//새주문서 data에 넣어줄 객체생성
-			
+			let updateDtOrder;
 			$(document).ready(function () {
 				//주문그리드
 				const order = new tui.Grid({
@@ -247,10 +247,11 @@
 					$('#plsdate').val('');
 					$('#doddate').val('');
 					$("#myModal").modal('show');
+					searchModal.resetData([]);
 					
 				});
 				//조회 처리이벤트
-				$('#searchDataBtn').on('click',function(ev){		
+				$('#searchDataBtn').on('click',function(ev){
 					$.ajax({
 						url:'/selectOrder',
 						method: 'POST',
@@ -292,8 +293,9 @@
 								order.resetData(eval([searchModalData[ev.rowKey]]));
 								dtOrder.resetData(result);
 								selectedData = searchModalData[ev.rowKey];//불러온 해당 열 변수에 저장
-								newOrder = result;
+								newOrder.push(searchModalData[ev.rowKey]);
 								newDtOrder = result;
+								updateDtOrder=result.length;
 							},
 							error:function(err){
 								console.log(err)
@@ -321,23 +323,66 @@
 						let editdata={};
 						editdata.vo = order.getData();
 						editdata.list = dtOrder.getData();
-						 if(editdata.vo[0].orderCode != null){//수정
-							/* $.ajax({
-								url:'',
+						
+						
+					    console.log(dtOrder.getData().length);
+						console.log(updateDtOrder);
+					 	if(dtOrder.getData().length > updateDtOrder){//수정중 상세주문 추가한경우
+									console.log('수정등록');
+							 for(let i =dtOrder.getData().length-1; i>updateDtOrder-1; i--){
+								 newOrderData.orderDtList = dtOrder.getCheckedRows() ;
+								 console.log('last',newOrderData)
+							 };
+							 
+							 $.ajax({
+								url:'/plusDtOrder',
 								method:'POST',
 								dataType: 'json',
 								contentType : 'application/json',
-								data:JSON.stringify(){
-									
+								data:JSON.stringify(newOrderData),
+								success:function(result){
+									alert('상세주문이 추가되었습니다');
+								},
+								error:function(err){
+									console.log(err);
 								}
-							}) */
+							})	 
+						 } 
+					 	
+					 	//수정등록
+					 	else if(editdata.vo[0].orderCode != null ){//수정
+							 	newOrderData.orderList = order.getData();
+								newOrderData.orderDtList = dtOrder.getCheckedRows() ;
+
+							 $.ajax({
+								url:'/updateOrder',
+								method:'POST',
+								dataType: 'json',
+								contentType : 'application/json',
+								data:JSON.stringify(newOrderData),
+								success:function(result){
+									
+										alert('수정되었습니다');
+										dtOrder.resetData(dtOrder.getData());
+										grid.dispatch('uncheck', {
+									        rowKey: rowKey
+									    });
+									console.log(result);	
+								},
+								error:function(err){
+									console.log(err);
+								}
+									
+								
+							}) 
 							console.log('update');
-						}else{//등록
+						}
+						 else {//등록
 							console.log('insert');
 							
 							
 							newOrderData.orderList = order.getData();
-							newOrderData.orderDtList = dtOrder.getData() ;
+							newOrderData.orderDtList = dtOrder.getCheckedRows();
 							$.ajax({
 								url:'/insertOrder',
 								method:'POST',
@@ -361,6 +406,56 @@
 						} 
 						
 					});
+					//주문서삭제
+					$('#deleteBtn').on('click',function(){
+						newOrderData={};
+						newOrderData.orderList = order.getData();
+						console.log(newOrderData);
+						$.ajax({
+							url:'/deleteOrder',
+							method:'POST',
+							dataType: 'json',
+							contentType : 'application/json',
+							data:JSON.stringify(newOrderData),
+							success:function(result){
+								if(result > 0 ){
+									alert('삭제되었습니다');
+									order.resetData([]);
+									dtOrder.resetData([]);
+								}
+							},
+							error:function(err){
+								console.log(err);
+							}
+							
+						})
+					});
+					//주문서상세삭제
+					$('#deleteDtBtn').on('click',function(){
+						let delrows = dtOrder.getCheckedRows();
+						newOrderData={};
+						newOrderData.orderDtList = dtOrder.getCheckedRows();
+						console.log(newOrderData);
+						$.ajax({
+							url:'/deleteDtOrder',
+							method:'POST',
+							dataType: 'json',
+							contentType : 'application/json',
+							data:JSON.stringify(newOrderData),
+							success:function(result){
+								if(result > 0 ){
+									alert('상세주문'+result+'건이 삭제되었습니다');
+									setTimeout(() => bpListModal.refreshLayout(), 200);
+									dtOrder.removeCheckedRows(); //삭제후 인터페이스 삭제처리
+								}
+							},
+							error:function(err){
+								console.log(err);
+							}
+							
+						})
+					})
+
 					
 					$('#insertBtn').on('click',function(){
 						newOrder = [];
@@ -418,8 +513,11 @@
 							},
 							success:function(result){
 								$('#bpModal').modal('hide');
+								result[0].dodDate = newOrder[0].dodDate;
+								result[0].orderDate = newOrder[0].orderDate;
+								result[0].orderManager = newOrder[0].orderManager;
 								order.resetData(result);
-								
+								console.log(newOrder[0]);
 							},
 							error:function(err){
 								console.log(err);
@@ -474,14 +572,16 @@
 					//주문상세 change 될때마다 newDtOrder에 저장해서 값 안사라지게하는이벤트
 					 dtOrder.on('afterChange', ev=>{
 						 console.log(ev)
+						 console.log(newDtOrder)
 			            let change = ev.changes
 			            newDtOrder[change[0].rowKey][change[0].columnName]=change[0].value
 			         })
-			         order.on('afterChange', ev=>{
+			          order.on('afterChange', ev=>{
 						 console.log(ev)
+						 console.log(newOrder);
 			            let change = ev.changes
 			            newOrder[change[0].rowKey][change[0].columnName]=change[0].value
-			         })
+			         }) 
 					
 				})
 				

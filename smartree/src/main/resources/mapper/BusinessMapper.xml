@@ -12,7 +12,7 @@
   	
   	<!-- 주문서상세조회 -->
   	<select id="selectOrderDtList" resultType="BusinessVO">
-	  	select o.order_code , d.order_dt_code , p.prdt_name , p.prdt_code, d.order_dt_cnt , o.dod_date 
+	  	select o.order_code , d.order_dt_code , p.prdt_name , p.prdt_code, d.order_dt_cnt , o.dod_date , o.order_date
 		  from orders o join dt_order d on o.order_code = d.order_code
 		              join prdt_table p on d.prdt_code = p.prdt_code
 		 where o.order_code = #{orderCode}
@@ -76,6 +76,53 @@
   			,#{orderCode}
   		)
   	</insert>
+  	
+  	<!-- 주문수정 -->
+  	<update id="updateOrder" parameterType="BusinessVO">
+	  	update orders 
+		   set bp_code = #{bpCode},
+	    		order_date = #{orderDate},
+	    		dod_date = #{dodDate},
+	    		order_manager = #{orderManager}
+		 where order_code = #{orderCode}
+  	</update>
+  	
+  	<!-- 주문상세수정 -->
+  	<update id="updateDtOrder" parameterType="BusinessVO">
+	  	update dt_order
+		   set prdt_code = #{prdtCode},
+	    		order_dt_cnt = #{orderDtCnt}
+		 where order_dt_code = #{orderDtCode}
+  	</update>
+  	
+  	
+   	<!-- 주문상세추가등록,수정 -->
+ 	<insert id="insertNewDtOrder" parameterType="BusinessVO">
+
+	  	{call p_dt_order(
+	  		#{orderDtCode},
+	  		#{prdtCode},
+	  		#{orderDtCnt},
+	  		#{orderCode}
+	  	)
+  	</insert> 
+  	
+  	<!-- 주문서삭제 -->
+  	<delete id="deleteOrder" parameterType="BusinessVO">
+  		delete from orders
+  		where order_code = #{orderCode}
+  	</delete>
+  	<!-- 주문서상세삭제(전체삭제) -->
+  	<delete id="deleteAllDtOrder" parameterType="BusinessVO">
+  		delete from dt_order
+  		where order_code = #{orderCode}
+  	</delete>
+  	
+  	<!-- 주문서상세삭제(한건삭제) -->
+  	<delete id="deleteDtOrder" parameterType="BusinessVO">
+  		delete from dt_order
+  		where order_dt_code = #{orderDtCode}
+  	</delete>
   	
   	<!-- 거래처목록 -->
   	<select id="selectBpList" resultType="BpVO">
