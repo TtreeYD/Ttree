@@ -6,7 +6,7 @@
     
     <!-- 자재발주 전체조회 -->
   	<select id="selectNeedList" resultType="MaterialVO">
-  		SELECT n.mtl_code , n.mtl_date, b.bp_name , t.mtl_type , t.mtl_name , n.mtl_cnt , t.mtl_unit , n.mtl_manager , n.mtl_wish_date , n.mtl_where
+  		SELECT n.mtl_code , n.mtl_date, b.bp_name , t.mtl_type , t.mtl_name , n.mtl_cnt , t.mtl_unit , n.mtl_manager , n.mtl_wish_date ,get_common (mtl_where, '009') mtl_where_nm
   		FROM mtl_need n
         JOIN mtl_table t
         ON n.mtl_code = t.mtl_code
@@ -35,8 +35,11 @@
   	</select>
   	<!-- 입고관리 검사완료 목록 출력 -->
   	<select id="selectChkMtl" resultType="MaterialVO">
-  		SELECT mtl_code, mtl_name, mtl_chk_date, mtl_chk_manager, mtl_chk_code, mtl_chk_status
+		SELECT mtl_code, mtl_name, mtl_pass_cnt, mtl_chk_date, mtl_chk_manager, mtl_chk_code, get_common(mtl_chk_status, '009') AS mtl_status_nm
 		FROM mtl_chk JOIN mtl_table USING(mtl_code)
   	</select>
+  	
+  	<!-- 출고자재를 자재목록에서 빼주는 procedure -->
+  	
   	
   </mapper>

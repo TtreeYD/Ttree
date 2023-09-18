@@ -16,6 +16,11 @@
 		<a href="javascript:pop()" style="margin:20px">안전재고미달목록<a>
 		<div id="mtlLowGrid"></div>
 		<br>
+		<div class="col-14">
+				<div class="btn-group" role="group" aria-label="Basic example" style="float:right;">
+			<button type="button" id="mtlSearch" class="btn btn-primary">조회</button>
+			<button type="button" id="mtlSave" class="btn btn-primary">발주</button>
+		</div>
 		<div id="mtlNeedGrid"></div>
 		<script>
 			// 안전재고 미달목록 출력/숨기기
@@ -96,11 +101,11 @@
 						name : 'mtlWishDate'
 					}, {
 						header : '상태',
-						name : 'mtlWhere'
+						name : 'mtlWhereNm'
 					}   ]
 				});
 				
-				const header = ['mtlCode', 'mtlDate', 'bpName', 'mtlName', 'mtlCnt', 'mtlUnit', 'mtlManager','mtlWishDate','mtlWhere','mtlLotCnt','mtlSs','mtlNow','mtlType']
+				const header = ['mtlCode', 'mtlDate', 'bpName', 'mtlName', 'mtlCnt', 'mtlUnit', 'mtlManager','mtlWishDate','mtlWhereNm','mtlLotCnt','mtlSs','mtlNow','mtlType']
 				
 				//안전재고미달 ajax
 		        $.ajax({

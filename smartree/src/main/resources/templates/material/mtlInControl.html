@@ -16,14 +16,112 @@
 		<a href="javascript:pop()" style="margin:20px">검사완료 자재목록<a>
 		<div id="mtlCheckGrid"></div>
 		<br>
+			<div class="col-14">
+				<div class="btn-group" role="group" aria-label="Basic example" style="float:right;">
+				<button type="button" id="mtlSearch" class="btn btn-primary" data-toggle="modal" data-target="#myModal">조회</button>
+				<button type="button" id="mtlSave" class="btn btn-primary">입고</button>
+			</div>
 		<div id="mtlInGrid"></div>
+		
+		<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-xl" role="document">
+				<div class="modal-content" style="height: 700px">
+					<div class="container text-center">
+						<div class="modal-header row justify-content-evenly">
+							<div class="col-6">
+								<div class="d-flex flex-column align-items-center">
+									<div class="mb-3">
+										<span>발주일자</span> <input class="form-control" id="mtlDate"
+											type="date" style="width: 350px;">
+									</div>
+
+									<div>
+										<span>담당자</span> <input class="form-control" id="mtlManager"
+											type="text" style="width: 350px;">
+									</div>
+								</div>
+							</div>
+							<div class="col-6">
+								<div class="d-flex flex-column align-items-center">
+									<div class="mb-3">
+										<span>자재</span> <input class="form-control" id="mtlCode"
+											type="text" style="width: 350px;">
+									</div>
+
+									<div>
+										<span>거래처</span> <input class="form-control" id="bpCode"
+											type="text" style="width: 350px;">
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div style="display: flex; justify-content: center;">
+						<button type="button" id="searchDataBtn" class="btn btn-primary"
+							style="margin: 5px;">조회</button>
+						<button type="button" id="resetModalBtn" class="btn btn-primary"
+							style="margin: 4px;">초기화</button>
+					</div>
+					<div class="modal-body">
+						<div id="modalGrid"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="addModalBtn" class="btn btn-default">저장</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 		<script>
+	       let modalSearchData;
+		   let mtlDate;
 		// 검사완료 목록 출력/숨기기
 	    function pop(){
     	    $('#mtlCheckGrid').toggle("size", 500);
    	    }		
 		
 			window.onload = function() {
+				// 모달창
+				const modalGrid = new tui.Grid({
+					el: document.getElementById('modalGrid'),
+					scrollX: false,	
+					scrollY: false,
+					contextMenu: null,
+					rowHeaders:["checkbox"],
+					pageOptions: {
+			            perPage: 5,
+			            useClient: true,
+		            },
+					columns: [
+					{
+						header: '자재',
+						name: 'mtlCode',
+						align: 'center'
+					},
+					{
+						header: '거래처',
+						name: 'bpCode',
+						align: 'center'
+					},
+					{
+						header: '발주일자',
+						name: 'mtlDate',
+						align: 'center'
+					},
+					{
+						header: '담당자',
+						name: 'mtlManager',
+						align: 'center'
+					},
+					]
+			    });								
+
+			    $('#mtlSearch').on('click', function(){
+                     setTimeout(() => modalGrid.refreshLayout(), 200);
+                 })
 				// 검사완료목록
 				const mtlCheckGrid = new tui.Grid({
 					el : document.getElementById('mtlCheckGrid'),
@@ -41,8 +139,11 @@
 						header : '자재코드',
 						name : 'mtlCode'
 					}, {
+						header : '자재이름',
+						name : 'mtlName'
+					}, {
 						header : '자재입고수량',
-						name : 'mtlInCnt'
+						name : 'mtlPassCnt'
 					}, {
 						header : '검사완료일',
 						name : 'mtlChkDate'
@@ -52,7 +153,10 @@
 					}, {
 						header : '자재검사코드',
 						name : 'mtlChkCode'
-					}   ]
+					}, {
+						header : '검사결과',
+						name : 'mtlStatusNm'
+					},   ]
 				});
 				// 아래 리스트
 				const mtlInGrid = new tui.Grid({
@@ -90,7 +194,7 @@
 					}   ]
 				});
 				
-				const header = ['mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode','mtlChkDate']
+				const header = ['mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode','mtlChkDate','mtlStatusNm']
 				// 검사완료 자재목록
 				$.ajax({
 		          url: '/mtlChecked',

@@ -25,7 +25,7 @@ public class MaterialVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date mtlWishDate; 						// 납기요청일ㅇ
-	private String mtlWhere; 						// 상태 ㅇ
+	private String mtlWhereNm; 						// 상태 ㅇ
 	
 	
 	// 자재목록
@@ -65,6 +65,8 @@ public class MaterialVO {
 													// 자재이름
 	private Date mtlChkDate;   						// 검사완료일 FK
 	private int mtlPassCnt;	   						// 입고수량 FK
+	private String mtlChkManager;					// 입고 검수 담당자
+	private String mtlStatusNm;						// 입고 검사결과
 													// 검사코드 FK
 													// 입고일
 	
