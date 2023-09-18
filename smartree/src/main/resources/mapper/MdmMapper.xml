@@ -5,30 +5,53 @@
 <mapper namespace="com.yedam.smartree.mdm.mapper.MdmMapper">
 
 	<!-- 코드분류 -->
-	<select id="selectCommonCodeType" resultType="CommonCodeVO">
+	<select id="selectCommonCode" resultType="CommonCodeVO">
 		SELECT code_type, type_name
 		FROM common_code
+		ORDER BY code_type
 	</select>
 
 	<!-- 코드상세 리스트 -->
-	<select id="selectCommonCodeList" resultType="CommonCodeVO">
+	<select id="selectCodeDetail" resultType="CommonCodeVO">
 		SELECT code_id
 		, code_name
-		,
-		code_use
+		, code_use
 		FROM code_detail
 		WHERE code_type = #{codeType}
+		ORDER BY code_id
 	</select>
 
+	<!-- 공통코드 입력 -->
 	<insert id="insertCommonCode" parameterType="CommonCodeVO">
-		<selectKey keyProperty="codeType" resultType="String" order="BEFORE">
-			SELECT LPAD( NVL ( MAX(code_type), 0) + 1, 3, '0')
-			FROM common_code
-		</selectKey>
-		INSERT INTO common_code
-		VALUES(#{codeType}, #{typeName})
+		{call in_up_common_code(
+			#{codeType},
+			#{typeName}
+		)}
 	</insert>
 
+	<!-- 상세코드 입력 -->
+	<insert id="insertCodeDetail" parameterType="CommonCodeVO" statementType="CALLABLE">
+		{call in_up_code_detail(
+			#{codeId},
+			#{codeName},
+			#{codeType},
+			#{codeUse}
+		)}
+	</insert>
+
+	<!-- 공통코드삭제 -->
+	<delete id="deleteCommonCode">
+		DELETE common_code
+		WHERE code_type = #{codeType}
+	</delete>
+	
+	<!-- 상세코드삭제 -->
+	<delete id="deleteCodeDetail" parameterType="CommonCodeVO">
+		DELETE code_detail
+		WHERE code_id = #{codeId}
+		AND code_type = #{codeType}
+	</delete>
+	
 	<!-- 사원 리스트 -->
 	<select id="selectEmpList" resultType="EmpVO">
 		SELECT *
@@ -41,7 +64,22 @@
 				AND emp_name LIKE '%'||#{empName}||'%'
 			</if>
 		</where>
-		ORDER BY emp_id
+		ORDER BY emp_dept, emp_id
 	</select>
 
+	<!-- 사원 등록 -->
+	<insert id="addEmp" parameterType="EmpVO">
+		<selectKey keyProperty="empId" resultType="String" order="BEFORE">
+			SELECT #{empDept} || NVL( LPAD( SUBSTR( MAX(emp_id), 5) +1, 4, '0'), '0001') from emp_list
+			WHERE emp_dept = #{empDept}			
+		</selectKey>
+			INSERT INTO emp_list(emp_id, emp_name, emp_dept, emp_class, emp_phone)
+			values(
+					#{empId}
+					, #{empName}
+					, #{empDept}
+					, #{empClass}
+					, #{empPhone}
+					)
+	</insert>
 </mapper>

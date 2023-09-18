@@ -10,8 +10,15 @@ import com.yedam.smartree.mdm.service.EmpVO;
 
 @Mapper
 public interface MdmMapper {
-	public List<CommonCodeVO> selectCommonCodeType();
-	public List<CommonCodeVO> selectCommonCodeList(String codeType);
-	public List<EmpVO> selectEmpList(@Param("empDept")String empDept, @Param("empName")String empName);
+	// 공통코드관리
+	public List<CommonCodeVO> selectCommonCode();
+	public List<CommonCodeVO> selectCodeDetail(String codeType);
 	public int insertCommonCode(CommonCodeVO commonCodeVO);
+	public int insertCodeDetail(CommonCodeVO commonCodeVO);
+	public int deleteCommonCode(CommonCodeVO commonCodeVO);
+	public int deleteCodeDetail(CommonCodeVO commonCodeVO);
+	
+	// 사원관리
+	public List<EmpVO> selectEmpList(@Param("empDept")String empDept, @Param("empName")String empName);
+	public int addEmp(EmpVO vo);
 }

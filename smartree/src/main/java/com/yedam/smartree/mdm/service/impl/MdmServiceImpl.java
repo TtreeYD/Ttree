@@ -17,14 +17,14 @@ public class MdmServiceImpl implements MdmService {
 	MdmMapper mdmMapper;
 	
 	@Override
-	public List<CommonCodeVO> selectCommonCodeType() {
+	public List<CommonCodeVO> selectCommonCode() {
 		// TODO Auto-generated method stub
-		return mdmMapper.selectCommonCodeType();
+		return mdmMapper.selectCommonCode();
 	}
 	
 	@Override
-	public List<CommonCodeVO> selectCommonCodeList(String codeType) {
-		return mdmMapper.selectCommonCodeList(codeType);
+	public List<CommonCodeVO> selectCodeDetail(String codeType) {
+		return mdmMapper.selectCodeDetail(codeType);
 	}
 
 	@Override
@@ -36,4 +36,25 @@ public class MdmServiceImpl implements MdmService {
 	public int insertCommonCode(CommonCodeVO commonCodeVO) {
 		return mdmMapper.insertCommonCode(commonCodeVO);
 	}
+
+	@Override
+	public int insertCodeDetail(CommonCodeVO commonCodeVO) {
+		return mdmMapper.insertCodeDetail(commonCodeVO);
+	}
+
+	@Override
+	public int deleteCommonCode(CommonCodeVO commonCodeVO) {
+		return mdmMapper.deleteCommonCode(commonCodeVO);
+	}
+	
+	@Override
+	public int deleteCodeDetail(CommonCodeVO commonCodeVO) {
+		return mdmMapper.deleteCodeDetail(commonCodeVO);
+	}
+
+	@Override
+	public int addEmp(EmpVO vo) {
+		return mdmMapper.addEmp(vo);
+	}
+
 }
