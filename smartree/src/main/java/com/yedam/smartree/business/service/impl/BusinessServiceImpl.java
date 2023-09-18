@@ -9,6 +9,7 @@ import com.yedam.smartree.business.mapper.BusinessMapper;
 import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessService;
 import com.yedam.smartree.business.service.BusinessVO;
+import com.yedam.smartree.business.service.FinPrdtVO;
 import com.yedam.smartree.business.service.ReqVO;
 
 @Service
@@ -105,6 +106,11 @@ public class BusinessServiceImpl implements BusinessService{
 	@Override
 	public List<BpVO> selectPrdtList(BpVO bpVO) {
 		return businessmapper.selectPrdtList(bpVO);
+	}
+	//완제품재고조회
+	@Override
+	public List<FinPrdtVO> selectFinPrdt() {
+		return businessmapper.selectFinPrdt();
 	}
 	
 

@@ -342,6 +342,7 @@
 								data:JSON.stringify(newOrderData),
 								success:function(result){
 									alert('상세주문이 추가되었습니다');
+									dtOrder.uncheckAll();
 								},
 								error:function(err){
 									console.log(err);
@@ -364,10 +365,7 @@
 									
 										alert('수정되었습니다');
 										dtOrder.resetData(dtOrder.getData());
-										grid.dispatch('uncheck', {
-									        rowKey: rowKey
-									    });
-									console.log(result);	
+										dtOrder.uncheckAll();
 								},
 								error:function(err){
 									console.log(err);
@@ -559,9 +557,24 @@
 								prdtCode : data
 							},
 							success:function(result){
-								newDtOrder[dtOrderRowNum] = result[0]
-								dtOrder.resetData(newDtOrder);
-								$('#prModal').modal('hide');
+								console.log(data)
+								console.log(newDtOrder)
+								let check = true; 
+								newDtOrder.forEach((order) => {
+									if(order.prdtCode == data) {
+										alert('이미 같은 제품이 있습니다.')
+										check=false;
+										return;
+									}
+									
+								})
+								if(check){
+									newDtOrder[dtOrderRowNum] = result[0]
+									dtOrder.resetData(newDtOrder);
+									//console.log(newDtOrder)
+									$('#prModal').modal('hide');
+								}
+								
 							},
 							error:function(err){
 								console.log(err)
