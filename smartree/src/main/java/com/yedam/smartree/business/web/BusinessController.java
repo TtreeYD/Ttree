@@ -28,4 +28,11 @@ public class BusinessController {
 	public String selectOrderForm() {
 		return "business/orderForm";
 	}
+	//완제품재고조회 페이지이동
+	@GetMapping("finPrdt")
+	public String selectFinPrdt(Model model) {
+		model.addAttribute("finPrdt", businessService.selectFinPrdt());
+		System.out.println(model);
+		return "business/finPrdt";
+	}
 }

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessVO;
+import com.yedam.smartree.business.service.FinPrdtVO;
 import com.yedam.smartree.business.service.ReqVO;
 
 
@@ -40,6 +41,9 @@ public interface BusinessMapper {
 	public void insertNewDtOrder(BusinessVO businessVO);
 	//주문서상세삭제
 	public void deleteDtOrder(BusinessVO businessVO);
+	
+	//완제품재고조회
+	public List<FinPrdtVO> selectFinPrdt();
 	
 	
 }
