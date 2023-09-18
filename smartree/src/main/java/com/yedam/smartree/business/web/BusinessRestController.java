@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessService;
 import com.yedam.smartree.business.service.BusinessVO;
+import com.yedam.smartree.business.service.FinPrdtVO;
 import com.yedam.smartree.business.service.ReqVO;
 /*
 개발자:정호현
@@ -89,4 +90,12 @@ public class BusinessRestController {
 	public List<BpVO> getprdtList(BpVO bpVO){
 		return businessService.selectPrdtList(bpVO);
 	}
+
+	//Lot별 수량
+	@GetMapping("/lotPrdtList")
+	public List<FinPrdtVO> lotPrdtList(FinPrdtVO fpvo){
+		System.out.println(fpvo);
+		return businessService.selectFinLotPrdt(fpvo);
+	}
+	
 }

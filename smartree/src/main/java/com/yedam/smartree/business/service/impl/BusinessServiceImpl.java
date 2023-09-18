@@ -112,6 +112,10 @@ public class BusinessServiceImpl implements BusinessService{
 	public List<FinPrdtVO> selectFinPrdt() {
 		return businessmapper.selectFinPrdt();
 	}
+	@Override
+	public List<FinPrdtVO> selectFinLotPrdt(FinPrdtVO fpvo) {
+		return businessmapper.selectFinLotPrdt(fpvo);
+	}
 	
 
 	

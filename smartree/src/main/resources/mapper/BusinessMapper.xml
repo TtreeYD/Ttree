@@ -153,4 +153,12 @@
 		        on f.prdt_code = p.prdt_code
 	  group by p.prdt_name, p.prdt_code, f.prdt_unit, f.prdt_save_cnt
   	</select>
+  	
+  	<!-- Lot별 완제품 재고조회 -->
+  	<select id="selectFinLotPrdt" resultType="FinPrdtVO">
+  		select f.prdt_lot_no , f.prdt_code , p.prdt_name , f.prdt_unit , f.prdt_cnt 
+		  from fin_prdt f join prdt_table p
+		    		on f.prdt_code = p.prdt_code
+		 where f.prdt_code = #{prdtCode}
+  	</select>
   </mapper>
