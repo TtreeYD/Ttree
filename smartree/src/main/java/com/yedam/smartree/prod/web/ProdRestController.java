@@ -43,9 +43,11 @@ public class ProdRestController {
 	@ResponseBody
 	public int insertProdPlan(@RequestBody RequestVO<ProdVO> vo) {
 		 return service.insertProdPlan(vo);
-		 
 	}
-	
+	@PostMapping("/updateProdPlan")
+	public int updateProdPlan(@RequestBody RequestVO<ProdVO> vo) {
+		return service.updateProd(vo);
+	}
 	@PostMapping("/searchProd")
 	public List<ProdVO> searchProdList(ProdVO vo){
 		return service.searchProdList(vo);

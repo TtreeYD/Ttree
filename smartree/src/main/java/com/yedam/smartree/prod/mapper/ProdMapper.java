@@ -22,4 +22,8 @@ public interface ProdMapper {
 	public List<ProdVO> searchProdPlan(ProdVO vo);
 	
 	public List<ProdVO> selectProdListView(ProdVO vo);
+	
+	public int updateProd(ProdVO vo);
+	
+	public int updateDtProd(ProdVO vo);
 }

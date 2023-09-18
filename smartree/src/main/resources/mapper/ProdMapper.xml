@@ -66,7 +66,7 @@
   	</select>
   	
   	<select id="selectProdListView" resultType="ProdVO">
-  		select p.prod_plan_name, p.prod_name, p.prod_plan_date, p.prod_plan_sdate, p.prod_plan_edate, pt.prdt_name,  dtp.prod_plan_cnt, dtp.prod_rank, dtp.prod_plan_note , pt.prdt_code, dto.order_dt_cnt
+  		select dtp.dt_prod_plan_code, p.prod_plan_code , p.prod_plan_name, p.prod_name, p.prod_plan_date, p.prod_plan_sdate, p.prod_plan_edate, pt.prdt_name,  dtp.prod_plan_cnt, dtp.prod_rank, dtp.prod_plan_note , pt.prdt_code, dto.order_dt_cnt
 		from dt_prod_plan dtp join prod_plan p 
 		on dtp.prod_plan_code = p.prod_plan_code
 		join  prdt_table pt 
@@ -76,5 +76,21 @@
 		where p.prod_plan_code = #{prodPlanCode}
   	</select>
   	
+  	<update id="updateProd" parameterType="ProdVO">
+  		update prod_plan
+  		set prod_plan_name = #{prodPlanName},
+  		    prod_name = #{prodName},
+  		    prod_plan_date = #{prodPlanDate},
+  		    prod_plan_sdate = #{prodPlanSdate},
+  		    prod_plan_edate = #{prodPlanEdate}
+  		where prod_plan_code = #{prodPlanCode}
+  	</update>
   	
+  	<update id="updateDtProd" parameterType="ProdVO">
+  		update dt_prod_plan
+  		set prod_plan_cnt = #{prodPlanCnt},
+  		    prod_rank = #{prodRank},
+  		    prod_plan_note = #{prodPlanNote}
+  		where dt_prod_plan_code = #{dtProdPlanCode}
+  	</update>
   </mapper>

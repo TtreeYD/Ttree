@@ -11,4 +11,5 @@ public interface ProdService {
 	public int insertProdPlan(RequestVO<ProdVO> vo);
 	public List<ProdVO> searchProdList(ProdVO vo);
 	public List<ProdVO> selectProdListView(ProdVO vo);
+	public int updateProd(RequestVO<ProdVO> vo);
 }
