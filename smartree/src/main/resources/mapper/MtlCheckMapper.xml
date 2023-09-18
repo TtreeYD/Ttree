@@ -3,12 +3,6 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.yedam.smartree.check.mapper.MtlCheckMapper">
-  	<select id="selectAll" resultType="MtlCheckVO">
-  		SELECT c.mtl_chk_code, c.mtl_chk_date, c.mtl_date, n.mtl_code, n.bp_code, n.mtl_name, c.mtl_chk_cnt, c.mtl_error_cnt , c.mtl_pass_cnt, c.mtl_chk_manager
-		FROM mtl_chk c 
-		JOIN mtl_need n ON c.mtl_code = n.mtl_code
-		order by mtl_chk_code ASC
-  	</select>
   
   	<select id="selectMtl" resultType="MtlCheckVO">
   		SELECT	mtl_date, 
@@ -59,6 +53,8 @@
     	</selectKey>
   	{call InsertAndUpdateMtlCheck(
   		#{mtlChkCode},
+  		#{mtlDate},
+  		#{bpCode},
   		#{mtlCode},
   		#{mtlChkCnt},
   		#{mtlErrorCnt},
@@ -69,10 +65,9 @@
   
 
   <select id="searchMtl" resultType="MtlCheckVO">
-  	 SELECT c.mtl_chk_code, c.mtl_chk_date, c.mtl_date, n.mtl_code, n.bp_code, n.mtl_name, c.mtl_chk_cnt, c.mtl_error_cnt , c.mtl_pass_cnt, c.mtl_chk_manager
+  	 SELECT *
 		FROM mtl_chk c 
 		JOIN mtl_need n ON c.mtl_code = n.mtl_code
-		
   		<where>
   			<if test="mtlChkCode != null and !mtlChkCode.equals('')">
   				mtl_chk_code LIKE '%'||#{mtlChkCode}||'%'
@@ -83,7 +78,7 @@
   	
   	
   	<select id="searchMtlDate" resultType="MtlCheckVO">
-  	 SELECT c.mtl_chk_code, c.mtl_chk_date, c.mtl_date, n.mtl_code, n.bp_code, n.mtl_name, c.mtl_chk_cnt, c.mtl_error_cnt , c.mtl_pass_cnt, c.mtl_chk_manager
+  	 SELECT *
 		FROM mtl_chk c 
 		JOIN mtl_need n ON c.mtl_code = n.mtl_code
   		<where>
@@ -96,11 +91,20 @@
   	
 	<select id="selectChkAll" resultType="MtlCheckVO">
 		SELECT *
-		FROM mtl_chk c 
-		JOIN mtl_need n ON c.mtl_code = n.mtl_code
-		order by mtl_chk_code 
+		FROM mtl_chk c JOIN mtl_table t using(mtl_code)
+		order by mtl_chk_code
   	</select>
   	
-  	
+  	<update id="updateChkMtl" parameterType="MtlCheckVO">
+  		update mtl_chk
+  		set mtl_chk_cnt = #{mtlChkCnt},
+  			mtl_error_cnt = #{mtlErrorCnt},
+  			mtl_pass_cnt = #{mtlPassCnt}
+	 <where>
+	    <if test="mtlChkCode != null and !mtlChkCode.equals('')">
+	       mtl_chk_code = #{mtlChkCode}
+	    </if>
+	 </where>
+  	</update>
   	
   </mapper>

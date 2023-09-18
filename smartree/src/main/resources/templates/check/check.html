@@ -34,6 +34,7 @@
       scrollY: false,
       contextMenu: null,
       rowHeaders:["rowNum"],
+      bodyHeight: 400,
       pageOptions: {
           perPage: 10,
           useClient: true,
@@ -106,7 +107,7 @@
 	// 전체 조회
     function getMtlCheckList(){
     	$.ajax({
-    		url:'/check',
+    		url:'/mtlallchk',
     		method:'get',
        	 	dataType:'json',
     		success:function(result){
@@ -164,17 +165,7 @@
 	} 
   }
 
-        $.ajax({
-			url:'/mtlallchk',
-			method:'get',
-	    	dataType:'json',
-			success:function(result){
-				grid.resetData(result);
-			},
-			error:function(err){
-				console.log(err);
-			}
-		})
+        
     </script>
 		</div>
 	</div>

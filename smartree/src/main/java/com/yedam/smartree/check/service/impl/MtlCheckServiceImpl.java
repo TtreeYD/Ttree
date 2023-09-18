@@ -15,10 +15,6 @@ public class MtlCheckServiceImpl implements MtlCheckService{
 	@Autowired
 	MtlCheckMapper mtlcheckmapper;
 	
-	@Override
-	public List<MtlCheckVO> selectAll() {
-		return mtlcheckmapper.selectAll();
-	}
 
 	@Override
 	public List<MtlCheckVO> selectMtl(MtlCheckVO vo) {
@@ -48,6 +44,11 @@ public class MtlCheckServiceImpl implements MtlCheckService{
 	@Override
 	public List<MtlCheckVO> selectChkAll() {
 		return mtlcheckmapper.selectChkAll();
+	}
+
+	@Override
+	public int updateChkMtl(MtlCheckVO vo) {
+		return mtlcheckmapper.updateChkMtl(vo);
 	}
 
 }
