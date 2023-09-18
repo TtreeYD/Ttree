@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+</head>
+
+<body>
+	<div layout:fragment="content">
+			<label style="text-align:center; margin-left: 400px">제품명</label>
+			<input type="text" id="prdt" class="form-control" placeholder="제품명을 입력하세요" name="ordercd"
+				style="width:300px;display: inline-block;">
+			<label  style="margin-top:10px; margin-left:50px">Lot번호</label>
+			<input type="text" id="lotNo" class="form-control" name="plsdate" style="width:300px; display: inline-block;" placeholder="Lot번호를 입력하세요" />
+			<div style="display: flex; justify-content: center; margin-top:10px;">
+				<button type="button" id="searchDataBtn" class="btn btn-primary"
+					style="margin: 5px;">조회</button>
+				<button type="button" id="resetModalBtn" class="btn btn-primary"
+					style="margin: 4px;" >초기화</button>
+			</div>
+		<hr>
+		<h1>제품별 수량</h1>
+		
+
+		
+		<div id="prdtGrid"></div>
+		<div id="lotPrdtGrid"></div>
+		<script th:inline="javascript">
+		var data = [[${finPrdt}]]
+			var grid;
+			$(document).ready(function () {
+
+				const finPrdt = new tui.Grid({
+					el: document.getElementById('prdtGrid'),
+					scrollX: false,
+					scrollY: false,
+					data: data ,
+					rowHeaders: ["rowNum"],
+					columns: [
+						{
+							header: '제품명',
+							name: 'prdtName',
+
+						},
+						{
+							header: '제품코드',
+							name: 'prdtCode',
+
+						},
+						{
+							header: '단위',
+							name: 'prdtUnit',
+
+						},
+						{
+							header: '수량',
+							name: 'prdtSum',
+
+						},
+						{
+							header: '안전재고',
+							name: 'prdtSaveCnt',
+
+						}],
+						
+					
+				})
+				const lotPrdtGrid = new tui.Grid({
+					el: document.getElementById('lotPrdtGrid'),
+					scrollX: false,
+					scrollY: false,
+					data: data ,
+					rowHeaders: ["rowNum"],
+					columns: [
+						{
+							header: 'Lot번호',
+							name: 'prdtLotNo',
+
+						},
+						{
+							header: '제품코드',
+							name: 'prdtCode',
+
+						},
+						{
+							header: '제품명',
+							name: 'prdtName',
+
+						},
+						{
+							header: '단위',
+							name: 'prdtUnit',
+
+						},
+						{
+							header: '수량',
+							name: 'prdtCnt',
+
+						}],
+						
+					
+				})
+				
+				$.ajax({
+					url:'',
+					method:'',
+					success:function(result){
+						console.log(result)
+					},
+					error:function(err){
+						console.log(err)
+					}
+				})
+			});
+
+
+			
+		</script>
+	</div>
+</body>
+
+</html>

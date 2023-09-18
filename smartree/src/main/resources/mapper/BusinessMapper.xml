@@ -145,4 +145,12 @@
   			</if>
   		</where>
   	</select>
+  	
+  	<!-- 완제품재고조회 -->
+  	<select id="selectFinPrdt" resultType="FinPrdtVO">
+  		select p.prdt_name , p.prdt_code , f.prdt_unit , sum(f.prdt_cnt) prdt_sum , f.prdt_save_cnt
+		  from fin_prdt f join prdt_table p 
+		        on f.prdt_code = p.prdt_code
+	  group by p.prdt_name, p.prdt_code, f.prdt_unit, f.prdt_save_cnt
+  	</select>
   </mapper>

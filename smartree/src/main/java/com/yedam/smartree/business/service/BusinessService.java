@@ -30,6 +30,8 @@ public interface BusinessService {
 	
 	//제품목록
 	public List<BpVO> selectPrdtList(BpVO bpVO);
+	//완제품 제품별 조회
+	public List<FinPrdtVO> selectFinPrdt();
 
 	
 
