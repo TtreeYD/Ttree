@@ -30,19 +30,13 @@ public class ProdServiceImpl implements ProdService {
 	public int insertProdPlan(RequestVO<ProdVO> vo) {
 		int cnt = 0;
 		// get Header
-		//String orderCode = vo.getList().get(0).getOrderCode();
-		//vo.getVo().setOrderCode(orderCode);
 		prodMapper.insertProdPlan(vo.getVo());
 		String prodPlanCode = vo.getVo().getProdPlanCode();
 		
 		// 계획 상세 저장하는 for문
 		for(ProdVO pvo : vo.getList()) {
 			pvo.setProdPlanCode(prodPlanCode);
-//			pvo.setOrderCode(orderCode);
-//			if(pvo.getProdPlanCnt() == 0) continue;
 		
-			System.out.println("7777777"+prodPlanCode);
- 			System.out.println(pvo.toString());
 			prodMapper.insertDtProdPlan(pvo);
 			cnt++;
 		}
@@ -52,6 +46,16 @@ public class ProdServiceImpl implements ProdService {
 	@Override
 	public List<ProdVO> searchProdList(ProdVO vo) {
 		return prodMapper.searchProdPlan(vo);
+	}
+
+	@Override
+	public List<ProdVO> selectProd(ProdVO vo) {
+		return prodMapper.selectProd(vo);
+	}
+
+	@Override
+	public List<ProdVO> selectProdListView(ProdVO vo) {
+		return prodMapper.selectProdListView(vo);
 	}
 
 	

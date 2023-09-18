@@ -32,4 +32,7 @@ public class ProdVO {
 	private String prodPlanNote;
 	private String prdtCode;
 	
+	private String orderDtCode;
+	private int orderDtCnt;
+	
 }

@@ -13,9 +13,13 @@ public interface ProdMapper {
 
 	public List<BusinessVO> selectAllOrderAndPrdt();
 	
+	public List<ProdVO> selectProd(ProdVO vo);
+	
 	public int insertProdPlan(ProdVO vo);
 	
 	public int insertDtProdPlan(ProdVO vo);
 	
 	public List<ProdVO> searchProdPlan(ProdVO vo);
+	
+	public List<ProdVO> selectProdListView(ProdVO vo);
 }
