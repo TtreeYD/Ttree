@@ -15,7 +15,7 @@
 		<label>검색 옵션 : </label> <select id="searchOption">
 			<option value="mtlChkNO">미검사조회</option>
 			<option value="mtlChkOK">검사조회</option>
-		</select> <input type="text" id="searchName" placeholder="검색어를 입력하시오">
+		</select> <!-- <input type="text" id="searchName" placeholder="검색어를 입력하시오"> -->
 		<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
 		<div class="btn-group btn-right" role="group"
 			aria-label="Basic example"
@@ -95,7 +95,7 @@
 			      scrollX: false,
 			      scrollY: false,
 			      contextMenu: null,
-			      rowHeaders:["rowNum"],
+			      rowHeaders:["checkbox"],
 			      bodyHeight: 400,
 			      pageOptions: {
 		            perPage: 10,
@@ -286,8 +286,12 @@
 				// 저장버튼 이벤트
 				$('#addBtn').on('click',function(e){
 					let data = grid2.getData();
+					let datas = grid2.getCheckedRows();
+					if(datas.length ==0 ){
+						alert("체크하세요");
+					}
 					 // 입력된 값이 있는 행만 필터링
-					 let filteredData = data.filter(row => (
+					/*  let filteredData = data.filter(row => (
 					    (row.mtlChkCnt && row.mtlChkCnt.trim() !== '') ||
 					    (row.mtlErrorCnt && row.mtlErrorCnt.trim() !== '') ||
 					    (row.mtlPassCnt && row.mtlPassCnt.trim() !== '') ||
@@ -297,15 +301,16 @@
 					   if (filteredData.length == 0) {
 					    alert("저장할 데이터가 없습니다. 입력된 값을 확인하세요.");
 					    return; 
-					  } 
+					  }  */
 					$.ajax({
 					url: '/mtlinsert', 
 					method: 'post',
 					dataType: 'json',
 					contentType : 'application/json',
-					data : JSON.stringify(filteredData)
-					,
+					data : JSON.stringify(datas),
 					success: function(result) {
+						
+						console.log(datas);
 						alert(result +" 건 저장완료");
 						unsavedChanges = false;
 						grid2.resetData([]);

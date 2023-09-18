@@ -13,10 +13,13 @@ public class CheckVO {
 	private String prdtCode;
 	private String prcsRsCode;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private Date prdtChkDate;
 	private int prdtChkCnt;
 	private String prdtChkResult;
 	private String prdtManager;
 	private String prdtChkStdCode;
+	
+	private String prdtName;
+	
 }

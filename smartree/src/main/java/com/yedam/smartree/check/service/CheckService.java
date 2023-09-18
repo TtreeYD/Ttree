@@ -1,5 +1,9 @@
 package com.yedam.smartree.check.service;
 
-public interface CheckService {
+import java.util.List;
 
+import com.yedam.smartree.business.service.BpVO;
+
+public interface CheckService {
+	public List<BpVO> selectPrdtList(BpVO vo);
 }

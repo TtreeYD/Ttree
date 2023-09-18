@@ -48,10 +48,7 @@
   	
   	
   	<insert id="insertChkMtl" parameterType="MtlCheckVO" statementType="CALLABLE">
-  		<selectKey keyProperty="mtlChkCode" resultType="String" order="BEFORE">
-       	 	select 'MTL' || LPAD(mtl_chk_seq.NEXTVAL, 5, '0') as mtlChkCode from dual
-    	</selectKey>
-  	{call InsertAndUpdateMtlCheck(
+  	{call InsertOrUpdateMtlCheck(
   		#{mtlChkCode},
   		#{mtlDate},
   		#{bpCode},

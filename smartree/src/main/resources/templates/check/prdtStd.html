@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>SMARTREE</title>
+<style>
+#grid .tui-grid-body-area , #grid .tui-grid-layer-state{
+	height : 40px !important;
+}
+</style>
+</head>
+
+<body>
+
+
+
+	<div layout:fragment="content">
+		<div class="btn-group btn-right" role="group"
+			aria-label="Basic example"
+			style="float: right; padding-bottom: 10px;">
+			<button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
+			<button type="button" id="insertBtn" class="btn btn-primary">추가</button>
+		</div>
+		<div id="grid"></div>
+		<div id="grid2"></div>
+
+<!-- 제품모달 -->
+		<div class="modal fade" tabindex="-1" role="dialog" id="prModal">
+			<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+				<div class="modal-content">
+					<h2 style="margin:30px">제품목록</h2>
+					
+					
+					<div class="modal-body">
+						<div id="prdtListModal"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+		
+		<script>
+		var Grid;
+			window.onload = function() {
+				//화면 제품그리드
+				const grid = new tui.Grid({
+					el : document.getElementById('grid'),
+					scrollX : false,
+					scrollY : false,
+					contextMenu : null,
+					rowHeaders : [ "rowNum" ],
+					//bodyHeight : 20px,
+					header : {
+						background : 'yellow'
+					},	
+					columns : [ {
+						header : '제품코드',
+						name : 'prdtCode',
+						align : 'center',
+						editor : 'text',
+						value : '',
+						 className: 'yellow-background'
+					}, {
+						header : '제품명',
+						name : 'prdtName',
+						editor : 'text',
+						value : '',
+						align : 'center'
+					}, {
+						header : '분류',
+						name : 'prdtType',
+						align : 'center'
+					}, {
+						header : '단위',
+						name : 'prdtUnit',
+						align : 'center'
+					} ],
+				});
+					//제품모달그리드
+					const prdtListModal = new tui.Grid({
+						el : document.getElementById('prdtListModal'),
+						scrollX : false,
+						scrollY : true,
+						pageOptions : {
+							perPage : 5,
+							useClient : true,
+						},
+						columns : [ {
+							header : '제품코드',
+							name : 'prdtCode',
+							align : 'center'
+						}, {
+							header : '제품명',
+							name : 'prdtName',
+							align : 'center'
+						}, {
+							header : '분류',
+							name : 'prdtType',
+							align : 'center'
+						}, {
+							header : '단위',
+							name : 'prdtUnit',
+							align : 'center'
+						}
+
+						],
+					});
+
+					const grid2 = new tui.Grid({
+						el : document.getElementById('grid2'),
+						scrollX : false,
+						scrollY : false,
+						contextMenu : null,
+						rowHeaders : [ "rowNum" ],
+						//bodyHeight : 20px,
+						header : {
+							background : 'yellow'
+						},	
+						columns : [ {
+							header : '제품코드',
+							name : 'prdtCode',
+							align : 'center',
+							editor : 'text',
+							value : '',
+						}, {
+							header : '제품명',
+							name : 'prdtName',
+							editor : 'text',
+							value : '',
+							align : 'center'
+						}, {
+							header : '분류',
+							name : 'prdtType',
+							align : 'center'
+						}, {
+							header : '단위',
+							name : 'prdtUnit',
+							align : 'center'
+						} ],
+					});
+
+				$('#insertBtn').on('click', function() {
+				let newGrid = grid.appendRow({
+						'prdtCode' : ``,
+						'prdtName' : ``,
+						'prdtType' : ``,
+						'prdtUnit' : ``
+					}, {
+						at : 0
+					});
+				});
+				
+				//제품명 클릭이벤트
+				grid.on('click',(ev)=>{
+					if(ev.columnName != 'prdtCode' && ev.columnName !='prdtName'){
+							return;	
+					}
+					dtOrderRowNum = ev.rowKey
+					$.ajax({
+						url:'/selectprdt',
+						method:'GET',
+						success:function(result){
+							prdtListModal.resetData(result);
+							setTimeout(() => prdtListModal.refreshLayout(), 200);
+							$('#prModal').modal('show');
+							
+						},
+						error:function(err){
+							console.log(err)
+						}
+					});
+				});
+				
+				//제품 더블클릭 이벤트
+				prdtListModal.on('dblclick',(ev)=>{
+					if(ev.rowKey==undefined){
+		        		return;
+		        	}
+					let data = prdtListModal.getValue(ev.rowKey,'prdtCode');
+					$.ajax({
+						url:'/prdtList',
+						method:'GET',
+						data:{
+							prdtCode : data
+						},
+						success:function(result){
+							console.log(data);
+							grid.resetData(result);
+							$('#prModal').modal('hide');
+						},
+						error:function(err){
+							console.log(err)
+						}
+						
+					})
+				});
+				
+				
+				//페이지 초기화버튼
+				$('#resetBtn').on('click',function(){
+					let data = grid.getData();
+
+					for (let i = 0; i < data.length; i++) {
+						data[i].prdtCode = ''; 
+						data[i].prdtName = ''; 
+					}
+					grid.resetData([]);
+				})
+				
+				
+				
+				
+				
+			}
+		</script>
+
+	</div>
+</body>
+</html>
