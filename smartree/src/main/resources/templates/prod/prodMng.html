@@ -26,7 +26,7 @@
 				주문서</button>
 			<button type="button" class="btn btn-primary" id="prodListBtn">검색</button>
 			<button type="button" class="btn btn-primary" id="saveBtn">저장</button>
-			<button type="button" class="btn btn-primary">삭제</button>
+			<button type="button" class="btn btn-primary" id="delBtn">삭제</button>
 		</div>
 		<div id="grid" style="height: 400px;"></div>
 		<div
@@ -331,7 +331,6 @@
 			else if(data.list[0].prodPlanCode != null){
 				
 				data.list = grid.getCheckedRows();
-				console.log(data.list);
 				$.ajax({
 		      		url:'/updateProdPlan',
 		      		method: 'post',
@@ -349,7 +348,34 @@
 			}
     		
 		})
-
+		
+		$('#delBtn').on('click', delBtnFunc);
+			
+		function delBtnFunc(){
+			var data = {};
+			data.list = grid.getCheckedRows();
+			data.vo = {
+				prodPlanName : $('#prodPlanName').val(),
+				prodPlanDate : $('#prodPlanDate').val(),
+				prodPlanSdate : $('#prodPlanSdate').val(),
+				prodPlanEdate : $('#prodPlanEdate').val(),
+				prodName : $('#prodName').val(),
+				orderCode : data.list[0].orderCode
+			}
+			$.ajax({
+				url:'/',
+	      		method: 'get',
+				dataType: 'json',
+	      		success:function(result){
+	      			alert("삭제완료");
+	      			resetList();
+	      		},
+	      		error:function(err){
+	      			console.log(err)
+	      		}
+			})
+		}
+		
 		// 주문서 모달창 더블클릭
 		grid4.on('dblclick',(ev)=>{
 			if(ev.rowKey==undefined){
