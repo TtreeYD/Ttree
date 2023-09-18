@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.yedam.smartree.check.mapper.CheckMapper">
+  
+  	<!-- 제품목록 -->
+  	<select id="selectPrdtList" resultType="BpVO">
+  		select prdt_code , prdt_name , prdt_type , prdt_unit
+  		from prdt_table
+  		<where>
+  			<if test="prdtCode != null">
+  				prdt_code = #{prdtCode}
+  			</if>
+  		</where>
+  	</select>
+  
+  
+  </mapper>

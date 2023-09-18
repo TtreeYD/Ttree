@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yedam.smartree.business.service.BpVO;
+import com.yedam.smartree.check.service.CheckService;
 import com.yedam.smartree.check.service.MtlCheckService;
 import com.yedam.smartree.check.service.MtlCheckVO;
 
@@ -24,6 +26,9 @@ import com.yedam.smartree.check.service.MtlCheckVO;
 public class CheckRestController {
 	@Autowired
 	MtlCheckService mtlcheckservice;
+	
+	@Autowired
+	CheckService checkservice;
 	
 	@GetMapping("/mtlcheck")
 	public List<MtlCheckVO> getmtlcheck(MtlCheckVO vo){
@@ -68,5 +73,10 @@ public class CheckRestController {
 	@PostMapping("/updatemtlchk")
 	public int mtlupdate(MtlCheckVO vo) {
 		return mtlcheckservice.updateChkMtl(vo);
+	}
+	
+	@GetMapping("/selectprdt")
+	public List<BpVO> getPrdtList(BpVO vo){
+		return checkservice.selectPrdtList(vo);
 	}
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.yedam.smartree.check.service.CheckService;
 import com.yedam.smartree.check.service.MtlCheckService;
 
 
@@ -21,6 +22,9 @@ public class CheckController {
 	@Autowired
 	MtlCheckService mtlcheckservice;
 	
+	@Autowired
+	CheckService checkservice;
+	
 	@GetMapping("/check")
 	public String selectMtlAllCheck() {
 		return "check/check";
@@ -30,5 +34,10 @@ public class CheckController {
 	public String selectAllCheck() {
 		
 		return "check/mtlCheck";
+	}
+	
+	@GetMapping("/prdtStd")
+	public String selectPrdtStd() {
+		return "check/prdtStd";
 	}
 }
