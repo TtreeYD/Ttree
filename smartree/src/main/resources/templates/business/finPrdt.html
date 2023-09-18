@@ -17,7 +17,7 @@
 			<div style="display: flex; justify-content: center; margin-top:10px;">
 				<button type="button" id="searchDataBtn" class="btn btn-primary"
 					style="margin: 5px;">조회</button>
-				<button type="button" id="resetModalBtn" class="btn btn-primary"
+				<button type="button" id="resetBtn" class="btn btn-primary"
 					style="margin: 4px;" >초기화</button>
 			</div>
 		<hr>
@@ -25,8 +25,9 @@
 		
 
 		
-		<div id="prdtGrid"></div>
-		<div id="lotPrdtGrid"></div>
+		<div id="prdtGrid" style="margin-bottom:50px;"></div>
+		<h1 >Lot별 재고</h1>
+		<div id="lotPrdtGrid" ></div>
 		<script th:inline="javascript">
 		var data = [[${finPrdt}]]
 			var grid;
@@ -71,7 +72,7 @@
 					el: document.getElementById('lotPrdtGrid'),
 					scrollX: false,
 					scrollY: false,
-					data: data ,
+					
 					rowHeaders: ["rowNum"],
 					columns: [
 						{
@@ -103,16 +104,30 @@
 					
 				})
 				
-				$.ajax({
-					url:'',
-					method:'',
-					success:function(result){
-						console.log(result)
-					},
-					error:function(err){
-						console.log(err)
-					}
-				})
+				
+				finPrdt.on('click',(ev)=> {
+					let data = finPrdt.getValue(ev.rowKey , 'prdtCode');
+					 $.ajax({
+						url:'/lotPrdtList',
+						method:'GET',
+						data: {
+							prdtCode:data
+						},
+						success:function(result){
+							lotPrdtGrid.resetData(result);
+							
+						},
+						error:function(err){
+							console.log(err)
+						}
+					}) 
+					
+				});
+				$('#resetBtn').on('click' , resetBtn)
+				
+				function resetBtn(){
+					
+				}
 			});
 
 

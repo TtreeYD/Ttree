@@ -42,8 +42,10 @@ public interface BusinessMapper {
 	//주문서상세삭제
 	public void deleteDtOrder(BusinessVO businessVO);
 	
-	//완제품재고조회
+	//완제품재고조회 , 제품별 수량 조회 
 	public List<FinPrdtVO> selectFinPrdt();
+	//Lot별 완제품 재고조회
+	public List<FinPrdtVO> selectFinLotPrdt(FinPrdtVO fpvo);
 	
 	
 }
