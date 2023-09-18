@@ -311,8 +311,7 @@
 				}
 				console.log(data.list[0]);
 			if(data.list[0].prodPlanCode == null){
-				console.log(data);
-				console.log(data.list[0]);
+				data.list = grid.getCheckedRows();
 				$.ajax({
 		      		url:'/insertProdPlan',
 		      		method: 'post',
