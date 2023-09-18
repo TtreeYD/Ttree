@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.check.service.CheckService;
+import com.yedam.smartree.check.service.CheckVO;
 import com.yedam.smartree.check.service.MtlCheckService;
 import com.yedam.smartree.check.service.MtlCheckVO;
 
@@ -78,5 +79,15 @@ public class CheckRestController {
 	@GetMapping("/selectprdt")
 	public List<BpVO> getPrdtList(BpVO vo){
 		return checkservice.selectPrdtList(vo);
+	}
+	
+	@GetMapping("/prdtStdList")
+	public List<CheckVO> getPrdtStdList(CheckVO vo){
+		return checkservice.selectPrdtStdList(vo);
+	}
+	
+	@PostMapping("/insertPrdtChkList")
+	public int insertPrdtChkList(CheckVO vo) {
+		return checkservice.insertPrdtChkStd(vo);
 	}
 }

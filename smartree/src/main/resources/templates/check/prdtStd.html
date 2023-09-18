@@ -24,8 +24,16 @@
 			<button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
 			<button type="button" id="insertBtn" class="btn btn-primary">추가</button>
 		</div>
-		<div id="grid"></div>
+		<div id="grid"style="margin-bottom: 150px;"></div>
+		<div class="btn-group btn-right" role="group"
+			aria-label="Basic example"
+			style="float: right; padding-bottom: 10px;">
+			<button type="button" id="prdtStdBtn" class="btn btn-primary">검사기준조회</button>
+			<button type="button" id="delBtn" class="btn btn-primary">선택삭제</button>
+			<button type="button" id="addBtn" class="btn btn-primary">저장</button>
+		</div>
 		<div id="grid2"></div>
+		
 
 <!-- 제품모달 -->
 		<div class="modal fade" tabindex="-1" role="dialog" id="prModal">
@@ -38,6 +46,24 @@
 						<div id="prdtListModal"></div>
 					</div>
 					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div><!-- /.modal-content -->
+			</div><!-- /.modal-dialog -->
+		</div><!-- /.modal -->
+
+<!-- 검사기준모달 -->
+		<div class="modal fade" tabindex="-1" role="dialog" id="prStdModal">
+			<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+				<div class="modal-content">
+					<h2 style="margin:30px">검사기준조회</h2>
+					
+					
+					<div class="modal-body">
+						<div id="prdtStdModalGrid"></div>
+					</div>
+					<div class="modal-footer">
+					<button type="button" id="addModalBtn" class="btn btn-default">저장</button>
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 					</div>
 				</div><!-- /.modal-content -->
@@ -110,40 +136,78 @@
 
 						],
 					});
-
+					
 					const grid2 = new tui.Grid({
 						el : document.getElementById('grid2'),
 						scrollX : false,
 						scrollY : false,
 						contextMenu : null,
-						rowHeaders : [ "rowNum" ],
-						//bodyHeight : 20px,
+						rowHeaders : [ "checkbox" ],
+						bodyHeight : 300,
 						header : {
 							background : 'yellow'
 						},	
 						columns : [ {
-							header : '제품코드',
-							name : 'prdtCode',
+							header : '검사기준코드',
+							name : 'chkStdCode',
 							align : 'center',
-							editor : 'text',
-							value : '',
 						}, {
-							header : '제품명',
-							name : 'prdtName',
-							editor : 'text',
-							value : '',
+							header : '검사명',
+							name : 'chkName',			
 							align : 'center'
 						}, {
-							header : '분류',
-							name : 'prdtType',
+							header : '검사설명',
+							name : 'chkDt',
 							align : 'center'
 						}, {
-							header : '단위',
-							name : 'prdtUnit',
+							header : '검사기준',
+							name : 'chkStd',
 							align : 'center'
-						} ],
+						}, {
+							header : '검사기준단위',
+							name : 'chkUnit',
+							align : 'center'
+						} 
+						
+						]
 					});
+					
+					//검사기준모달그리드
+					const prdtStdModalGrid = new tui.Grid({
+						el : document.getElementById('prdtStdModalGrid'),
+						scrollX : false,
+						scrollY : false,
+						rowHeaders : [ "checkbox" ],
+						pageOptions : {
+							perPage : 5,
+							useClient : true,
+						},
+						columns : [ {
+							header : '검사기준코드',
+							name : 'chkStdCode',
+							align : 'center'
+						}, {
+							header : '검사명',
+							name : 'chkName',
+							align : 'center'
+						}, {
+							header : '검사설명',
+							name : 'chkDt',
+							align : 'center'
+						}, {
+							header : '검사기준',
+							name : 'chkStd',
+							align : 'center'
+						}, {
+							header : '검사기준단위',
+							name : 'chkUnit',
+							align : 'center'
+						}
 
+						]
+					});
+					
+					
 				$('#insertBtn').on('click', function() {
 				let newGrid = grid.appendRow({
 						'prdtCode' : ``,
@@ -210,8 +274,51 @@
 						data[i].prdtName = ''; 
 					}
 					grid.resetData([]);
-				})
+				});
 				
+				//검사기준조회 이벤트
+				 $('#prdtStdBtn').on('click', function () {					 
+					 $.ajax({
+							url:'/prdtStdList',
+							method:'GET',
+							success:function(result){
+								console.log(result);
+								prdtStdModalGrid.resetData(result);
+								setTimeout(() => prdtStdModalGrid.refreshLayout(), 200);
+								$('#prStdModal').modal('show');
+							},
+							error:function(err){
+								console.log(err);
+							}
+		
+						})
+				 });
+				
+				// 모달창 저장버튼이벤트
+				 $('#addModalBtn').on('click', function (ev) {
+					 if(!ev.rowKey==undefined){
+							// 체크여부확인 경고창
+							alert("체크하세요");
+			        		return; 
+			        }
+					 	let datas = prdtStdModalGrid.getCheckedRows();
+					 	console.log(datas);
+						grid2.appendRows(datas);
+						$("#prStdModal").modal('hide');
+		        });
+				
+				// 선택삭제 이벤트
+				 $('#delBtn').on('click', function() {
+					  let selectedRows = grid2.getCheckedRows(); 
+					  if (selectedRows.length == 0) {
+					    alert('선택된 행이 없습니다.'); 
+					  } else {
+					    selectedRows.forEach(function(row) {
+					    	console.log(row);
+					      grid2.removeRow(row.rowKey);
+					    });
+					  }
+					});
 				
 				
 				
