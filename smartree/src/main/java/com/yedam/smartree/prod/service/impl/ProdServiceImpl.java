@@ -58,6 +58,18 @@ public class ProdServiceImpl implements ProdService {
 		return prodMapper.selectProdListView(vo);
 	}
 
+	@Override
+	public int updateProd(RequestVO<ProdVO> vo) {
+		int cnt = 0;
+		prodMapper.updateProd(vo.getVo());
+		
+		for(ProdVO pvo : vo.getList()) {
+			prodMapper.updateDtProd(pvo);
+			cnt++;
+		}
+		return cnt;
+	}
+
 	
 	
 }
