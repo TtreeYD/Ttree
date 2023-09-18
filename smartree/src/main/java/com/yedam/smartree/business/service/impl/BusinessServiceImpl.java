@@ -112,9 +112,15 @@ public class BusinessServiceImpl implements BusinessService{
 	public List<FinPrdtVO> selectFinPrdt() {
 		return businessmapper.selectFinPrdt();
 	}
+	//Lot별 재고조회
 	@Override
 	public List<FinPrdtVO> selectFinLotPrdt(FinPrdtVO fpvo) {
 		return businessmapper.selectFinLotPrdt(fpvo);
+	}
+	//완제품조건검색
+	@Override
+	public List<FinPrdtVO> prdtSearchList(FinPrdtVO fpvo) {
+		return businessmapper.prdtSearchList(fpvo);
 	}
 	
 

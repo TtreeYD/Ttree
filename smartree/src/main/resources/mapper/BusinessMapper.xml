@@ -156,9 +156,27 @@
   	
   	<!-- Lot별 완제품 재고조회 -->
   	<select id="selectFinLotPrdt" resultType="FinPrdtVO">
-  		select f.prdt_lot_no , f.prdt_code , p.prdt_name , f.prdt_unit , f.prdt_cnt 
+  		select f.prdt_lot_no , f.prdt_code , p.prdt_name , f.prdt_unit , f.prdt_cnt,f.prdt_recieve_date
 		  from fin_prdt f join prdt_table p
 		    		on f.prdt_code = p.prdt_code
 		 where f.prdt_code = #{prdtCode}
+  	</select>
+  	
+  	<!-- 완제품조건검색 -->
+  	<select id="prdtSearchList" resultType="FinPrdtVO">
+  		
+  		select f.prdt_lot_no , f.prdt_code , p.prdt_name , f.prdt_unit , f.prdt_cnt , f.prdt_recieve_date
+  		  from fin_prdt f join prdt_table p
+		    		on f.prdt_code = p.prdt_code
+		<where>
+		 	<if test="prdtName != null">	 	
+		 		p.prdt_name like '%'||#{prdtName}||'%'
+		 	</if>
+		 	<if test="prdtLotNo != null ">
+		       	and f.prdt_lot_no like '%'||#{prdtLotNo}||'%'
+		 	</if>
+		    	
+		</where>
+  	
   	</select>
   </mapper>

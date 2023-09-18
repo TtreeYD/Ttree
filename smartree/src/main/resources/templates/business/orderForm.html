@@ -4,7 +4,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>주문서관리</title>
 </head>
 
 <body>
@@ -318,8 +318,14 @@
 						$('#plsdate').val('');
 						$('#doddate').val('');
 					});
-					//새주문서클릭
+					//저장버튼클릭
+					
 					$('#saveBtn').on('click',function(){
+						if(dtOrder.getCheckedRows().length == 0 ){
+							alert('주문상세정보를 선택해주세요');
+							return;
+						}else{
+							
 						let editdata={};
 						editdata.vo = order.getData();
 						editdata.list = dtOrder.getData();
@@ -381,28 +387,28 @@
 							
 							newOrderData.orderList = order.getData();
 							newOrderData.orderDtList = dtOrder.getCheckedRows();
-							$.ajax({
-								url:'/insertOrder',
-								method:'POST',
-								dataType: 'json',
-								contentType : 'application/json',
-								data:JSON.stringify(newOrderData),
-								success:function(result){
-									if(result > 0 ){
-										alert('등록되었습니다');
-										order.resetData([]);
-										dtOrder.resetData([]);
-									}
-								},
-								error:function(err){
-									console.log(err);
-								}
-									
-								
-							})
-						
+							
+								$.ajax({
+									url:'/insertOrder',
+									method:'POST',
+									dataType: 'json',
+									contentType : 'application/json',
+									data:JSON.stringify(newOrderData),
+									success:function(result){
+										if(result > 0 ){
+											alert('등록되었습니다');
+											order.resetData([]);
+											dtOrder.resetData([]);
+										}
+									},
+									error:function(err){
+										console.log(err);
+									}				
+								})
+							
 						} 
 						
+						}
 					});
 					//주문서삭제
 					$('#deleteBtn').on('click',function(){
@@ -443,8 +449,8 @@
 							success:function(result){
 								if(result > 0 ){
 									alert('상세주문'+result+'건이 삭제되었습니다');
-									setTimeout(() => bpListModal.refreshLayout(), 200);
 									dtOrder.removeCheckedRows(); //삭제후 인터페이스 삭제처리
+									newDtOrder = dtOrder.getData();//삭제값 다시들어가지않게 인터페이스reset 
 								}
 							},
 							error:function(err){
@@ -557,8 +563,6 @@
 								prdtCode : data
 							},
 							success:function(result){
-								console.log(data)
-								console.log(newDtOrder)
 								let check = true; 
 								newDtOrder.forEach((order) => {
 									if(order.prdtCode == data) {
