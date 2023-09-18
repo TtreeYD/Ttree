@@ -24,52 +24,74 @@ public class CommonRestController {
 	MdmService mdmService;
 
 	// 코드분류조회
-	@GetMapping("/selectCommonCodeType")
-	public List<CommonCodeVO> selectCommonCodeType() {
-		return mdmService.selectCommonCodeType();
+	@GetMapping("/selectCommonCode")
+	public List<CommonCodeVO> selectCommonCode() {
+		return mdmService.selectCommonCode();
 	}
 
 	// 코드상세조회
-	@GetMapping("/selectCommonCode")
-	public List<CommonCodeVO> selectCommonCode(String codeType) {
-		return mdmService.selectCommonCodeList(codeType);
+	@GetMapping("/selectCodeDetail")
+	public List<CommonCodeVO> selectCodeDetail(String codeType) {
+		return mdmService.selectCodeDetail(codeType);
 	}
 
 	// 공통코드입력
 	@PostMapping("/insertCommonCode")
-	public String insertCommonCode(@RequestBody List<String> commonCodeList) {
-		int cnt = 0;
-		System.out.println(commonCodeList);
-		for (String commonCode : commonCodeList) {
-			CommonCodeVO vo = new CommonCodeVO();
-			vo.setTypeName(commonCode);
-			System.out.println(vo);
-			if(mdmService.insertCommonCode(vo)>0) {
-				cnt++;
-			};
-			System.out.println(commonCode);
+	public void insertCommonCode(@RequestBody List<CommonCodeVO> commonCodeList) {
+		for(CommonCodeVO commonCode : commonCodeList) {
+			mdmService.insertCommonCode(commonCode);
 		}
-		String msg = "";
-		if (cnt > 0) {
-			msg = "성공";
-		} else {
-			msg = "실패";
-		}
-		return msg;
-	}
-	
-	// 상세코드입력
-	@PostMapping("/insertCodeDetail")
-	public String insertCodeDetail(@RequestBody List<String> codeDetailList) {
-		return null;
 	}
 
+	// 상세코드입력
+	@PostMapping("/insertCodeDetail")
+	public void insertCodeDetail(@RequestBody List<CommonCodeVO> codeDetailList) {
+		for(CommonCodeVO codeDetail : codeDetailList) {
+			mdmService.insertCodeDetail(codeDetail);
+		}
+	}
+
+	// 공통코드삭제
+	@PostMapping("/deleteCommonCode")
+	public int deleteCommonCode(@RequestBody List<CommonCodeVO> delList) {
+		for(CommonCodeVO delData : delList) {
+			String codeType = delData.getCodeType();
+			if(mdmService.selectCodeDetail(codeType).isEmpty()) { // 상세목록이 비어있는지 확인
+				mdmService.deleteCommonCode(delData);
+			}
+		}
+		return 0;
+	}
+	
+	// 상세코드삭제
+	@PostMapping("/deleteCodeDetail")
+	public int deleteCodeDetail(@RequestBody List<CommonCodeVO> delList) {
+		int cnt=0;
+		for(CommonCodeVO delData : delList) {
+			cnt += mdmService.deleteCodeDetail(delData);
+		}
+		return cnt;
+	}
+	
+	
+	// 사원관리
+		
 	// 사원 조회
 	@GetMapping("/selectEmpList")
 	public List<EmpVO> selectEmpList(String empDept, String empName) {
 		return mdmService.selectEmpList(empDept, empName);
 	}
 
-	//
+	//	사원 등록
+	@PostMapping("/insertEmp")
+	public String addEmp(@RequestBody EmpVO empInfo) {
+		String msg = "";
+		if(mdmService.addEmp(empInfo)>0) {
+			msg = "등록성공";
+		} else {
+			msg = "등록실패";
+		}
+		return msg;
+	}
 
 }

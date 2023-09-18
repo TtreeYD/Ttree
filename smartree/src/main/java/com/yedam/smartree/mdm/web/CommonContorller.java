@@ -27,4 +27,40 @@ public class CommonContorller {
 		return "mdm/emp";
 	}
 	
+	// 자재관리 페이지
+	@GetMapping("/mtl")
+	public String mtlManage() {
+		return "mdm/mtl";
+	}
+	
+	// 제품관리 페이지
+	@GetMapping("/prdt")
+	public String prodManage() {
+		return "mdm/prdt";
+	}
+	
+	// 공정기준 페이지
+	@GetMapping("/prcs")
+	public String prcsManage() {
+		return "mdm/prcs";
+	}
+	
+	// 거래처 관리 페이지
+	@GetMapping("/bp")
+	public String bpManage() {
+		return "mdm/bp";
+	}
+	
+	// bom관리 페이지
+	@GetMapping("/bom")
+	public String bomManage() {
+		return "mdm/bom";
+	}
+	
+	// 품질기준관리 페이지
+	@GetMapping("/chkStd")
+	public String chkStdManage() {
+		return "mdm/chkStd";
+	}
+	
 }
