@@ -29,6 +29,16 @@ public class ProdRestController {
 		return service.selectOrderAndPrdt();
 	}
 	
+	@GetMapping("/selectProdPlan")
+	public List<ProdVO> getProdPlan(ProdVO vo){
+		return service.selectProd(vo);
+	}
+	
+	@GetMapping("/selectProdListView")
+	public List<ProdVO> getProdPlanListView(ProdVO vo){
+		return service.selectProdListView(vo);
+	}
+	
 	@PostMapping("/insertProdPlan")
 	@ResponseBody
 	public int insertProdPlan(@RequestBody RequestVO<ProdVO> vo) {

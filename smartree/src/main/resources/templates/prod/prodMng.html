@@ -1,68 +1,93 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
 <head>
-    <meta charset="UTF-8">
-    <title>생산계획관리</title>
-</head> 
+<meta charset="UTF-8">
+<title>생산계획관리</title>
+</head>
 <style>
-	
 </style>
 <body>
 	<div layout:fragment="content">
-	<label>계획명 : </label>
-	<input type="text" name="prodPlanName" id="prodPlanName"><br>
-	<label>담당자 : </label>
-	<input type="text" name="prodName" id="prodName"><br>
-	<label>생산계획일자 : </label>
-	<input type="date" name="prodPlanDate" id="prodPlanDate">
-	<label>생산시작일자 : </label>
-	<input type="date" name="prodPlanSdate" id="prodPlanSdate">
-	<label>생산종료일자 : </label>
-	<input type="date" name="prodPlanEdate" id="prodPlanEdate">
-	<div class="btn-group" role="group" aria-label="Basic example" style="float : right; margin-bottom : 10px;">
-	  <button type="button" class="btn btn-primary" id="resetBtn">초기화</button>
-	  <button type="button" class="btn btn-primary" id="loadOrders">
-		  주문서
-	  </button>
-	  <button type="button" class="btn btn-primary">검색</button>
-	  <button type="button" class="btn btn-primary" id="saveBtn">저장</button>
-	  <button type="button" class="btn btn-primary">삭제</button>
-	</div>
-    <div id="grid" style="height: 400px;"></div>
-	<div style="display:flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
-		<span>
-			<div id="grid2" style="width: 600px;"></div>
-		</span>
-		<span>
-			<div id="grid3" style="width: 600px;"></div>
-		</span>
-	</div>
-    
-    <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
-	  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	      	<h4 class="modal-title">주문서 조회</h4>
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	      </div>
-	      <div class="modal-body">
-	        <div id="grid4"></div>
-	      </div>
-	      <div class="modal-footer">
-	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary">Save changes</button>
-	      </div>
-	    </div><!-- /.modal-content -->
-	  </div><!-- /.modal-dialog -->
-	</div><!-- /.modal -->
+		<label>계획명 : </label> <input type="text" name="prodPlanName"
+			id="prodPlanName"><br> <label>담당자 : </label> <input
+			type="text" name="prodName" id="prodName"><br> <label>생산계획일자
+			: </label> <input type="date" name="prodPlanDate" id="prodPlanDate">
+		<label>생산시작일자 : </label> <input type="date" name="prodPlanSdate"
+			id="prodPlanSdate"> <label>생산종료일자 : </label> <input
+			type="date" name="prodPlanEdate" id="prodPlanEdate">
+		<div class="btn-group" role="group" aria-label="Basic example"
+			style="float: right; margin-bottom: 10px;">
+			<button type="button" class="btn btn-primary" id="newBtn">새계획</button>
+			<button type="button" class="btn btn-primary" id="resetBtn">초기화</button>
+			<button type="button" class="btn btn-primary" id="loadOrders">
+				주문서</button>
+			<button type="button" class="btn btn-primary" id="prodListBtn">검색</button>
+			<button type="button" class="btn btn-primary" id="saveBtn">저장</button>
+			<button type="button" class="btn btn-primary">삭제</button>
+		</div>
+		<div id="grid" style="height: 400px;"></div>
+		<div
+			style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
+			<span>
+				<div id="grid2" style="width: 600px;"></div>
+			</span> <span>
+				<div id="grid3" style="width: 600px;"></div>
+			</span>
+		</div>
 
-      <script>
-      	let selectValue;
-      	let newProdList;
-        let grid, grid2, grid3, grid4;
+		<div class="modal fade" tabindex="-1" role="dialog" id="orderModal">
+			<div class="modal-dialog modal-dialog-centered modal-xl"
+				role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">주문서 조회</h4>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="grid4"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<div class="modal fade" tabindex="-1" role="dialog" id="prodModal">
+			<div class="modal-dialog modal-dialog-centered modal-xl"
+				role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">생산계획 조회</h4>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="grid5"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<script>
+        let grid, grid2, grid3, grid4, grid5;
         const header = ['prodPlanName','prodPlanDate','prodPlanSdate','prodPlanEdate'];
         
         window.onload=function(){
@@ -75,6 +100,7 @@
             perPage: 5,
             useClient: true,
           },
+          rowHeaders : ["checkbox"],
 	      columns: [
 	        {
 	          header: '제품명',
@@ -175,7 +201,34 @@
 	            }
 	          ]
 		    });
-	    
+	    const grid5 = new tui.Grid({
+		      el: document.getElementById('grid5'),
+		      scrollX: false,
+		      scrollY: false,
+		      pageOptions: {
+	            perPage: 5,
+	            useClient: true,
+	          },
+		      columns: [
+	    	  	{
+	              header: '계획코드',
+	              name: 'prodPlanCode'
+	            },
+		    	{
+	              header: '계획명',
+	              name: 'prodPlanName'
+	            },
+	            {
+	              header: '담당자',
+	              name: 'prodName'
+	            },
+	            {
+	              header: '생산계획일자',
+	              name: 'prodPlanDate',
+
+	            }
+	          ]
+		    });
 		$.ajax({
 			url:'/',
 			method:'get',
@@ -190,6 +243,7 @@
 			}
 		})
 		
+		// 주문서 모달창
 		$('#loadOrders').on('click', loadOrders);
 		
 		function loadOrders() {
@@ -198,10 +252,8 @@
 				method:'get',
 		    	dataType:'json',
 				success:function(result){
-					
-					
 					grid4.resetData(result);
-					$("#myModal").modal('show');
+					$("#orderModal").modal('show');
 					setTimeout(() => grid4.refreshLayout(), 200);
 					
 				},
@@ -211,6 +263,24 @@
 			})
 		}
 		
+		// 검색버튼 -> 생산계획에 들어갔는 항목들
+		$('#prodListBtn').on('click', prodIngList);
+		
+		function prodIngList(){
+			$.ajax({
+				url:'/selectProdPlan',
+				method:'get',
+		    	dataType:'json',
+				success:function(result){
+					grid5.resetData(result);
+					$("#prodModal").modal('show');
+					setTimeout(() => grid5.refreshLayout(), 200);
+				},
+				error:function(err){
+					console.log(err);
+				}
+			})
+		}
 		//페이지 초기화버튼
 		$('#resetBtn').on('click', resetList)
 		
@@ -230,18 +300,16 @@
 			// 저장 버튼
 			$('#saveBtn').on('click',function(){
 				var data = {};
-				data.list = grid.getData();
+				data.list = grid.getCheckedRows();
 				data.vo = {
-						prodPlanName : $('#prodPlanName').val(),
-						prodPlanDate : $('#prodPlanDate').val(),
-						prodPlanSdate : $('#prodPlanSdate').val(),
-						prodPlanEdate : $('#prodPlanEdate').val(),
-						prodName : $('#prodName').val(),
-						orderCode : data.list[0].orderCode
+					prodPlanName : $('#prodPlanName').val(),
+					prodPlanDate : $('#prodPlanDate').val(),
+					prodPlanSdate : $('#prodPlanSdate').val(),
+					prodPlanEdate : $('#prodPlanEdate').val(),
+					prodName : $('#prodName').val(),
+					orderCode : data.list[0].orderCode
 				}
-			console.log(data);
 			
-
 			$.ajax({
 	      		url:'/insertProdPlan',
 	      		method: 'post',
@@ -270,26 +338,51 @@
 			
 			console.log(data)
 		 	$.ajax({
-      		url:'/orderDtList',
-      		method:'get',
-      		data : {
-      			orderDtCode : data,
-      			orderCode : data1
-      		},
+	      		url:'/orderDtList',
+	      		method:'get',
+	      		data : {
+	      			orderDtCode : data,
+	      			orderCode : data1
+	      		},
       		success:function(result){
-      			console.log(result);
-      			selectValue = result;
-   	            $("#myModal").modal('hide');
+   	            $("#orderModal").modal('hide');
    	         	grid.resetData(result)
-   	         	for(let field of result){
-   	         	}
-   	         	newProdList = selectValue[ev.rowKey];
-   	         	console.log(newProdList);
+   	         	
       		},
       		error:function(err){
-      			
-      		console.log(err)
-      				}
+      			console.log(err)
+      		}
+    		})
+		})
+		// 검색 모달창 더블클릭
+		grid5.on('dblclick',(ev)=>{
+			if(ev.rowKey==undefined){
+        		return;
+        	}
+			let data = grid5.getValue(ev.rowKey, 'prodPlanCode');
+			let data1 = grid5.getValue(ev.rowKey,'orderDtCnt');
+			
+			console.log(data)
+		 	$.ajax({
+	      		url:'/selectProdListView',
+	      		method:'get',
+	      		data : {
+	      			prodPlanCode : data,
+	      			orderDtCnt : data1
+	      		},
+      		success:function(result){
+   	            $("#prodModal").modal('hide');
+   	         	$('#prodPlanName').val(result[0].prodPlanName);
+				$('#prodPlanDate').val(result[0].prodPlanDate);
+				$('#prodPlanSdate').val(result[0].prodPlanSdate);
+				$('#prodPlanEdate').val(result[0].prodPlanEdate);
+				$('#prodName').val(result[0].prodName);
+   	         	grid.resetData(result);
+   	         	
+      		},
+      		error:function(err){
+      			console.log(err)
+      		}
     		})
 		})
 	  }
