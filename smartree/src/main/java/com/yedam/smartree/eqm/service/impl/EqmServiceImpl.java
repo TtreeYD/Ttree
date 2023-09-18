@@ -32,4 +32,22 @@ public class EqmServiceImpl implements EqmService {
 		return eqmmapper.searchEqm(eqmName);
 	}
 
+	@Override
+	public int insertEqm(EqmVO eqmVO) {
+		return eqmmapper.insertEqm(eqmVO);
+	}
+
+	@Override
+	public EqmVO selectEqm(EqmVO eqmVO) {
+		return eqmmapper.selectEqm(eqmVO);
+	}
+
+	@Override
+	public int deleteEqm(EqmVO eqmVO) {
+		String eqmCode = eqmVO.getEqmCode();
+		eqmVO.setEqmCode(eqmCode);
+		eqmmapper.deleteEqm(eqmVO);
+		return 1;
+	}
+
 }
