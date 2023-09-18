@@ -39,8 +39,18 @@
   		ORDER BY eqm_code
   	</select>
   	
+  	<select id="selectEqm" resultType="EqmVO">
+  	select eqm_code,eqm_name,eqm_ucheck,insp_cycle,eqm_min_temp,eqm_max_temp,eqm_manager,mfg_comp,mfg_date,eqm_img
+  	from EQM
+  	where eqm_code=#{eqmCode} and eqm_name = #{eqmName} and  mfg_comp = #{mfgComp}
+  	</select>
+  	
+  	
   	
   	<insert id="insertEqm" parameterType="EqmVO">
+  	<selectKey keyProperty="eqmCode" resultType="String" order="BEFORE">
+  		select 'eqm' || LPAD(eqm_code_seq.NEXTVAL, 7, '0') as eqmCode from dual
+  	</selectKey>
   	INSERT INTO EQM
   			 ( 
   			    EQM_CODE
@@ -71,6 +81,10 @@
   	
   	</insert>
   	
+  	<delete id="deleteEqm" parameterType="EqmVO">
+  		delete from EQM
+  		where eqm_code= #{eqmCode}
+  	</delete>
   	
   	
   </mapper>

@@ -42,80 +42,85 @@
 		<h2>설비관리</h2>
 		<button type="button" id="selectBtn" class="btn btn-primary" data-toggle="modal" data-target="#searchEqmModal">설비조회</button>
 		<div>
-			<form>
+			<form th:action="@{eqmForm}" method="post" th:object='${eqmVO}'>
 			
 				<table id="equipTable">
 					<tr>
 						<th>설비코드</th>
 						<td>
-							<input type="text" name="eqmCode" id="eqmCode" style="background-color:#d3d3d3;" readonly>
+							<input type="text" th:field="*{eqmCode}" name="eqmCode" id="eqmCode" style="background-color:#d3d3d3;" readonly>
 						</td>
 						<th>설비명</th>
 						<td>
-							<input type="text" name="eqmName" id="eqmName">
+							<input type="text" th:field="*{eqmName}" name="eqmName" id="eqmName">
 						</td>
 					</tr>
 				
 					<tr>
 						<th>사용여부</th>
 						<td>
-							<label style="margin-left:10px; margin-right:40px;"><input type="radio" id="" name="eqmUcheck" value="y"> Yes </label>
-							<label><input type="radio" id="" name="eqmUcheck" value="n"> No </label>
+							<label for="y" style="margin-left:10px; margin-right:40px;"  ><input type="radio" id="y" th:field="*{eqmUcheck}" name="eqmUcheck" value="y"> Yes </label>
+							<label for="n"><input type="radio" id="n" th:field="*{eqmUcheck}" name="eqmUcheck" value="n"> No </label>
 						</td>
 					</tr>
 					<tr>
 						<th>온도</th>
 						<td>
-							<input type="text" id="eqmMinTemp" name="eqmMinTemp" placeholder="최저"> ℃   ~
-							<input type="text" id="eqmMaxTemp" name="eqmMaxTemp" placeholder="최고"> ℃
+							<input type="text" id="eqmMinTemp" th:field="*{eqmMaxTemp}" name="eqmMinTemp" placeholder="최저"> ℃   ~
+							<input type="text" id="eqmMaxTemp" th:field="*{eqmMaxTemp}" name="eqmMaxTemp" placeholder="최고"> ℃
 						</td>
 						
 						<th>관리인</th>
-						<td> <input type="text" id="eqmManager" name="eqmManager" > </td>
+						<td> <input type="text" id="eqmManager" th:field="*{eqmManager}" name="eqmManager" > </td>
 					</tr>
 					<tr>
 						<th>점검주기</th>
 						<td>
-							<input type="text" name="inspCycle" id="inspCycle">일 
+							<input type="text" name="inspCycle" id="inspCycle" th:field="*{inspCycle}">일 
 						</td>
 						<th>이미지</th>
 						<td>
-							<input type="file" name="eqmImg" id="eqmImg">
+							<input type="file" name="eqmImg" id="eqmImg" th:field="*{eqmImg}">
 						</td>
 					</tr>
 					<tr>
 						<th>제조업체</th>
-						<td><input type="text" id="mfgComp" name="mfgComp" ></td>
+						<td><input type="text" id="mfgComp" name="mfgComp" th:field="*{mfgComp}"></td>
 					</tr>
 					<tr>
 						<th>제조일자</th>
-						<td><input type="date" id="" name="mfgDate" ></td>
+						<td><input type="date" id="mfgDate" name="mfgDate" th:field="*{mfgDate}"></td>
 					</tr>
 				</table>
 				
 				<div id="buttons" >
 					<button type="submit" id="" class="btn btn-primary">등록</button>
-					<button type="button" id="" class="btn btn-primary">취소</button>
-					<button type="button" id="" class="btn btn-primary">삭제</button>
+					<button type="button" id="resetBtn" class="btn btn-primary">취소</button>
+					<button type="button" id="deleteBtn" class="btn btn-primary">삭제</button>
 				</div>
 			</form>
 		</div>
 		<!-- 모달창 시작 -->
-			<div class="modal fade " id="searchEqmModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-			aria-hidden="true">
-			<div class="modal-dialog" role="document">
+			<div class="modal fade " id="searchEqmModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-dialog-centered " role="document">
 				<div class="modal-content">
-					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">설비</h5>
-						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							<span aria-hidden="true">&times;</span>
+					<div class="modal-header" >
+					 
+						<h5 class="modal-title"  >설비</h5>
+						
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+							<span aria-hidden="true">&times;</span>								
 						</button>
+						
+				
+	
 					</div>
 					<div class="modal-body">
-						<label>설비명</label>
-						<input type= "text" id="searchName" placeholder="설비명을 입력하시오">
-						<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
-						<br>
+				 			<label for="searchName">설비명</label>
+							<input type= "text" id="searchName" placeholder="설비명을 입력하시오">
+							<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
+						<br> 
+						<br> 
 						<div id="grid2"></div>
 					</div>
 					<div class="modal-footer">
@@ -128,7 +133,7 @@
 		<!-- 모달창 끝 -->
 		
 		<script>
-		 var grid2;
+		
 	      $(document).ready(function () {
 	    	  
 	    	  const grid2 = new tui.Grid({
@@ -140,21 +145,154 @@
 	                  perPage: 5,
 	                  useClient: true,
 	                },
-	              columns: [{
+	              columns: [
+	              {
 	                header: '설비명',
 	                name: 'eqmName',
-	                align: 'center'
+	             
 	              },
 	              {
 	                header: '제조업체',
 	                name: 'mfgComp',
-	                align: 'center'
+	               
 	              }
 	              ]
 
 	            });
-	      });
+	    	   	  
+	          $('#selectBtn').on('click', getEqmList);
+		      
+	         
+	          
+	   	   // 전체설비 조회
+	   	      function getEqmList(){
+	   	      	$.ajax({
+	   	      		url:'/eqms',
+	   	      		method:'get',
+	   	          dataType:'json',
+	   	      		success:function(result){
+	   	      			//console.log(result);
+	   	      			grid2.resetData(result);
+	   	      			$("#searchEqmModal").modal('show');
+	   	      			setTimeout(() => grid2.refreshLayout(), 200);
+	   					
+	   	      		},
+	   	      		error:function(err){
+	   	      			console.log(err);
+	   	      		}
+	   	      	})
+	   	      }
+	   	   
+	   	   // 검색버튼 클릭시 
+	   	    $('#searchBtn').on('click',function(){
+	   	    	searchEqmName();
+	   	    })
+	   	    // 검색 - 엔터시
+	   	    $('#searchName').on('keypress', function (ev) {
+	   			if (ev.which == 13) {
+	   				ev.preventDefault();
+	   				searchEqmName()
+	   			}
+	   		})
+	   	   
+	   		// 설비 이름 조회
+	   		function getEqmName(eqmName){
+	   			$.ajax({
+	   				url:'/eqmName',
+	   				data: {
+	   					eqmName : eqmName
+	   				},
+	   				success: result => {
+	   				 console.log(result);
+	   					grid2.resetData(eval(result)); 
+	   					
+	   				/* 	grid2.resetData(result);
+	   	      			$("#searchEqmModal").modal('show');
+	   	      			setTimeout(() => grid2.refreshLayout(), 200); */
+	   				}
+	   				,
+	   				error: err => console.log(err)
+	   			})
+	   		}
+	   		// 설비 이름 조회 : input에 값
+	   		function searchEqmName(){
+	   			   			
+	   			if($('#searchName').val()){
+	   				let eqmName = $('#searchName').val();
+	   				getEqmName(eqmName);
+	   				
+	   			}
+	   		}
+	   	   // 설비조회 모달창 더블클릭
+	   	   grid2.on('dblclick',(ev)=>{
+	   			if(ev.rowKey==undefined){
+        			return;
+        		}
+	   		   let data = grid2.getValue(ev.rowKey,'eqmCode');
+	   		   let data1 = grid2.getValue(ev.rowKey,'eqmName');
+	   		   let data2  = grid2.getValue(ev.rowKey,'mfgComp');
+	   		  // console.log(data);
+	   		   $.ajax({
+	   			   url:'/selectEqm',
+	   			   method:'get',
+	   			   data:{
+	   				eqmCode :data,
+	   				eqmName : data1,
+	   				mfgComp : data2
+	   			   },
+	   		   success: function(result){
+	   			console.log(result);		
+	   			console.log(result.eqmName);
+	   			console.log(result.eqmUcheck);
+	   			
+	   	    	 $('#searchEqmModal').modal('hide');
+	   			$('#eqmCode').val(result.eqmCode);
+	   			$('#eqmName').val(result.eqmName);
+	   			
+	   			if(result.eqmUcheck == 'y'){
+	   				$('#y').prop('checked',true)
+	   			}else{
+	   				$('#n').prop('checked',true)
+	   			}
+	   			//$('#eqmUcheck').val(result.eqmUcheck);
+	   			$('#eqmMinTemp').val(result.eqmMinTemp);
+	   			$('#eqmMaxTemp').val(result.eqmMaxTemp);
+	   			$('#eqmManager').val(result.eqmManager);
+	   			$('#inspCycle').val(result.inspCycle);
+	   			$('#eqmImg').val(result.eqmImg);
+	   			$('#mfgComp').val(result.mfgComp);
+	   			$('#mfgDate').val(result.mfgDate); 
+	   		   },
+	      		error:function(err){	      			
+	          		console.log(err)
+	          	}
+	   		   })
+	   	   })
+	   	   
+	   	   
+	   	   // 초기화
+	   	$('#resetBtn').on('click',function(){		
+	   		$('#eqmCode').val('');
+   			$('#eqmName').val('');   			   		
+   			$('#y,#n').prop('checked',false)  			  			
+   			$('#eqmMinTemp').val('');
+   			$('#eqmMaxTemp').val('');
+   			$('#eqmManager').val('');
+   			$('#inspCycle').val('');
+   			$('#eqmImg').val('');
+   			$('#mfgComp').val('');
+   			$('#mfgDate').val(''); 			
+		});
+	   			
+	   	$('#deleteBtn').on('click',function(){
+	   		
+	   	})   
+	   	   
+	   	   
+	   	   
+	 });
 	      
+	
 
 		</script>
 		

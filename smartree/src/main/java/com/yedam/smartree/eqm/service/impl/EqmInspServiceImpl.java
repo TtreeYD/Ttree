@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.yedam.smartree.eqm.mapper.EqmInspMapper;
 import com.yedam.smartree.eqm.service.EqmInspService;
 import com.yedam.smartree.eqm.service.EqmInspVO;
+import com.yedam.smartree.eqm.service.EqmVO;
 
 @Service
 public class EqmInspServiceImpl implements EqmInspService{
@@ -29,5 +30,6 @@ public class EqmInspServiceImpl implements EqmInspService{
 	public List<EqmInspVO> searchEqmInsp(String eqmName) {
 		return eqminspmapper.searchEqmInsp(eqmName);
 	}
+
 
 }
