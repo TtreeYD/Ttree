@@ -4,16 +4,18 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>완제품재고조회</title>
 </head>
 
 <body>
 	<div layout:fragment="content">
-			<label style="text-align:center; margin-left: 400px">제품명</label>
+		<div style="margin: 0 auto;">
+			<label style="text-align:center; margin-left: 300px">제품명</label>
 			<input type="text" id="prdt" class="form-control" placeholder="제품명을 입력하세요" name="ordercd"
-				style="width:300px;display: inline-block;">
+				style="width:300px;display: inline-block; margin:0 auto">
 			<label  style="margin-top:10px; margin-left:50px">Lot번호</label>
 			<input type="text" id="lotNo" class="form-control" name="plsdate" style="width:300px; display: inline-block;" placeholder="Lot번호를 입력하세요" />
+		</div>
 			<div style="display: flex; justify-content: center; margin-top:10px;">
 				<button type="button" id="searchDataBtn" class="btn btn-primary"
 					style="margin: 5px;">조회</button>
@@ -99,7 +101,17 @@
 							header: '수량',
 							name: 'prdtCnt',
 
-						}],
+						},
+						{
+				            header: '입고일자',
+				            name: 'prdtRecieveDate',
+				            filter: {
+				              type: 'date', showApplyBtn: true, showClearBtn: true,
+				              options: {
+				                format: 'yyyy-MM-dd'
+				              }
+				            }
+				          }],
 						
 					
 				})
@@ -123,10 +135,29 @@
 					}) 
 					
 				});
-				$('#resetBtn').on('click' , resetBtn)
-				
 				function resetBtn(){
-					
+					$('#prdt').val('');
+					$('#lotNo').val('');
+				}
+				
+				$('#resetBtn').on('click' , resetBtn)
+				$('#searchDataBtn').on('click',searchBtn)
+				
+				function searchBtn(){
+					$.ajax({
+						url:'/prdtSearch',
+						method:'POST',
+						data:{
+							prdtName : $('#prdt').val(),
+							prdtLotNo : $('#lotNo').val()
+						},
+						success:function(result){
+							lotPrdtGrid.resetData(result);
+						},
+						error:function(err){
+							console.log(err);
+						}
+					})
 				}
 			});
 

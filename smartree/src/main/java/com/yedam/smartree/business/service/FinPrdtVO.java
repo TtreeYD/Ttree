@@ -2,6 +2,10 @@ package com.yedam.smartree.business.service;
 
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 @Data
@@ -15,6 +19,8 @@ public class FinPrdtVO {
 	
 	private int prdtCnt;
 	private String prdtUnit;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private Date prdtRecieveDate;
 	private String recieveManager;
 	private String prdtChkCode;

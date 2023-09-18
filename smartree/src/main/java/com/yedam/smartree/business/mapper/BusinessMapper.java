@@ -46,6 +46,8 @@ public interface BusinessMapper {
 	public List<FinPrdtVO> selectFinPrdt();
 	//Lot별 완제품 재고조회
 	public List<FinPrdtVO> selectFinLotPrdt(FinPrdtVO fpvo);
+	//완제품조건검색
+	public List<FinPrdtVO> prdtSearchList(FinPrdtVO fpvo);
 	
 	
 }

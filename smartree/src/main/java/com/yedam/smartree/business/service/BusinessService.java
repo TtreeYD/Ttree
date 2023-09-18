@@ -34,6 +34,8 @@ public interface BusinessService {
 	public List<FinPrdtVO> selectFinPrdt();
 	//Lot별 수량
 	public List<FinPrdtVO> selectFinLotPrdt(FinPrdtVO fpvo);
+	//완제품조건조회
+	public List<FinPrdtVO> prdtSearchList(FinPrdtVO fpvo);
 
 	
 

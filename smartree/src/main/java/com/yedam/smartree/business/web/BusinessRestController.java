@@ -97,5 +97,10 @@ public class BusinessRestController {
 		System.out.println(fpvo);
 		return businessService.selectFinLotPrdt(fpvo);
 	}
+	//완제품조건조회
+	@PostMapping("/prdtSearch")
+	public List<FinPrdtVO> prdtSearchList(FinPrdtVO fpvo){
+		return businessService.prdtSearchList(fpvo);
+	}
 	
 }
