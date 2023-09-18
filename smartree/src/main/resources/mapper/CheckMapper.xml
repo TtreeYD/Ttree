@@ -14,6 +14,20 @@
   			</if>
   		</where>
   	</select>
+  	
+  	<!-- 제품검사기준목록 -->
+  	<select id="selectPrdtStdList" resultType="CheckVO">
+  		select chk_std_code , chk_name , chk_dt , chk_std, chk_unit
+  		from chk_std
+  		<where>
+  			<if test="chkStdCode != null">
+  				chk_std_code = #{chkStdCode}
+  			</if>
+  		</where>
+  	</select>
   
+  	<insert id="insertPrdtChkStd" parameterType="CheckVO">
+  		
+  	</insert>
   
   </mapper>

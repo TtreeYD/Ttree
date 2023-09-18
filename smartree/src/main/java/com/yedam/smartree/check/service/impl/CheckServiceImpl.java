@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.check.mapper.CheckMapper;
 import com.yedam.smartree.check.service.CheckService;
+import com.yedam.smartree.check.service.CheckVO;
 
 @Service
 public class CheckServiceImpl implements CheckService{
@@ -18,6 +19,17 @@ public class CheckServiceImpl implements CheckService{
 	@Override
 	public List<BpVO> selectPrdtList(BpVO vo) {
 		return checkmapper.selectPrdtList(vo);
+		
+	}
+
+	@Override
+	public List<CheckVO> selectPrdtStdList(CheckVO vo) {
+		return checkmapper.selectPrdtStdList(vo);
+	}
+
+	@Override
+	public int insertPrdtChkStd(CheckVO vo) {
+		return checkmapper.insertPrdtChkStd(vo);
 	}
 	 
 }
