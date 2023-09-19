@@ -58,7 +58,7 @@
 		<script>
 			// 부서정보 불러오기
 			$.ajax({
-				url: "/selectCodeDetail",
+				url: "/mdm/selectCodeDetail",
 				data: {
 					codeType: '001'
 				},
@@ -128,7 +128,7 @@
 
 			function getEmpList(empDept, empName) {
 				$.ajax({
-					url: '/selectEmpList',
+					url: '/mdm/selectEmpList',
 					data: {
 						empDept: empDept,
 						empName: empName
@@ -172,7 +172,7 @@
 					return;
 				}
 				$.ajax({
-					url: '/insertEmp',
+					url: '/mdm/insertEmp',
 					type: 'post',
 					headers: {
 						'Content-Type': 'application/json'

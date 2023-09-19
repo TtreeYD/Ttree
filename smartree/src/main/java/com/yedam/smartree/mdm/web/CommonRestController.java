@@ -6,17 +6,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
 import com.yedam.smartree.mdm.service.MdmService;
+import com.yedam.smartree.mdm.service.PrdtVO;
 
 /*
 	개발자 : 정현철
 	개발일자 : 2023/09/14
 	기준정보관리 데이터 조회
 */
+@RequestMapping("/mdm")
 @RestController
 public class CommonRestController {
 
@@ -94,4 +97,49 @@ public class CommonRestController {
 		return msg;
 	}
 
+	
+	// 제품관리
+	
+	// 제품리스트
+	@GetMapping("/selectPrdtList")
+	public List<PrdtVO> selectPrdtList(){
+		return mdmService.selectPrdtList();
+	}
+	
+	// 제품단건조회
+	@GetMapping("/selectPrdt")
+	public PrdtVO selectPrdt(String prdtCode) {
+		return mdmService.selectPrdt(prdtCode);
+	}
+	
+	// 제품검색
+	@PostMapping("/searchPrdt")
+	public List<PrdtVO> searchPrdt(@RequestBody PrdtVO vo) {
+		return mdmService.searchPrdt(vo);
+	}
+	
+	// 제품등록
+	@PostMapping("/insertPrdt")
+	public String insertPrdt(@RequestBody PrdtVO vo) {
+		String msg ="등록실패";
+		if(mdmService.insertPrdt(vo)>0) msg = "등록완료";
+		return msg;
+	}
+	
+	// 제품수정
+	@PostMapping("/updatePrdt")
+	public String updatePrdt(@RequestBody PrdtVO vo) {
+		String msg = "수정실패";
+		if(mdmService.updatePrdt(vo)>0) msg = "수정완료";
+		return msg;
+	}
+	
+	// 제품삭제
+	@PostMapping("/deletePrdt")
+	public String deletePrdt(String prdtCode) {
+		String msg = "삭제실패";
+		if(mdmService.deletePrdt(prdtCode)>0) msg = "삭제완료";
+		return msg;
+	}
+	
 }

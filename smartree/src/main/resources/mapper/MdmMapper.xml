@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yedam.smartree.mdm.mapper.MdmMapper">
 
-	<!-- 코드분류 -->
+	<!-- 공통코드 리스트 -->
 	<select id="selectCommonCode" resultType="CommonCodeVO">
 		SELECT code_type, type_name
 		FROM common_code
@@ -18,6 +18,17 @@
 		, code_use
 		FROM code_detail
 		WHERE code_type = #{codeType}
+		ORDER BY code_id
+	</select>
+
+	<!-- 코드상세 리스트 -->
+	<select id="selectCodeDetailY" resultType="CommonCodeVO">
+		SELECT code_id
+		, code_name
+		, code_use
+		FROM code_detail
+		WHERE code_type = #{codeType}
+		AND code_use = 'Y'
 		ORDER BY code_id
 	</select>
 
@@ -70,7 +81,8 @@
 	<!-- 사원 등록 -->
 	<insert id="addEmp" parameterType="EmpVO">
 		<selectKey keyProperty="empId" resultType="String" order="BEFORE">
-			SELECT #{empDept} || NVL( LPAD( SUBSTR( MAX(emp_id), 5) +1, 4, '0'), '0001') from emp_list
+			SELECT #{empDept} || NVL( LPAD( SUBSTR( MAX(emp_id), 5) +1, 4, '0'), '0001')
+			FROM emp_list
 			WHERE emp_dept = #{empDept}			
 		</selectKey>
 			INSERT INTO emp_list(emp_id, emp_name, emp_dept, emp_class, emp_phone)
@@ -82,4 +94,61 @@
 					, #{empPhone}
 					)
 	</insert>
+	
+	<!-- 제품 리스트 -->
+	<select id="selectPrdtList">
+		SELECT prdt_code, prdt_name, get_common(prdt_type, '010') prdt_type, prdt_ss
+		FROM prdt_table
+		ORDER BY prdt_code
+	</select>
+	
+	<!-- 제품검색 -->
+	<select id="searchPrdt" resultType="PrdtVO" parameterType="PrdtVO">
+		SELECT prdt_code, prdt_name, get_common(prdt_type, '010') prdt_type, prdt_ss
+		FROM prdt_table
+		<where>
+			<if test="prdtName != null and prdtName.equals('')">
+				prdt_name LIKE '%' || #{prdtName} || '%'
+			</if>
+			<if test="prdtType != null and prdtType.equals('')">
+				prdt_type = #{prdtType}
+			</if>			
+		</where>
+		ORDER BY prdt_code
+	</select>
+	
+	<!-- 제품 단건조회 -->
+	<select id="selectPrdt" resultType="PrdtVO">
+		SELECT prdt_code, prdt_name, prdt_type, prdt_ss, prdt_size
+		FROM prdt_table
+		WHERE prdt_code = #{prdtCode}
+	</select>
+	
+	<!-- 제품 등록 -->
+	<insert id="insertPrdt" parameterType="PrdtVO">
+		<selectKey keyProperty="prdtCode" order="BEFORE" resultType="String">
+			SELECT #{prdtType} || NVL( LPAD( SUBSTR( MAX(prdt_code), 5) +1, 4, '0'), '0001')
+			FROM prdt_table
+			WHERE prdt_type = #{prdtType}
+		</selectKey>
+		INSERT INTO prdt_table(prdt_code, prdt_name, prdt_type, prdt_ss, prdt_size)
+		VALUES(#{prdtCode}, #{prdtName}, #{prdtType}, #{prdtSs}, #{prdtSize})
+	</insert>
+	
+	<!-- 제품 수정 -->
+	<update id="updatePrdt" parameterType="PrdtVO">
+		UPDATE prdt_table
+		SET prdt_name = #{prdtName},
+			 prdt_type = #{prdtType},
+			 prdt_ss = #{prdtSs},
+			 prdt_size = #{prdtSize}
+		WHERE prdt_code = #{prdtCode}
+	</update>
+	
+	<!-- 제품 삭제 -->
+	<delete id="deletePrdt">
+		DELETE prdt_table
+		WHERE prdt_code = #{prdtCode}
+	</delete>
+	
 </mapper>
