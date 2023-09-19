@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.eqm.service.EqmInspService;
@@ -47,7 +46,7 @@ public class EqmRestController {
 	public EqmVO getEqm(EqmVO eqmVO) {
 		return eqmservice.selectEqm(eqmVO);
 	}
-	@PostMapping("/deleteEqm")
+	@GetMapping("/deleteEqm")
 	public int deleteEqm(EqmVO eqmVO) {
 		return eqmservice.deleteEqm(eqmVO);
 	}

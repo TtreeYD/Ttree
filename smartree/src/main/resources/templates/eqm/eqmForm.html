@@ -4,6 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
 <head>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
@@ -41,8 +42,8 @@
 	<div layout:fragment="content">
 		<h2>설비관리</h2>
 		<button type="button" id="selectBtn" class="btn btn-primary" data-toggle="modal" data-target="#searchEqmModal">설비조회</button>
-		<div>
-			<form th:action="@{eqmForm}" method="post" th:object='${eqmVO}'>
+		<div> 
+			<form name="infoForm" action="eqmForm" method="post" th:object='${eqmVO}'>
 			
 				<table id="equipTable">
 					<tr>
@@ -66,7 +67,7 @@
 					<tr>
 						<th>온도</th>
 						<td>
-							<input type="text" id="eqmMinTemp" th:field="*{eqmMaxTemp}" name="eqmMinTemp" placeholder="최저"> ℃   ~
+							<input type="text" id="eqmMinTemp" th:field="*{eqmMinTemp}" name="eqmMinTemp" placeholder="최저"> ℃   ~
 							<input type="text" id="eqmMaxTemp" th:field="*{eqmMaxTemp}" name="eqmMaxTemp" placeholder="최고"> ℃
 						</td>
 						
@@ -124,7 +125,7 @@
 						<div id="grid2"></div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-primary">등록</button>
+						<!-- <button type="button" class="btn btn-primary">등록</button> -->
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
 					</div>
 				</div>
@@ -134,6 +135,7 @@
 		
 		<script>
 		
+	
 	      $(document).ready(function () {
 	    	  
 	    	  const grid2 = new tui.Grid({
@@ -166,6 +168,7 @@
 	          
 	   	   // 전체설비 조회
 	   	      function getEqmList(){
+	   		   $('#searchName').val('');
 	   	      	$.ajax({
 	   	      		url:'/eqms',
 	   	      		method:'get',
@@ -284,15 +287,51 @@
    			$('#mfgDate').val(''); 			
 		});
 	   			
-	   	$('#deleteBtn').on('click',function(){
-	   		
-	   	})   
-	   	   
-	   	   
-	   	   
+
+	  // 삭제버튼 	
+	   	$('#deleteBtn').click(function(){
+			
+			swal({
+				title: "정말 삭제하시겠습니까?",
+				text: "",
+				icon: "warning",
+				buttons: true,
+				dangerMode: true,
+			})
+			
+			.then((message) => {
+				if(message) {
+			
+			var eqmCode = $('#eqmCode').val();
+			
+			
+			$.ajax({
+				url : '/deleteEqm',
+				method : 'GET',
+				data : { eqmCode : eqmCode },
+				success : function(data){
+					console.log(data);
+					//삭제 후 <input> 태그 칸 값 비우기
+					$('input').val("");
+					swal('삭제 성공!', '설비가 삭제되었습니다.', 'success' )
+				    },
+				error : function(reject){
+		 			console.log(reject);
+		 			}	
+				})	
+			} else{
+				swal("삭제가 취소되었습니다.", "", {icon: "warning"});
+			}
+		})
+	   	})
+		
+	   	
+	   	
 	 });
 	      
 	
+
+		
 
 		</script>
 		

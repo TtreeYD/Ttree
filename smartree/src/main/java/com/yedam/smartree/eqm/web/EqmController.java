@@ -46,10 +46,33 @@ public class EqmController {
 		model.addAttribute("eqmVO", new EqmVO());
 		return "eqm/eqmForm";
 	}
-	// 설비 등록 - 처리
+	// 설비 등록 - 등록, 수정
 	@PostMapping("/eqmForm")
 	public String registerEqmProcess(EqmVO eqmVO) {
-		eqmservice.insertEqm(eqmVO);
+		// eqmcode 없으면 등록 / 있으면 수정
+		if(eqmVO.getEqmCode() == null) {
+			eqmservice.insertEqm(eqmVO);
+		}else {
+			eqmservice.updateEqm(eqmVO);
+		}
+		
 		return "redirect:eqmForm";
+	}
+	// 설비 수정 - 폼
+	/*
+	 * @GetMapping("/eqmUpdate") public String updateEqm(EqmVO eqmVO, Model model) {
+	 * EqmVO findEqm = eqmservice.selectEqm(eqmVO); model.addAttribute("eqmInfo",
+	 * findEqm); return "eqm/eqmForm"; }
+	 */
+	// 설비 수정 - 처리
+	/*
+	 * @PostMapping("/eqmUpdate") public String updateEqmProcess(EqmVO eqmVO) {
+	 * 
+	 * eqmservice.updateEqm(eqmVO); return "redirect:eqmForm"; }
+	 */
+	// 설비 점검 등록 - 페이지
+	@GetMapping("/eqmInspForm")
+	public String registerEqmInspForm() {
+		return "eqm/eqmInspForm";
 	}
 }

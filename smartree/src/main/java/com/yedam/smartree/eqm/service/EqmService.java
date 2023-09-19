@@ -9,4 +9,5 @@ public interface EqmService {
 	public int insertEqm(EqmVO eqmVO);
 	public EqmVO selectEqm(EqmVO eqmVO);
 	public int deleteEqm(EqmVO eqmVO);
+	public int updateEqm(EqmVO eqmVO);
 }

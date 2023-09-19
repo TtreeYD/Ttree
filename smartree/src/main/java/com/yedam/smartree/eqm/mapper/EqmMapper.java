@@ -13,5 +13,6 @@ public interface EqmMapper {
 	public List<EqmVO> searchEqm(String eqmName);
 	public int insertEqm(EqmVO eqmVO);
 	public EqmVO selectEqm(EqmVO eqmVO);
-	public void deleteEqm(EqmVO eqmVO);
+	public int deleteEqm(EqmVO eqmVO);
+	public int updateEqm(EqmVO eqmVO);
 }
