@@ -45,11 +45,16 @@
 	        #{prodRank}
 	    )
 	</insert>
-	<!-- <insert id="">
+	 <insert id="insertAndUpdateDtProd" parameterType="ProdVO">
 		{call in_dtProd_up_dtProd(
-			
+			#{prodPlanCode},
+			#{prdtCode},
+			#{prodPlanCnt},
+			#{prodPlanNote},
+			#{prodRank},
+			#{dtProdPlanCode}
 		)}
-	</insert> -->
+	</insert> 
   	<select id="searchProdPlan" resultType="ProdVO">
   		select *
 		from dt_prod_plan dtp join prod_plan p 
@@ -112,4 +117,16 @@
   		delete from dt_prod_plan
   		where dt_prod_plan_code = #{dtProdPlanCode}
   	</delete>
+  	
+  	<select id="selectPrdt" resultType="PrdtProdVO">
+  		select p.prod_plan_code , pt.prdt_code , pt.prdt_name , pt.prdt_type 
+  		from prdt_table pt join dt_prod_plan p
+  		                     on pt.prdt_code = p.prdt_code
+  		<where>
+  			<if test="prdtCode != null">
+  				pt.prdt_code = #{prdtCode}
+  			</if>
+  		</where>
+  	</select>
+  	
   </mapper>

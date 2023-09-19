@@ -2,9 +2,8 @@ package com.yedam.smartree.prod.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Mapper;
-
 import com.yedam.smartree.business.service.BusinessVO;
+import com.yedam.smartree.prod.service.PrdtProdVO;
 import com.yedam.smartree.prod.service.ProdVO;
 
 public interface ProdMapper {
@@ -30,4 +29,8 @@ public interface ProdMapper {
 	public int deleteProd(ProdVO vo);
 	
 	public int deleteDtProd(ProdVO vo);
+	
+	public void insertAndUpdateDtProd(ProdVO vo);
+	
+	public List<PrdtProdVO> selectPrdt(PrdtProdVO vo);
 }
