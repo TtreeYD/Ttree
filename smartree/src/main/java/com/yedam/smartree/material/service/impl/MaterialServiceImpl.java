@@ -45,9 +45,46 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialVO> selectMinusMtl() {
 		return materialMapper.selectMinusMtl();
 	}
+	// 검사완료 자재목록
 	@Override
 	public List<MaterialVO> selectChkMtl() {
 		return materialMapper.selectChkMtl();
+	}
+	
+	// 발주관리 등록
+	@Override
+	public int insertNeedMtl(MaterialVO vo) {
+		return materialMapper.insertNeedMtl(vo);
+	}
+	
+	//발주관리 수정
+	@Override
+	public int updateNeedMtl(MaterialVO vo) {
+		return materialMapper.updateNeedMtl(vo);
+	}
+	
+	//발주관리 삭제
+	@Override
+	public int deleteNeedMtl(MaterialVO vo) {
+		return materialMapper.deleteNeedMtl(vo);
+	}
+	
+	//입고관리 등록
+	@Override
+	public int insertInMtl(MaterialVO vo) {
+		return materialMapper.insertInMtl(vo);
+	}
+	
+	//입고관리 수정
+	@Override
+	public int updateInMtl(MaterialVO vo) {
+		return materialMapper.updateInMtl(vo);
+	}
+	
+	//입고관리 삭제
+	@Override
+	public int deleteInMtl(MaterialVO vo) {
+		return materialMapper.deleteInMtl(vo);
 	}
 
 }

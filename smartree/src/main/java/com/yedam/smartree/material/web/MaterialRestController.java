@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.material.service.MaterialService;
@@ -43,6 +44,37 @@ public class MaterialRestController {
 	@GetMapping("/mtlChecked")
 	public List<MaterialVO> getMtlChecked(){
 		return materialService.selectChkMtl();
+	}
+	
+	// 발주관리 insert
+	@PostMapping("/insertNeedMtl")
+	public int insertNeedMtl(MaterialVO vo) {
+		return materialService.insertNeedMtl(vo);
+	}
+	// 발주관리 update
+	@PostMapping("/updateNeedMtl")
+	public int updateNeedMtl(MaterialVO vo) {
+		return materialService.updateNeedMtl(vo);
+	}
+	// 발주관리 delete
+	@PostMapping("/deleteNeedMtl")
+	public int deleteNeedMtl(MaterialVO vo) {
+		return materialService.deleteNeedMtl(vo);
+	}
+	// 입고관리 insert
+	@PostMapping("/insertInMtl")
+	public int insertInMtl(MaterialVO vo) {
+		return materialService.insertInMtl(vo);
+	}
+	// 입고관리 update
+	@PostMapping("/updateInMtl")
+	public int updateInMtl(MaterialVO vo) {
+		return materialService.updateInMtl(vo);
+	}
+	// 입고관리 delete
+	@PostMapping("/deleteInMtl")
+	public int deleteInMtl(MaterialVO vo) {
+		return materialService.deleteInMtl(vo);
 	}
 	
 }

@@ -13,14 +13,16 @@
 	<h3>자재출고목록</h3>	
 		<div>
 			<span>자재종류</span>
-			<select id="mtlPick">
-				<option value="" selected>원자재</option>
-				<option value="" selected>부자재</option>
-				<option value="" selected>-전체-</option>
-			</select>
-			<br>
-			<span>생산실적코드</span>
-			<input id="mtlName" placeholder="">
+				<div> 
+			    <input type="radio" id="all" name="mtlRadio" value="" checked />
+			    <label for="all">전체</label>
+			 	<input type="radio" id="m1" name="mtlRadio" value="m1"/>
+			    <label for="y">원자재</label>
+			    <input type="radio" id="m2" name="mtlRadio" value="m2"/>
+			    <label for="n">부자재</label>
+				</div>
+			<span>공정실적코드</span>
+			<input id="prcsRsCode" placeholder="">
 			<br>
 			<button type="button" id="searchBtn" class="btn btn-primary">조회</button>
 		</div>
@@ -49,15 +51,21 @@
 						header : '자재코드',
 						name : 'mtlCode'
 					}, {
+						header : '자재이름',
+						name : 'mtlName'
+					}, {
 						header : '자재출고량',
 						name : 'mtlOutCnt'
 					}, {
 						header : '공정실적코드',
 						name : 'prcsRsCode'
+					}, {
+						header : '출고일',
+						name : 'prcsEDate'
 					}		]
 				});
 				
-				const header = ['mtlOutCode', 'mtlLotNum', 'mtlCode', 'mtlOutCnt', 'prcsRsCode']
+				const header = ['mtlOutCode', 'mtlLotNum','mtlName' ,'mtlCode', 'mtlOutCnt', 'prcsRsCode', 'prcsEDate']
 
 		        $.ajax({
 		          url: '/mtlEmpty',

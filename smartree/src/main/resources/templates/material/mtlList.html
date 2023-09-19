@@ -52,6 +52,9 @@
 						header : '자재코드',
 						name : 'mtlCode'
 					}, {
+						header : '자재이름',
+						name : 'mtlName'
+					}, {
 						header : '자재입고수량',
 						name : 'mtlInCnt'
 					}, {
@@ -69,7 +72,7 @@
 					}   ]
 				});
 				
-				const header = ['mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode']
+				const header = ['mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode', 'mtlName']
 
 		        $.ajax({
 		          url: '/mtlExist',
