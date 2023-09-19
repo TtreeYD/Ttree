@@ -33,6 +33,5 @@ public class CheckVO {
 	private String chkName;
 	private String chkDt;
 	private String chkStd;
-	
-	
+
 }

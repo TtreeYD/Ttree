@@ -26,25 +26,32 @@
 			<div class="modal-dialog modal-xl" role="document">
 				<div class="modal-content" style="height: 700px">
 					<div class="container text-center">
+					<br>
+						<h2>발주관리</h2>
 						<div class="modal-header row justify-content-evenly">
 							<div class="col-6">
 								<div class="d-flex flex-column align-items-center">
 									<div class="mb-3">
-										<span>자재입고일</span> <input class="form-control" id="mtlInDate"
-											type="date" style="width: 350px;">
+										<span>자재발주일</span>
+										<div class="input-group">
+											<input class="form-control" id="mtlDate" type="date" style="width: 150px;">
+											<input class="form-control" id="mtlDate" type="date" style="width: 150px;">
+									</div>		
 									</div>
-
 									<div>
-										<span>검사완료일</span> <input class="form-control" id="mtlChkDate"
-											type="date" style="width: 350px;">
+									<span>납기요청일</span>
+									<div class="input-group">
+										 <input class="form-control" id="mtlWishDate" type="date" style="width: 150px;">
+										 <input class="form-control" id="mtlWishDate" type="date" style="width: 150px;">
+									</div>
 									</div>
 								</div>
 							</div>
 							<div class="col-6">
 								<div class="d-flex flex-column align-items-center">
 									<div class="mb-3">
-										<span>자재이름</span> <input class="form-control" id="mtlName"
-											type="text" style="width: 350px;">
+										<span>자재이름</span> <input class="form-control" id="mtlName"	type="text" style="width: 300px;">
+										<span>담당자</span> <input class="form-control" id="mtlManager" type="text" style="width: 300px;">
 									</div>
 								</div>
 							</div>
@@ -116,6 +123,7 @@
 			    $('#mtlSearch').on('click', function(){
                      setTimeout(() => needModalGrid.refreshLayout(), 200);
                  })
+
 				// 안전재고미달 자재목록
 				const mtlLowGrid = new tui.Grid({
 					el : document.getElementById('mtlLowGrid'),
@@ -146,7 +154,10 @@
 						name : 'mtlNow'
 					}   ]
 				});
-				
+			    // 미달목록그리드 클릭 이벤트
+       			mtlLowGrid.on('dblclick',(ev)=>{
+					alert('성공');
+	        	});
 				// 발주자재목록
 				const mtlNeedGrid = new tui.Grid({
 					el : document.getElementById('mtlNeedGrid'),
@@ -164,10 +175,14 @@
 					    sortingType: 'asc'
 					}, {
 						header : '자재발주일',
-						name : 'mtlDate'
+						name : 'mtlDate',
+						sortable: true,
+					    sortingType: 'asc'
 					}, {
 						header : '거래처이름',
-						name : 'bpName'
+						name : 'bpName',
+						sortable: true,
+					    sortingType: 'asc'
 					}, {
 						header : '분류',
 						name : 'mtlType'
@@ -218,8 +233,8 @@
 			        
 				// 아래리스트 ajax
 		        $.ajax({
-		          url: '/mtlNeeds',
-		          method: 'get',
+		          url: '/insertNeedMtl',
+		          method: 'POST',
 		          dataType: 'json',
 		          success: function (result) {
 		            //날짜변환

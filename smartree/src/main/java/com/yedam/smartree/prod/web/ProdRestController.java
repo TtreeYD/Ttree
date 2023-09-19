@@ -48,6 +48,10 @@ public class ProdRestController {
 	public int updateProdPlan(@RequestBody RequestVO<ProdVO> vo) {
 		return service.updateProd(vo);
 	}
+	@PostMapping("/deleteProdPlan")
+	public int deleteProdPlan(@RequestBody RequestVO<ProdVO> vo) {
+		return service.deleteProd(vo);
+	}
 	@PostMapping("/searchProd")
 	public List<ProdVO> searchProdList(ProdVO vo){
 		return service.searchProdList(vo);

@@ -26,4 +26,8 @@ public interface ProdMapper {
 	public int updateProd(ProdVO vo);
 	
 	public int updateDtProd(ProdVO vo);
+	
+	public int deleteProd(ProdVO vo);
+	
+	public int deleteDtProd(ProdVO vo);
 }

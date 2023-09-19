@@ -16,28 +16,86 @@
   	
   	<!-- 재고목록 전체조회 -->
   	<select id="selectMtlList" resultType="MaterialVO">
-  		select * from mtl_container
+  		SELECT c.mtl_lot_num, c.mtl_code, t.mtl_name, c.mtl_in_cnt, c.mtl_in_date, c.mtl_manager, c.mtl_lot_cnt, c.mtl_chk_code
+        FROM mtl_container c 
+        JOIN mtl_table t
+        ON c.mtl_code = t.mtl_code
   	</select>
   	
   	<!-- 출고목록 전체조회 -->
     <select id="selectMtlOutList" resultType="MaterialVO">
-  		select * from mtl_out
+  		SELECT m.mtl_out_code, m.mtl_lot_num, t.mtl_name, m.mtl_code, m.mtl_out_cnt, m.prcs_rs_code, p.prcs_edate
+  		FROM mtl_out m 
+  		JOIN mtl_table t
+  		ON m.mtl_code = t.mtl_code
+  		JOIN process_result p
+  		ON  m.prcs_rs_code = p.prcs_rs_code
   	</select>
   	
   	<!-- 발주관리 안전재고 미달목록 출력 -->
   	<select id="selectMinusMtl" resultType="MaterialVO">
   		SELECT t.mtl_type, c.mtl_code, t.mtl_name, t.mtl_ss, c.mtl_lot_cnt, (c.mtl_lot_cnt - t.mtl_ss) AS "mtl_now"
-		FROM mtl_container c JOIN mtl_table t
+		FROM mtl_container c 
+		JOIN mtl_table t
 		ON c.mtl_code = t.mtl_code
 		<![CDATA[
 		WHERE (c.mtl_lot_cnt - t.mtl_ss) < 0
 		]]>
   	</select>
+  	
   	<!-- 입고관리 검사완료 목록 출력 -->
   	<select id="selectChkMtl" resultType="MaterialVO">
 		SELECT mtl_code, mtl_name, mtl_pass_cnt, mtl_chk_date, mtl_chk_manager, mtl_chk_code, get_common(mtl_chk_status, '009') AS mtl_status_nm
 		FROM mtl_chk JOIN mtl_table USING(mtl_code)
   	</select>
+  	
+  	
+  	
+  	<!-- 발주관리 insert -->
+  	<insert id="insertNeedMtl" parameterType="MaterialVO">
+  		INSERT INTO mtl_need (mtl_code, bp_code, mtl_name, mtl_cnt, mtl_unit, mtl_manager, mtl_wish_date, tml_where, mtl_type)
+  		VALUES(
+  		#{mtlCode}, #{bpCode}, #{mtlName}, #{mtlCnt}, #{mtlUnit}, #{mtlManager}, #{mtlWishDate}, #{mtlWhere}, #{mtlType}
+  		)
+  	</insert>
+  	
+  	<!-- 발주관리 update -->
+  	<update id="updateNeedMtl" parameterType="MaterialVO">
+  		UPDATE mtl_need
+  		SET mtl_cnt = #{mtlCnt},
+  			mtl_wish_date = #{mtlWishDate}
+  		WHERE mtl_code = #{mtlCode} AND mtl_date = #{mtlDate}
+  	</update>
+  	
+  	<!-- 발주관리 delete -->
+  	<delete id="deleteNeedMtl" parameterType="MaterialVO">
+  		DELETE FROM mtl_need
+  		WHERE mtl_code = #{mtlCode} AND mtl_date = #{mtlDate}
+  	</delete>
+  	
+  	
+  	<!-- 입고관리 insert -->
+  	<insert id="insertInMtl" parameterType="MaterialVO">
+  		INSERT INTO mtl_container(mtl_lot_num, mtl_code, mtl_in_cnt, mtl_in_date, mtl_manager, mtl_lot_cnt, mtl_chk_code )
+  		VALUES(
+  			#{mtlLotNum},#{mtlCode},#{mtlInCnt},#{mtlInDate},#{mtlManager},#{mtlLotCnt},#{mtlChkCode}
+  		)
+  	</insert>
+  	
+  	<!-- 입고관리 update -->
+  	<update id="updateInMtl" parameterType="MaterialVO">
+  		UPDATE mtl_container
+  		SET mtl_in_cnt = #{mtlInCnt}
+  		WHERE mtl_lot_num = #{mtlLotNum}
+  	</update>
+  	
+  	<!-- 입고관리 delete -->
+  	<delete id="deleteInMtl" parameterType="MaterialVO">
+  		DELETE FROM mtl_container
+  		WHERE mtl_lot_num = #{mtlLotNum}
+  	</delete>
+  	
+  	
   	
   	<!-- 출고자재를 자재목록에서 빼주는 procedure -->
   	

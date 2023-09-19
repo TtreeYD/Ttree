@@ -22,4 +22,18 @@ public interface MaterialMapper {
 	public List<MaterialVO> controlInList();
 	// 입고관리 검사완료목록 출력
 	public List<MaterialVO> selectChkMtl();
+	
+	// 입고관리 insert
+	public int insertNeedMtl(MaterialVO vo);
+	// 입고관리 update
+	public int updateNeedMtl(MaterialVO vo);
+	// 입고관리 delete
+	public int deleteNeedMtl(MaterialVO vo);
+	
+	// 발주관리 insert
+	public int insertInMtl(MaterialVO vo);
+	// 발주관리 update
+	public int updateInMtl(MaterialVO vo);
+	// 발주관리 delete
+	public int deleteInMtl(MaterialVO vo);
 }

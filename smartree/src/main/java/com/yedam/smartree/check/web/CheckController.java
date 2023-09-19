@@ -50,4 +50,5 @@ public class CheckController {
 	public String selectPrdtCheckList() {
 		return "check/prdtCheckList";
 	}
+
 }

@@ -34,6 +34,7 @@
   			#{prdtCode},
   			#{chkStd}
   		) 
+
   	</insert>
   
   <!-- 완제품검사목록 -->
