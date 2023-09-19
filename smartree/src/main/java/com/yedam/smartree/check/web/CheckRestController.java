@@ -1,13 +1,12 @@
 package com.yedam.smartree.check.web;
 
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -87,7 +86,13 @@ public class CheckRestController {
 	}
 	
 	@PostMapping("/insertPrdtChkList")
-	public int insertPrdtChkList(CheckVO vo) {
-		return checkservice.insertPrdtChkStd(vo);
+	public List<Integer> insertPrdtChkList(@RequestBody List<CheckVO> vo) {
+		List<Integer> results = new ArrayList<>();
+		System.out.println("111111111111111111111111111111"+vo);
+		for(CheckVO checkvo : vo) {
+			int result = checkservice.insertPrdtChkStd(checkvo);
+			results.add(result);
+		}
+		return results;
 	}
 }

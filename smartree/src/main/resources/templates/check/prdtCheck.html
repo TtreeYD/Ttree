@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>SMARTREE</title>
+</head>
+<body>
+<div layout:fragment="content">
+<h2>제품품질검사</h2>
+	<div style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
+		<span>
+			<h3>권민석</h3>
+			<div id="grid" style="width: 800px;"></div>
+		</span> 
+		<span>
+		<h3>권민석</h3>
+			<div id="grid2" style="width: 800px;"></div>
+		</span>
+	</div>
+	
+	
+	
+	
+	<script>
+	window.onload=function(){
+
+	    const grid = new tui.Grid({
+	      el: document.getElementById('grid'),
+	      scrollX: false,
+	      scrollY: false,
+	      pageOptions: {
+            perPage: 5,
+            useClient: true,
+          },
+          rowHeaders : ["rowNum"],
+          bodyHeight : 400,
+	      columns: [
+	        {
+	          header: '검사코드',
+	          name: ''
+	        },
+	        {
+	          header: '공정실적코드',
+	          name: ''
+	        },
+	        {
+	          header: '검사량',
+	          name: '',
+	          editor : 'text'
+	        },
+	        {
+	          header: '',
+	          name: '',
+	          editor : 'text'
+	        },
+	        {
+	          header: '',
+	          name: '',
+	          editor : 'text'
+	        },
+	      ]
+	    });
+	    const grid2 = new tui.Grid({
+		      el: document.getElementById('grid2'),
+		      scrollX: false,
+		      scrollY: false,
+	          bodyHeight : 400,
+		      columns: [
+		        {
+		          header: '제품코드',
+		          name: ''
+		        },
+		        {
+		          header: '제품명',
+		          name: ''
+		        },
+		        {
+		          header: '수량',
+		          name: ''
+		        },
+		      ]
+		    });
+	};
+	</script>
+	</div>
+</body>
+</html>
