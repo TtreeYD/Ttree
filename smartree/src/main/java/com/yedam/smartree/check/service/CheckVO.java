@@ -22,10 +22,12 @@ public class CheckVO {
 	
 	private String prdtName;
 	
+	//제품검사기준목록
+	private String prdtChkNum;
+	
 	//품질검사기준
 	private String chkStdCode;
 	private String chkName;
 	private String chkDt;
 	private String chkStd;
-	private String chkUnit;
 }

@@ -6,7 +6,7 @@
   
   	<!-- 제품목록 -->
   	<select id="selectPrdtList" resultType="BpVO">
-  		select prdt_code , prdt_name , prdt_type , prdt_unit
+  		select prdt_code , prdt_name , prdt_type
   		from prdt_table
   		<where>
   			<if test="prdtCode != null">
@@ -17,7 +17,7 @@
   	
   	<!-- 제품검사기준목록 -->
   	<select id="selectPrdtStdList" resultType="CheckVO">
-  		select chk_std_code , chk_name , chk_dt , chk_std, chk_unit
+  		select chk_std_code , chk_name , chk_dt , chk_std
   		from chk_std
   		<where>
   			<if test="chkStdCode != null">
@@ -27,6 +27,13 @@
   	</select>
   
   	<insert id="insertPrdtChkStd" parameterType="CheckVO">
+  		insert into prdt_chk_list(chk_std_code, prdt_chk_num, prdt_code, chk_std)
+  		values (
+  			#{chkStdCode},
+  			#{prdtChkNum},
+  			#{prdtCode},
+  			#{chkStd}
+  		) 
   		
   	</insert>
   
