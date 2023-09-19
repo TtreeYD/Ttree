@@ -20,7 +20,7 @@
 			type="date" name="prodPlanEdate" id="prodPlanEdate">
 		<div class="btn-group" role="group" aria-label="Basic example"
 			style="float: right; margin-bottom: 10px;">
-			<button type="button" class="btn btn-primary" id="newBtn">새계획</button>
+			<button type="button" class="btn btn-primary" id="insertListBtn">새계획</button>
 			<button type="button" class="btn btn-primary" id="resetBtn">초기화</button>
 			<button type="button" class="btn btn-primary" id="loadOrders">
 				주문서</button>
@@ -86,9 +86,33 @@
 		</div>
 		<!-- /.modal -->
 
+		<div class="modal fade" tabindex="-1" role="dialog" id="prdtModal">
+			<div class="modal-dialog modal-dialog-centered modal-xl"
+				role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">생산계획 조회</h4>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="grid6"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+		
 		<script>
 		let dtPPCode = [];
-        let grid, grid2, grid3, grid4, grid5;
+        let grid, grid2, grid3, grid4, grid5, grid6;
         const header = ['prodPlanName','prodPlanDate','prodPlanSdate','prodPlanEdate'];
         
         window.onload=function(){
@@ -230,6 +254,29 @@
 	            }
 	          ]
 		    });
+	    const grid6 = new tui.Grid({
+		      el: document.getElementById('grid6'),
+		      scrollX: false,
+		      scrollY: false,
+		      pageOptions: {
+	            perPage: 5,
+	            useClient: true,
+	          },
+	          columns: [
+					{
+						header: '제품코드',
+						name: 'prdtCode',
+					},
+					{
+						header: '제품명',
+						name: 'prdtName',
+					},
+					{
+						header: '분류',
+						name: 'prdtType',
+					},
+				]
+		    });
 		$.ajax({
 			url:'/',
 			method:'get',
@@ -274,6 +321,7 @@
 		    	dataType:'json',
 				success:function(result){
 					grid5.resetData(result);
+					
 					$("#prodModal").modal('show');
 					setTimeout(() => grid5.refreshLayout(), 200);
 				},
@@ -310,8 +358,10 @@
 					prodName : $('#prodName').val(),
 					orderCode : data.list[0].orderCode
 				}
+				console.log(data);
 			if(data.list[0].prodPlanCode == null){
-				data.list = grid.getCheckedRows();
+				data.list = grid.getData();
+				console.log(data);
 				$.ajax({
 		      		url:'/insertProdPlan',
 		      		method: 'post',
@@ -330,7 +380,7 @@
 			}
 			else if(data.list[0].prodPlanCode != null){
 				
-				data.list = grid.getCheckedRows();
+				data.list = grid.getData();
 				$.ajax({
 		      		url:'/updateProdPlan',
 		      		method: 'post',
@@ -360,20 +410,44 @@
 				prodPlanSdate : $('#prodPlanSdate').val(),
 				prodPlanEdate : $('#prodPlanEdate').val(),
 				prodName : $('#prodName').val(),
-				orderCode : data.list[0].orderCode
+				orderCode : data.list[0].orderCode,
+				prodPlanCode : data.list[0].prodPlanCode
 			}
-			$.ajax({
-				url:'/',
-	      		method: 'get',
-				dataType: 'json',
-	      		success:function(result){
-	      			alert("삭제완료");
-	      			resetList();
-	      		},
-	      		error:function(err){
-	      			console.log(err)
-	      		}
-			})
+			console.log(data);
+			
+			if(data.list.length == grid.getData().length){
+				$.ajax({
+					url:'/deleteProdPlan',
+					method: 'post',
+					dataType: 'json',
+					contentType : 'application/json',
+					data : JSON.stringify(data),
+					success:function(result){
+						alert("전체삭제완료");
+						resetList();
+					},
+					error:function(err){
+						console.log(err)
+					}
+				})
+			} else {
+				data.vo.prodPlanCode = null;
+				console.log(data);
+				$.ajax({
+					url:'/deleteProdPlan',
+					method: 'post',
+					dataType: 'json',
+					contentType : 'application/json',
+					data : JSON.stringify(data),
+					success:function(result){
+						alert(result + " 건 삭제완료");
+						resetList();
+					},
+					error:function(err){
+						console.log(err)
+					}
+				})
+			}
 		}
 		
 		// 주문서 모달창 더블클릭
@@ -392,6 +466,7 @@
 	      			orderCode : data1
 	      		},
       		success:function(result){
+      			
    	            $("#orderModal").modal('hide');
    	         	grid.resetData(result)
    	         	
@@ -407,7 +482,7 @@
         		return;
         	}
 			let data = grid5.getValue(ev.rowKey, 'prodPlanCode');
-			
+			console.log(data);
 		 	$.ajax({
 	      		url:'/selectProdListView',
 	      		method:'get',
@@ -416,6 +491,7 @@
 	      		},
       		success:function(result){
 				dtPPCode = result;
+				console.log(result);
    	         	$('#prodPlanName').val(result[0].prodPlanName);
 				$('#prodPlanDate').val(result[0].prodPlanDate);
 				$('#prodPlanSdate').val(result[0].prodPlanSdate);
@@ -429,6 +505,73 @@
       		}
     		})
 		})
+		$('#insertListBtn').on('click', function() {
+			let newGrid = grid.appendRow({
+				'prdtName' : ``,
+				'orderDtCnt' : ``,
+				'prodPlanCnt' : ``,
+				'prodRank' : ``,
+				'prodPlanNote' : ``
+			}, {
+				extendPrevRowSpan : true
+			});
+		});
+		//제품 클릭모달이벤트
+		grid.on('click',(ev)=>{
+			if(ev.columnName != 'prdtCode' && ev.columnName !='prdtName'){
+				return;	
+			}
+			$.ajax({
+				url:'/prdtList',
+				method:'GET',
+				success:function(result){
+					grid6.resetData(result);
+					setTimeout(() => grid6.refreshLayout(), 200);
+					$('#prdtModal').modal('show');
+					
+				},
+				error:function(err){
+					console.log(err)
+				}
+			})
+		})
+		//제품 더블클릭 이벤트
+		grid6.on('dblclick',(ev)=>{
+			if(ev.rowKey==undefined){
+        		return;
+        	}
+			let data = grid6.getValue(ev.rowKey,'prdtCode');
+			$.ajax({
+				url:'/prdtList',
+				method:'GET',
+				data:{
+					prdtCode : data
+				},
+				success:function(result){
+					/* let check = true; 
+					newDtOrder.forEach((order) => {
+						if(order.prdtCode == data) {
+							alert('이미 같은 제품이 있습니다.')
+							check=false;
+							return;
+						}
+						
+					})
+					if(check){
+						newDtOrder[dtOrderRowNum] = result[0]
+						dtOrder.resetData(newDtOrder);
+						//console.log(newDtOrder)
+						$('#prModal').modal('hide');
+					} */
+					grid.resetData(result);
+					$('#prdtModal').modal('hide');
+				},
+				error:function(err){
+					console.log(err)
+				}
+				
+			})
+		});
 	  }
 	  
     </script>

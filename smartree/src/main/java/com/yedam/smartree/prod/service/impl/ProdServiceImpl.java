@@ -32,11 +32,11 @@ public class ProdServiceImpl implements ProdService {
 		// get Header
 		prodMapper.insertProdPlan(vo.getVo());
 		String prodPlanCode = vo.getVo().getProdPlanCode();
-		
+		System.out.println();
 		// 계획 상세 저장하는 for문
 		for(ProdVO pvo : vo.getList()) {
 			pvo.setProdPlanCode(prodPlanCode);
-		
+			
 			prodMapper.insertDtProdPlan(pvo);
 			cnt++;
 		}
@@ -66,6 +66,24 @@ public class ProdServiceImpl implements ProdService {
 		for(ProdVO pvo : vo.getList()) {
 			prodMapper.updateDtProd(pvo);
 			cnt++;
+		}
+		return cnt;
+	}
+
+	@Override
+	public int deleteProd(RequestVO<ProdVO> vo) {
+		int cnt = 0;
+		prodMapper.deleteProd(vo.getVo());
+		
+		System.out.println(vo.getVo());
+		
+		
+		for(ProdVO pvo : vo.getList()) {
+			
+			
+			prodMapper.deleteDtProd(pvo);
+			cnt++;
+			
 		}
 		return cnt;
 	}

@@ -24,8 +24,8 @@
         select 'PPN' || LPAD(prod_plan_seq.NEXTVAL, 7, '0') as prodPlanCode from dual
     </selectKey>
     {call in_prod_up_order(
-        #{prodPlanCode},
         #{orderCode},
+        #{prodPlanCode},
         #{prodPlanName},
         #{prodPlanDate},
         #{prodName},
@@ -93,4 +93,14 @@
   		    prod_plan_note = #{prodPlanNote}
   		where dt_prod_plan_code = #{dtProdPlanCode}
   	</update>
+  	
+  	<delete id="deleteProd" parameterType="ProdVO">
+  		delete from prod_plan
+  		where prod_plan_code = #{prodPlanCode}
+  	</delete>
+  	
+  	<delete id="deleteDtProd" parameterType="ProdVO">
+  		delete from dt_prod_plan
+  		where dt_prod_plan_code = #{dtProdPlanCode}
+  	</delete>
   </mapper>
