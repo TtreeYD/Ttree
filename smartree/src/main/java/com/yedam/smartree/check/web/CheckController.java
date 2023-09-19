@@ -45,4 +45,9 @@ public class CheckController {
 	public String selectPrdtCheck() {
 		return "check/prdtCheck";
 	}
+	
+	@GetMapping("/prdtCheckList")
+	public String selectPrdtCheckList() {
+		return "check/prdtCheckList";
+	}
 }
