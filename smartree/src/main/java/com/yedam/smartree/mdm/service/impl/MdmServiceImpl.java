@@ -9,6 +9,7 @@ import com.yedam.smartree.mdm.mapper.MdmMapper;
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
 import com.yedam.smartree.mdm.service.MdmService;
+import com.yedam.smartree.mdm.service.PrdtVO;
 
 @Service
 public class MdmServiceImpl implements MdmService {
@@ -55,6 +56,36 @@ public class MdmServiceImpl implements MdmService {
 	@Override
 	public int addEmp(EmpVO vo) {
 		return mdmMapper.addEmp(vo);
+	}
+
+	@Override
+	public List<PrdtVO> selectPrdtList() {
+		return mdmMapper.selectPrdtList();
+	}
+
+	@Override
+	public int insertPrdt(PrdtVO vo) {
+		return mdmMapper.insertPrdt(vo);
+	}
+
+	@Override
+	public int updatePrdt(PrdtVO vo) {
+		return mdmMapper.updatePrdt(vo);
+	}
+
+	@Override
+	public PrdtVO selectPrdt(String prdtCode) {
+		return mdmMapper.selectPrdt(prdtCode);
+	}
+	
+	@Override
+	public int deletePrdt(String prdtCode) {
+		return mdmMapper.deletePrdt(prdtCode);
+	}
+
+	@Override
+	public List<PrdtVO> searchPrdt(PrdtVO vo) {
+		return mdmMapper.searchPrdt(vo);
 	}
 
 }

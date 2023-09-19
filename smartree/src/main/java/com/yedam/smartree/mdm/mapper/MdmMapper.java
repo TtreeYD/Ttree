@@ -7,18 +7,27 @@ import org.apache.ibatis.annotations.Param;
 
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
+import com.yedam.smartree.mdm.service.PrdtVO;
 
 @Mapper
 public interface MdmMapper {
 	// 공통코드관리
-	public List<CommonCodeVO> selectCommonCode();
-	public List<CommonCodeVO> selectCodeDetail(String codeType);
-	public int insertCommonCode(CommonCodeVO commonCodeVO);
-	public int insertCodeDetail(CommonCodeVO commonCodeVO);
-	public int deleteCommonCode(CommonCodeVO commonCodeVO);
-	public int deleteCodeDetail(CommonCodeVO commonCodeVO);
+	List<CommonCodeVO> selectCommonCode();
+	List<CommonCodeVO> selectCodeDetail(String codeType);
+	int insertCommonCode(CommonCodeVO commonCodeVO);
+	int insertCodeDetail(CommonCodeVO commonCodeVO);
+	int deleteCommonCode(CommonCodeVO commonCodeVO);
+	int deleteCodeDetail(CommonCodeVO commonCodeVO);
 	
 	// 사원관리
-	public List<EmpVO> selectEmpList(@Param("empDept")String empDept, @Param("empName")String empName);
-	public int addEmp(EmpVO vo);
+	List<EmpVO> selectEmpList(@Param("empDept")String empDept, @Param("empName")String empName);
+	int addEmp(EmpVO vo);
+	
+	// 제품관리
+	List<PrdtVO> selectPrdtList();
+	PrdtVO selectPrdt(String prdtCode);
+	List<PrdtVO> searchPrdt(PrdtVO vo);
+	int insertPrdt(PrdtVO vo);
+	int updatePrdt(PrdtVO vo); 
+	int deletePrdt(String prdtCode);
 }
