@@ -112,6 +112,8 @@
 		
 		<script>
 		let dtPPCode = [];
+		let newGrid = [];
+		let rowNum;
         let grid, grid2, grid3, grid4, grid5, grid6;
         const header = ['prodPlanName','prodPlanDate','prodPlanSdate','prodPlanEdate'];
         
@@ -339,6 +341,7 @@
 				grid.resetData([]);
 				grid2.resetData([]);
 				grid3.resetData([]);
+				newGrid = [];
 				$('#prodPlanName').val('');
 				$('#prodPlanDate').val('');
 				$('#prodPlanSdate').val('');
@@ -359,7 +362,40 @@
 					orderCode : data.list[0].orderCode
 				}
 				console.log(data);
-			if(data.list[0].prodPlanCode == null){
+			if(data.list.length != grid.getData().length){
+				$.ajax({
+		      		url:'/',
+		      		method: 'post',
+					dataType: 'json',
+					contentType : 'application/json',
+					data : JSON.stringify(data),
+		      		success:function(result){
+		      			alert("등록및 수정완료");
+		      			resetList();
+		      		},
+		      		error:function(err){
+		      			console.log(err)
+		      		}
+	    		})
+			}
+			else if(data.list[0].prodPlanCode != null){
+				data.list = grid.getData();
+				$.ajax({
+		      		url:'/updateProdPlan',
+		      		method: 'post',
+					dataType: 'json',
+					contentType : 'application/json',
+					data : JSON.stringify(data),
+		      		success:function(result){
+		      			alert("수정완료");
+		      			resetList();
+		      		},
+		      		error:function(err){
+		      			console.log(err)
+		      		}
+	    		})
+			}
+			else {
 				data.list = grid.getData();
 				console.log(data);
 				$.ajax({
@@ -378,25 +414,6 @@
 		      		}
 	    		})
 			}
-			else if(data.list[0].prodPlanCode != null){
-				
-				data.list = grid.getData();
-				$.ajax({
-		      		url:'/updateProdPlan',
-		      		method: 'post',
-					dataType: 'json',
-					contentType : 'application/json',
-					data : JSON.stringify(data),
-		      		success:function(result){
-		      			alert("수정완료");
-		      			resetList();
-		      		},
-		      		error:function(err){
-		      			console.log(err)
-		      		}
-	    		})
-			}
-    		
 		})
 		
 		$('#delBtn').on('click', delBtnFunc);
@@ -491,6 +508,7 @@
 	      		},
       		success:function(result){
 				dtPPCode = result;
+				newGrid = result;
 				console.log(result);
    	         	$('#prodPlanName').val(result[0].prodPlanName);
 				$('#prodPlanDate').val(result[0].prodPlanDate);
@@ -506,21 +524,21 @@
     		})
 		})
 		$('#insertListBtn').on('click', function() {
-			let newGrid = grid.appendRow({
-				'prdtName' : ``,
-				'orderDtCnt' : ``,
-				'prodPlanCnt' : ``,
-				'prodRank' : ``,
-				'prodPlanNote' : ``
-			}, {
-				extendPrevRowSpan : true
+			newGrid.push({
+				prdtName : '',
+				orderDtCnt : '',
+				prodPlanCnt : '',
+				rodRank : '',
+				prodPlanNote : ''
 			});
+			grid.resetData(newGrid);
 		});
 		//제품 클릭모달이벤트
 		grid.on('click',(ev)=>{
 			if(ev.columnName != 'prdtCode' && ev.columnName !='prdtName'){
 				return;	
 			}
+			rowNum = ev.rowKey;
 			$.ajax({
 				url:'/prdtList',
 				method:'GET',
@@ -548,8 +566,9 @@
 					prdtCode : data
 				},
 				success:function(result){
-					/* let check = true; 
-					newDtOrder.forEach((order) => {
+					console.log(result);
+					 let check = true; 
+					 newGrid.forEach((order) => {
 						if(order.prdtCode == data) {
 							alert('이미 같은 제품이 있습니다.')
 							check=false;
@@ -558,13 +577,11 @@
 						
 					})
 					if(check){
-						newDtOrder[dtOrderRowNum] = result[0]
-						dtOrder.resetData(newDtOrder);
-						//console.log(newDtOrder)
-						$('#prModal').modal('hide');
-					} */
-					grid.resetData(result);
-					$('#prdtModal').modal('hide');
+						newGrid[rowNum] = result[0]
+						grid.resetData(newGrid);
+						$('#prdtModal').modal('hide');
+					}
+					
 				},
 				error:function(err){
 					console.log(err)
@@ -572,6 +589,10 @@
 				
 			})
 		});
+		grid.on('afterChange', ev=>{
+           let change = ev.changes
+           newGrid[change[0].rowKey][change[0].columnName]=change[0].value
+        })
 	  }
 	  
     </script>
