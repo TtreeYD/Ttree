@@ -94,7 +94,7 @@ public class BusinessRestController {
 	//Lot별 수량
 	@GetMapping("/lotPrdtList")
 	public List<FinPrdtVO> lotPrdtList(FinPrdtVO fpvo){
-		System.out.println(fpvo);
+		System.out.println("111111111111111111111"+fpvo);
 		return businessService.selectFinLotPrdt(fpvo);
 	}
 	//완제품조건조회
@@ -102,5 +102,6 @@ public class BusinessRestController {
 	public List<FinPrdtVO> prdtSearchList(FinPrdtVO fpvo){
 		return businessService.prdtSearchList(fpvo);
 	}
+	//출고관리 lot별 
 	
 }
