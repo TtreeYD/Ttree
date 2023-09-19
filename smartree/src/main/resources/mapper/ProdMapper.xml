@@ -45,7 +45,11 @@
 	        #{prodRank}
 	    )
 	</insert>
-	
+	<!-- <insert id="">
+		{call in_dtProd_up_dtProd(
+			
+		)}
+	</insert> -->
   	<select id="searchProdPlan" resultType="ProdVO">
   		select *
 		from dt_prod_plan dtp join prod_plan p 
