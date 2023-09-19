@@ -26,25 +26,32 @@
 			<div class="modal-dialog modal-xl" role="document">
 				<div class="modal-content" style="height: 700px">
 					<div class="container text-center">
+					<br>
+						<h2>입고관리</h2>
 						<div class="modal-header row justify-content-evenly">
 							<div class="col-6">
 								<div class="d-flex flex-column align-items-center">
 									<div class="mb-3">
-										<span>자재입고일</span>
-										<input class="form-control" id="mtlInDate" type="date" style="width: 350px;">
+									<span>자재입고일</span>
+									<div class="input-group">
+										<input class="form-control" id="mtlInDate" type="date" style="width: 150px;">
+										<input class="form-control" id="mtlInDate" type="date" style="width: 150px;">
+									</div>			
 									</div>
-
 									<div>
-										<span>검사완료일</span> <input class="form-control" id="mtlChkDate"
-											type="date" style="width: 350px;">
+									<span>검사완료일</span>
+									<div class="input-group">
+										 <input class="form-control" id="mtlChkDate" type="date" style="width: 150px;">
+										 <input class="form-control" id="mtlChkDate" type="date" style="width: 150px;">
+									</div>
 									</div>
 								</div>
 							</div>
 							<div class="col-6">
 								<div class="d-flex flex-column align-items-center">
 									<div class="mb-3">
-										<span>자재이름</span> <input class="form-control" id="mtlName"
-											type="text" style="width: 350px;">
+									<span>자재이름</span> <input class="form-control" id="mtlName" type="text" style="width: 300px;">
+									<span>담당자</span> <input class="form-control" id="mtlManager" type="text" style="width: 300px;">
 									</div>
 								</div>
 							</div>
@@ -75,8 +82,7 @@
 		// 검사완료 목록 출력/숨기기
 	    function pop(){
     	    $('#mtlCheckGrid').toggle("size", 500);
-   	    }		
-		
+   	    }		     
 			window.onload = function() {
 				// 모달창
 				const modalGrid = new tui.Grid({
@@ -111,8 +117,11 @@
 						align: 'center'
 					},
 					]
-			    });								
-
+			    });		
+				// 모달그리드 클릭이벤트
+				modalGrid.on('click', (ev) => {
+					alert('성공');
+					});
 			    $('#mtlSearch').on('click', function(){
                      setTimeout(() => modalGrid.refreshLayout(), 200);
                  })
@@ -152,6 +161,14 @@
 						name : 'mtlStatusNm'
 					},   ]
 				});
+				// 검사완료 그리드 클릭이벤트
+				mtlCheckGrid.on('dblclick', (ev) => {
+					if (ev.rowKey == undefined) {
+						return;
+					}
+					codeType = grid.getValue(ev.rowKey, 'mtlCode')
+					selCodeDetail(mtlCode)
+					});
 				// 아래 리스트
 				const mtlInGrid = new tui.Grid({
 					el : document.getElementById('mtlInGrid'),
@@ -171,6 +188,9 @@
 						header : '자재코드',
 						name : 'mtlCode'
 					}, {
+						header : '자재이름',
+						name : 'mtlName'
+					}, {
 						header : '자재입고수량',
 						name : 'mtlInCnt'
 					}, {
@@ -188,7 +208,7 @@
 					}   ]
 				});
 				
-				const header = ['mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode','mtlChkDate','mtlStatusNm']
+				const header = ['mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode','mtlChkDate','mtlStatusNm', 'mtlName']
 				// 검사완료 자재목록
 				$.ajax({
 		          url: '/mtlChecked',

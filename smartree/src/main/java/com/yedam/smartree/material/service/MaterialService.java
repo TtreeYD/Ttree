@@ -17,4 +17,22 @@ public interface MaterialService {
 	public List<MaterialVO> controlInList();
 	// 입고관리 검사완료목록 출력
 	public List<MaterialVO> selectChkMtl();
+	
+	
+	// 발주관리 발주기능
+	public int insertNeedMtl(MaterialVO vo);
+	// 발주관리 수정기능
+	public int updateNeedMtl(MaterialVO vo);
+	// 발주관리 삭제기능
+	public int deleteNeedMtl(MaterialVO vo);
+	
+	
+	// 입고관리 입고기능
+	public int insertInMtl(MaterialVO vo);
+	// 입고관리 수정기능
+	public int updateInMtl(MaterialVO vo);
+	// 입고관리 삭제기능
+	public int deleteInMtl(MaterialVO vo);
+	
+	
 }
