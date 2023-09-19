@@ -32,7 +32,14 @@ public class BusinessController {
 	@GetMapping("finPrdt")
 	public String selectFinPrdt(Model model) {
 		model.addAttribute("finPrdt", businessService.selectFinPrdt());
-		System.out.println(model);
 		return "business/finPrdt";
+	}
+	//출고관리 페이지 이동
+	@GetMapping("prdtOut")
+	public String selectprdtOut(Model model) {
+		model.addAttribute("prdtOut" , businessService.selectOrderList() );
+		System.out.println(model);
+		
+		return "business/prdtOut";
 	}
 }

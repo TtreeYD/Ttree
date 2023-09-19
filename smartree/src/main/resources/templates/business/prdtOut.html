@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>완제품출고관리</title>
+</head>
+
+<body>
+	<div layout:fragment="content">	
+		<div class="btn-group" role="group" aria-label="Basic example" style="float : right;">
+			<button class="btn btn-primary" style="float:right" id="searchOrderModal">주문서검색</button>
+			<button class="btn btn-primary" style="float:right" id="prdtOut">출고</button>
+			<button class="btn btn-primary" style="float:right" id="resetBtn">초기화</button>
+		</div>
+		<h2>주문서</h2>
+		<div id="orderGrid"></div>
+		<h2 style="margin-top:90px;">상세주문서</h2>
+		<div id="orderDtGrid" ></div>
+		
+		<div class="modal fade" tabindex="-1" role="dialog" id="orderModal">
+      <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content" style="height:500px">
+          <div class="modal-header">
+            <h2>주문서조회</h2>
+          </div>
+          <div class="modal-body">
+            <div id="searchGrid"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+	
+	
+	
+	
+	<div class="modal fade" tabindex="-1" role="dialog" id="prdtModal">
+      <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content" style="height:500px">
+          <div class="modal-header">
+            <h2>lot별재고조회</h2>
+          </div>
+          <div class="modal-body">
+            <div id="lotPrdtGrid"></div>
+            <label>주문수량</label>
+            <input id="orderCnt">
+            <label>출고수량</label>
+            <input id="outCnt">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+	
+		<script th:inline="javascript">
+		var data = [[${prdtOut}]]
+		var Grid = tui.Grid
+		const searchOrderGrid = new Grid({
+			el: document.getElementById('searchGrid'),
+			scrollX: false,
+			scrollY: false,
+			data: data,
+			rowHeaders: ["rowNum"],
+			pageOptions: {
+	            perPage: 5,
+	            useClient: true,
+	          },
+			columns: [
+				{
+					header: '주문코드',
+					name: 'orderCode',
+
+				},
+				{
+					header: '업체코드',
+					name: 'bpCode',
+
+				},
+				{
+					header: '업체명',
+					name: 'bpName',
+
+				},
+				{
+					header: '납기일자',
+					name: 'dodDate',
+
+				},
+				{
+					header: '담당자',
+					name: 'orderManager',
+
+				}],
+				
+			
+		})
+		const OrderGrid = new tui.Grid({
+			el: document.getElementById('orderGrid'),
+			scrollX: false,
+			scrollY: false,
+			rowHeaders: ["rowNum"],
+			
+			columns: [
+				{
+					header: '주문코드',
+					name: 'orderCode',
+
+				},
+				{
+					header: '업체코드',
+					name: 'bpCode',
+
+				},
+				{
+					header: '업체명',
+					name: 'bpName',
+
+				},
+				{
+					header: '납기일자',
+					name: 'dodDate',
+
+				},
+				{
+					header: '담당자',
+					name: 'orderManager',
+
+				}],		
+		})
+		
+		const OrderDtGrid = new tui.Grid({
+			el: document.getElementById('orderDtGrid'),
+			scrollX: false,
+			scrollY: false,
+			rowHeaders: ["rowNum"],
+			
+			columns: [
+				{
+					header: '주문상세코드',
+					name: 'orderDtCode',
+
+				},
+				{
+					header: '제품코드',
+					name: 'prdtCode',
+
+				},
+				{
+					header: '제품명',
+					name: 'prdtName',
+
+				},
+				{
+					header: '주문수량',
+					name: 'orderDtCnt',
+
+				},
+				{
+					header: '출고수량',
+					name: 'prdtOutCnt',
+
+				},
+				{
+					header: '미납수량',
+					name: 'prdtLeftCnt',
+
+				}],
+			})
+				
+				//lot별 재고
+				const lotPrdtGrid = new tui.Grid({
+					el: document.getElementById('lotPrdtGrid'),
+					scrollX: false,
+					scrollY: false,
+					rowHeaders: ["rowNum"],
+					columns: [
+						{
+							header: 'Lot번호',
+							name: 'prdtLotNo',
+
+						},
+						{
+							header: '제품코드',
+							name: 'prdtCode',
+
+						},
+						{
+							header: '제품명',
+							name: 'prdtName',
+
+						},
+						
+						{
+							header: '재고량',
+							name: 'prdtCnt',
+
+						},
+						{
+				            header: '입고일자',
+				            name: 'prdtRecieveDate',
+				            filter: {
+				              type: 'date', showApplyBtn: true, showClearBtn: true,
+				              options: {
+				                format: 'yyyy-MM-dd'
+				              }
+				            }
+				          },
+				          {
+								header: '수량입력',
+								name: 'insertCnt',
+								editor: 'text',
+							}],
+				         	
+				})
+			$(document).ready(function () {
+				//주문서검색클릭이벤트
+				$('#searchOrderModal').on('click',function(){
+					setTimeout(() => searchOrderGrid.refreshLayout(), 300);
+					$('#orderModal').modal('show')
+				})
+				//열클릭이벤트
+				searchOrderGrid.on('dblclick',(ev)=> {
+					if(ev.rowKey==undefined){
+		        		return;
+		        	}
+					let data = searchOrderGrid.getValue(ev.rowKey , 'orderCode');
+					 $.ajax({
+						url:'/orderDtList',
+						method:'GET',
+						data: {
+							orderCode:data
+						},
+						success:function(result){
+							OrderDtGrid.resetData(result);
+							OrderGrid.resetData(eval([searchOrderGrid.getData()[ev.rowKey]]));
+							$('#orderModal').modal('hide')
+						},
+						error:function(err){
+							console.log(err)
+						}
+					}) 
+					
+				});
+				//주문상세클릭이벤트
+				OrderDtGrid.on('click',function(ev){
+					let data = OrderDtGrid.getValue(ev.rowKey,'prdtCode');
+					$.ajax({
+						url:'/lotPrdtList',
+						method:'GET',
+						data:{
+							prdtCode : data
+						},
+						success:function(result){
+							lotPrdtGrid.resetData(result);	
+							setTimeout(() => lotPrdtGrid.refreshLayout(), 300);
+							$('#prdtModal').modal('show');
+						},
+						error:function(err){
+							console.log(err);
+						}
+					})
+				})
+				
+			});
+		</script>
+	</div>
+</body>
+</html>
