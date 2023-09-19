@@ -11,18 +11,34 @@ import lombok.Data;
 @Data
 public class FinPrdtVO {
 
-	private String prdtLotNo;
-	private String prdtCode;
-	private String prdtName;
-	private int prdtRecieveCnt;
-	private int prdtSum;
+	private String prdtLotNo;//lot번호
+	private String prdtCode;//제품코드
+	private String prdtName; // 제품이름
 	
-	private int prdtCnt;
-	private String prdtUnit;
+	
+	//완제품재고관련
+	private int prdtSaveCnt; // 안전재고
+	private int prdtCnt; // 재고수량
+	private int prdtSum; // 합계
+	
+	//입고관련
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
-	private Date prdtRecieveDate;
-	private String recieveManager;
-	private String prdtChkCode;
-	private int prdtSaveCnt;
+	private Date prdtRecieveDate; // 입고날짜
+	private String recieveManager; // 입고담당자
+	private int prdtRecieveCnt; // 입고수량
+	private String prdtChkCode; // 완제품검사코드
+	
+	
+	
+		//출고관련
+		private String prdtOutCode;
+		private String prdtDtOutCode;
+		private String orderDtCode;//상세주문코드
+		private int prdtOutCnt;//출고수량
+		private int prdtLeftCnt;//잔여수량
+		@DateTimeFormat(pattern = "yyyy-MM-dd")
+		@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
+		private Date prdtOutDate;//출고날짜
+		private String prdtOutManager;//출고담당자
 }

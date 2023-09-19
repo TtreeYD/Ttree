@@ -241,6 +241,7 @@
 							orderCode:data
 						},
 						success:function(result){
+							console.log(result)
 							valueCheck = result
 							OrderDtGrid.resetData(result);
 							OrderGrid.resetData(eval([searchOrderGrid.getData()[ev.rowKey]]));
@@ -287,14 +288,14 @@
 							var data={};
 							data.list = lotPrdtGrid.getData();
 							data.vo = {
-									prdtOutDate : $('#outmanager').val(),
-									prdtOutManager:$('#outdate').val(),
+									prdtOutDate : $('#outdate').val(),
+									prdtOutManager:$('#outmanager').val(),
 									orderDtCode: valueCheck[0].orderDtCode
 									};
 							console.log('data:' , data)
 							console.log('valuecheck:', valueCheck)
 							$.ajax({
-								url:'',
+								url:'/prdtOutProcess',
 								method:'POST',
 								dataType: 'json',
 								contentType : 'application/json',

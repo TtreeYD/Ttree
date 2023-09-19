@@ -64,7 +64,7 @@ public class BusinessServiceImpl implements BusinessService{
 		@Override
 		public int plusDtOrder(ReqVO<BusinessVO> businessvo) {
 			int cnt=0;
-			String orderCode = businessvo.getOrderDtList().get(0).getOrderCode();
+			String orderCode = businessvo.getOrderList().get(0).getOrderCode();
 			for(int i = 0 ; i<businessvo.getOrderDtList().size();i++) {
 				businessvo.getOrderDtList().get(i).setOrderCode(orderCode);
 				businessmapper.insertNewDtOrder(businessvo.getOrderDtList().get(i));
@@ -121,6 +121,21 @@ public class BusinessServiceImpl implements BusinessService{
 	@Override
 	public List<FinPrdtVO> prdtSearchList(FinPrdtVO fpvo) {
 		return businessmapper.prdtSearchList(fpvo);
+	}
+	//제품출고
+	@Override
+	public int prdtOutProcess(ReqVO<FinPrdtVO> finPrdtVO) {
+		int cnt=0;
+		businessmapper.insertPrdtOut(finPrdtVO.getVo());
+		String dtcode = finPrdtVO.getVo().getOrderDtCode();
+		String outcod= finPrdtVO.getVo().getPrdtOutCode();
+		System.out.println("33333333333333333"+outcod);
+		for(int i =0; i<finPrdtVO.getList().size();i++) {
+			finPrdtVO.getList().get(i).setOrderDtCode(dtcode);
+			businessmapper.insertPrdtDtOut(finPrdtVO.getList().get(i));
+			cnt++;
+		}
+		return cnt;
 	}
 	
 

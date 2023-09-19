@@ -330,12 +330,13 @@
 						
 					    console.log(dtOrder.getData().length);
 						console.log(updateDtOrder);
-					 	if(dtOrder.getData().length > updateDtOrder){//수정중 상세주문 추가한경우
-									console.log('수정등록');
-							 for(let i =dtOrder.getData().length-1; i>updateDtOrder-1; i--){
+					 	if(dtOrder.getData().length > updateDtOrder && editdata.vo[0].orderCode != null){//수정중 상세주문 추가한경우
+								console.log('수정등록');
+					 			 newOrderData.orderList = order.getData();
 								 newOrderData.orderDtList = dtOrder.getCheckedRows() ;
+								 
+							 	
 								 console.log('last',newOrderData)
-							 };
 							 
 							 $.ajax({
 								url:'/plusDtOrder',

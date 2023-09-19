@@ -9,4 +9,5 @@ public class ReqVO<T> {
 	T vo;
 	List<T> orderList;
 	List<T> orderDtList;
+	List<T> list;
 }

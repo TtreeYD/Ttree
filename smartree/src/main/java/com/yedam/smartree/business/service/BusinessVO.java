@@ -29,9 +29,7 @@ public class BusinessVO {
 	private String prdtCode;
 	private int orderDtCnt;
 	
-	//출고관련
-	private int prdtOutCnt;//출고수량
-	private int prdtLeftCnt;
+	
 
 	
 }
