@@ -66,14 +66,19 @@
   	</select>
   	
   	<select id="selectProdListView" resultType="ProdVO">
-  		select dtp.dt_prod_plan_code, p.prod_plan_code , p.prod_plan_name, p.prod_name, p.prod_plan_date, p.prod_plan_sdate, p.prod_plan_edate, pt.prdt_name,  dtp.prod_plan_cnt, dtp.prod_rank, dtp.prod_plan_note , pt.prdt_code, dto.order_dt_cnt
-		from dt_prod_plan dtp join prod_plan p 
-		on dtp.prod_plan_code = p.prod_plan_code
-		join  prdt_table pt 
-		on dtp.prdt_code = pt.prdt_code
-        join dt_order dto
-        on p.order_code = dto.order_code and dtp.prdt_code = dto.prdt_code
-		where p.prod_plan_code = #{prodPlanCode}
+  		SELECT dtp.dt_prod_plan_code, p.prod_plan_code , p.prod_plan_name, p.prod_name, p.prod_plan_date, p.prod_plan_sdate, p.prod_plan_edate, pt.prdt_name,  dtp.prod_plan_cnt, dtp.prod_rank, dtp.prod_plan_note , pt.prdt_code
+		<if test="orderCode != null and oderCode.equals('')">
+	  		, dto.order_dt_cnt
+        </if>
+		FROM dt_prod_plan dtp JOIN prod_plan p 
+		ON dtp.prod_plan_code = p.prod_plan_code
+		JOIN  prdt_table pt 
+		ON dtp.prdt_code = pt.prdt_code
+		<if test="orderCode != null and oderCode.equals('')">
+	        JOIN dt_order dto
+	        ON p.order_code = dto.order_code AND dtp.prdt_code = dto.prdt_code
+        </if>
+		WHERE p.prod_plan_code = #{prodPlanCode}
   	</select>
   	
   	<update id="updateProd" parameterType="ProdVO">
