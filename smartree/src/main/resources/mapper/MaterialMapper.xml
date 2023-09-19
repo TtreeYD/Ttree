@@ -51,7 +51,6 @@
   	
   	
   	
-  	
   	<!-- 발주관리 insert -->
   	<insert id="insertNeedMtl" parameterType="MaterialVO">
   		INSERT INTO mtl_need (mtl_code, bp_code, mtl_name, mtl_cnt, mtl_unit, mtl_manager, mtl_wish_date, tml_where, mtl_type)
@@ -59,6 +58,7 @@
   		#{mtlCode}, #{bpCode}, #{mtlName}, #{mtlCnt}, #{mtlUnit}, #{mtlManager}, #{mtlWishDate}, #{mtlWhere}, #{mtlType}
   		)
   	</insert>
+  	
   	<!-- 발주관리 update -->
   	<update id="updateNeedMtl" parameterType="MaterialVO">
   		UPDATE mtl_need
@@ -66,6 +66,7 @@
   			mtl_wish_date = #{mtlWishDate}
   		WHERE mtl_code = #{mtlCode} AND mtl_date = #{mtlDate}
   	</update>
+  	
   	<!-- 발주관리 delete -->
   	<delete id="deleteNeedMtl" parameterType="MaterialVO">
   		DELETE FROM mtl_need
@@ -80,14 +81,18 @@
   			#{mtlLotNum},#{mtlCode},#{mtlInCnt},#{mtlInDate},#{mtlManager},#{mtlLotCnt},#{mtlChkCode}
   		)
   	</insert>
+  	
   	<!-- 입고관리 update -->
   	<update id="updateInMtl" parameterType="MaterialVO">
   		UPDATE mtl_container
-  		SET
+  		SET mtl_in_cnt = #{mtlInCnt}
+  		WHERE mtl_lot_num = #{mtlLotNum}
   	</update>
+  	
   	<!-- 입고관리 delete -->
   	<delete id="deleteInMtl" parameterType="MaterialVO">
-  	
+  		DELETE FROM mtl_container
+  		WHERE mtl_lot_num = #{mtlLotNum}
   	</delete>
   	
   	
