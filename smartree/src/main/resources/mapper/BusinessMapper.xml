@@ -167,11 +167,10 @@
   	</select> -->
   	
   	<select id="selectFinLotPrdt" resultType="FinPrdtVO">
-  		select f.prdt_lot_no , f.prdt_code , p.prdt_name , f.prdt_cnt , f.prdt_recieve_date , pol.prdt_out_cnt , f.prdt_cnt-pol.prdt_out_cnt prdt_left_cnt
+  		select f.prdt_lot_no , f.prdt_code , p.prdt_name , f.prdt_cnt , f.prdt_recieve_date 
 		  from fin_prdt f join prdt_table p
 		    		on f.prdt_code = p.prdt_code
-		    			join prdt_out_list pol
-		    		on f.prdt_lot_no = pol.prdt_lot_no
+		    			
 		 where f.prdt_code = #{prdtCode}
   	</select>
   	
