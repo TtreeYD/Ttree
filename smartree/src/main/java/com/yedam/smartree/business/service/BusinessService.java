@@ -36,7 +36,8 @@ public interface BusinessService {
 	public List<FinPrdtVO> selectFinLotPrdt(FinPrdtVO fpvo);
 	//완제품조건조회
 	public List<FinPrdtVO> prdtSearchList(FinPrdtVO fpvo);
-
+	//완제품출고관리
+	
 	
 
 }
