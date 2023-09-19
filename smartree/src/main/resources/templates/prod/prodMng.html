@@ -114,10 +114,11 @@
 		let dtPPCode = [];
 		let newGrid = [];
 		let rowNum;
+		let dblProdLeng;
         let grid, grid2, grid3, grid4, grid5, grid6;
         const header = ['prodPlanName','prodPlanDate','prodPlanSdate','prodPlanEdate'];
         
-        window.onload=function(){
+        $(document).ready(function (){
 
 	    const grid = new tui.Grid({
 	      el: document.getElementById('grid'),
@@ -265,6 +266,11 @@
 	            useClient: true,
 	          },
 	          columns: [
+	        	  	{
+						header: '계획코드',
+						name: 'prodPlanCode',
+						hidden : true
+					},
 					{
 						header: '제품코드',
 						name: 'prdtCode',
@@ -359,12 +365,15 @@
 					prodPlanSdate : $('#prodPlanSdate').val(),
 					prodPlanEdate : $('#prodPlanEdate').val(),
 					prodName : $('#prodName').val(),
-					orderCode : data.list[0].orderCode
+					orderCode : data.list[0].orderCode,
+					prodPlanCode : data.list[0].prodPlanCode
 				}
 				console.log(data);
-			if(data.list.length != grid.getData().length){
+				console.log(newGrid.length);
+				console.log(grid.getData().length);
+			if(data.list.length > dblProdLeng){
 				$.ajax({
-		      		url:'/',
+		      		url:'/insertAndUpdate',
 		      		method: 'post',
 					dataType: 'json',
 					contentType : 'application/json',
@@ -509,7 +518,8 @@
       		success:function(result){
 				dtPPCode = result;
 				newGrid = result;
-				console.log(result);
+				dblProdLeng = newGrid.length;
+				console.log(newGrid.length);
    	         	$('#prodPlanName').val(result[0].prodPlanName);
 				$('#prodPlanDate').val(result[0].prodPlanDate);
 				$('#prodPlanSdate').val(result[0].prodPlanSdate);
@@ -559,14 +569,17 @@
         		return;
         	}
 			let data = grid6.getValue(ev.rowKey,'prdtCode');
+			let data1 = grid.getValue(ev.rowKey,'prodPlanCode');
 			$.ajax({
-				url:'/prdtList',
+				url:'/selectPrdt',
 				method:'GET',
 				data:{
-					prdtCode : data
+					prdtCode : data,
+					prodPlanCode : data1
 				},
 				success:function(result){
 					console.log(result);
+					console.log(data1); 
 					 let check = true; 
 					 newGrid.forEach((order) => {
 						if(order.prdtCode == data) {
@@ -577,7 +590,7 @@
 						
 					})
 					if(check){
-						newGrid[rowNum] = result[0]
+						newGrid[rowNum] = result[0];
 						grid.resetData(newGrid);
 						$('#prdtModal').modal('hide');
 					}
@@ -593,7 +606,7 @@
            let change = ev.changes
            newGrid[change[0].rowKey][change[0].columnName]=change[0].value
         })
-	  }
+	  })
 	  
     </script>
 	</div>

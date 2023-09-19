@@ -5,8 +5,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessVO;
 import com.yedam.smartree.prod.mapper.ProdMapper;
+import com.yedam.smartree.prod.service.PrdtProdVO;
 import com.yedam.smartree.prod.service.ProdService;
 import com.yedam.smartree.prod.service.ProdVO;
 import com.yedam.smartree.prod.service.RequestVO;
@@ -75,17 +77,29 @@ public class ProdServiceImpl implements ProdService {
 		int cnt = 0;
 		prodMapper.deleteProd(vo.getVo());
 		
-		System.out.println(vo.getVo());
-		
-		
 		for(ProdVO pvo : vo.getList()) {
-			
 			
 			prodMapper.deleteDtProd(pvo);
 			cnt++;
 			
 		}
 		return cnt;
+	}
+
+	@Override
+	public int insertAndUpdateDtProdPlan(RequestVO<ProdVO> vo) {
+		int cnt = 0;
+		
+		for(ProdVO pvo : vo.getList()) {
+			prodMapper.insertAndUpdateDtProd(pvo);
+			cnt++;
+		}
+		return cnt;
+	}
+
+	@Override
+	public List<PrdtProdVO> selectPrdt(PrdtProdVO vo) {
+		return prodMapper.selectPrdt(vo);
 	}
 
 	
