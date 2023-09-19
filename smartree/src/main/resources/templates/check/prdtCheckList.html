@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
+
+<head>
+<meta charset="UTF-8">
+<title>SMARTREE</title>
+<style>
+	.y-background {
+		background-color: rgb(255,253,235);
+	}
+</style>
+</head>
+
+<body>
+   <div layout:fragment="content">
+<h2>제품품질검사조회</h2>
+	<div style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
+		<span>
+			<h3>정호현</h3>
+			<div id="grid" style="width: 800px;"></div>
+		</span> 
+		<span>
+			<h3>정호현</h3>
+			<div id="grid2" style="width: 800px;"></div>
+		</span>
+	</div>
+	
+	
+	
+	
+	<script>
+	window.onload=function(){
+
+	    const grid = new tui.Grid({
+	      el: document.getElementById('grid'),
+	      scrollX: false,
+	      scrollY: false,
+	      pageOptions: {
+            perPage: 5,
+            useClient: true,
+          },
+          rowHeaders : ["rowNum"],
+          bodyHeight : 400,
+	      columns: [
+	        {
+	          header: '제품검사코드',
+	          name: 'prdtChkCode'
+	        },
+	        {
+	          header: '공정실적코드',
+	          name: 'prcsRsCode'
+	        },
+	        {
+	          header: '제품코드',
+	          name: 'prdtCode',
+	        },
+	        {
+	          header: '검사량',
+	          name: 'prdtChkCnt',
+	        },
+	        {
+	          header: '검사결과',
+	          name: 'prdtChkResult',
+	        },
+	        {
+	          header: '검사날짜',
+	          name: 'prdtChkDate',
+	        },
+	        {
+	          header: '담당자',
+	          name: 'prdtManager',
+	          className: 'y-background'
+	        },
+	      ]
+	    });
+	    const grid2 = new tui.Grid({
+		      el: document.getElementById('grid2'),
+		      scrollX: false,
+		      scrollY: false,
+	          bodyHeight : 400,
+		      columns: [
+		        {
+		          header: '제품검사코드',
+		          name: 'prdtChkCode'
+		        },
+		        {
+		          header: '공정실적코드',
+		          name: 'prcsRsCode'
+		        },
+		        {
+		          header: '검사명',
+		          name: 'chkName'
+		        },
+		        {
+		          header: '검사기준',
+		          name: 'chkStd'
+		        },
+		        {
+		          header: '검사값',
+		          name: 'prdtChkVal'
+		        },
+		        {
+		          header: '적합여부',
+		          name: 'prdtChkResult',
+	        	  className: 'y-background'
+		        },
+		      ]
+		    });
+	    getprdtCheckList();
+	    
+	 // 제품검사목록 조회
+	    function getprdtCheckList(){
+	    	$.ajax({
+	    		url:'/prdtCheckList',
+	    		method:'get',
+	       	 	dataType:'json',
+	    		success:function(result){
+	    			console.log(result);
+	    			grid.resetData(result);
+	    		},
+	    		error:function(err){
+	    			console.log(err);
+	    		}
+	    	})
+	    }
+	    
+	    // 제품검사상세목록 조회
+	    grid.on('click',(ev)=>{
+	    	const prdtChkCode = grid.getValue(ev.rowKey, 'prdtChkCode')  
+	    	$.ajax({
+	    		url:'/dtList',
+	    		method:'get',
+	    		data : {  prdtChkCode  },
+	       	 	dataType:'json',
+	    		success:function(result){
+	    			console.log(result);
+	    			grid2.resetData(result);
+	    		},
+	    		error:function(err){
+	    			console.log(err);
+	    		}
+	    	});
+	    });
+	    
+	    
+		
+		 //자동 계산
+	     /*  grid2.on('afterChange', (ev) => {
+	      
+	      let change = ev.changes[0];
+	      let rowData = grid2.getRow(change.rowKey);
+	      
+	      
+	      
+	      if(change.columnName == 'prdtChkVal'){
+	         if(rowData.prdtChkVal != null && rowData.prdtChkVal != ""){
+	            let fitYn;
+	            if(rowData.prdtChkVal < rowData.passValue){
+	               passYn = 'Y';
+	            } else if(rowData.testResult >= rowData.chkStd){
+	               passYn = 'N';
+	            }
+	            grid2.setValue(change.rowKey, 'fitYn', fitYn);
+	         }
+	      }
+	      }); */
+	      //끝
+	    
+	    
+	    
+	    
+	    
+	};
+	</script>
+	</div>
+</body>
+</html>

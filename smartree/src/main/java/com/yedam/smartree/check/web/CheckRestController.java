@@ -88,11 +88,24 @@ public class CheckRestController {
 	@PostMapping("/insertPrdtChkList")
 	public List<Integer> insertPrdtChkList(@RequestBody List<CheckVO> vo) {
 		List<Integer> results = new ArrayList<>();
-		System.out.println("111111111111111111111111111111"+vo);
+
 		for(CheckVO checkvo : vo) {
 			int result = checkservice.insertPrdtChkStd(checkvo);
 			results.add(result);
 		}
 		return results;
+
+	}
+	
+	@GetMapping("/prdtCheckList")
+	public List<CheckVO> selectPrdtCheckList(CheckVO vo){
+		return checkservice.selectPrdtCheckList(vo);
+	}
+	
+	@GetMapping("/dtList")
+	public List<CheckVO> selectDtList(CheckVO vo){
+		System.out.println("@@@@@@@@@@@@@@@@@@" + vo);
+		return checkservice.selectdtList(vo);
+
 	}
 }

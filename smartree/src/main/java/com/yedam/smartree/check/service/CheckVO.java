@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 @Data
 public class CheckVO {
+	//제품검사
 	private String prdtChkCode;
 	private String prdtCode;
 	private String prcsRsCode;
@@ -19,6 +20,8 @@ public class CheckVO {
 	private String prdtChkResult;
 	private String prdtManager;
 	private String prdtChkStdCode;
+	private String prdtChkVal;
+	private String prdtChkFit;
 	
 	private String prdtName;
 	
@@ -30,4 +33,5 @@ public class CheckVO {
 	private String chkName;
 	private String chkDt;
 	private String chkStd;
+
 }

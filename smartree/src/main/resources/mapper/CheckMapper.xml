@@ -34,7 +34,34 @@
   			#{prdtCode},
   			#{chkStd}
   		) 
-  		
+
   	</insert>
+  
+  <!-- 완제품검사목록 -->
+  <select id="selectPrdtCheckList" resultType="CheckVO">
+  	select *
+  	from prdt_chk
+  </select>
+  
+  <!-- 완제품검사상세목록 -->
+  <select id="selectdtList" resultType="CheckVO">
+  SELECT p.prdt_chk_code, 
+         p.prdt_code, 
+         p.prcs_rs_code,
+          
+         c.chk_name, 
+         c.chk_std,
+          
+         d.prdt_chk_val, 
+         d.prdt_chk_result
+         
+    FROM prdt_chk p 
+    JOIN dt_prdt_chk d 
+      ON p.prdt_chk_code = d.prdt_chk_code
+    JOIN chk_std c 
+      ON d.chk_std_code = c.chk_std_code
+  
+   WHERE p.prdt_chk_code = #{prdtChkCode}
+  </select>
   
   </mapper>
