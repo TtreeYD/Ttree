@@ -18,6 +18,7 @@
 
 
 	<div layout:fragment="content">
+	<h2>품질검사기준관리</h2>
 		<div class="btn-group btn-right" role="group"
 			aria-label="Basic example"
 			style="float: right; padding-bottom: 10px;">
@@ -71,10 +72,10 @@
 		</div><!-- /.modal -->
 		
 		<script>
-		var Grid;
+		var grid;
 			window.onload = function() {
 				//화면 제품그리드
-				const grid = new tui.Grid({
+				 grid = new tui.Grid({
 					el : document.getElementById('grid'),
 					scrollX : false,
 					scrollY : false,
@@ -101,11 +102,8 @@
 						header : '분류',
 						name : 'prdtType',
 						align : 'center'
-					}, {
-						header : '단위',
-						name : 'prdtUnit',
-						align : 'center'
-					} ],
+					}, 
+					]
 				});
 					//제품모달그리드
 					const prdtListModal = new tui.Grid({
@@ -128,11 +126,7 @@
 							header : '분류',
 							name : 'prdtType',
 							align : 'center'
-						}, {
-							header : '단위',
-							name : 'prdtUnit',
-							align : 'center'
-						}
+						}, 
 
 						],
 					});
@@ -148,6 +142,11 @@
 							background : 'yellow'
 						},	
 						columns : [ {
+							header : '완제품코드',
+							name : 'prdtCode',
+							align : 'center',
+							hidden : true
+						},{	
 							header : '검사기준코드',
 							name : 'chkStdCode',
 							align : 'center',
@@ -164,11 +163,11 @@
 							name : 'chkStd',
 							align : 'center'
 						}, {
-							header : '검사기준단위',
-							name : 'chkUnit',
-							align : 'center'
-						} 
-						
+							header : '검사순서',
+							name : 'prdtChkNum',
+							align : 'center',
+							editor : 'text'
+						},
 						]
 					});
 					
@@ -198,11 +197,7 @@
 							header : '검사기준',
 							name : 'chkStd',
 							align : 'center'
-						}, {
-							header : '검사기준단위',
-							name : 'chkUnit',
-							align : 'center'
-						}
+						}, 
 
 						]
 					});
@@ -213,7 +208,6 @@
 						'prdtCode' : ``,
 						'prdtName' : ``,
 						'prdtType' : ``,
-						'prdtUnit' : ``
 					}, {
 						at : 0
 					});
@@ -224,7 +218,6 @@
 					if(ev.columnName != 'prdtCode' && ev.columnName !='prdtName'){
 							return;	
 					}
-					dtOrderRowNum = ev.rowKey
 					$.ajax({
 						url:'/selectprdt',
 						method:'GET',
@@ -274,6 +267,7 @@
 						data[i].prdtName = ''; 
 					}
 					grid.resetData([]);
+					grid2.resetData([]);
 				});
 				
 				//검사기준조회 이벤트
@@ -302,7 +296,14 @@
 			        		return; 
 			        }
 					 	let datas = prdtStdModalGrid.getCheckedRows();
-					 	console.log(datas);
+					 	console.log(grid.getValue(0,"prdtCode"));
+					 	let prdtCode = grid.getValue(0,"prdtCode");
+					 	
+					 	datas.forEach((data,index)=>{
+					 		data.prdtCode= prdtCode;
+					 		
+					 	})
+					 	
 						grid2.appendRows(datas);
 						$("#prStdModal").modal('hide');
 		        });
@@ -316,11 +317,31 @@
 					    selectedRows.forEach(function(row) {
 					    	console.log(row);
 					      grid2.removeRow(row.rowKey);
+					      
 					    });
 					  }
 					});
 				
-				
+				// 저장 이벤트
+				$('#addBtn').on('click',function(){
+					let datas = grid2.getData();
+					console.log(datas);
+					$.ajax({
+						url: '/insertPrdtChkList', 
+						method: 'post',
+						dataType: 'json',
+						contentType : 'application/json',
+						data : JSON.stringify(datas),
+						success: function(result) {
+							console.log(datas);
+							grid.resetData([]);
+							grid2.resetData([]);
+						},
+						error: function(err) {
+							console.log(err);
+						}
+					});
+				});
 				
 				
 			}
