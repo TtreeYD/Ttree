@@ -49,5 +49,10 @@ public interface BusinessMapper {
 	//완제품조건검색
 	public List<FinPrdtVO> prdtSearchList(FinPrdtVO fpvo);
 	
+	//제품출고
+	public int insertPrdtOut(FinPrdtVO vo);
+	//제품상세출고
+	public void insertPrdtDtOut(FinPrdtVO finPrdtVO);
+	
 	
 }

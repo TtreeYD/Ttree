@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.business.service.BpVO;
@@ -63,7 +62,6 @@ public class BusinessRestController {
 	//주문수정중 상세주문 추가로 등록하는경우 
 	@PostMapping("/plusDtOrder")
 	public int plusDtOrder(@RequestBody ReqVO<BusinessVO> businessvo) {
-		System.out.println("111111111111111111111"+businessvo);
 		return businessService.plusDtOrder(businessvo);
 	}
 	
@@ -102,6 +100,10 @@ public class BusinessRestController {
 	public List<FinPrdtVO> prdtSearchList(FinPrdtVO fpvo){
 		return businessService.prdtSearchList(fpvo);
 	}
-	//출고관리 lot별 
+	//출고관리 lot별
+	@PostMapping("/prdtOutProcess")
+	public int prdtOutProcess(@RequestBody ReqVO<FinPrdtVO> finPrdtVO) {
+		return businessService.prdtOutProcess(finPrdtVO);
+	}
 	
 }

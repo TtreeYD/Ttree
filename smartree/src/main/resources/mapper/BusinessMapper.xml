@@ -193,6 +193,28 @@
 		       	and f.prdt_lot_no like '%'||#{prdtLotNo}||'%'
 		 	</if> 	
 		</where>
-  	
   	</select>
+  	
+  	<!-- 제품출고 -->
+  		<insert id="insertPrdtOut" parameterType="FinPrdtVO">
+  			insert into prdt_out
+			values(
+				    'POT'|| LPAD(order_dt_code_seq.NEXTVAL , 7 , '0'),
+				    #{prdtOutDate},
+				    #{prdtOutManager},
+				    #{orderDtCode}
+				  )
+  		</insert>
+  		
+  	<!-- 제품상세출고 -->
+  		<insert id="insertPrdtDtOut" parameterType="FinPrdtVO">
+  			insert into prdt_out_list
+  			values(
+  					'POD'|| LPAD(order_dt_code_seq.NEXTVAL , 7 , '0'),
+  					#{prdtLotNo},
+  					#{prdtOutCnt},
+  					#{prdtOutCode}
+  					)
+  		</insert>
+  		
   </mapper>
