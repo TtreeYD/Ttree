@@ -30,7 +30,7 @@ public class BusinessVO {
 	private int orderDtCnt;
 	
 	//출고관련
-	private int prdtOutCnt;
+	private int prdtOutCnt;//출고수량
 	private int prdtLeftCnt;
 
 	

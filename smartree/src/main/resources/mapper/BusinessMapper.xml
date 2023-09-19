@@ -12,14 +12,18 @@
   	
   	<!-- 주문서상세조회 -->
   	<select id="selectOrderDtList" resultType="BusinessVO">
-	  	select o.order_code , d.order_dt_code , p.prdt_name , p.prdt_code, d.order_dt_cnt , o.dod_date , o.order_date,
-	  	    (select  sum(prdt_out_cnt)
-                    from prdt_out p join prdt_out_list pol
-                                on p.prdt_out_code = pol.prdt_out_code
-                    where order_dt_code = d.order_dt_code)  prdt_out_cnt 
-		  from orders o join dt_order d on o.order_code = d.order_code
-		              join prdt_table p on d.prdt_code = p.prdt_code
-		 where o.order_code = #{orderCode}
+ 		select a.*, a.order_dt_cnt - prdt_out_cnt as prdt_left_cnt 
+ 		  from (       
+				         select o.order_code , d.order_dt_code , p.prdt_name , p.prdt_code, d.order_dt_cnt , o.dod_date 
+				       				 , o.order_date, (select sum(prdt_out_cnt) 
+							                           from prdt_out p join prdt_out_list pol 
+							                                        on p.prdt_out_code = pol.prdt_out_code 
+							                          where order_dt_code = d.order_dt_code) as prdt_out_cnt 
+        				   from orders o join dt_order d 
+				                    on o.order_code = d.order_code 
+				                    join prdt_table p 
+                    				on d.prdt_code = p.prdt_code
+					 	  where o.order_code = #{orderCode}) a
   	</select>
   	
   	<!-- 주문서 상세 함께조회 -->
@@ -169,9 +173,9 @@
   	<select id="selectFinLotPrdt" resultType="FinPrdtVO">
   		select f.prdt_lot_no , f.prdt_code , p.prdt_name , f.prdt_cnt , f.prdt_recieve_date 
 		  from fin_prdt f join prdt_table p
-		    		on f.prdt_code = p.prdt_code
-		    			
+		    		on f.prdt_code = p.prdt_code		    			
 		 where f.prdt_code = #{prdtCode}
+		 order by f.prdt_recieve_date
   	</select>
   	
   	
