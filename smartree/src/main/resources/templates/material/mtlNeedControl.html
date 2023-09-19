@@ -175,10 +175,14 @@
 					    sortingType: 'asc'
 					}, {
 						header : '자재발주일',
-						name : 'mtlDate'
+						name : 'mtlDate',
+						sortable: true,
+					    sortingType: 'asc'
 					}, {
 						header : '거래처이름',
-						name : 'bpName'
+						name : 'bpName',
+						sortable: true,
+					    sortingType: 'asc'
 					}, {
 						header : '분류',
 						name : 'mtlType'
@@ -229,8 +233,8 @@
 			        
 				// 아래리스트 ajax
 		        $.ajax({
-		          url: '/mtlNeeds',
-		          method: 'get',
+		          url: '/insertNeedMtl',
+		          method: 'POST',
 		          dataType: 'json',
 		          success: function (result) {
 		            //날짜변환
