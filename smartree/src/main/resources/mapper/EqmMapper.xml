@@ -4,6 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="com.yedam.smartree.eqm.mapper.EqmMapper">
+  <!-- 전체조회 -->
   	<select id="selectEqmList" resultType="EqmVO">
   		SELECT e.eqm_code,e.eqm_name,e.eqm_ucheck,e.insp_cycle,e.mfg_comp,e.mfg_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE
 		FROM eqm e left join EQM_INSP i
@@ -11,7 +12,7 @@
   	 					 
   		ORDER BY eqm_code
   	</select>
-  	
+  	<!-- 사용여부 조회 -->
   	<select id="selectEqmUcheckList" resultType="EqmVO">
   		SELECT e.eqm_code,e.eqm_name,e.eqm_ucheck,e.insp_cycle,e.mfg_comp,e.mfg_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE
 		FROM eqm e left join EQM_INSP i
@@ -25,7 +26,7 @@
   		ORDER BY eqm_code
   	</select>
   	
-  	
+  	<!-- 설비검색 -->
   	  <select id="searchEqm" resultType="EqmVO">
   		SELECT e.eqm_code,e.eqm_name,e.eqm_ucheck,e.insp_cycle,e.mfg_comp,e.mfg_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE
 		FROM eqm e left join EQM_INSP i
@@ -38,7 +39,7 @@
   		 
   		ORDER BY eqm_code
   	</select>
-  	
+  	<!-- 설비조회 -->
   	<select id="selectEqm" resultType="EqmVO">
   	select eqm_code,eqm_name,eqm_ucheck,insp_cycle,eqm_min_temp,eqm_max_temp,eqm_manager,mfg_comp,mfg_date,eqm_img
   	from EQM
@@ -46,7 +47,7 @@
   	</select>
   	
   	
-  	
+  	<!-- 설비등록  -->
   	<insert id="insertEqm" parameterType="EqmVO">
   	<selectKey keyProperty="eqmCode" resultType="String" order="BEFORE">
   		select 'eqm' || LPAD(eqm_code_seq.NEXTVAL, 7, '0') as eqmCode from dual
@@ -81,10 +82,45 @@
   	
   	</insert>
   	
+  	<!-- 설비삭제 -->
   	<delete id="deleteEqm" parameterType="EqmVO">
   		delete from EQM
   		where eqm_code= #{eqmCode}
   	</delete>
   	
+  	<update id="updateEqm" parameterType="EqmVO">
+  		update EQM
+  		<set>
+  			<if test="eqmName != null and !eqmName.equals('')">
+  			     EQM_NAME=#{eqmName},
+  			</if>
+  			<if test="eqmUcheck != null and !eqmUcheck.equals('')">
+  			       EQM_UCHECK =#{eqmUcheck},
+  			</if>
+  			<if test="eqmMinTemp != null and !eqmMinTemp.equals('')">
+  			       EQM_MIN_TEMP =#{eqmMinTemp},
+  			</if>
+  			<if test="eqmMaxTemp != null and !eqmMaxTemp.equals('')">
+  			       EQM_MAX_TEMP =#{eqmMaxTemp},
+  			</if>
+  			<if test="eqmManager != null and !eqmManager.equals('')">
+  			       EQM_MANAGER =#{eqmManager},
+  			</if>
+  			<if test="inspCycle != null and !inspCycle.equals('')">
+  			       INSP_CYCLE =#{inspCycle},
+  			</if>
+  			<if test="mfgComp != null and !mfgComp.equals('')">
+  			       MFG_COMP =#{mfgComp},
+  			</if>
+  			<if test="mfgDate != null and !mfgDate.equals('')">
+  			       MFG_DATE =#{mfgDate},
+  			</if>
+  			<if test="eqmImg != null and !eqmImg.equals('')">
+  			       EQM_IMG =#{eqmImg}
+  			</if>
+  		
+  		</set>
+  		where eqm_code=#{eqmCode}
+  	</update>
   	
   </mapper>

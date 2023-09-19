@@ -46,8 +46,14 @@ public class EqmServiceImpl implements EqmService {
 	public int deleteEqm(EqmVO eqmVO) {
 		String eqmCode = eqmVO.getEqmCode();
 		eqmVO.setEqmCode(eqmCode);
-		eqmmapper.deleteEqm(eqmVO);
-		return 1;
+		return eqmmapper.deleteEqm(eqmVO);
+	}
+
+	@Override
+	public int updateEqm(EqmVO eqmVO) {
+		String eqmCode = eqmVO.getEqmCode();
+		eqmVO.setEqmCode(eqmCode);
+		return eqmmapper.updateEqm(eqmVO);
 	}
 
 }
