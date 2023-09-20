@@ -8,7 +8,11 @@
 <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <meta charset="UTF-8">
 <title>자재발주관리</title>
-
+<style>
+.selec {
+background-color: cadetblue;
+}
+</style>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -68,7 +72,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" id="addModalBtn" class="btn btn-default">저장</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
 					</div>
 				</div>
 				<!-- /.modal-content -->
@@ -127,6 +131,7 @@
 				// 안전재고미달 자재목록
 				const mtlLowGrid = new tui.Grid({
 					el : document.getElementById('mtlLowGrid'),
+					data: [],
 					scrollX : false,
 					scrollY : false,
 					rowHeaders : [ "rowNum" ],
@@ -154,13 +159,74 @@
 						name : 'mtlNow'
 					}   ]
 				});
-			    // 미달목록그리드 클릭 이벤트
-       			mtlLowGrid.on('dblclick',(ev)=>{
-					alert('성공');
-	        	});
-				// 발주자재목록
+			    
+			    
+                //선택한 행 색깔 바꾸기
+/*        			mtlLowGrid.on('focusChange', (ev) => {
+       			 mtlLowGrid.setSelectionRange({
+       			      start: [ev.rowKey, 0],
+       			      end: [ev.rowKey, mtlLowGrid.getColumns().length-1]
+       			    });
+       			  }); */
+                
+                // 미달목록 더블클릭시 발주목록으로 이동시키기
+                mtlLowGrid.on('dblclick', () => {
+                    let rowKey =
+                    	mtlLowGrid.getFocusedCell().rowKey;
+
+                    if (rowKey != null && rowKey >= 0) {
+                        let mtlCode = mtlLowGrid.getValue(
+                            rowKey,
+                            "mtlCode"
+                        );
+                        let mtlName = mtlLowGrid.getValue(
+                            rowKey,
+                            "mtlName"
+                        );
+                        let mtlType = mtlLowGrid.getValue(
+                            rowKey,
+                            "mtlType"
+                        );
+                        let mtlNow = mtlLowGrid.getValue(
+                            rowKey,
+                            "mtlNow"
+                        );
+                        
+
+                        mtlLowGrid.removeRow(rowKey);
+
+                        mtlLowGrid.blur();
+
+                        let now = new Date(); // 현재 날짜 및 시간
+                        let year = now.getFullYear();
+                        let month = (
+                            "0" +
+                            (now.getMonth() + 1)
+                        ).substr(-2);
+                        let day = (
+                            "0" + now.getDate()
+                        ).substr(-2);
+                        let mtlDate =
+                            year + "-" + month + "-" + day;
+
+                        mtlNeedGrid.appendRow(
+                            {
+                            	mtlCode: mtlCode,
+                            	mtlDate: mtlDate,
+                            	mtlName: mtlName,
+                            	mtlType: mtlType,
+                            	mtlCnt: (-1)*mtlNow,
+                            	mtlUnit: 'ea',
+                            	mtlManager: '남태원'
+                            },
+                            { at: 0 }
+                        );
+                    }
+                });
+                
 				const mtlNeedGrid = new tui.Grid({
 					el : document.getElementById('mtlNeedGrid'),
+					data: [],
 					scrollX : false,
 					scrollY : false,
 					rowHeaders : [ "rowNum" ],
@@ -208,6 +274,46 @@
 				});
 				
 				const header = ['mtlCode', 'mtlDate', 'bpName', 'mtlName', 'mtlCnt', 'mtlUnit', 'mtlManager','mtlWishDate','mtlWhereNm','mtlLotCnt','mtlSs','mtlNow','mtlType']
+				
+/*        			// 발주목록에서 취소시키기
+                mtlNeedGrid.on('dblclick', () => {
+                    let rowKey =
+                    	mtlNeedGrid.getFocusedCell().rowKey;
+
+                    if (rowKey != null && rowKey >= 0) {
+                        let mtlCode = mtlNeedGrid.getValue(
+                            rowKey,
+                            "mtlCode"
+                        );
+                        let mtlName = mtlNeedGrid.getValue(
+                            rowKey,
+                            "mtlName"
+                        );
+                        let mtlType = mtlNeedGrid.getValue(
+                            rowKey,
+                            "mtlType"
+                        );
+                        let mtlCnt = mtlNeedGrid.getValue(
+                            rowKey,
+                            "mtlCnt"
+                        );
+                        
+
+                        mtlNeedGrid.removeRow(rowKey);
+
+                        mtlNeedGrid.blur();
+
+                        mtlLowGrid.appendRow(
+                            {
+                            	mtlCode: mtlCode,
+                            	mtlName: mtlName,
+                            	mtlType: mtlType,
+                            	mtlNow: (-1)*mtlCnt,
+                            },
+                            { at: 0 }
+                        );
+                    }
+                }); */
 				
 				//안전재고미달 ajax
 		        $.ajax({
