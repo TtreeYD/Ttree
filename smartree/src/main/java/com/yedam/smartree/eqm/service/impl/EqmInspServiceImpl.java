@@ -31,5 +31,10 @@ public class EqmInspServiceImpl implements EqmInspService{
 		return eqminspmapper.searchEqmInsp(eqmName);
 	}
 
+	@Override
+	public int insertEqmInsp(EqmInspVO eqmInspVO) {
+		return eqminspmapper.insertEqmInsp(eqmInspVO);
+	}
+
 
 }

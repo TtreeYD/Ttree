@@ -13,7 +13,7 @@ public class EqmServiceImpl implements EqmService {
 
 	@Autowired
 	EqmMapper eqmmapper;
-	
+	//설비
 	@Override
 	public List<EqmVO> selectEqmList() {
 		
@@ -55,5 +55,6 @@ public class EqmServiceImpl implements EqmService {
 		eqmVO.setEqmCode(eqmCode);
 		return eqmmapper.updateEqm(eqmVO);
 	}
+	
 
 }

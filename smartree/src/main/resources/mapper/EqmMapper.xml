@@ -4,7 +4,7 @@
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
   <mapper namespace="com.yedam.smartree.eqm.mapper.EqmMapper">
-  <!-- 전체조회 -->
+  <!-- 설비 전체조회 -->
   	<select id="selectEqmList" resultType="EqmVO">
   		SELECT e.eqm_code,e.eqm_name,e.eqm_ucheck,e.insp_cycle,e.mfg_comp,e.mfg_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE
 		FROM eqm e left join EQM_INSP i
@@ -26,7 +26,7 @@
   		ORDER BY eqm_code
   	</select>
   	
-  	<!-- 설비검색 -->
+  	<!-- 설비이름으로 검색 -->
   	  <select id="searchEqm" resultType="EqmVO">
   		SELECT e.eqm_code,e.eqm_name,e.eqm_ucheck,e.insp_cycle,e.mfg_comp,e.mfg_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE
 		FROM eqm e left join EQM_INSP i
@@ -88,6 +88,7 @@
   		where eqm_code= #{eqmCode}
   	</delete>
   	
+  	<!-- 설비 수정 -->
   	<update id="updateEqm" parameterType="EqmVO">
   		update EQM
   		<set>
@@ -122,5 +123,10 @@
   		</set>
   		where eqm_code=#{eqmCode}
   	</update>
+  	
+  	
+  	
+  	
+
   	
   </mapper>
