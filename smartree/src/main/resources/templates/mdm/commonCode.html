@@ -58,9 +58,38 @@
 		    class CustomTextEditor {
 		        constructor(props) {
 		          const el = document.createElement('input');
+		          const { maxLength } = props.columnInfo.editor.options;
+		          
 		          el.value = String(props.value);
 			       el.type = 'text';
 			       if(props.rowKey<cdl) el.readOnly=true;
+		          el.maxLength = maxLength;
+		          
+		          this.el = el;
+		        }
+
+		        getElement() {
+		          return this.el;
+		        }
+
+		        getValue() {
+		          return this.el.value;
+		        }
+
+		        mounted() {
+		          this.el.select();
+		        }
+		      }
+		    
+		    class lengthChk {
+		        constructor(props) {
+		          const el = document.createElement('input');
+		          const { maxLength } = props.columnInfo.editor.options;
+
+		          el.type = 'text';
+		          el.maxLength = maxLength;
+		          el.value = String(props.value);
+
 		          this.el = el;
 		        }
 
@@ -90,8 +119,11 @@
 					header: '코드명',
 					name: 'typeName',
 					editor: {
-						type: 'text'
-					}
+				       	type: lengthChk,
+				         options: {
+				           maxLength: 10
+				         }
+				       }
 				}]
 			});
 
@@ -105,14 +137,21 @@
 				columns: [{
 					header: '상세코드',
 					name: 'codeId',
-					editor: CustomTextEditor
-					
+					editor: {
+						type: CustomTextEditor,
+						options: {
+				              maxLength: 4
+				            }
+					}
 				}, {
 					header: '상세코드명',
 					name: 'codeName',
 					editor: {
-						type: 'text'
-					}
+				       	type: lengthChk,
+				         options: {
+				           maxLength: 10
+				         }
+				       }
 				}, {
 					header: '사용여부',
 					name: 'codeUse',
@@ -190,6 +229,10 @@
 
 			function insertCommonCode() {
 				grid.blur();
+				if(!grid.isModified()) {
+					alert('변경사항이 없습니다.');
+					return
+				}
 				$.ajax({
 					url: '/mdm/insertCommonCode',
 					type: 'post',
@@ -198,6 +241,7 @@
 					},
 					data: JSON.stringify(commonCode),
 					success: result => {
+						alert("등록완료")
 						selCommonCode();
 					},
 					error: err => console.log(err)
@@ -210,6 +254,10 @@
 			
 			function insertCodeDetail() {
 				grid2.blur();
+				if(!grid2.isModified()) {
+					alert('변경사항이 없습니다.');
+					return
+				}
 				$.ajax({
 					url: '/mdm/insertCodeDetail',
 					type: 'post',
@@ -218,7 +266,9 @@
 					},
 					data: JSON.stringify(codeDetail),
 					success: result => {
+						alert("등록완료")
 						selCodeDetail(codeType)
+						
 					},
 					error: err => console.log(err)
 				})
