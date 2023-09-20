@@ -15,7 +15,7 @@
 		<div style="float:right; margin-bottom: 10px">
 			<div class="input-group" >
 				<div class="form-outline">
-					<input type="search" id="form1" class="form-control" placeholder="Search"/> 
+					<input type="search" id="form1" class="form-control" placeholder="상세코드 또는 제품명"/> 
 				</div>
 				<button type="button" class="btn btn-primary" id="searchBtn">
 					<i class="fas fa-search"></i>
@@ -78,7 +78,7 @@
 		$.ajax({
 			url:'/prodPlanList',
 			method:'get',
-	    dataType:'json',
+	    	dataType:'json',
 
 			success:function(result){
 				grid.resetData(result);
@@ -92,7 +92,8 @@
 				url:'/searchProd',
 				method:'post',
 				data : {
-					dtProdPlanCode : $('#form1').val()
+					dtProdPlanCode : $('#form1').val(),
+					prdtName : $('#form1').val()
 				},
 				success:function(result){
 					searchData = result;

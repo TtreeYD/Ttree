@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>생산지시조회</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<h2>생산지시조회</h2>
+		<div style="float:right; margin-bottom: 10px">
+			<div class="input-group" >
+				<div class="form-outline">
+					<input type="search" id="form1" class="form-control" placeholder="상세코드 또는 제품명"/> 
+				</div>
+				<button type="button" class="btn btn-primary" id="searchBtn">
+					<i class="fas fa-search"></i>
+				</button>
+			</div>
+		</div>
+		<div id="grid" style="height: 400px;"></div>
+	<script>
+		let grid;
+		
+		$(document).ready(function (){
+			const grid = new tui.Grid({
+				el : document.getElementById('grid'),
+				scrollX : false,
+				scrollY : false,
+				pageOptions : {
+					perPage : 10,
+					useClient : true
+				},
+				columns : [
+					{
+				          header: '계획명',
+				          name: 'prodPlanName'
+				        },
+				        {
+				          header: '생산지시명',
+				          name: 'prodInstName'
+				        },
+				        {
+				          header: '지시우선순위',
+				          name: 'prodInstRank'
+				        },
+				        {
+				          header: '계획량',
+				          name: 'prodPlanCnt'
+				        },
+				        {
+				          header: '지시량',
+				          name: 'prodInstCnt'
+				        },
+				        {
+				          header: '기지시량',
+				          name: ''
+				        },
+				        {
+				          header: '미지시량',
+				          name: ''
+				        },
+				]
+			}) // end of grid.
+			$.ajax({
+				url : '',
+				method : 'get',
+				dataType : 'json',
+				success : function(result){
+					
+				},
+				error : function(err){
+					console.log(err);
+				}
+			})
+		})
+	</script>
+	</div>
+</body>
+</html>

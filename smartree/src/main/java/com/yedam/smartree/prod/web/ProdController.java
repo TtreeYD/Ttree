@@ -15,15 +15,20 @@ public class ProdController {
 	@Autowired
 	ProdService service;
 	
-	@GetMapping("/prodList")
+	@GetMapping("/prodPlanList")
 	public String selectAllProd() {
-		
-		return "prod/prodList";
+		return "prod/prodPlanList";
 	}
-	
-	@GetMapping("/prodMng")
+	@GetMapping("/prodPlanMng")
 	public String selectProdMng() {
-		
-		return "prod/prodMng";
+		return "prod/prodPlanMng";
+	}
+	@GetMapping("/prodInstMng")
+	public String selectProdInstMng() {
+		return "prod/prodInstMng";
+	}
+	@GetMapping("/prodInstList")
+	public String selectProdInstList() {
+		return "prod/prodInstList";
 	}
 }
