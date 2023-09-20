@@ -8,7 +8,11 @@
 <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <meta charset="UTF-8">
 <title>자재발주관리</title>
-
+<style>
+.selec {
+background-color: cadetblue;
+}
+</style>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -68,7 +72,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" id="addModalBtn" class="btn btn-default">저장</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
 					</div>
 				</div>
 				<!-- /.modal-content -->
@@ -78,13 +82,13 @@
 		<!-- /.modal -->
 		<script>
 			// 안전재고 미달목록 출력/숨기기
-		   let modalSearchData;
-		   let mtlDate;
+			let searchModalData = [];
+			let mtlDate;
 		    function pop(){
         	    $('#mtlLowGrid').toggle("size", 500);
        	    }		
 		
-			window.onload = function() {
+		    document.addEventListener("DOMContentLoaded",() => {
 				// 모달창
 				const needModalGrid = new tui.Grid({
 					el: document.getElementById('needModalGrid'),
@@ -96,28 +100,37 @@
 			            perPage: 5,
 			            useClient: true,
 		            },
-					columns: [
-					{
-						header: '자재',
-						name: 'mtlCode',
+					columns: [ {
+						header : '분류',
+						name : 'mtlType',
 						align: 'center'
-					},
-					{
+					}, {
+						header : '자재코드',
+						name : 'mtlCode',
+						sortable: true,
+					    sortingType: 'asc',
+					    align: 'center'
+					}, {
+						header : '자재이름',
+						name : 'mtlName',
+						align: 'center'
+					}, {
 						header: '거래처',
-						name: 'bpCode',
+						name: 'bpName',
 						align: 'center'
-					},
-					{
+					}, {
 						header: '발주일자',
 						name: 'mtlDate',
 						align: 'center'
-					},
-					{
+					}, {
+						header : '납기요청일',
+						name : 'mtlWishDate',
+						align: 'center'
+					}, {
 						header: '담당자',
 						name: 'mtlManager',
 						align: 'center'
-					},
-					]
+					}]
 			    });								
 
 			    $('#mtlSearch').on('click', function(){
@@ -127,6 +140,7 @@
 				// 안전재고미달 자재목록
 				const mtlLowGrid = new tui.Grid({
 					el : document.getElementById('mtlLowGrid'),
+					data: [],
 					scrollX : false,
 					scrollY : false,
 					rowHeaders : [ "rowNum" ],
@@ -135,11 +149,11 @@
 			            useClient: true,
 			          },
 					columns : [ {
-						header : '자재코드',
-						name : 'mtlCode',
-					}, {
 						header : '분류',
 						name : 'mtlType'
+					}, {
+						header : '자재코드',
+						name : 'mtlCode',
 					}, {
 						header : '자재이름',
 						name : 'mtlName'
@@ -154,13 +168,74 @@
 						name : 'mtlNow'
 					}   ]
 				});
-			    // 미달목록그리드 클릭 이벤트
-       			mtlLowGrid.on('dblclick',(ev)=>{
-					alert('성공');
-	        	});
-				// 발주자재목록
+			    
+			    
+                //선택한 행 색깔 바꾸기
+/*        			mtlLowGrid.on('focusChange', (ev) => {
+       			 mtlLowGrid.setSelectionRange({
+       			      start: [ev.rowKey, 0],
+       			      end: [ev.rowKey, mtlLowGrid.getColumns().length-1]
+       			    });
+       			  }); */
+                
+                // 미달목록 더블클릭시 발주목록으로 이동시키기
+                mtlLowGrid.on('dblclick', () => {
+                    let rowKey =
+                    	mtlLowGrid.getFocusedCell().rowKey;
+
+                    if (rowKey != null && rowKey >= 0) {
+                        let mtlCode = mtlLowGrid.getValue(
+                            rowKey,
+                            "mtlCode"
+                        );
+                        let mtlName = mtlLowGrid.getValue(
+                            rowKey,
+                            "mtlName"
+                        );
+                        let mtlType = mtlLowGrid.getValue(
+                            rowKey,
+                            "mtlType"
+                        );
+                        let mtlNow = mtlLowGrid.getValue(
+                            rowKey,
+                            "mtlNow"
+                        );
+                        
+
+                        mtlLowGrid.removeRow(rowKey);
+
+                        mtlLowGrid.blur();
+
+                        let now = new Date(); // 현재 날짜 및 시간
+                        let year = now.getFullYear();
+                        let month = (
+                            "0" +
+                            (now.getMonth() + 1)
+                        ).substr(-2);
+                        let day = (
+                            "0" + now.getDate()
+                        ).substr(-2);
+                        let mtlDate =
+                            year + "-" + month + "-" + day;
+
+                        mtlNeedGrid.appendRow(
+                            {
+                            	mtlCode: mtlCode,
+                            	mtlDate: mtlDate,
+                            	mtlName: mtlName,
+                            	mtlType: mtlType,
+                            	mtlCnt: (-1)*mtlNow,
+                            	mtlUnit: 'ea',
+                            	mtlManager: '남태원'
+                            },
+                            { at: 0 }
+                        );
+                    }
+                });
+                
 				const mtlNeedGrid = new tui.Grid({
 					el : document.getElementById('mtlNeedGrid'),
+					data: [],
 					scrollX : false,
 					scrollY : false,
 					rowHeaders : [ "rowNum" ],
@@ -169,10 +244,17 @@
 			            useClient: true,
 			          },
 					columns : [ {
+						header : '분류',
+						name : 'mtlType'
+					},
+						{
 						header : '자재코드',
 						name : 'mtlCode',
 						sortable: true,
 					    sortingType: 'asc'
+					}, {
+						header : '자재이름',
+						name : 'mtlName'
 					}, {
 						header : '자재발주일',
 						name : 'mtlDate',
@@ -183,12 +265,6 @@
 						name : 'bpName',
 						sortable: true,
 					    sortingType: 'asc'
-					}, {
-						header : '분류',
-						name : 'mtlType'
-					}, {
-						header : '자재이름',
-						name : 'mtlName'
 					}, {
 						header : '수량',
 						name : 'mtlCnt'
@@ -208,6 +284,46 @@
 				});
 				
 				const header = ['mtlCode', 'mtlDate', 'bpName', 'mtlName', 'mtlCnt', 'mtlUnit', 'mtlManager','mtlWishDate','mtlWhereNm','mtlLotCnt','mtlSs','mtlNow','mtlType']
+				
+/*        			// 발주목록에서 취소시키기
+                mtlNeedGrid.on('dblclick', () => {
+                    let rowKey =
+                    	mtlNeedGrid.getFocusedCell().rowKey;
+
+                    if (rowKey != null && rowKey >= 0) {
+                        let mtlCode = mtlNeedGrid.getValue(
+                            rowKey,
+                            "mtlCode"
+                        );
+                        let mtlName = mtlNeedGrid.getValue(
+                            rowKey,
+                            "mtlName"
+                        );
+                        let mtlType = mtlNeedGrid.getValue(
+                            rowKey,
+                            "mtlType"
+                        );
+                        let mtlCnt = mtlNeedGrid.getValue(
+                            rowKey,
+                            "mtlCnt"
+                        );
+                        
+
+                        mtlNeedGrid.removeRow(rowKey);
+
+                        mtlNeedGrid.blur();
+
+                        mtlLowGrid.appendRow(
+                            {
+                            	mtlCode: mtlCode,
+                            	mtlName: mtlName,
+                            	mtlType: mtlType,
+                            	mtlNow: (-1)*mtlCnt,
+                            },
+                            { at: 0 }
+                        );
+                    }
+                }); */
 				
 				//안전재고미달 ajax
 		        $.ajax({
@@ -252,7 +368,47 @@
 		            console.log(err);
 		          }
 		        })
-			}
+		        // 모달검색 ajax
+		        $.ajax({
+		          url: '/getNeedMtl',
+		          method: 'POST',
+		          dataType: 'json',
+		          success: function (result) {
+		            //날짜변환
+		            $(result).each(function (idx, obj) {
+		              for (let head of header) {
+
+		                if (head.slice(-4).toLowerCase() == 'date') {
+		                  obj[head] = getDate(obj[head]);
+		                }
+		              }
+		            });
+		            needModalGrid.resetData(eval(result));
+		          },
+		          error: function (err) {
+		            console.log(err);
+		          }
+		        })
+				// 모달창의 조회버튼을 누를때 조건에 맞게 검색해주기
+				$('#searchDataBtn').on('click',function(ev){
+					$.ajax({
+						url:'/getNeedMtl',
+						method: 'POST',
+						data:{
+							mtlName: $('#mtlName').val()
+						},
+						success:function(result){
+							searchModalData = result;
+							needModalGrid.resetData(result);
+					 		setTimeout(() => needModalGrid.refreshLayout(), 200);
+						},
+						error:function(err){
+							console.log(err);
+						}
+					})
+						
+					});
+			});
 		</script>
 	</div>
 </body>

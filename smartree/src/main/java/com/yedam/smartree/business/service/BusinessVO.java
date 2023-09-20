@@ -29,10 +29,14 @@ public class BusinessVO {
 	private String prdtCode;
 	private int orderDtCnt;
 	
-	//생산용
+
 	private String prodPlanCnt;
 	private int prodRank;
 	private String prodPlanNote;
+
+	private int prdtOutCnt;//출고수량
+	private int prdtLeftCnt;//잔여수량
+
 
 	
 }

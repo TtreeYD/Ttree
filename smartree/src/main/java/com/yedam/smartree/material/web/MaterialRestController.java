@@ -77,4 +77,14 @@ public class MaterialRestController {
 		return materialService.deleteInMtl(vo);
 	}
 	
+	// 발주관리 조건검색
+	@PostMapping("/getNeedMtl")
+	public List<MaterialVO> getNeedMtl(MaterialVO vo){
+		return materialService.getNeedMtl(vo);
+	}
+	// 입고관리 조건검색
+	@PostMapping("/getInMtl")
+	public List<MaterialVO> getInMtl(MaterialVO vo){
+		return materialService.getInMtl(vo);
+	}
 }
