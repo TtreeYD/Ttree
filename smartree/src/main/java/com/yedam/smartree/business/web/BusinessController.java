@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.yedam.smartree.business.service.BusinessService;
+import com.yedam.smartree.business.service.BusinessVO;
 /*
 개발자:정호현
 개발일자:23/09/14
@@ -34,10 +35,11 @@ public class BusinessController {
 		model.addAttribute("finPrdt", businessService.selectFinPrdt());
 		return "business/finPrdt";
 	}
+	
 	//출고관리 페이지 이동
 	@GetMapping("prdtOut")
-	public String selectprdtOut(Model model) {
-		model.addAttribute("prdtOut" , businessService.selectOrderList() );
+	public String selectprdtOut(Model model , BusinessVO businessVO) {
+		model.addAttribute("prdtOut" , businessService.selectOrderBfOutList(businessVO) );
 		System.out.println(model);
 		
 		return "business/prdtOut";

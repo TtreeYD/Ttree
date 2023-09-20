@@ -10,8 +10,6 @@
 	<div layout:fragment="content">	
 		<div class="btn-group" role="group" aria-label="Basic example" style="float : right;">
 			<button class="btn btn-primary" style="float:right" id="searchOrderModal">주문서검색</button>
-			<button class="btn btn-primary" style="float:right" id="prdtOut">출고</button>
-			<button class="btn btn-primary" style="float:right" id="resetBtn">초기화</button>
 		</div>
 		<h2>주문서</h2>
 		<div id="orderGrid"></div>
@@ -50,7 +48,6 @@
 		  <label for="ordercd" style="text-align:center;">출고날짜</label>
 		  <input type="date" id="outdate" class="form-control"  name="ordercd"
 							style="width:300px">
-			<input id="orderdtcode">				
             <div id="lotPrdtGrid"></div>
           </div>
           <div class="modal-footer">
@@ -66,6 +63,7 @@
 		var valueCheck;
 		var data = [[${prdtOut}]]
 		var Grid = tui.Grid
+		var check = 0;
 		const searchOrderGrid = new Grid({
 			el: document.getElementById('searchGrid'),
 			scrollX: false,
@@ -229,38 +227,75 @@
 					setTimeout(() => searchOrderGrid.refreshLayout(), 300);
 					$('#orderModal').modal('show')
 				})
+				
+				let ordercode;//주문정보 orderCode 저장
 				//열클릭이벤트
-				searchOrderGrid.on('dblclick',(ev)=> {
-					if(ev.rowKey==undefined){
-		        		return;
-		        	}
-					let data = searchOrderGrid.getValue(ev.rowKey , 'orderCode');
+				searchOrderGrid.on('dblclick',function(ev){
+					//주문정보그리드
+					ordercode = searchOrderGrid.getValue(ev.rowKey , 'orderCode');//주문정보 orderCode 저장
+					OrderGrid.resetData([searchOrderGrid.getRow(ev.rowKey)]);
+					loadDTList();
 					
+				});
+				
+				function loadDTList(){
 					 $.ajax({
 						url:'/orderDtList',
 						method:'GET',
 						data: {
-							orderCode:data
+							orderCode: ordercode //함수로쓰기위해서 주문정보를 클릭할때저장
 						},
 						success:function(result){
-							console.log(result)
+							
 							valueCheck = result
 							OrderDtGrid.resetData(result);
-							OrderGrid.resetData(eval([searchOrderGrid.getData()[ev.rowKey]]));
+							
 							$('#orderModal').modal('hide')
+							if(result[0].prdtLeftCnt == 0 && check==1){
+								alert('이미 출고된 주문서입니다.');	
+								OrderGrid.resetData([]);
+								OrderDtGrid.resetData([]);
+								return;
+							}else{
+								let count=0;
+							for(let i =0 ; i< result.length ; i++){
+								count+=result[i].prdtLeftCnt;
+								
+							}
+							if(count==0 ){
+								
+								$.ajax({
+									url:'/prdtFinOut',
+									method:'POST',
+									data:{
+										orderCode : result[0].orderCode
+									},		
+									success:function(result){
+										OrderGrid.resetData([]);
+										OrderDtGrid.resetData([]);
+										check=1;
+										
+									},
+									error:function(err){
+										console.log(err);
+									}
+								})
+							}
+							}
+							
 						},
 						error:function(err){
 							console.log(err)
 						}
 					}) 
 					
-				});
+				}
 				//주문상세클릭이벤트
 				OrderDtGrid.on('click',function(ev){
 					let data = OrderDtGrid.getValue(ev.rowKey,'prdtCode');
 					$('#orderdtcode').val(OrderDtGrid.getValue(ev.rowKey,"orderDtCode"))
 					$.ajax({
-						url:'/lotPrdtList',
+						url:'/lotPrdtOutList',
 						method:'GET',
 						data:{
 							prdtCode : data
@@ -286,7 +321,7 @@
 						lotcnt += Number(lotPrdtGrid.getData()[i].prdtOutCnt)
 					}
 						if(lotcnt > valueCheck[rowCheck].prdtLeftCnt){
-							alert('출고수량보다 많습니다.')
+							alert('미납수량보다 많습니다.')
 							return;
 						}else{
 							lotPrdtGrid.blur()
@@ -297,8 +332,6 @@
 									prdtOutManager:$('#outmanager').val(),
 									orderDtCode: OrderDtGrid.getValue(rowCheck,"orderDtCode")
 									};
-							console.log('data:' , data)
-							console.log('valuecheck:', valueCheck)
 							
 							$.ajax({
 								url:'/prdtOutProcess',
@@ -307,7 +340,10 @@
 								contentType : 'application/json',
 								data:JSON.stringify(data),
 								success:function(result){
-									console.log(result);
+									alert('출고되었습니다');
+									$('#prdtModal').modal('hide');
+									loadDTList() //페이지 리로드
+									
 								},
 								error:function(err){
 									console.log(err);

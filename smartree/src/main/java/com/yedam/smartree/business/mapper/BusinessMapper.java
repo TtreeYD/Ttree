@@ -46,6 +46,8 @@ public interface BusinessMapper {
 	public List<FinPrdtVO> selectFinPrdt();
 	//Lot별 완제품 재고조회
 	public List<FinPrdtVO> selectFinLotPrdt(FinPrdtVO fpvo);
+	//lot별 완제품 조회(출고 수량0안보이게)
+	public List<FinPrdtVO> selectFinLotOutPrdt(FinPrdtVO fpvo);
 	//완제품조건검색
 	public List<FinPrdtVO> prdtSearchList(FinPrdtVO fpvo);
 	
@@ -53,6 +55,14 @@ public interface BusinessMapper {
 	public int insertPrdtOut(FinPrdtVO vo);
 	//제품상세출고
 	public void insertPrdtDtOut(FinPrdtVO finPrdtVO);
+	//제품출고시 재고update
+	public void updatePrdtOut(FinPrdtVO finPrdtVO);
+	//제품출고완료update
+	public int prdtFinOut(BusinessVO businessvo);
+	
+	//납기전 orderList
+	public List<BusinessVO> selectOrderBfOutList(BusinessVO businessVO);
+	
 	
 	
 }

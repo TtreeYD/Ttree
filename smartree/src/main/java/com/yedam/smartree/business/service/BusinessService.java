@@ -34,10 +34,17 @@ public interface BusinessService {
 	public List<FinPrdtVO> selectFinPrdt();
 	//Lot별 수량
 	public List<FinPrdtVO> selectFinLotPrdt(FinPrdtVO fpvo);
+	//lot별 수량(출고시 수량0인것들 안보이게)
+	public List<FinPrdtVO> selectFinLotOutPrdt(FinPrdtVO fpvo);
 	//완제품조건조회
 	public List<FinPrdtVO> prdtSearchList(FinPrdtVO fpvo);
 	//완제품출고관리
 	public int prdtOutProcess(ReqVO<FinPrdtVO> finPrdtVO);
+	//출고완료시 update
+	public int prdtFinOut(BusinessVO businessvo);
+	//출고전 orderList
+	public List<BusinessVO> selectOrderBfOutList(BusinessVO businessVO);
+	
 	
 	
 

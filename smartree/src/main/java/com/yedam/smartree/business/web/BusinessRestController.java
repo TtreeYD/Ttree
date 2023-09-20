@@ -37,8 +37,9 @@ public class BusinessRestController {
 	//주문서관리-주문서검색
 	@PostMapping("/selectOrder")
 	public List<BusinessVO> getOrderDt(BusinessVO businessVO) {
-		return businessService.getOrder(businessVO);
+		return businessService.selectOrderBfOutList(businessVO);
 	}
+
 	
 	//주문서관리-주문서검색후 더블클릭
 //	@GetMapping("/orderDtList")
@@ -95,6 +96,11 @@ public class BusinessRestController {
 		System.out.println("111111111111111111111"+fpvo);
 		return businessService.selectFinLotPrdt(fpvo);
 	}
+	//lot별 수량(출고시 수량0인것들 안보이게)
+	@GetMapping("/lotPrdtOutList")
+	public List<FinPrdtVO> lotPrdtOutList(FinPrdtVO fpvo){
+		return businessService.selectFinLotOutPrdt(fpvo);
+	}
 	//완제품조건조회
 	@PostMapping("/prdtSearch")
 	public List<FinPrdtVO> prdtSearchList(FinPrdtVO fpvo){
@@ -105,6 +111,11 @@ public class BusinessRestController {
 	public int prdtOutProcess(@RequestBody ReqVO<FinPrdtVO> finPrdtVO) {
 		System.out.println(finPrdtVO);
 		return businessService.prdtOutProcess(finPrdtVO);
+	}
+	//출고완료시 update
+	@PostMapping("/prdtFinOut")
+	public int prdtFinOut( BusinessVO businessvo) {
+		return businessService.prdtFinOut(businessvo);
 	}
 	
 }

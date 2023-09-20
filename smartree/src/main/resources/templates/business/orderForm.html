@@ -316,8 +316,10 @@
 						$('#doddate').val('');
 					});
 					//저장버튼클릭
-					
+					order.blur();
+					dtOrder.blur();
 					$('#saveBtn').on('click',function(){
+						
 						if(dtOrder.getCheckedRows().length == 0 ){
 							alert('주문상세정보를 선택해주세요');
 							return;
@@ -328,15 +330,12 @@
 						editdata.list = dtOrder.getData();
 						
 						
-					    console.log(dtOrder.getData().length);
-						console.log(updateDtOrder);
 					 	if(dtOrder.getData().length > updateDtOrder && editdata.vo[0].orderCode != null){//수정중 상세주문 추가한경우
 								console.log('수정등록');
 					 			 newOrderData.orderList = order.getData();
 								 newOrderData.orderDtList = dtOrder.getCheckedRows() ;
 								 
 							 	
-								 console.log('last',newOrderData)
 							 
 							 $.ajax({
 								url:'/plusDtOrder',
@@ -412,7 +411,6 @@
 					$('#deleteBtn').on('click',function(){
 						newOrderData={};
 						newOrderData.orderList = order.getData();
-						console.log(newOrderData);
 						$.ajax({
 							url:'/deleteOrder',
 							method:'POST',
@@ -437,7 +435,6 @@
 						let delrows = dtOrder.getCheckedRows();
 						newOrderData={};
 						newOrderData.orderDtList = dtOrder.getCheckedRows();
-						console.log(newOrderData);
 						$.ajax({
 							url:'/deleteDtOrder',
 							method:'POST',
@@ -519,7 +516,6 @@
 								result[0].orderDate = newOrder[0].orderDate;
 								result[0].orderManager = newOrder[0].orderManager;
 								order.resetData(result);
-								console.log(newOrder[0]);
 							},
 							error:function(err){
 								console.log(err);
@@ -572,10 +568,7 @@
 								})
 								if(check){
 									newDtOrder[dtOrderRowNum] = result[0]
-									console.log('newDtOrder:',newDtOrder);
-									console.log('result:', result);
 									dtOrder.resetData(newDtOrder);
-									//console.log(newDtOrder)
 									$('#prModal').modal('hide');
 								}
 								
@@ -588,14 +581,10 @@
 					});
 					//주문상세 change 될때마다 newDtOrder에 저장해서 값 안사라지게하는이벤트
 					 dtOrder.on('afterChange', ev=>{
-						 console.log(ev)
-						 console.log(newDtOrder)
 			            let change = ev.changes
 			            newDtOrder[change[0].rowKey][change[0].columnName]=change[0].value
 			         })
 			          order.on('afterChange', ev=>{
-						 console.log(ev)
-						 console.log(newOrder);
 			            let change = ev.changes
 			            newOrder[change[0].rowKey][change[0].columnName]=change[0].value
 			         }) 
