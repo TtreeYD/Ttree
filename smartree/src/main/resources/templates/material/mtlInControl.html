@@ -68,7 +68,7 @@
 					</div>
 					<div class="modal-footer">
 						<button type="button" id="addModalBtn" class="btn btn-default">저장</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
 					</div>
 				</div>
 				<!-- /.modal-content -->
@@ -125,20 +125,18 @@
 			    $('#mtlSearch').on('click', function(){
                      setTimeout(() => modalGrid.refreshLayout(), 200);
                  })
+                 
 				// 검사완료목록
 				const mtlCheckGrid = new tui.Grid({
 					el : document.getElementById('mtlCheckGrid'),
 					scrollX : false,
 					scrollY : false,
-					rowHeaders : [ "rowNum" ],
+					rowHeaders : ["checkbox","rowNum" ],
 					pageOptions: {
 			            perPage: 5,
 			            useClient: true,
 			          },
 					columns : [ {
-						header : '자재LOT',
-						name : 'mtlLotNum'
-					}, {
 						header : '자재코드',
 						name : 'mtlCode'
 					}, {
@@ -161,22 +159,70 @@
 						name : 'mtlStatusNm'
 					},   ]
 				});
-				// 검사완료 그리드 클릭이벤트
-				mtlCheckGrid.on('dblclick', (ev) => {
-					if (ev.rowKey == undefined) {
-						return;
-					}
-					codeType = grid.getValue(ev.rowKey, 'mtlCode')
-					selCodeDetail(mtlCode)
-					});
+			 // 미달목록 더블클릭시 발주목록으로 이동시키기
+                mtlCheckGrid.on('dblclick', () => {
+                    let rowKey =
+                    	mtlCheckGrid.getFocusedCell().rowKey;
+
+                    if (rowKey != null && rowKey >= 0) {
+                        let mtlCode = mtlCheckGrid.getValue(
+                            rowKey,
+                            "mtlCode"
+                        );
+                        let mtlName = mtlCheckGrid.getValue(
+                            rowKey,
+                            "mtlName"
+                        );
+                        let mtlPassCnt = mtlCheckGrid.getValue(
+                            rowKey,
+                            "mtlPassCnt"
+                        );
+                        let mtlChkCode = mtlCheckGrid.getValue(
+                            rowKey,
+                            "mtlChkCode"
+                        );
+                        
+
+                        mtlCheckGrid.removeRow(rowKey);
+
+                        mtlCheckGrid.blur();
+
+                        let now = new Date(); // 현재 날짜 및 시간
+                        let year = now.getFullYear();
+                        let month = (
+                            "0" +
+                            (now.getMonth() + 1)
+                        ).substr(-2);
+                        let day = (
+                            "0" + now.getDate()
+                        ).substr(-2);
+                        let mtlInDate =
+                            year + "-" + month + "-" + day;
+
+                        mtlInGrid.appendRow(
+                            {
+                            	mtlCode: mtlCode,
+                            	mtlName: mtlName,
+                            	mtlInDate: mtlInDate,
+                            	mtlInCnt: mtlPassCnt,
+                            	mtlChkCode: mtlChkCode,
+                            	/* mtlLotNum: 'testLotNum1', */
+                            	mtlManager: '남태원'
+                            },
+                            { at: 0 }
+                        );
+                    }
+                });
+			    
 				// 아래 리스트
 				const mtlInGrid = new tui.Grid({
 					el : document.getElementById('mtlInGrid'),
+					data: [],
 					scrollX : false,
 					scrollY : false,
 					rowHeaders : [ "rowNum" ],
 					pageOptions: {
-			            perPage: 10,
+			            perPage: 5,
 			            useClient: true,
 			          },
 					columns : [ {
@@ -199,9 +245,6 @@
 					}, {
 						header : '담당자',
 						name : 'mtlManager'
-					}, {
-						header : '자재재고수량',
-						name : 'mtlLotCnt'
 					}, {
 						header : '자재검사코드',
 						name : 'mtlChkCode'
