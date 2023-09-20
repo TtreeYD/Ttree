@@ -117,6 +117,11 @@ public class BusinessServiceImpl implements BusinessService{
 	public List<FinPrdtVO> selectFinLotPrdt(FinPrdtVO fpvo) {
 		return businessmapper.selectFinLotPrdt(fpvo);
 	}
+	//Lot별 재고조회(출고시 수량0인것들 안보이게)
+	@Override
+	public List<FinPrdtVO> selectFinLotOutPrdt(FinPrdtVO fpvo) {
+		return businessmapper.selectFinLotOutPrdt(fpvo);
+	}
 	//완제품조건검색
 	@Override
 	public List<FinPrdtVO> prdtSearchList(FinPrdtVO fpvo) {
@@ -126,18 +131,31 @@ public class BusinessServiceImpl implements BusinessService{
 	@Override
 	public int prdtOutProcess(ReqVO<FinPrdtVO> finPrdtVO) {
 		int cnt=0;
+		//주문출고테이블insert
 		businessmapper.insertPrdtOut(finPrdtVO.getVo());
 		String dtcode = finPrdtVO.getVo().getOrderDtCode();
 		String outcod= finPrdtVO.getVo().getPrdtOutCode();
-		System.out.println("33333333333333333"+outcod);
+		//주문상세출고테이블insert
 		for(int i =0; i<finPrdtVO.getList().size();i++) {
 			finPrdtVO.getList().get(i).setOrderDtCode(dtcode);
 			finPrdtVO.getList().get(i).setPrdtOutCode(outcod);
 			businessmapper.insertPrdtDtOut(finPrdtVO.getList().get(i));
 			cnt++;
+			//재고수량 update
+			businessmapper.updatePrdtOut(finPrdtVO.getList().get(i));
 		}
 		return cnt;
 	}
+	//제품출고완료update
+	@Override
+	public int prdtFinOut(BusinessVO businessvo) {
+		return businessmapper.prdtFinOut(businessvo);
+	}
+	@Override
+	public List<BusinessVO> selectOrderBfOutList(BusinessVO businessVO) {
+		return businessmapper.selectOrderBfOutList(businessVO);
+	}
+	
 	
 
 	
