@@ -200,7 +200,11 @@
 		                grid2.setValue(rowKey, 'mtlPassCnt', mtlPassCnt);
 		                
 		                if (mtlErrorCnt > mtlChkCnt) {
-		                    alert('불량량이 검사량을 초과합니다.');
+		                	Swal.fire({
+								icon: 'warning',
+								title: '불량량이 검사량을 초과합니다.',
+								text: '',
+							});
 		                }
 		                
 		                grid2.refreshLayout();
@@ -210,7 +214,11 @@
 			  //모달 조회 클릭이벤트
 			  $('#searchDataBtn').on('click', function() {
 				if(!($('#mtlDate').val())){
-					alert('날짜를 선택하세요')
+					Swal.fire({
+						icon: 'warning',
+						title: '날짜를 지정하세요.',
+						text: '',
+					});
 					return;
 				}
 				$.ajax({
@@ -312,7 +320,11 @@
 					success: function(result) {
 						
 						console.log(datas);
-						alert(result +" 건 저장완료");
+						Swal.fire({
+							icon: 'success',
+							title: '저장완료.',
+							text: '',
+						});
 						unsavedChanges = false;
 						grid2.resetData([]);
 					},

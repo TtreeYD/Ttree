@@ -10,6 +10,9 @@
 #grid .tui-grid-body-area , #grid .tui-grid-layer-state{
 	height : 40px !important;
 }
+#grid tbody td{
+			cursor : pointer;
+		}
 </style>
 </head>
 
@@ -312,7 +315,11 @@
 				 $('#delBtn').on('click', function() {
 					  let selectedRows = grid2.getCheckedRows(); 
 					  if (selectedRows.length == 0) {
-					    alert('선택된 행이 없습니다.'); 
+						  Swal.fire({
+								icon: 'warning',
+								title: '선택된 행이 없습니다.',
+								text: '',
+							});
 					  } else {
 					    selectedRows.forEach(function(row) {
 					    	console.log(row);

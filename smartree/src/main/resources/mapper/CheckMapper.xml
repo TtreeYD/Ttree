@@ -6,7 +6,9 @@
   
   	<!-- 제품목록 -->
   	<select id="selectPrdtList" resultType="BpVO">
-  		select prdt_code , prdt_name , prdt_type
+  		select prdt_code,
+  			   prdt_name,
+  			   prdt_type
   		from prdt_table
   		<where>
   			<if test="prdtCode != null">
@@ -17,7 +19,10 @@
   	
   	<!-- 제품검사기준목록 -->
   	<select id="selectPrdtStdList" resultType="CheckVO">
-  		select chk_std_code , chk_name , chk_dt , chk_std
+  		select chk_std_code,
+  		       chk_name,
+  		       chk_dt,
+  		       chk_std
   		from chk_std
   		<where>
   			<if test="chkStdCode != null">
@@ -38,12 +43,54 @@
   	</insert>
   
   <!-- 완제품검사목록 -->
+  <select id="selectProdCheckList" resultType="CheckVO">
+  	select p.pass_cnt, 
+  		   p.prcs_rs_code,
+  		   p.prdt_code,
+  		    
+  		   d.prod_inst_code, 
+  		   
+  		   i.prod_inst_date
+	from process_result p
+	JOIN process r 
+	  ON p.prcs_code = r.prcs_code
+    JOIN dt_prod_inst d 
+      ON r.dt_prod_inst_code = d.dt_prod_inst_code
+    JOIN prod_inst i 
+      ON d.prod_inst_code = i.prod_inst_code
+      
+	WHERE r.prod_yn = 'y'
+
+  </select>
+  
+  <!-- 완제품검사상세목록 -->
+  <select id="selectProdDtList" resultType="CheckVO">
+  SELECT 
+         s.chk_name, 
+         s.chk_std,
+         
+         p.prcs_rs_code,
+         
+         c.prdt_chk_num
+  FROM prdt_chk p 
+  JOIN dt_prdt_chk d
+    ON p.prdt_chk_code = d.prdt_chk_code
+  JOIN prdt_chk_list c
+    ON d.chk_std_code = c.chk_std_code
+  JOIN chk_std s
+    ON c.chk_std_code = s.chk_std_code
+  
+   WHERE c.prdt_code = #{prdtCode}
+   	 AND p.prcs_rs_code = #{prcsRsCode}
+  </select>  
+  
+  <!-- 완제품검사조회목록 -->
   <select id="selectPrdtCheckList" resultType="CheckVO">
   	select *
   	from prdt_chk
   </select>
   
-  <!-- 완제품검사상세목록 -->
+  <!-- 완제품검사상세조회목록 -->
   <select id="selectdtList" resultType="CheckVO">
   SELECT p.prdt_chk_code, 
          p.prdt_code, 

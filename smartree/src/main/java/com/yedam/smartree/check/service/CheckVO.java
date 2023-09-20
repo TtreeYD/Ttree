@@ -33,5 +33,12 @@ public class CheckVO {
 	private String chkName;
 	private String chkDt;
 	private String chkStd;
-
+	
+	
+	//생산
+	private String prodInstCode;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
+	private Date prodInstDate;
+	private int passCnt;
 }
