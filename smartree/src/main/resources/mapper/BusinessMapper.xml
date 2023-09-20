@@ -197,9 +197,12 @@
   	
   	<!-- 제품출고 -->
   		<insert id="insertPrdtOut" parameterType="FinPrdtVO">
+	  	<selectKey keyProperty="prdtOutCode" resultType="String" order="BEFORE">
+	  		select 'POT'|| LPAD(prdt_out_seq.NEXTVAL , 7 , '0') as prdtOutCode from dual
+	  	</selectKey>
   			insert into prdt_out
 			values(
-				    'POT'|| LPAD(order_dt_code_seq.NEXTVAL , 7 , '0'),
+				    #{prdtOutCode},
 				    #{prdtOutDate},
 				    #{prdtOutManager},
 				    #{orderDtCode}
@@ -210,7 +213,7 @@
   		<insert id="insertPrdtDtOut" parameterType="FinPrdtVO">
   			insert into prdt_out_list
   			values(
-  					'POD'|| LPAD(order_dt_code_seq.NEXTVAL , 7 , '0'),
+  					'POD'|| LPAD(prdt_dt_out_seq.NEXTVAL , 7 , '0'),
   					#{prdtLotNo},
   					#{prdtOutCnt},
   					#{prdtOutCode}
