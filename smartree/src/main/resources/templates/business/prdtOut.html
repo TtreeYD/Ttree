@@ -274,6 +274,7 @@
 						}
 					})
 				})
+				
 				//제품수량선택 후 저장버튼클릭
 				$('#saveBtn').on('click',function(){
 					let lotcnt=0;
@@ -294,7 +295,8 @@
 									};
 							console.log('data:' , data)
 							console.log('valuecheck:', valueCheck)
-							$.ajax({
+							
+/*							$.ajax({
 								url:'/prdtOutProcess',
 								method:'POST',
 								dataType: 'json',
@@ -307,6 +309,7 @@
 									console.log(err);
 								}
 							})
+*/
 						}
 				})
 			});

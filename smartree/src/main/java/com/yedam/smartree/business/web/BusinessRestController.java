@@ -103,6 +103,7 @@ public class BusinessRestController {
 	//출고관리 lot별
 	@PostMapping("/prdtOutProcess")
 	public int prdtOutProcess(@RequestBody ReqVO<FinPrdtVO> finPrdtVO) {
+		System.out.println(finPrdtVO);
 		return businessService.prdtOutProcess(finPrdtVO);
 	}
 	
