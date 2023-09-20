@@ -36,4 +36,9 @@ public interface MaterialMapper {
 	public int updateInMtl(MaterialVO vo);
 	// 발주관리 delete
 	public int deleteInMtl(MaterialVO vo);
+	
+	// 발주관리 검색조회
+	public List<MaterialVO> getNeedMtl(MaterialVO vo);
+	// 입고관리 검색조회
+	public List<MaterialVO> getInMtl(MaterialVO vo);
 }

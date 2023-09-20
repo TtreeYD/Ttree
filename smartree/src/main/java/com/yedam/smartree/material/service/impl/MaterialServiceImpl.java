@@ -15,7 +15,7 @@ public class MaterialServiceImpl implements MaterialService {
 	@Autowired
 	MaterialMapper materialMapper;
 	
-	//발주목록 전체조회
+	// 발주목록 전체조회
 	@Override
 	public List<MaterialVO> selectNeedList() {
 		return materialMapper.selectNeedList();
@@ -85,6 +85,18 @@ public class MaterialServiceImpl implements MaterialService {
 	@Override
 	public int deleteInMtl(MaterialVO vo) {
 		return materialMapper.deleteInMtl(vo);
+	}
+	
+	// 발주관리 단건조회
+	@Override
+	public List<MaterialVO> getNeedMtl(MaterialVO vo) {
+		return materialMapper.getNeedMtl(vo);
+	}
+	
+	//입고관리 단건조회
+	@Override
+	public List<MaterialVO> getInMtl(MaterialVO vo) {
+		return materialMapper.getInMtl(vo);
 	}
 
 }
