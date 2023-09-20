@@ -50,6 +50,7 @@
 		  <label for="ordercd" style="text-align:center;">출고날짜</label>
 		  <input type="date" id="outdate" class="form-control"  name="ordercd"
 							style="width:300px">
+			<input id="orderdtcode">				
             <div id="lotPrdtGrid"></div>
           </div>
           <div class="modal-footer">
@@ -234,6 +235,7 @@
 		        		return;
 		        	}
 					let data = searchOrderGrid.getValue(ev.rowKey , 'orderCode');
+					
 					 $.ajax({
 						url:'/orderDtList',
 						method:'GET',
@@ -256,6 +258,7 @@
 				//주문상세클릭이벤트
 				OrderDtGrid.on('click',function(ev){
 					let data = OrderDtGrid.getValue(ev.rowKey,'prdtCode');
+					$('#orderdtcode').val(OrderDtGrid.getValue(ev.rowKey,"orderDtCode"))
 					$.ajax({
 						url:'/lotPrdtList',
 						method:'GET',
@@ -286,17 +289,18 @@
 							alert('출고수량보다 많습니다.')
 							return;
 						}else{
+							lotPrdtGrid.blur()
 							var data={};
-							data.list = lotPrdtGrid.getData();
+							data.list = lotPrdtGrid.getModifiedRows().updatedRows;
 							data.vo = {
 									prdtOutDate : $('#outdate').val(),
 									prdtOutManager:$('#outmanager').val(),
-									orderDtCode: valueCheck[0].orderDtCode
+									orderDtCode: OrderDtGrid.getValue(rowCheck,"orderDtCode")
 									};
 							console.log('data:' , data)
 							console.log('valuecheck:', valueCheck)
 							
-/*							$.ajax({
+							$.ajax({
 								url:'/prdtOutProcess',
 								method:'POST',
 								dataType: 'json',
@@ -309,7 +313,7 @@
 									console.log(err);
 								}
 							})
-*/
+
 						}
 				})
 			});

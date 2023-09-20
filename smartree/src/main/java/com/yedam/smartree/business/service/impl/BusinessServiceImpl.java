@@ -132,6 +132,7 @@ public class BusinessServiceImpl implements BusinessService{
 		System.out.println("33333333333333333"+outcod);
 		for(int i =0; i<finPrdtVO.getList().size();i++) {
 			finPrdtVO.getList().get(i).setOrderDtCode(dtcode);
+			finPrdtVO.getList().get(i).setPrdtOutCode(outcod);
 			businessmapper.insertPrdtDtOut(finPrdtVO.getList().get(i));
 			cnt++;
 		}
