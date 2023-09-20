@@ -15,10 +15,10 @@
  		select a.*, a.order_dt_cnt - prdt_out_cnt as prdt_left_cnt 
  		  from (       
 				         select o.order_code , d.order_dt_code , p.prdt_name , p.prdt_code, d.order_dt_cnt , o.dod_date 
-				       				 , o.order_date, (select sum(prdt_out_cnt) 
+				       				 , o.order_date, nvl((select sum(prdt_out_cnt) 
 							                           from prdt_out p join prdt_out_list pol 
 							                                        on p.prdt_out_code = pol.prdt_out_code 
-							                          where order_dt_code = d.order_dt_code) as prdt_out_cnt 
+							                          where order_dt_code = d.order_dt_code),0) as prdt_out_cnt 
         				   from orders o join dt_order d 
 				                    on o.order_code = d.order_code 
 				                    join prdt_table p 
