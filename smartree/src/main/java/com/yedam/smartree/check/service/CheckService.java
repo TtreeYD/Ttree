@@ -10,6 +10,10 @@ public interface CheckService {
 	public int insertPrdtChkStd(CheckVO vo);
 	
 	//완제품 검사목록
+	public List<CheckVO> selectProdCheckList(CheckVO vo);
+	public List<CheckVO> selectProdDtList(CheckVO vo);
+	
+	//완제품 검사조회목록
 	public List<CheckVO> selectPrdtCheckList(CheckVO vo);
 	public List<CheckVO> selectdtList(CheckVO vo);
 }

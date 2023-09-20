@@ -6,6 +6,14 @@
 <head>
 <meta charset="UTF-8">
 <title>SMARTREE</title>
+<style>
+#grid tbody td, #grid2 tbody td{
+			cursor : pointer;
+		}
+.yellow-background {
+	background-color: yellow;
+}
+</style>
 </head>
 <body>
 <div layout:fragment="content">
@@ -16,7 +24,8 @@
 			<div id="grid" style="width: 800px;"></div>
 		</span> 
 		<span>
-		<h3>권민석</h3>
+		<button type="button" id="addBtn" class="btn btn-primary" style="float : right;">저장</button>
+			<h3>권민석</h3>
 			<div id="grid2" style="width: 800px;"></div>
 		</span>
 	</div>
@@ -38,37 +47,33 @@
           rowHeaders : ["rowNum"],
           bodyHeight : 400,
 	      columns: [
-	        {
-	          header: '검사코드',
-	          name: ''
+    	    {
+	          header: '생산지시코드',
+	          name: 'prodInstCode',
+	          align: 'center'
 	        },
 	        {
 	          header: '공정실적코드',
-	          name: ''
+	          name: 'prcsRsCode',
+	          align: 'center'
+	        },
+	        {
+	          header: '생산지시일자',
+	          name: 'prodInstDate',
+	          align: 'center'
 	        },
 	        {
 	          header: '검사량',
-	          name: '',
-	          editor : 'text'
+	          name: 'passCnt',
+	          align: 'center'
 	        },
 	        {
-
 	          header: '제품코드',
-
-	          header: '',
-
-	          name: '',
-	          editor : 'text'
+	          name: 'prdtCode',
+	          align: 'center',
+	          className: 'yellow-background'
 	        },
-	        {
-
-	          header: '담당자',
-
-	          header: '',
-
-	          name: '',
-	          editor : 'text'
-	        },
+	       
 	      ]
 	    });
 	    const grid2 = new tui.Grid({
@@ -78,43 +83,108 @@
 	          bodyHeight : 400,
 		      columns: [
 		        {
-
-		          header: '검사코드',
-		          name: ''
-		        },
-		        {
 		          header: '공정실적코드',
-		          name: ''
+		          name: 'prcsRsCode',
+		          align: 'center'
 		        },
 		        {
 		          header: '검사명',
-		          name: ''
+		          name: 'chkName',
+		          align: 'center'
 		        },
 		        {
 		          header: '검사기준',
-		          name: ''
+		          name: 'chkStd',
+		          align: 'center'
 		        },
 		        {
 		          header: '검사값',
-		          name: ''
+		          name: 'prdtChkVal',
+		          editor : 'text',
+		          align: 'center'
 		        },
 		        {
 		          header: '적합여부',
-
-		          header: '제품코드',
-		          name: ''
+		          name: 'prdtChkFit',
+		          align: 'center'
 		        },
 		        {
-		          header: '제품명',
-		          name: ''
-		        },
-		        {
-		          header: '수량',
-
-		          name: ''
+		          header: '담당자',
+		          name: 'prdtManager',
+		          editor : 'text',
+		          align: 'center',
+		         
 		        },
 		      ]
 		    });
+	    getprdtCheckList();
+	    
+	   let prcsRsCode;
+	    //제품검사목록 
+	    function getprdtCheckList(){
+
+	    	$.ajax({
+	    		url:'/prodCheckList',
+	    		method:'get',
+	       	 	dataType:'json',
+	    		success:function(result){
+	    			console.log(result);
+	    			grid.resetData(result);
+	    		},
+	    		error:function(err){
+	    			console.log(err);
+	    		}
+	    	})
+	    }
+	    
+	   grid.on('click',(ev)=>{
+	    	const prdtCode = grid.getValue(ev.rowKey,'prdtCode');
+	    	const prcsRsCode = grid.getValue(ev.rowKey,'prcsRsCode');
+	    	$.ajax({
+	    		url:'/prodDtList',
+	    		method:'get',
+	    		data : {  prdtCode , prcsRsCode  },
+	       	 	dataType:'json',
+	    		success:function(result){
+	    			console.log(result);
+	    			grid2.resetData(result);
+	    		},
+	    		error:function(err){
+	    			console.log(err);
+	    		}
+	    	});
+	    }) 
+	    
+	    //자동 계산
+	       grid2.on('afterChange', (ev) => {
+	      console.log(ev);
+	      let change = ev.changes[0];
+	      let rowData = grid2.getRow(change.rowKey);
+	      console.log(rowData)
+	      let firstNum = parseFloat(rowData.prdtChkVal)
+	      let secNum = parseFloat(rowData.chkStd)
+	      
+		  	      
+	      if(change.columnName == 'prdtChkVal'){
+	         if(firstNum != null && firstNum != ""){
+	            let prdtChkFit;
+	            if(firstNum < secNum){
+	            	prdtChkFit = '적합';
+	            } else if(firstNum >= secNum){
+	            	prdtChkFit = '부적합';
+	            }
+	            grid2.setValue(change.rowKey, 'prdtChkFit', prdtChkFit);
+	         }
+	      }
+	      }); 
+
+	   	//저장버튼 이벤트
+	   	$('#addBtn').on('click',function(){
+	   		
+	   	})
+	   
+	   
+
 	};
 	</script>
 	</div>

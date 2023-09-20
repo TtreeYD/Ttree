@@ -41,5 +41,15 @@ public class CheckServiceImpl implements CheckService{
 	public List<CheckVO> selectdtList(CheckVO vo) {
 		return checkmapper.selectdtList(vo);
 	}
+
+	@Override
+	public List<CheckVO> selectProdCheckList(CheckVO vo) {
+		return checkmapper.selectProdCheckList(vo);
+	}
+
+	@Override
+	public List<CheckVO> selectProdDtList(CheckVO vo) {
+		return checkmapper.selectProdDtList(vo);
+	}
 	 
 }

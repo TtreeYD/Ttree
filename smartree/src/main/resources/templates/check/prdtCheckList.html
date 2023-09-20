@@ -8,9 +8,12 @@
 <meta charset="UTF-8">
 <title>SMARTREE</title>
 <style>
-	.y-background {
-		background-color: rgb(255,253,235);
+	.column {
+		background-color: aqua;
 	}
+	#grid tbody td{
+			cursor : pointer;
+		}
 </style>
 </head>
 
@@ -51,7 +54,7 @@
 	        },
 	        {
 	          header: '공정실적코드',
-	          name: 'prcsRsCode'
+	          name: 'prcsRsCode',
 	        },
 	        {
 	          header: '제품코드',
@@ -72,7 +75,7 @@
 	        {
 	          header: '담당자',
 	          name: 'prdtManager',
-	          className: 'y-background'
+	          getColumnClassName: 'y-background'
 	        },
 	      ]
 	    });
@@ -144,34 +147,6 @@
 	    		}
 	    	});
 	    });
-	    
-	    
-		
-		 //자동 계산
-	     /*  grid2.on('afterChange', (ev) => {
-	      
-	      let change = ev.changes[0];
-	      let rowData = grid2.getRow(change.rowKey);
-	      
-	      
-	      
-	      if(change.columnName == 'prdtChkVal'){
-	         if(rowData.prdtChkVal != null && rowData.prdtChkVal != ""){
-	            let fitYn;
-	            if(rowData.prdtChkVal < rowData.passValue){
-	               passYn = 'Y';
-	            } else if(rowData.testResult >= rowData.chkStd){
-	               passYn = 'N';
-	            }
-	            grid2.setValue(change.rowKey, 'fitYn', fitYn);
-	         }
-	      }
-	      }); */
-	      //끝
-	    
-	    
-	    
-	    
 	    
 	};
 	</script>

@@ -97,15 +97,28 @@ public class CheckRestController {
 
 	}
 	
+	// 제품검사끝난 목록조회
 	@GetMapping("/prdtCheckList")
 	public List<CheckVO> selectPrdtCheckList(CheckVO vo){
 		return checkservice.selectPrdtCheckList(vo);
 	}
 	
+	// 제품검사끝난 상세목록조회
 	@GetMapping("/dtList")
 	public List<CheckVO> selectDtList(CheckVO vo){
-		System.out.println("@@@@@@@@@@@@@@@@@@" + vo);
 		return checkservice.selectdtList(vo);
-
+	}
+	
+	// 완제품검사할목록조회
+	@GetMapping("/prodCheckList")
+	public List<CheckVO> selectProdCheckList(CheckVO vo){
+		return checkservice.selectProdCheckList(vo);		
+	}
+	
+	// 완제품검사할 상세목록조회
+	@GetMapping("/prodDtList")
+	public List<CheckVO> selectProdDtList(CheckVO vo){
+		System.out.println("@@@@@@@@@@@@@@@@@@@" + vo);
+		return checkservice.selectProdDtList(vo);
 	}
 }
