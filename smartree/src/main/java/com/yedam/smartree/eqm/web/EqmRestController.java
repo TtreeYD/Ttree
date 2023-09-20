@@ -15,8 +15,10 @@ import com.yedam.smartree.eqm.service.EqmVO;
 public class EqmRestController {
 	@Autowired
 	EqmService eqmservice;	
-	@Autowired
-	EqmInspService eqminspservice;
+	
+	 @Autowired 
+	 EqmInspService eqminspservice;
+	 
 	
 	@GetMapping("/eqms")
 	public List<EqmVO> getEqms() {

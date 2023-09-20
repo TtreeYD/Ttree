@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
 <head>
-<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style>
@@ -42,7 +42,7 @@
 	<div layout:fragment="content">
 		<h2>설비관리</h2>
 		<button type="button" id="selectBtn" class="btn btn-primary" data-toggle="modal" data-target="#searchEqmModal">설비조회</button>
-		<div> 
+		<div>
 			<form name="infoForm" action="eqmForm" method="post" th:object='${eqmVO}'>
 			
 				<table id="equipTable">

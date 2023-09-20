@@ -11,4 +11,5 @@ public interface EqmInspMapper {
 	public List<EqmInspVO> selectEqmInspList();
 	public List<EqmInspVO> selectEqmInspInspJudgList(String inspJudg);
 	public List<EqmInspVO> searchEqmInsp(String eqmName);
+	public int insertEqmInsp(EqmInspVO eqmInspVO);
 }
