@@ -18,6 +18,7 @@
 		<label>생산시작일자 : </label> <input type="date" name="prodPlanSdate"
 			id="prodPlanSdate"> <label>생산종료일자 : </label> <input
 			type="date" name="prodPlanEdate" id="prodPlanEdate">
+			<input type="hidden" name="prodPlanCode" id="prodPlanCode">
 		<div class="btn-group" role="group" aria-label="Basic example"
 			style="float: right; margin-bottom: 10px;">
 			<button type="button" class="btn btn-primary" id="insertListBtn">새계획</button>
@@ -109,17 +110,16 @@
 			<!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
-		
+
 		<script>
 		let dtPPCode = [];
 		let newGrid = [];
 		let rowNum;
 		let dblProdLeng;
-        let grid, grid2, grid3, grid4, grid5, grid6;
+		let grid, grid2, grid3, grid4, grid5, grid6;
         const header = ['prodPlanName','prodPlanDate','prodPlanSdate','prodPlanEdate'];
         
-        $(document).ready(function (){
-
+        window.onload=function(){
 	    const grid = new tui.Grid({
 	      el: document.getElementById('grid'),
 	      scrollX: false,
@@ -285,19 +285,6 @@
 					},
 				]
 		    });
-		$.ajax({
-			url:'/',
-			method:'get',
-	    dataType:'json',
-			success:function(result){
-				grid.resetData(result);
-				grid2.resetData(result);
-				grid3.resetData(result);
-			},
-			error:function(err){
-				console.log(err);
-			}
-		})
 		
 		// 주문서 모달창
 		$('#loadOrders').on('click', loadOrders);
@@ -329,7 +316,7 @@
 		    	dataType:'json',
 				success:function(result){
 					grid5.resetData(result);
-					
+					console.log(result)
 					$("#prodModal").modal('show');
 					setTimeout(() => grid5.refreshLayout(), 200);
 				},
@@ -348,6 +335,7 @@
 				grid2.resetData([]);
 				grid3.resetData([]);
 				newGrid = [];
+				$('#prodPlanCode').val('');
 				$('#prodPlanName').val('');
 				$('#prodPlanDate').val('');
 				$('#prodPlanSdate').val('');
@@ -357,6 +345,7 @@
 		
 			// 저장 버튼
 			$('#saveBtn').on('click',function(){
+				grid.blur();
 				var data = {};
 				data.list = grid.getData();
 				data.vo = {
@@ -366,12 +355,14 @@
 					prodPlanEdate : $('#prodPlanEdate').val(),
 					prodName : $('#prodName').val(),
 					orderCode : data.list[0].orderCode,
-					prodPlanCode : data.list[0].prodPlanCode
+					prodPlanCode : $('#prodPlanCode').val()
 				}
 				console.log(data);
 				console.log(newGrid.length);
-				console.log(grid.getData().length);
-			if(data.list.length > dblProdLeng){
+				console.log(data.vo.prodPlanCode);
+				console.log(data.vo.prodPlanCode != '');
+				
+			if(data.vo.prodPlanCode != ''){
 				$.ajax({
 		      		url:'/insertAndUpdate',
 		      		method: 'post',
@@ -387,7 +378,7 @@
 		      		}
 	    		})
 			}
-			else if(data.list[0].prodPlanCode != null){
+			/* else if(data.list[0].prodPlanCode != null){
 				data.list = grid.getData();
 				$.ajax({
 		      		url:'/updateProdPlan',
@@ -403,7 +394,7 @@
 		      			console.log(err)
 		      		}
 	    		})
-			}
+			} */
 			else {
 				data.list = grid.getData();
 				console.log(data);
@@ -439,7 +430,6 @@
 				orderCode : data.list[0].orderCode,
 				prodPlanCode : data.list[0].prodPlanCode
 			}
-			console.log(data);
 			
 			if(data.list.length == grid.getData().length){
 				$.ajax({
@@ -458,7 +448,6 @@
 				})
 			} else {
 				data.vo.prodPlanCode = null;
-				console.log(data);
 				$.ajax({
 					url:'/deleteProdPlan',
 					method: 'post',
@@ -495,6 +484,7 @@
       			
    	            $("#orderModal").modal('hide');
    	         	grid.resetData(result)
+   	         	console.log(result)
    	         	
       		},
       		error:function(err){
@@ -507,19 +497,21 @@
 			if(ev.rowKey==undefined){
         		return;
         	}
-			let data = grid5.getValue(ev.rowKey, 'prodPlanCode');
-			console.log(data);
+			let prodPlanCode = grid5.getValue(ev.rowKey, 'prodPlanCode');
+			let orderCode = grid5.getValue(ev.rowKey, 'orderCode');
 		 	$.ajax({
 	      		url:'/selectProdListView',
 	      		method:'get',
 	      		data : {
-	      			prodPlanCode : data,
+	      			prodPlanCode : prodPlanCode,
+	      			orderCode : orderCode
 	      		},
       		success:function(result){
 				dtPPCode = result;
 				newGrid = result;
 				dblProdLeng = newGrid.length;
-				console.log(newGrid.length);
+				console.log(result)
+				$('#prodPlanCode').val(result[0].prodPlanCode);
    	         	$('#prodPlanName').val(result[0].prodPlanName);
 				$('#prodPlanDate').val(result[0].prodPlanDate);
 				$('#prodPlanSdate').val(result[0].prodPlanSdate);
@@ -568,9 +560,26 @@
 			if(ev.rowKey==undefined){
         		return;
         	}
-			let data = grid6.getValue(ev.rowKey,'prdtCode');
-			let data1 = grid.getValue(ev.rowKey,'prodPlanCode');
-			$.ajax({
+			let data = grid6.getData()[ev.rowKey]
+			
+			data.prodPlanCode = $('#prodPlanCode').val();
+			data.rowKey = rowNum
+			console.log(data)
+			 let check = true; 
+			 newGrid.forEach((order) => {
+						if(order.prdtCode == data.prdtCode) {
+							alert('이미 같은 제품이 있습니다.')
+							check=false;
+							return;
+						}
+				})
+			if(check){
+				newGrid[rowNum] = data;
+				grid.resetData(newGrid);
+				$('#prdtModal').modal('hide');
+				console.log(newGrid)
+			}
+/*			$.ajax({
 				url:'/selectPrdt',
 				method:'GET',
 				data:{
@@ -600,13 +609,9 @@
 					console.log(err)
 				}
 				
-			})
+			})*/
 		});
-		grid.on('afterChange', ev=>{
-           let change = ev.changes
-           newGrid[change[0].rowKey][change[0].columnName]=change[0].value
-        })
-	  })
+	};
 	  
     </script>
 	</div>

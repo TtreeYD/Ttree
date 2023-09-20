@@ -89,7 +89,7 @@ public class ProdServiceImpl implements ProdService {
 	@Override
 	public int insertAndUpdateDtProdPlan(RequestVO<ProdVO> vo) {
 		int cnt = 0;
-		
+		prodMapper.updateProd(vo.getVo());
 		for(ProdVO pvo : vo.getList()) {
 			prodMapper.insertAndUpdateDtProd(pvo);
 			cnt++;
