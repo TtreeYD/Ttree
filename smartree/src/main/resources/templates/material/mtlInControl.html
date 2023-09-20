@@ -64,7 +64,7 @@
 							style="margin: 4px;">초기화</button>
 					</div>
 					<div class="modal-body">
-						<div id="modalGrid"></div>
+						<div id="mtlInmodalGrid"></div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" id="addModalBtn" class="btn btn-default">저장</button>
@@ -77,16 +77,16 @@
 		</div>
 		<!-- /.modal -->
 		<script>
-	       let modalSearchData;
-		   let mtlDate;
+			let searchModalData = [];
+			let mtlDate;
 		// 검사완료 목록 출력/숨기기
 	    function pop(){
     	    $('#mtlCheckGrid').toggle("size", 500);
    	    }		     
-			window.onload = function() {
+		document.addEventListener("DOMContentLoaded",() => {
 				// 모달창
-				const modalGrid = new tui.Grid({
-					el: document.getElementById('modalGrid'),
+				const mtlInmodalGrid = new tui.Grid({
+					el: document.getElementById('mtlInmodalGrid'),
 					scrollX: false,	
 					scrollY: false,
 					contextMenu: null,
@@ -95,35 +95,34 @@
 			            perPage: 5,
 			            useClient: true,
 		            },
-					columns: [
-					{
-						header: '자재',
-						name: 'mtlCode',
-						align: 'center'
-					},
-					{
-						header: '거래처',
-						name: 'bpCode',
-						align: 'center'
-					},
-					{
-						header: '발주일자',
-						name: 'mtlDate',
-						align: 'center'
-					},
-					{
-						header: '담당자',
-						name: 'mtlManager',
-						align: 'center'
-					},
-					]
+					columns: [ {
+						header : '자재코드',
+						name : 'mtlCode'
+					}, {
+						header : '자재이름',
+						name : 'mtlName'
+					}, {
+						header : '자재입고수량',
+						name : 'mtlPassCnt'
+					}, {
+						header : '자재입고일자',
+						name : 'mtlInDate'
+					}, {
+						header : '검사완료일자',
+						name : 'mtlChkDate'
+					}, {
+						header : '입고담당자',
+						name : 'mtlManager'
+					}, {
+						header : '자재검사코드',
+						name : 'mtlChkCode'
+					}, {
+						header : '검사결과',
+						name : 'mtlStatusNm'
+					},   ]
 			    });		
-				// 모달그리드 클릭이벤트
-				modalGrid.on('click', (ev) => {
-					alert('성공');
-					});
 			    $('#mtlSearch').on('click', function(){
-                     setTimeout(() => modalGrid.refreshLayout(), 200);
+                     setTimeout(() => mtlInmodalGrid.refreshLayout(), 200);
                  })
                  
 				// 검사완료목록
@@ -295,7 +294,47 @@
 		            console.log(err);
 		          }
 		        })
-			}
+		        // 모달검색 ajax
+		        $.ajax({
+		          url: '/getInMtl',
+		          method: 'POST',
+		          dataType: 'json',
+		          success: function (result) {
+		            //날짜변환
+		            $(result).each(function (idx, obj) {
+		              for (let head of header) {
+
+		                if (head.slice(-4).toLowerCase() == 'date') {
+		                  obj[head] = getDate(obj[head]);
+		                }
+		              }
+		            });
+		            mtlInmodalGrid.resetData(eval(result));
+		          },
+		          error: function (err) {
+		            console.log(err);
+		          }
+		        })
+		     // 모달창의 조회버튼을 누를때 조건에 맞게 검색해주기
+				$('#searchDataBtn').on('click',function(ev){
+					$.ajax({
+						url:'/getInMtl',
+						method: 'POST',
+						data:{
+							mtlName: $('#mtlName').val()
+						},
+						success:function(result){
+							searchModalData = result;
+							mtlInmodalGrid.resetData(result);
+					 		setTimeout(() => mtlInmodalGrid.refreshLayout(), 200);
+						},
+						error:function(err){
+							console.log(err);
+						}
+					})
+						
+					});
+	});
 		</script>
 	</div>
 	

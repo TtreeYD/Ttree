@@ -95,8 +95,26 @@
   		WHERE mtl_lot_num = #{mtlLotNum}
   	</delete>
   	
+  	<!-- 발주관리 검색조회 -->
+  	<select id="getNeedMtl" parameterType="MaterialVO">
+  		SELECT n.mtl_code , n.mtl_date, b.bp_name , t.mtl_type , t.mtl_name , n.mtl_cnt , t.mtl_unit , n.mtl_manager , n.mtl_wish_date ,get_common (mtl_where, '009') mtl_where_nm
+  		FROM mtl_need n
+        JOIN mtl_table t
+        ON n.mtl_code = t.mtl_code
+        JOIN business_partner b
+        ON n.bp_code = b.bp_code
+        WHERE t.mtl_name like '%'||#{mtlName}||'%'
+  	</select>
   	
   	
+  	<!-- 입고관리 검색조회 -->
+  	<select id="getInMtl" parameterType="MaterialVO">
+  		SELECT c.mtl_lot_num, c.mtl_code, t.mtl_name, c.mtl_in_cnt, c.mtl_in_date, c.mtl_manager, c.mtl_lot_cnt, c.mtl_chk_code
+        FROM mtl_container c 
+        JOIN mtl_table t
+        ON c.mtl_code = t.mtl_code
+		WHERE c.mtl_lot_num IS NOT NULL AND t.mtl_name like '%'||#{mtlName}||'%'
+  	</select>
   	<!-- 출고자재를 자재목록에서 빼주는 procedure -->
   	
   	

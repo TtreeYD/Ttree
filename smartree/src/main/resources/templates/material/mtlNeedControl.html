@@ -82,13 +82,13 @@ background-color: cadetblue;
 		<!-- /.modal -->
 		<script>
 			// 안전재고 미달목록 출력/숨기기
-		   let modalSearchData;
-		   let mtlDate;
+			let searchModalData = [];
+			let mtlDate;
 		    function pop(){
         	    $('#mtlLowGrid').toggle("size", 500);
        	    }		
 		
-			window.onload = function() {
+		    document.addEventListener("DOMContentLoaded",() => {
 				// 모달창
 				const needModalGrid = new tui.Grid({
 					el: document.getElementById('needModalGrid'),
@@ -100,28 +100,37 @@ background-color: cadetblue;
 			            perPage: 5,
 			            useClient: true,
 		            },
-					columns: [
-					{
-						header: '자재',
-						name: 'mtlCode',
+					columns: [ {
+						header : '분류',
+						name : 'mtlType',
 						align: 'center'
-					},
-					{
+					}, {
+						header : '자재코드',
+						name : 'mtlCode',
+						sortable: true,
+					    sortingType: 'asc',
+					    align: 'center'
+					}, {
+						header : '자재이름',
+						name : 'mtlName',
+						align: 'center'
+					}, {
 						header: '거래처',
-						name: 'bpCode',
+						name: 'bpName',
 						align: 'center'
-					},
-					{
+					}, {
 						header: '발주일자',
 						name: 'mtlDate',
 						align: 'center'
-					},
-					{
+					}, {
+						header : '납기요청일',
+						name : 'mtlWishDate',
+						align: 'center'
+					}, {
 						header: '담당자',
 						name: 'mtlManager',
 						align: 'center'
-					},
-					]
+					}]
 			    });								
 
 			    $('#mtlSearch').on('click', function(){
@@ -140,11 +149,11 @@ background-color: cadetblue;
 			            useClient: true,
 			          },
 					columns : [ {
-						header : '자재코드',
-						name : 'mtlCode',
-					}, {
 						header : '분류',
 						name : 'mtlType'
+					}, {
+						header : '자재코드',
+						name : 'mtlCode',
 					}, {
 						header : '자재이름',
 						name : 'mtlName'
@@ -235,10 +244,17 @@ background-color: cadetblue;
 			            useClient: true,
 			          },
 					columns : [ {
+						header : '분류',
+						name : 'mtlType'
+					},
+						{
 						header : '자재코드',
 						name : 'mtlCode',
 						sortable: true,
 					    sortingType: 'asc'
+					}, {
+						header : '자재이름',
+						name : 'mtlName'
 					}, {
 						header : '자재발주일',
 						name : 'mtlDate',
@@ -249,12 +265,6 @@ background-color: cadetblue;
 						name : 'bpName',
 						sortable: true,
 					    sortingType: 'asc'
-					}, {
-						header : '분류',
-						name : 'mtlType'
-					}, {
-						header : '자재이름',
-						name : 'mtlName'
 					}, {
 						header : '수량',
 						name : 'mtlCnt'
@@ -358,7 +368,47 @@ background-color: cadetblue;
 		            console.log(err);
 		          }
 		        })
-			}
+		        // 모달검색 ajax
+		        $.ajax({
+		          url: '/getNeedMtl',
+		          method: 'POST',
+		          dataType: 'json',
+		          success: function (result) {
+		            //날짜변환
+		            $(result).each(function (idx, obj) {
+		              for (let head of header) {
+
+		                if (head.slice(-4).toLowerCase() == 'date') {
+		                  obj[head] = getDate(obj[head]);
+		                }
+		              }
+		            });
+		            needModalGrid.resetData(eval(result));
+		          },
+		          error: function (err) {
+		            console.log(err);
+		          }
+		        })
+				// 모달창의 조회버튼을 누를때 조건에 맞게 검색해주기
+				$('#searchDataBtn').on('click',function(ev){
+					$.ajax({
+						url:'/getNeedMtl',
+						method: 'POST',
+						data:{
+							mtlName: $('#mtlName').val()
+						},
+						success:function(result){
+							searchModalData = result;
+							needModalGrid.resetData(result);
+					 		setTimeout(() => needModalGrid.refreshLayout(), 200);
+						},
+						error:function(err){
+							console.log(err);
+						}
+					})
+						
+					});
+			});
 		</script>
 	</div>
 </body>
