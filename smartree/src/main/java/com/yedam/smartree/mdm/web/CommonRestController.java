@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
+import com.yedam.smartree.mdm.service.MdmBpVO;
+import com.yedam.smartree.mdm.service.MdmMtlVO;
+import com.yedam.smartree.mdm.service.MdmPrdtVO;
 import com.yedam.smartree.mdm.service.MdmService;
-import com.yedam.smartree.mdm.service.PrdtVO;
 
 /*
 	개발자 : 정현철
@@ -97,30 +99,29 @@ public class CommonRestController {
 		return msg;
 	}
 
-	
 	// 제품관리
 	
 	// 제품리스트
 	@GetMapping("/selectPrdtList")
-	public List<PrdtVO> selectPrdtList(){
+	public List<MdmPrdtVO> selectPrdtList(){
 		return mdmService.selectPrdtList();
 	}
 	
 	// 제품단건조회
 	@GetMapping("/selectPrdt")
-	public PrdtVO selectPrdt(String prdtCode) {
+	public MdmPrdtVO selectPrdt(String prdtCode) {
 		return mdmService.selectPrdt(prdtCode);
 	}
 	
 	// 제품검색
 	@PostMapping("/searchPrdt")
-	public List<PrdtVO> searchPrdt(@RequestBody PrdtVO vo) {
+	public List<MdmPrdtVO> searchPrdt(@RequestBody MdmPrdtVO vo) {
 		return mdmService.searchPrdt(vo);
 	}
 	
 	// 제품등록
 	@PostMapping("/insertPrdt")
-	public String insertPrdt(@RequestBody PrdtVO vo) {
+	public String insertPrdt(@RequestBody MdmPrdtVO vo) {
 		String msg ="등록실패";
 		if(mdmService.insertPrdt(vo)>0) msg = "등록완료";
 		return msg;
@@ -128,7 +129,7 @@ public class CommonRestController {
 	
 	// 제품수정
 	@PostMapping("/updatePrdt")
-	public String updatePrdt(@RequestBody PrdtVO vo) {
+	public String updatePrdt(@RequestBody MdmPrdtVO vo) {
 		String msg = "수정실패";
 		if(mdmService.updatePrdt(vo)>0) msg = "수정완료";
 		return msg;
@@ -139,6 +140,94 @@ public class CommonRestController {
 	public String deletePrdt(String prdtCode) {
 		String msg = "삭제실패";
 		if(mdmService.deletePrdt(prdtCode)>0) msg = "삭제완료";
+		return msg;
+	}
+	
+	// 자재관리
+	
+	// 자재리스트
+	@GetMapping("/selectMtlList")
+	public List<MdmMtlVO> selectMtlList(){
+		return mdmService.selectMtlList();
+	}
+	
+	// 자재단건조회
+	@GetMapping("/selectMtl")
+	public MdmMtlVO selectMtl(String mtlCode) {
+		return mdmService.selectMtl(mtlCode);
+	}
+	
+	// 자재검색
+	@PostMapping("/searchMtl")
+	public List<MdmMtlVO> searchMtl(@RequestBody MdmMtlVO vo) {
+		return mdmService.searchMtl(vo);
+	}
+	
+	// 자재등록
+	@PostMapping("/insertMtl")
+	public String insertMtl(@RequestBody MdmMtlVO vo) {
+		String msg ="등록실패";
+		if(mdmService.insertMtl(vo)>0) msg = "등록완료";
+		return msg;
+	}
+	
+	// 자재수정
+	@PostMapping("/updateMtl")
+	public String updateMtl(@RequestBody MdmMtlVO vo) {
+		String msg = "수정실패";
+		if(mdmService.updateMtl(vo)>0) msg = "수정완료";
+		return msg;
+	}
+	
+	// 자재삭제
+	@PostMapping("/deleteMtl")
+	public String deleteMtl(String mtlCode) {
+		String msg = "삭제실패";
+		if(mdmService.deleteMtl(mtlCode)>0) msg = "삭제완료";
+		return msg;
+	}
+	
+	// 거래처관리
+	
+	// 거래처리스트
+	@GetMapping("/selectBpList")
+	public List<MdmBpVO> selectBpList(){
+		return mdmService.selectBpList();
+	}
+	
+	// 거래처단건조회
+	@GetMapping("/selectBp")
+	public MdmBpVO selectBp(String bpCode) {
+		return mdmService.selectBp(bpCode);
+	}
+	
+	// 거래처검색
+	@PostMapping("/searchBp")
+	public List<MdmBpVO> searchBp(@RequestBody MdmBpVO vo) {
+		return mdmService.searchBp(vo);
+	}
+	
+	// 거래처등록
+	@PostMapping("/insertBp")
+	public String insertBp(@RequestBody MdmBpVO vo) {
+		String msg ="등록실패";
+		if(mdmService.insertBp(vo)>0) msg = "등록완료";
+		return msg;
+	}
+	
+	// 거래처수정
+	@PostMapping("/updateBp")
+	public String updateBp(@RequestBody MdmBpVO vo) {
+		String msg = "수정실패";
+		if(mdmService.updateBp(vo)>0) msg = "수정완료";
+		return msg;
+	}
+	
+	// 거래처삭제
+	@PostMapping("/deleteBp")
+	public String deleteBp(String bpCode) {
+		String msg = "삭제실패";
+		if(mdmService.deleteBp(bpCode)>0) msg = "삭제완료";
 		return msg;
 	}
 	

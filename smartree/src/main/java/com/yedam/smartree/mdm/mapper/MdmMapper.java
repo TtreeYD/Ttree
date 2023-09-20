@@ -7,7 +7,9 @@ import org.apache.ibatis.annotations.Param;
 
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
-import com.yedam.smartree.mdm.service.PrdtVO;
+import com.yedam.smartree.mdm.service.MdmBpVO;
+import com.yedam.smartree.mdm.service.MdmMtlVO;
+import com.yedam.smartree.mdm.service.MdmPrdtVO;
 
 @Mapper
 public interface MdmMapper {
@@ -24,10 +26,27 @@ public interface MdmMapper {
 	int addEmp(EmpVO vo);
 	
 	// 제품관리
-	List<PrdtVO> selectPrdtList();
-	PrdtVO selectPrdt(String prdtCode);
-	List<PrdtVO> searchPrdt(PrdtVO vo);
-	int insertPrdt(PrdtVO vo);
-	int updatePrdt(PrdtVO vo); 
+	List<MdmPrdtVO> selectPrdtList();
+	MdmPrdtVO selectPrdt(String prdtCode);
+	List<MdmPrdtVO> searchPrdt(MdmPrdtVO vo);
+	int insertPrdt(MdmPrdtVO vo);
+	int updatePrdt(MdmPrdtVO vo); 
 	int deletePrdt(String prdtCode);
+	
+	// 자재관리
+	List<MdmMtlVO> selectMtlList();
+	MdmMtlVO selectMtl(String mtlCode);
+	List<MdmMtlVO> searchMtl(MdmMtlVO vo);
+	int insertMtl(MdmMtlVO vo);
+	int updateMtl(MdmMtlVO vo); 
+	int deleteMtl(String mtlCode);
+	
+	// 거래처관리
+	List<MdmBpVO> selectBpList();
+	MdmBpVO selectBp(String bpCode);
+	List<MdmBpVO> searchBp(MdmBpVO vo);
+	int insertBp(MdmBpVO vo);
+	int updateBp(MdmBpVO vo); 
+	int deleteBp(String bpCode);
+	
 }

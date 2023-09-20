@@ -36,7 +36,7 @@ input::-webkit-inner-spin-button {
 				<div class="input-group mb-4">
 					<input type="text" class="form-control col-3" placeholder="분류" readonly> 
 						<select class="custom-select text-right" id="prdtType">
-						   <option selected>--</option>
+						   <option value="" selected>--</option>
 					  </select>
 				</div>
 				<div class="input-group mb-4">
@@ -56,6 +56,7 @@ input::-webkit-inner-spin-button {
 				</div>
 				<div class="text-center">
 					<button type="button" id="insertPrdt" class="btn btn-primary">등록</button>
+					<button type="button" id="resetPrdt" class="btn btn-primary">초기화</button>
 					<button type="button" id="deletePrdt" class="btn btn-primary">삭제</button>
 				</div>
 			</div>
@@ -64,7 +65,7 @@ input::-webkit-inner-spin-button {
 				<h2>제품 리스트</h2>
 				<div class="input-group mb-3">
 					<select class="custom-select col-2" id="searchPrdtType">
-				   	<option selected>--</option>
+				   	<option value="" selected>--</option>
 				  	</select>
 					<input type="text" class="form-control col-2" placeholder="제품명" id="searchPrdtName">
 					<div class="input-group-append">
@@ -162,6 +163,13 @@ input::-webkit-inner-spin-button {
 				}
 			}
 			
+			$('#resetPrdt').on('click', resetPrdt)
+			
+			// 등록창 초기화
+			function resetPrdt() {
+				$('.text-right').val('')
+			}
+			
 			// 제품삭제
 			$('#deletePrdt').on('click', deletePrdt)
 			
@@ -182,6 +190,13 @@ input::-webkit-inner-spin-button {
 			
 			$('#searchPrdt').on('click', searchPrdt)
 			
+			$('#searchPrdtName').on('keypress', function (ev) {
+				if (ev.which == 13) {
+					event.preventDefault();
+					searchPrdt();
+				}
+			})
+			
 			// 제품검색
 			function searchPrdt() {
 				let vo = {};
@@ -195,6 +210,8 @@ input::-webkit-inner-spin-button {
 					data: JSON.stringify(vo),
 					success: result => {
 						console.log(result)
+						prdtGrid.resetData(result)
+						resetPrdt();
 					},
 					error: err => console.log(err)
 				})
@@ -218,10 +235,13 @@ input::-webkit-inner-spin-button {
 						$('#prdtName').val(result.prdtName)
 						$('#prdtType').val(result.prdtType)
 						$('#prdtSs').val(result.prdtSs)
-						let prdt = result.prdtSize.split('x');
-						$('#prdtSizeW').val(prdt[0])
-						$('#prdtSizeD').val(prdt[1])
-						$('#prdtSizeH').val(prdt[2])
+						let prdt=[]
+						if(result.prdtSize){
+							prdt = result.prdtSize.split('x');
+						}
+							$('#prdtSizeW').val(prdt[0])
+							$('#prdtSizeD').val(prdt[1])
+							$('#prdtSizeH').val(prdt[2])
 					}
 				})
 			}

@@ -1,14 +1,261 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+.input-group {
+	margin-bottom: 10px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+</style>
 </head>
 <body>
 	<div layout:fragment="content">
+		<div class="row">
+			<div class="col"></div>
+			<div class="col-3">
+				<h2>거래처 정보</h2>
+				<br>
+				<div class="input-group mb-4">
+					<input type="text" class="form-control col-4" placeholder="거래처코드" readonly> 
+					<input type="text" class="form-control text-right" readonly id="bpCode"> 
+				</div>
+				
+				<div class="input-group mb-4">
+					<input type="text" class="form-control col-4" placeholder="거래처명" readonly> 
+					<input type="text" maxlength="12" class="form-control text-right" placeholder="거래처명" id="bpName">
+				</div>
+				
+				<div class="input-group mb-4">
+					<input type="text" class="form-control col-4" placeholder="분류" readonly> 
+						<select class="custom-select text-right" id="bpType">
+						   <option value="" selected>--</option>
+					  </select>
+				</div>
+				
+				<div class="input-group mb-4">
+					<input type="text" class="form-control col-4" placeholder="주거래" readonly> 
+					<input type="text" maxlength="12" class="form-control text-right" placeholder="주거래품목" id="bpMain">
+				</div>
+				
+				<div class="input-group mb-4">
+					<input type="text" class="form-control col-4" placeholder="연락처" readonly> 
+					<input type="text" maxlength="16" class="form-control text-right" placeholder="" id="bpTell">
+				</div>
+								
+				<div class="text-center">
+					<button type="button" id="insertBp" class="btn btn-primary">등록</button>
+					<button type="button" id="resetBp" class="btn btn-primary">초기화</button>
+					<button type="button" id="deleteBp" class="btn btn-primary">삭제</button>
+				</div>
+			</div>
+			<div class="col"></div>
+			<div class="col-7">
+				<h2>거래처 리스트</h2>
+				<div class="input-group mb-3">
+					<select class="custom-select col-2" id="searchBpType">
+				   	<option value="" selected>--</option>
+				  	</select>
+					<input type="text" class="form-control col-2" placeholder="거래처명" id="searchBpName">
+					<div class="input-group-append">
+				   	<button class="btn btn-outline-secondary" type="button" id="searchBp">검색</button>
+					</div>
+				</div> 
+				<div id="bpGrid"></div>
+			</div>	
+			<div class="col"></div>	
+		</div>
+		<script>
+			var Grid = tui.Grid;
+			
+			// 거래처표
+			const bpGrid = new Grid({
+				el: document.getElementById('bpGrid'),
+				scrollX: false,
+				minBodyHeight: 400,
+				pagination: true,
+				pageOptions: {
+					useClient: true,
+					perPage: 10,
+				},
+				contextMenu: null,
+				rowHeaders: ['rowNum'],
+				columns: [{
+					header: '거래처코드',
+					name: 'bpCode'
+				}, {
+					header: '거래처명',
+					name: 'bpName'					
+				}, {
+					header: '분류',
+					name: 'bpType'					
+				}, {
+					header: '주거래',
+					name: 'bpMain'					
+				}, {
+					header: '연락처',
+					name: 'bpTell'					
+				}]
+			});
+			
+			// 거래처분류 불러오기
+			$.ajax({
+				url: "/mdm/selectCodeDetail",
+				data: {
+					codeType: '005'
+				},
+				success: result => {
+					$(result).each(function (idx, dept) {
+						let optTag = $('<option/>');
+						optTag.val(dept['codeId']);
+						optTag.text(dept['codeName']);
+						$('#bpType, #searchBpType').append(optTag);
+					})
+				},
+				error: err => console.log(err)
+			})
+			
+			// 등록창 초기화
+			$('#resetBp').on('click', resetBp)
+			
+			function resetBp() {
+				$('.text-right').val('')
+			}
+			
+			// 거래처등록
+			selectBpList();
+			
+			$('#insertBp').on('click', insertBp)
+			
+			function insertBp() {
+				let vo = {};
+				vo.bpCode = $('#bpCode').val();
+				vo.bpName = $('#bpName').val();
+				vo.bpType = $('#bpType').val();
+				vo.bpMain = $('#bpMain').val();
+				vo.bpTell = $('#bpTell').val();
+				if(vo.bpCode){
+					// 코드있으면 수정
+					$.ajax({
+						url: '/mdm/updateBp',
+						method: 'post',
+						contentType : 'application/json',
+						data: JSON.stringify(vo),
+						success: result =>{
+							alert(result);
+							selectBpList();
+						}
+					})
+				} else {
+					// 없으면 등록
+					$.ajax({
+						url: '/mdm/insertBp',
+						method: 'post',
+						contentType : 'application/json',
+						data: JSON.stringify(vo),
+						success: result =>{
+							alert(result);
+							selectBpList();
+						}
+					})
+				}
+			}
+			
+			// 거래처삭제
+			$('#deleteBp').on('click', deleteBp)
+			
+			function deleteBp() {
+				let bpCode = $('#bpCode').val()
+				console.log(bpCode)
+				$.ajax({
+					url: '/mdm/deleteBp',
+					method: 'POST',
+					data: {bpCode : bpCode},
+					success: result => {
+						alert(result);
+						selectBpList();
+						resetBp();
+					},
+					error: err => console.log(err)
+				})
+			}
+			
+			$('#searchBp').on('click', searchBp)
+			
+			$('#searchBpName').on('keypress', function (ev) {
+				if (ev.which == 13) {
+					event.preventDefault();
+					searchBp();
+				}
+			})
+			
+			// 거래처검색
+			function searchBp() {
+				let vo = {};
+				vo.bpType = $('#searchBpType').val();
+				vo.bpName = $('#searchBpName').val();
+				console.log(vo)
+				$.ajax({
+					url: '/mdm/searchBp',
+					method: 'POST',
+					contentType : 'application/json',
+					data: JSON.stringify(vo),
+					success: result => {
+						console.log(result)
+						bpGrid.resetData(result)
+					},
+					error: err => console.log(err)
+				})
+			}
+			
+			// 거래처단건조회
+			bpGrid.on('click', function (ev) {
+				if (ev.rowKey == undefined) {
+					return;
+				}
+				let bpCode = bpGrid.getValue(ev.rowKey, 'bpCode')
+				selectBp(bpCode)
+			})
+			
+			function selectBp(bpCode) {
+				$.ajax({
+					url:'/mdm/selectBp',
+					data: {bpCode : bpCode},
+					success: result => {
+						$('#bpCode').val(result.bpCode)
+						$('#bpName').val(result.bpName)
+						$('#bpType').val(result.bpType)
+						$('#bpMain').val(result.bpMain)
+						$('#bpTell').val(result.bpTell)
+					}
+				})
+			}
+			
+			// 거래처리스트 조회
+			function selectBpList(){
+				$.ajax({
+					url:'/mdm/selectBpList',
+					success: result =>{
+						console.log(result)
+						bpGrid.resetData(result)
+					}
+				})
+			}
+			
+			// input 글자수제한 
+			function maxLengthChk(object){
+			    if (object.value.length > object.maxLength){
+			      object.value = object.value.slice(0, object.maxLength);
+			    }    
+			  }
+		</script>
 	</div>
 </body>
 </html>

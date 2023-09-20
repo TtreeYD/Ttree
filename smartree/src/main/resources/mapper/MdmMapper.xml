@@ -33,7 +33,7 @@
 	</select>
 
 	<!-- 공통코드 입력 -->
-	<insert id="insertCommonCode" parameterType="CommonCodeVO">
+	<insert id="insertCommonCode" parameterType="CommonCodeVO" statementType="CALLABLE">
 		{call in_up_common_code(
 			#{codeType},
 			#{typeName}
@@ -95,6 +95,7 @@
 					)
 	</insert>
 	
+	<!-- 제품관리 -->
 	<!-- 제품 리스트 -->
 	<select id="selectPrdtList">
 		SELECT prdt_code, prdt_name, get_common(prdt_type, '010') prdt_type, prdt_ss
@@ -103,31 +104,31 @@
 	</select>
 	
 	<!-- 제품검색 -->
-	<select id="searchPrdt" resultType="PrdtVO" parameterType="PrdtVO">
+	<select id="searchPrdt" resultType="MdmPrdtVO" parameterType="MdmPrdtVO">
 		SELECT prdt_code, prdt_name, get_common(prdt_type, '010') prdt_type, prdt_ss
 		FROM prdt_table
 		<where>
-			<if test="prdtName != null and prdtName.equals('')">
+			<if test="prdtName != null and !prdtName.equals('')">
 				prdt_name LIKE '%' || #{prdtName} || '%'
 			</if>
-			<if test="prdtType != null and prdtType.equals('')">
-				prdt_type = #{prdtType}
+			<if test="prdtType != null and !prdtType.equals('')">
+				and prdt_type = #{prdtType}
 			</if>			
 		</where>
 		ORDER BY prdt_code
 	</select>
 	
 	<!-- 제품 단건조회 -->
-	<select id="selectPrdt" resultType="PrdtVO">
+	<select id="selectPrdt" resultType="MdmPrdtVO">
 		SELECT prdt_code, prdt_name, prdt_type, prdt_ss, prdt_size
 		FROM prdt_table
 		WHERE prdt_code = #{prdtCode}
 	</select>
 	
 	<!-- 제품 등록 -->
-	<insert id="insertPrdt" parameterType="PrdtVO">
+	<insert id="insertPrdt" parameterType="MdmPrdtVO">
 		<selectKey keyProperty="prdtCode" order="BEFORE" resultType="String">
-			SELECT #{prdtType} || NVL( LPAD( SUBSTR( MAX(prdt_code), 5) +1, 4, '0'), '0001')
+			SELECT #{prdtType} || NVL( LPAD( MAX( SUBSTR( prdt_code, 5)) +1, 4, '0'), '0001')
 			FROM prdt_table
 			WHERE prdt_type = #{prdtType}
 		</selectKey>
@@ -136,7 +137,7 @@
 	</insert>
 	
 	<!-- 제품 수정 -->
-	<update id="updatePrdt" parameterType="PrdtVO">
+	<update id="updatePrdt" parameterType="MdmPrdtVO">
 		UPDATE prdt_table
 		SET prdt_name = #{prdtName},
 			 prdt_type = #{prdtType},
@@ -149,6 +150,120 @@
 	<delete id="deletePrdt">
 		DELETE prdt_table
 		WHERE prdt_code = #{prdtCode}
+	</delete>
+	
+	<!-- 자재관리 -->
+	<!-- 자재 리스트 -->
+	<select id="selectMtlList">
+		SELECT mtl_code, mtl_name, get_common(mtl_type, '003') mtl_type, mtl_ss
+		FROM mtl_table
+		ORDER BY mtl_code
+	</select>
+	
+	<!-- 자재검색 -->
+	<select id="searchMtl" resultType="MdmMtlVO" parameterType="MdmMtlVO">
+		SELECT mtl_code, mtl_name, get_common(mtl_type, '003') mtl_type, mtl_ss
+		FROM mtl_table
+		<where>
+			<if test="mtlName != null and !mtlName.equals('')">
+				mtl_name LIKE '%' || #{mtlName} || '%'
+			</if>
+			<if test="mtlType != null and !mtlType.equals('')">
+				and mtl_type = #{mtlType}
+			</if>			
+		</where>
+		ORDER BY mtl_code
+	</select>
+	
+	<!-- 자재 단건조회 -->
+	<select id="selectMtl" resultType="MdmMtlVO">
+		SELECT mtl_code, mtl_name, mtl_type, mtl_ss, mtl_unit
+		FROM mtl_table
+		WHERE mtl_code = #{mtlCode}
+	</select>
+	
+	<!-- 자재 등록 -->
+	<insert id="insertMtl" parameterType="MdmMtlVO">
+		<selectKey keyProperty="MtlCode" order="BEFORE" resultType="String">
+			SELECT #{mtlType} || NVL( LPAD( MAX( SUBSTR( mtl_code, 5)) +1, 4, '0'), '0001')
+			FROM mtl_table
+			WHERE mtl_type = #{mtlType}
+		</selectKey>
+		INSERT INTO mtl_table(mtl_code, mtl_name, mtl_type, mtl_ss, mtl_unit)
+		VALUES(#{mtlCode}, #{mtlName}, #{mtlType}, #{mtlSs}, #{mtlUnit})
+	</insert>
+	
+	<!-- 자재 수정 -->
+	<update id="updateMtl" parameterType="MdmMtlVO">
+		UPDATE mtl_table
+		SET mtl_name = #{mtlName},
+			 mtl_type = #{mtlType},
+			 mtl_ss = #{mtlSs},
+			 mtl_unit = #{mtlUnit}
+		WHERE mtl_code = #{mtlCode}
+	</update>
+	
+	<!-- 자재 삭제 -->
+	<delete id="deleteMtl">
+		DELETE mtl_table
+		WHERE mtl_code = #{mtlCode}
+	</delete>
+	
+	<!-- 거래처관리 -->
+	<!-- 거래처 리스트 -->
+	<select id="selectBpList">
+		SELECT bp_code, bp_name, get_common(bp_type, '005') bp_type, bp_main, bp_tell
+		FROM business_partner
+		ORDER BY bp_code
+	</select>
+	
+	<!-- 거래처검색 -->
+	<select id="searchBp" resultType="MdmBpVO" parameterType="MdmBpVO">
+		SELECT bp_code, bp_name, get_common(bp_type, '005') bp_type, bp_main, bp_tell
+		FROM business_partner
+		<where>
+			<if test="bpName != null and !bpName.equals('')">
+				bp_name LIKE '%' || #{bpName} || '%'
+			</if>
+			<if test="bpType != null and !bpType.equals('')">
+				and bp_type = #{bpType}
+			</if>			
+		</where>
+		ORDER BY bp_code
+	</select>
+	
+	<!-- 거래처 단건조회 -->
+	<select id="selectBp" resultType="MdmBpVO">
+		SELECT bp_code, bp_name, bp_type, bp_main, bp_tell
+		FROM business_partner
+		WHERE bp_code = #{bpCode}
+	</select>
+	
+	<!-- 거래처 등록 -->
+	<insert id="insertBp" parameterType="MdmBpVO">
+		<selectKey keyProperty="BpCode" order="BEFORE" resultType="String">
+			SELECT #{bpType} || NVL( LPAD( MAX( SUBSTR( bp_code, 5)) +1, 4, '0'), '0001')
+			FROM business_partner
+			WHERE bp_type = #{bpType}
+		</selectKey>
+		INSERT INTO business_partner(bp_code, bp_name, bp_type, bp_main, bp_tell)
+		VALUES(#{bpCode}, #{bpName}, #{bpType}, #{bpMain}, #{bpTell})
+	</insert>
+	
+	<!-- 거래처 수정 -->
+	<update id="updateBp" parameterType="MdmBpVO">
+		UPDATE business_partner
+		SET bp_name = #{bpName},
+			 bp_type = #{bpType},
+			 bp_main = #{bpMain},
+			 bp_tell = #{bpTell}
+		WHERE bp_code = #{bpCode}
+	</update>
+	
+	<!-- 거래처 삭제 -->
+	<delete id="deleteBp">
+		DELETE business_partner
+		WHERE bp_code = #{bpCode}
 	</delete>
 	
 </mapper>

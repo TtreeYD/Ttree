@@ -1,14 +1,258 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+.input-group {
+	margin-bottom: 10px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+</style>
 </head>
 <body>
 	<div layout:fragment="content">
+		<div class="row">
+			<div class="col"></div>
+			<div class="col-3">
+				<h2>자재 정보</h2>
+				<br>
+				<div class="input-group mb-4">
+					<input type="text" class="form-control col-3" placeholder="자재코드" readonly> 
+					<input type="text" class="form-control text-right" readonly id="mtlCode"> 
+				</div>
+				
+				<div class="input-group mb-4">
+					<input type="text" class="form-control col-3" placeholder="자재명" readonly> 
+					<input type="text" maxlength="12" class="form-control text-right" placeholder="자재명" id="mtlName">
+				</div>
+				
+				<div class="input-group mb-4">
+					<input type="text" class="form-control col-3" placeholder="분류" readonly> 
+						<select class="custom-select text-right" id="mtlType">
+						   <option value="" selected>--</option>
+					  </select>
+				</div>
+				
+				<div class="input-group mb-4">
+					<input type="text" class="form-control col-3" placeholder="안전재고" readonly> 
+					<input type="number" min="0" maxlength="5" oninput="maxLengthChk(this)"
+						class="form-control text-right" placeholder="0" id="mtlSs">
+				</div>
+				
+				<div class="input-group mb-4">
+					<input type="text" class="form-control col-3" placeholder="단위" readonly> 
+					<input type="text" maxlength="10" class="form-control text-right" placeholder="" id="mtlUnit">
+				</div>
+				
+				<div class="text-center">
+					<button type="button" id="insertMtl" class="btn btn-primary">등록</button>
+					<button type="button" id="resetMtl" class="btn btn-primary">초기화</button>
+					<button type="button" id="deleteMtl" class="btn btn-primary">삭제</button>
+				</div>
+			</div>
+			<div class="col"></div>
+			<div class="col-7">
+				<h2>자재 리스트</h2>
+				<div class="input-group mb-3">
+					<select class="custom-select col-2" id="searchMtlType">
+				   	<option value="" selected>--</option>
+				  	</select>
+					<input type="text" class="form-control col-2" placeholder="자재명" id="searchMtlName">
+					<div class="input-group-append">
+				   	<button class="btn btn-outline-secondary" type="button" id="searchMtl">검색</button>
+					</div>
+				</div> 
+				<div id="mtlGrid"></div>
+			</div>	
+			<div class="col"></div>	
+		</div>
+		<script>
+			var Grid = tui.Grid;
+			
+			// 자재표
+			const mtlGrid = new Grid({
+				el: document.getElementById('mtlGrid'),
+				scrollX: false,
+				minBodyHeight: 400,
+				pagination: true,
+				pageOptions: {
+					useClient: true,
+					perPage: 10,
+				},
+				contextMenu: null,
+				rowHeaders: ['rowNum'],
+				columns: [{
+					header: '자재코드',
+					name: 'mtlCode'
+				}, {
+					header: '자재명',
+					name: 'mtlName'					
+				}, {
+					header: '분류',
+					name: 'mtlType'					
+				}, {
+					header: '안전재고',
+					name: 'mtlSs'					
+				}]
+			});
+			
+			// 자재분류 불러오기
+			$.ajax({
+				url: "/mdm/selectCodeDetail",
+				data: {
+					codeType: '003'
+				},
+				success: result => {
+					$(result).each(function (idx, dept) {
+						let optTag = $('<option/>');
+						optTag.val(dept['codeId']);
+						optTag.text(dept['codeName']);
+						$('#mtlType, #searchMtlType').append(optTag);
+					})
+				},
+				error: err => console.log(err)
+			})
+			
+			// 등록창 초기화
+			$('#resetMtl').on('click', resetMtl)
+			
+			function resetMtl() {
+				$('.text-right').val('')
+			}
+			
+			// 자재등록
+			selectMtlList();
+			
+			$('#insertMtl').on('click', insertMtl)
+			
+			function insertMtl() {
+				let vo = {};
+				vo.mtlCode = $('#mtlCode').val();
+				vo.mtlName = $('#mtlName').val();
+				vo.mtlType = $('#mtlType').val();
+				vo.mtlSs = $('#mtlSs').val();
+				vo.mtlUnit = $('#mtlUnit').val();
+				if(vo.mtlCode){
+					// 코드있으면 수정
+					$.ajax({
+						url: '/mdm/updateMtl',
+						method: 'post',
+						contentType : 'application/json',
+						data: JSON.stringify(vo),
+						success: result =>{
+							alert(result);
+							selectMtlList();
+						}
+					})
+				} else {
+					// 없으면 등록
+					$.ajax({
+						url: '/mdm/insertMtl',
+						method: 'post',
+						contentType : 'application/json',
+						data: JSON.stringify(vo),
+						success: result =>{
+							alert(result);
+							selectMtlList();
+						}
+					})
+				}
+			}
+			
+			// 자재삭제
+			$('#deleteMtl').on('click', deleteMtl)
+			
+			function deleteMtl() {
+				let mtlCode = $('#mtlCode').val()
+				console.log(mtlCode)
+				$.ajax({
+					url: '/mdm/deleteMtl',
+					method: 'POST',
+					data: {mtlCode : mtlCode},
+					success: result => {
+						alert(result);
+						selectMtlList();
+						resetMtl();
+					},
+					error: err => console.log(err)
+				})
+			}
+			
+			$('#searchMtl').on('click', searchMtl)
+			
+			$('#searchMtlName').on('keypress', function (ev) {
+				if (ev.which == 13) {
+					event.preventDefault();
+					searchMtl();
+				}
+			})
+			
+			// 자재검색
+			function searchMtl() {
+				let vo = {};
+				vo.mtlType = $('#searchMtlType').val();
+				vo.mtlName = $('#searchMtlName').val();
+				console.log(vo)
+				$.ajax({
+					url: '/mdm/searchMtl',
+					method: 'POST',
+					contentType : 'application/json',
+					data: JSON.stringify(vo),
+					success: result => {
+						console.log(result)
+						mtlGrid.resetData(result)
+					},
+					error: err => console.log(err)
+				})
+			}
+			
+			// 자재단건조회
+			mtlGrid.on('click', function (ev) {
+				if (ev.rowKey == undefined) {
+					return;
+				}
+				let mtlCode = mtlGrid.getValue(ev.rowKey, 'mtlCode')
+				selectMtl(mtlCode)
+			})
+			
+			function selectMtl(mtlCode) {
+				$.ajax({
+					url:'/mdm/selectMtl',
+					data: {mtlCode : mtlCode},
+					success: result => {
+						$('#mtlCode').val(result.mtlCode)
+						$('#mtlName').val(result.mtlName)
+						$('#mtlType').val(result.mtlType)
+						$('#mtlSs').val(result.mtlSs)
+						$('#mtlUnit').val(result.mtlUnit)
+					}
+				})
+			}
+			
+			// 자재리스트 조회
+			function selectMtlList(){
+				$.ajax({
+					url:'/mdm/selectMtlList',
+					success: result =>{
+						mtlGrid.resetData(result)
+					}
+				})
+			}
+			
+			// input 글자수제한 
+			function maxLengthChk(object){
+			    if (object.value.length > object.maxLength){
+			      object.value = object.value.slice(0, object.maxLength);
+			    }    
+			  }
+		</script>
 	</div>
 </body>
 </html>

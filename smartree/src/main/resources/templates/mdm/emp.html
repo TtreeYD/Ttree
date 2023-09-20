@@ -64,7 +64,6 @@
 				},
 				success: result => {
 					$(result).each(function (idx, dept) {
-						if (dept['codeName'] == '관리자') return;
 						let optTag = $('<option/>');
 						optTag.val(dept['codeId']);
 						optTag.text(dept['codeName']);
