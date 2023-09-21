@@ -102,5 +102,9 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialVO> getLotMtl(MaterialVO vo) {
 		return materialMapper.getLotMtl(vo);
 	}
+	// 발주목록 발주서별 출력
+	public List<MaterialVO> getPaperMtl(MaterialVO vo) {
+		return materialMapper.getPaperMtl(vo);
+	}
 
 }

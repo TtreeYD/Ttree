@@ -5,20 +5,18 @@
     <mapper namespace="com.yedam.smartree.material.mapper.MaterialMapper">
     
     <!-- 자재발주 전체조회 -->
-  	<select id="selectNeedList" resultType="MaterialVO">
-  		SELECT n.mtl_code , n.mtl_date, b.bp_name , t.mtl_type , t.mtl_name , n.mtl_cnt , t.mtl_unit , n.mtl_manager , n.mtl_wish_date ,get_common (mtl_where, '009') mtl_where_nm
-  		FROM mtl_need n
-        JOIN mtl_table t
-        ON n.mtl_code = t.mtl_code
-        JOIN business_partner b
-        ON n.bp_code = b.bp_code
+  	<select id="mtlNeedList" resultType="MaterialVO">
+		SELECT b.bp_name, n.mtl_date, n.mtl_manager, MIN(n.mtl_wish_date) mtl_wish_date
+		FROM mtl_need n 
+		JOIN business_partner b ON n.bp_code = b.bp_code
+		GROUP BY b.bp_name, n.mtl_date, n.mtl_manager
   	</select>
   	
   	<!-- 재고목록 전체조회 -->
   	<select id="selectMtlList" resultType="MaterialVO">
-		WITH c as (select c.mtl_code, MAX(mtl_in_date)mtl_in_date,SUM(mtl_lot_cnt)mtl_lot_cnt 
-		         FROM mtl_container c 
-		      GROUP BY c.mtl_code)
+		WITH c as (SELECT c.mtl_code, MAX(mtl_in_date)mtl_in_date,SUM(mtl_lot_cnt)mtl_lot_cnt 
+		           FROM mtl_container c 
+		      	   GROUP BY c.mtl_code)
 		SELECT c.mtl_code, get_common(mtl_type, '003') AS mtl_type, t.mtl_name, mtl_in_date, mtl_lot_cnt
 		FROM c
 		JOIN mtl_table t 
@@ -135,6 +133,12 @@
 		WHERE c.mtl_code = #{mtlCode}
   	</select>
   	
+  	<!-- 발주목록 발주서별 자재내역 출력기능 -->
+  	<select id="getPaperMtl" parameterType="MaterialVO">
+		SELECT get_common(t.mtl_type, '003') AS mtl_type, n.mtl_code, t.mtl_name, t.mtl_unit, n.mtl_cnt, get_common(n.mtl_where, '009')mtl_where
+		FROM mtl_need n JOIN mtl_table t ON n.mtl_code = t.mtl_code
+		WHERE bp_code = #{bpCode} AND mtl_date = #{mtlDate} AND mtl_manager = #{mtlManager}
+  	</select>
   	
 
   	

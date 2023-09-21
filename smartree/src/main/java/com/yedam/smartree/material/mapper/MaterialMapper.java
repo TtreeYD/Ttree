@@ -44,4 +44,6 @@ public interface MaterialMapper {
 	
 	// 재고조회 로트별 출력
 	public List<MaterialVO> getLotMtl(MaterialVO vo);
+	// 발주목록 주문서별 출력 
+	public List<MaterialVO> getPaperMtl(MaterialVO vo);
 }

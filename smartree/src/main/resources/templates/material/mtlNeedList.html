@@ -11,60 +11,106 @@
 margin-top: 0px;
 float: right;
 }
+.tui-grid-body-area .tui-grid-cell .tui-grid-cell-content{
+ text-align: center;
+}
+
 </style>
+
 </head>
 <body>
 	<div layout:fragment="content">
-	<h3>자재발주목록</h3>	
-		<div>
-			<span>자재정보</span>
-			<select id="mtlPick">
-				<option value="" selected>자재이름</option>
-				<option value="" selected>자재코드</option>
-				<option value="" selected>-전체-</option>
-			</select>
-			<input id="mtlName" placeholder="">
-			<br>
-			<span>상태</span>
-			<select id="mtlStatus">
-				<option value="" selected>주문진행중</option>
-				<option value="" selected>검사완료</option>
-				<option value="" selected>입고완료</option>
-				<option value="" selected>-전체-</option>
-			</select>
-			<br>
-			<button type="button" id="searchBtn" class="btn btn-primary">조회</button>
-			<button type="button" class="btn btn-info btn-icon-text excelDownload">Excel 
-			<i class="bi bi-printer"></i>
-            </button>
+		<div class="row">
+		<div class="col-5">
+			<h2>발주서</h2>
+				<div class="input-group mb-3">
+					<select class="custom-select col-2" id="searchMtlType">
+				   	<option value="" selected>--</option>
+				  	</select>
+					<input type="text" class="form-control col-3" placeholder="자재명" id="searchMtlName">
+					<div class="input-group-append">
+				   	<button class="btn btn-outline-secondary" type="button" id="searchMtl">검색</button>
+					</div>
+				</div> 
+			<div id="mtlNeedGrid"></div>
 		</div>
-		<div id="mtlNeedgrid"></div>
+		<div class="col-7">
+			<h2>발주자재</h2>
+				<div class="input-group mb-3" style="float: right;">
+					<select class="custom-select col-2" id="searchMtlType">
+				   	<option value="" selected>--</option>
+				  	</select>
+					<input type="text" class="form-control col-3" placeholder="LOT" id="searchLot">
+					<div class="input-group-append">
+				   	<button class="btn btn-outline-secondary" type="button" id="searchLot">검색</button>
+					</div>
+				</div> 
+			<div id=mtlNeedListGrid></div>
+		</div>
+
+
+		</div>
+
+		<button type="button" class="btn btn-info btn-icon-text excelDownload">Excel 
+		<i class="bi bi-printer"></i>
+           </button>
+		
 		<script>
-			var grid;
-			document.addEventListener("DOMContentLoaded",() => {
-				const mtlNeedgrid = new tui.Grid({
-					el : document.getElementById('mtlNeedgrid'),
+		
+		document.addEventListener("DOMContentLoaded",() => {
+			let commonCode = [];
+			let codeDetail = [];
+			let codeType;
+			let cdl;	
+			
+			// 발주목록 그리드- 거래처명,발주일자,담당자가 같은경우 한건씩만 나오게
+				const mtlNeedGrid = new tui.Grid({
+					el : document.getElementById('mtlNeedGrid'),
 					scrollX : false,
 					scrollY : false,
 					rowHeaders : [ "rowNum" ],
+					minBodyHeight: 450,
 					pageOptions: {
 			            perPage: 10,
 			            useClient: true,
 			          },
 					columns : [ {
-						header : '자재코드',
-						name : 'mtlCode',
+						header : '거래처명',
+						name : 'bpName',
 						sortable: true,
-					    sortingType: 'asc'
+					},{
+						header : '발주일자',
+						name : 'mtlDate',
+						sortable: true						
 					}, {
-						header : '자재발주일',
-						name : 'mtlDate'
+						header : '담당자',
+						name : 'mtlManager'
 					}, {
-						header : '거래처이름',
-						name : 'bpName'
-					}, {
+						header : '납기요청일',
+						name : 'mtlWishDate'
+					} ]
+				});
+				
+				const header = ['mtlWishDate','bpName', 'mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode', 'mtlName']
+				
+				// lot목록 그리드
+				const mtlNeedListGrid = new tui.Grid({
+					el : document.getElementById('mtlNeedListGrid'),
+					data: [],
+					scrollX : false,
+					scrollY : false,
+					rowHeaders : [ "rowNum" ],
+					minBodyHeight: 450,
+					pageOptions: {
+			            perPage: 5,
+			            useClient: true,
+			          },
+					columns : [ {
 						header : '분류',
 						name : 'mtlType'
+					}, {
+						header : '자재코드',
+						name : 'mtlCode'
 					}, {
 						header : '자재이름',
 						name : 'mtlName'
@@ -75,21 +121,13 @@ float: right;
 						header : '단위',
 						name : 'mtlUnit'
 					}, {
-						header : '담당자',
-						name : 'mtlManager'
-					}, {
-						header : '납기요청일',
-						name : 'mtlWishDate'
-					}, {
-						header : '상태',
-						name : 'mtlWhereNm'
+						header : '진행상황',
+						name : 'mtlWhere'
 					}   ]
 				});
-				
-				const header = ['mtlCode', 'mtlDate', 'bpName', 'mtlCode', 'mtlName', 'mtlCnt', 'mtlUnit', 'mtlManager','mtlWishDate','mtlWhereNm']
-
+				// 발주목록 ajax
 		        $.ajax({
-		          url: '/mtlNeeds',
+		          url: '/mtlNeedList',
 		          method: 'get',
 		          dataType: 'json',
 		          success: function (result) {
@@ -101,22 +139,92 @@ float: right;
 		                }
 		              }
 		            });
-		            mtlNeedgrid.resetData(eval(result));
+		            mtlNeedGrid.resetData(eval(result));
 		          },
 		          error: function (err) {
 		            console.log(err);
 		          }
 		        })
+		        // 자재의 모든lot 조회 출력기능
+		        function PaperFnc(bpName){
+		        $.ajax({
+		          url: '/getPaperMtl',
+		          method: 'POST',
+		          data: { bpName : bpName },
+		          success: function (result) {
+		            //날짜변환
+		            $(result).each(function (idx, obj) {
+		              for (let head of header) {
+
+		                if (head.slice(-4).toLowerCase() == 'date') {
+		                  obj[head] = getDate(obj[head]);
+		                }
+		              }
+		            });
+		            mtlNeedListGrid.resetData(eval(result));
+		          },
+		          error: function (err) {
+		            console.log(err);
+		          }
+		        });
+				}
+			// 자재분류 불러오기
+			$.ajax({
+				url: "/mdm/selectCodeDetail",
+				data: {
+					codeType: '003'
+				},
+				success: result => {
+					$(result).each(function (idx, dept) {
+						let optTag = $('<option/>');
+						optTag.val(dept['codeId']);
+						optTag.text(dept['codeName']);
+						$('#mtlType, #searchMtlType').append(optTag);
+					})
+				},
+				error: err => console.log(err)
+			})		    
+		    // 자재검색
+			function searchMtl() {
+				let vo = {};
+				vo.mtlType = $('#searchMtlType').val();
+				vo.mtlName = $('#searchMtlName').val();
+				console.log(vo)
+				$.ajax({
+					url: '/mdm/searchMtl',
+					method: 'POST',
+					contentType : 'application/json',
+					data: JSON.stringify(vo),
+					success: result => {
+						console.log(result)
+						mtlNeedGrid.resetData(result)
+					},
+					error: err => console.log(err)
+				})
+			}
+
+			
+			mtlNeedGrid.on('click', function (ev) {
+				if (ev.rowKey == undefined) {
+					return;
+				}
+				bpName = mtlNeedGrid.getValue(ev.rowKey, 'bpName')
+				PaperFnc(bpName)
+			})
+		        
 		        //엑셀 다운로드 버튼으로 만드는 기능
 		        const excelDownload = document.querySelector(".excelDownload");
 	               excelDownload.addEventListener("click",
 	                    function (e) {
-	            	  		mtlNeedgrid.export("xlsx");
+	            	   		mtlNeedGrid.export("xlsx");
 	                    }
 	               );
+	           
+		
 			});
+
 		</script>
 	</div>
-	
+	</div>
 </body>
 </html>
