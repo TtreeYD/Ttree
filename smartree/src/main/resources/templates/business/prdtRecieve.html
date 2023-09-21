@@ -136,7 +136,22 @@ const recieveGrid = new tui.Grid({
 		}
 	});
 	$('#recieveDtBtn').on('click',function(){
-		console.log(recieveGrid.getData())
+		let data={}; 
+		data.list= recieveGrid.getData();
+		console.log(data)
+		$.ajax({
+			url:'/recievePrdt',
+			method:'POST',
+			dataType: 'json',
+			contentType : 'application/json',
+			data:JSON.stringify(data),
+			success:function(result){
+				console.log(result)
+			},
+			error:function(err){
+				console.log(err);
+			}
+		})
 	})
 	
 </script>
