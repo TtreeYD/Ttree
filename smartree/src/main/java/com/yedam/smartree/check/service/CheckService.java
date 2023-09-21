@@ -22,4 +22,8 @@ public interface CheckService {
 	
 	//완제품 합격조회
 	public List<CheckVO> selectPrdtFin(CheckVO vo);
+	
+	//검사완료 업데이트
+	public int updateFinChk(CheckVO vo);
+
 }

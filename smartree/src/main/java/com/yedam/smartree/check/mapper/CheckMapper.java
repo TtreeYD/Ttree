@@ -24,4 +24,10 @@ public interface CheckMapper {
 	
 	//완제품 합격조회
 	public List<CheckVO> selectPrdtFin(CheckVO vo);
+	
+	//적합 업데이트
+	public int updatePrdtChk(CheckVO vo);
+	
+	//검사완료 업데이트
+	public int updateFinChk(CheckVO vo);
 }
