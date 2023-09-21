@@ -112,83 +112,85 @@
 		<!-- /.modal -->
 
 		<script>
-		let dtPPCode = [];
-		let newGrid = [];
-		let rowNum;
-		let dblProdLeng;
+		let dtPPCode = [];	// prodPlanCode 담을 변수
+		let newGrid = [];	// newGrid에 grid 값들을 넣어주고 거기에 새계획 눌렀을 때도 추가하기 위해 만든 변수
+		let rowNum;			// 해당 rowNum 값을 담기위해 만든 변수
 		let grid, grid2, grid3, grid4, grid5, grid6;
         const header = ['prodPlanName','prodPlanDate','prodPlanSdate','prodPlanEdate'];
         
         window.onload=function(){
 	    const grid = new tui.Grid({
-	      el: document.getElementById('grid'),
+	    	// 생산계획 등록및 수정 그리드
+	      	el: document.getElementById('grid'),
+	      	scrollX: false,
+	      	scrollY: false,
+	      	pageOptions: {
+            	perPage: 5,
+            	useClient: true,
+          	},
+          	rowHeaders : ["checkbox"],
+	      	columns: [
+		        {
+		          header: '제품명',
+		          name: 'prdtName'
+		        },
+		        {
+		          header: '주문수량',
+		          name: 'orderDtCnt'
+		        },
+		        {
+		          header: '계획수량',
+		          name: 'prodPlanCnt',
+		          editor : 'text'
+		        },
+		        
+		        {
+		          header: '순위',
+		          name: 'prodRank',
+		          editor : 'text'
+		        },
+		        {
+		          header: '비고',
+		          name: 'prodPlanNote',
+		          editor : 'text'
+		        },
+	      	]
+	    	});
+	    const grid2 = new tui.Grid({
+	      	// 하단의 제품 그리드
+	      el: document.getElementById('grid2'),
 	      scrollX: false,
 	      scrollY: false,
 	      pageOptions: {
             perPage: 5,
             useClient: true,
           },
-          rowHeaders : ["checkbox"],
 	      columns: [
-	        {
-	          header: '제품명',
-	          name: 'prdtName'
-	        },
-	        {
-	          header: '주문수량',
-	          name: 'orderDtCnt'
-	        },
-	        {
-	          header: '계획수량',
-	          name: 'prodPlanCnt',
-	          editor : 'text'
-	        },
-	        
-	        {
-	          header: '순위',
-	          name: 'prodRank',
-	          editor : 'text'
-	        },
-	        {
-	          header: '비고',
-	          name: 'prodPlanNote',
-	          editor : 'text'
-	        },
+			{
+			  header: '제품코드',
+			  name: 'prdtCode'
+			},
+			{
+			  header: '제품명',
+			  name: 'prdtName'
+			},
+			{
+			  header: '수량',
+			  name: 'prdtSs'
+			},
 	      ]
 	    });
-	    const grid2 = new tui.Grid({
-		      el: document.getElementById('grid2'),
-		      scrollX: false,
-		      scrollY: false,
-		      pageOptions: {
-	            perPage: 5,
-	            useClient: true,
-	          },
-		      columns: [
-		        {
-		          header: '제품코드',
-		          name: 'prdtCode'
-		        },
-		        {
-		          header: '제품명',
-		          name: 'prdtName'
-		        },
-		        {
-		          header: '수량',
-		          name: 'prdtSs'
-		        },
-		      ]
-		    });
 	    const grid3 = new tui.Grid({
-		      el: document.getElementById('grid3'),
-		      scrollX: false,
-		      scrollY: false,
-		      pageOptions: {
-	            perPage: 5,
-	            useClient: true,
-	          },
-		      columns: [
-		        {
+	    	// 하단 자재 그리드
+			el: document.getElementById('grid3'),
+	      	scrollX: false,
+	      	scrollY: false,
+	      	pageOptions: {
+            	perPage: 5,
+            	useClient: true,
+          	},
+	      	columns: [
+	        	{
 		          header: '자재코드',
 		          name: ''
 		        },
@@ -200,45 +202,47 @@
 		          header: '재고수량',
 		          name: ''
 		        },
-		      ]
-		    });
+	      	]
+	    });
 	    const grid4 = new tui.Grid({
-		      el: document.getElementById('grid4'),
-		      scrollX: false,
-		      scrollY: false,
-		      pageOptions: {
-	            perPage: 5,
+	    	// 주문서 모달 그리드
+			el: document.getElementById('grid4'),
+	      	scrollX: false,
+	      	scrollY: false,
+			pageOptions: {
+            	perPage: 5,
 	            useClient: true,
-	          },
-		      columns: [{
-	              header: '주문코드',
-	              name: 'orderCode'
-	            },
-	            {
+          	},
+	      	columns: [{
+            	header: '주문코드',
+              	name: 'orderCode'
+            	},
+            	{
 	              header: '주문일자',
 	              name: 'orderDate'
 	            },
 	            {
 	              header: '납기일자',
 	              name: 'orderDate',
-
+	
 	            },
 	            {
 	              header: '담당자',
 	              name: 'orderManager'
 	            }
-	          ]
-		    });
+          	]
+	    });
 	    const grid5 = new tui.Grid({
-		      el: document.getElementById('grid5'),
-		      scrollX: false,
-		      scrollY: false,
-		      pageOptions: {
+	    	// 생산계획 모달 그리드
+	      	el: document.getElementById('grid5'),
+	      	scrollX: false,
+	      	scrollY: false,
+	      	pageOptions: {
 	            perPage: 5,
 	            useClient: true,
-	          },
-		      columns: [
-	    	  	{
+          	},
+	      	columns: [
+    	  		{
 	              header: '계획코드',
 	              name: 'prodPlanCode'
 	            },
@@ -253,11 +257,11 @@
 	            {
 	              header: '생산계획일자',
 	              name: 'prodPlanDate',
-
 	            }
-	          ]
-		    });
+   	       ]
+ 	   });
 	    const grid6 = new tui.Grid({
+	    	// 새계획눌렀을때 제품 그리드
 		      el: document.getElementById('grid6'),
 		      scrollX: false,
 		      scrollY: false,
@@ -266,25 +270,25 @@
 	            useClient: true,
 	          },
 	          columns: [
-	        	  	{
-						header: '계획코드',
-						name: 'prodPlanCode',
-						hidden : true
-					},
-					{
-						header: '제품코드',
-						name: 'prdtCode',
-					},
-					{
-						header: '제품명',
-						name: 'prdtName',
-					},
-					{
-						header: '분류',
-						name: 'prdtType',
-					},
-				]
-		    });
+				{
+					header: '계획코드',
+					name: 'prodPlanCode',
+					hidden : true
+				},
+				{
+					header: '제품코드',
+					name: 'prdtCode',
+				},
+				{
+					header: '제품명',
+					name: 'prdtName',
+				},
+				{
+					header: '분류',
+					name: 'prdtType',
+				},
+			]
+	    });
 		
 		// 주문서 모달창
 		$('#loadOrders').on('click', loadOrders);
@@ -316,7 +320,6 @@
 		    	dataType:'json',
 				success:function(result){
 					grid5.resetData(result);
-					console.log(result)
 					$("#prodModal").modal('show');
 					setTimeout(() => grid5.refreshLayout(), 200);
 				},
@@ -328,20 +331,20 @@
 		//페이지 초기화버튼
 		$('#resetBtn').on('click', resetList)
 		
-			function resetList(){
-				var data = grid.getData();
-	
-				grid.resetData([]);
-				grid2.resetData([]);
-				grid3.resetData([]);
-				newGrid = [];
-				$('#prodPlanCode').val('');
-				$('#prodPlanName').val('');
-				$('#prodPlanDate').val('');
-				$('#prodPlanSdate').val('');
-				$('#prodPlanEdate').val('');
-				$('#prodName').val('');
-			}
+		function resetList(){
+			var data = grid.getData();
+
+			grid.resetData([]);
+			grid2.resetData([]);
+			grid3.resetData([]);
+			newGrid = [];
+			$('#prodPlanCode').val('');
+			$('#prodPlanName').val('');
+			$('#prodPlanDate').val('');
+			$('#prodPlanSdate').val('');
+			$('#prodPlanEdate').val('');
+			$('#prodName').val('');
+		}
 		
 			// 저장 버튼
 			$('#saveBtn').on('click',function(){
@@ -378,23 +381,7 @@
 		      		}
 	    		})
 			}
-			/* else if(data.list[0].prodPlanCode != null){
-				data.list = grid.getData();
-				$.ajax({
-		      		url:'/updateProdPlan',
-		      		method: 'post',
-					dataType: 'json',
-					contentType : 'application/json',
-					data : JSON.stringify(data),
-		      		success:function(result){
-		      			alert("수정완료");
-		      			resetList();
-		      		},
-		      		error:function(err){
-		      			console.log(err)
-		      		}
-	    		})
-			} */
+		
 			else {
 				data.list = grid.getData();
 				console.log(data);
@@ -415,7 +402,7 @@
 	    		})
 			}
 		})
-		
+		// 삭제버튼
 		$('#delBtn').on('click', delBtnFunc);
 			
 		function delBtnFunc(){
@@ -447,6 +434,8 @@
 					}
 				})
 			} else {
+				// 삭제 SQL에 WHERE prod_plan_code =  #{prodPlanCode} 라고 했기때문에
+				// prodPlanCode = null 을 주고 똑같은 url을 타도 else에는 단건 삭제가 된다.
 				data.vo.prodPlanCode = null;
 				$.ajax({
 					url:'/deleteProdPlan',
@@ -509,7 +498,6 @@
       		success:function(result){
 				dtPPCode = result;
 				newGrid = result;
-				dblProdLeng = newGrid.length;
 				console.log(result)
 				$('#prodPlanCode').val(result[0].prodPlanCode);
    	         	$('#prodPlanName').val(result[0].prodPlanName);
@@ -579,37 +567,7 @@
 				$('#prdtModal').modal('hide');
 				console.log(newGrid)
 			}
-/*			$.ajax({
-				url:'/selectPrdt',
-				method:'GET',
-				data:{
-					prdtCode : data,
-					prodPlanCode : data1
-				},
-				success:function(result){
-					console.log(result);
-					console.log(data1); 
-					 let check = true; 
-					 newGrid.forEach((order) => {
-						if(order.prdtCode == data) {
-							alert('이미 같은 제품이 있습니다.')
-							check=false;
-							return;
-						}
-						
-					})
-					if(check){
-						newGrid[rowNum] = result[0];
-						grid.resetData(newGrid);
-						$('#prdtModal').modal('hide');
-					}
-					
-				},
-				error:function(err){
-					console.log(err)
-				}
-				
-			})*/
+
 		});
 	};
 	  
