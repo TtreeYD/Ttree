@@ -23,7 +23,7 @@ public interface MdmService {
 	int updatePrdt(MdmPrdtVO vo);
 	int deletePrdt(String prdtCode);
 	
-	// 제품관리
+	// 자재관리
 	List<MdmMtlVO> selectMtlList();
 	MdmMtlVO selectMtl(String mtlCode);
 	List<MdmMtlVO> searchMtl(MdmMtlVO vo);
@@ -31,11 +31,29 @@ public interface MdmService {
 	int updateMtl(MdmMtlVO vo);
 	int deleteMtl(String mtlCode);
 	
-	// 제품관리
+	// 거래처관리
 	List<MdmBpVO> selectBpList();
 	MdmBpVO selectBp(String bpCode);
 	List<MdmBpVO> searchBp(MdmBpVO vo);
 	int insertBp(MdmBpVO vo);
 	int updateBp(MdmBpVO vo);
 	int deleteBp(String bpCode);
+	
+	// 공정관리
+	List<MdmPrcsVO> selectPrcsList();
+	MdmPrcsVO selectPrcs(String prcsStdCode);
+	List<MdmPrcsVO> searchPrcs(MdmPrcsVO vo);
+	int insertPrcs(MdmPrcsVO vo);
+	int updatePrcs(MdmPrcsVO vo);
+	int deletePrcs(String prcsStdCode);
+	
+	// 품질검사관리
+	List<MdmChkVO> selectChkList();
+	MdmChkVO selectChk(String chkStdCode);
+	List<MdmChkVO> searchChk(MdmChkVO vo);
+	int insertChk(MdmChkVO vo);
+	int updateChk(MdmChkVO vo);
+	int deleteChk(String chkStdCode);
+	
+	
 }

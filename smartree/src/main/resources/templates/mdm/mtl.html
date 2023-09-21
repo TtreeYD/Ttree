@@ -14,6 +14,9 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
+.input-group-prepend{
+	padding: 0;
+}
 </style>
 </head>
 <body>
@@ -24,31 +27,51 @@ input::-webkit-inner-spin-button {
 				<h2>자재 정보</h2>
 				<br>
 				<div class="input-group mb-4">
-					<input type="text" class="form-control col-3" placeholder="자재코드" readonly> 
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">자재코드</span>
+				  	</div>
 					<input type="text" class="form-control text-right" readonly id="mtlCode"> 
 				</div>
 				
 				<div class="input-group mb-4">
-					<input type="text" class="form-control col-3" placeholder="자재명" readonly> 
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">자재명</span>
+				  	</div>
 					<input type="text" maxlength="12" class="form-control text-right" placeholder="자재명" id="mtlName">
 				</div>
 				
 				<div class="input-group mb-4">
-					<input type="text" class="form-control col-3" placeholder="분류" readonly> 
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">분류</span>
+				  	</div>
 						<select class="custom-select text-right" id="mtlType">
 						   <option value="" selected>--</option>
 					  </select>
 				</div>
 				
 				<div class="input-group mb-4">
-					<input type="text" class="form-control col-3" placeholder="안전재고" readonly> 
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">안전재고</span>
+				  	</div>
 					<input type="number" min="0" maxlength="5" oninput="maxLengthChk(this)"
 						class="form-control text-right" placeholder="0" id="mtlSs">
 				</div>
 				
 				<div class="input-group mb-4">
-					<input type="text" class="form-control col-3" placeholder="단위" readonly> 
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">단위</span>
+				  	</div>
 					<input type="text" maxlength="10" class="form-control text-right" placeholder="" id="mtlUnit">
+				</div>
+				
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">사용여부</span>
+				  	</div>
+						<select class="custom-select text-right" id="mtlUse">
+						   <option value="Y" selected>Y</option>
+						   <option value="N">N</option>
+					  </select>
 				</div>
 				
 				<div class="text-center">
@@ -100,6 +123,9 @@ input::-webkit-inner-spin-button {
 				}, {
 					header: '안전재고',
 					name: 'mtlSs'					
+				}, {
+					header: '사용여부',
+					name: 'mtlUse'					
 				}]
 			});
 			
@@ -139,6 +165,7 @@ input::-webkit-inner-spin-button {
 				vo.mtlType = $('#mtlType').val();
 				vo.mtlSs = $('#mtlSs').val();
 				vo.mtlUnit = $('#mtlUnit').val();
+				vo.mtlUse = $('#mtlUse').val();
 				if(vo.mtlCode){
 					// 코드있으면 수정
 					$.ajax({
@@ -232,6 +259,7 @@ input::-webkit-inner-spin-button {
 						$('#mtlType').val(result.mtlType)
 						$('#mtlSs').val(result.mtlSs)
 						$('#mtlUnit').val(result.mtlUnit)
+						$('#mtlUse').val(result.mtlUse)
 					}
 				})
 			}

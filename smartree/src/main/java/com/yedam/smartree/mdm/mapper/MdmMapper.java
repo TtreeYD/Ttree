@@ -8,7 +8,9 @@ import org.apache.ibatis.annotations.Param;
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
 import com.yedam.smartree.mdm.service.MdmBpVO;
+import com.yedam.smartree.mdm.service.MdmChkVO;
 import com.yedam.smartree.mdm.service.MdmMtlVO;
+import com.yedam.smartree.mdm.service.MdmPrcsVO;
 import com.yedam.smartree.mdm.service.MdmPrdtVO;
 
 @Mapper
@@ -41,12 +43,27 @@ public interface MdmMapper {
 	int updateMtl(MdmMtlVO vo); 
 	int deleteMtl(String mtlCode);
 	
+	// 공정관리
+	List<MdmPrcsVO> selectPrcsList();
+	MdmPrcsVO selectPrcs(String prcsStdCode);
+	List<MdmPrcsVO> searchPrcs(MdmPrcsVO vo);
+	int insertPrcs(MdmPrcsVO vo);
+	int updatePrcs(MdmPrcsVO vo); 
+	int deletePrcs(String prcsStdCode);
+	
 	// 거래처관리
 	List<MdmBpVO> selectBpList();
 	MdmBpVO selectBp(String bpCode);
 	List<MdmBpVO> searchBp(MdmBpVO vo);
 	int insertBp(MdmBpVO vo);
-	int updateBp(MdmBpVO vo); 
+	int updateBp(MdmBpVO vo);
 	int deleteBp(String bpCode);
 	
+	// 품질검사관리
+	List<MdmChkVO> selectChkList();
+	MdmChkVO selectChk(String chkStdCode);
+	List<MdmChkVO> searchChk(MdmChkVO vo);
+	int insertChk(MdmChkVO vo);
+	int updateChk(MdmChkVO vo); 
+	int deleteChk(String chkStdCode);
 }
