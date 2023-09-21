@@ -266,8 +266,8 @@
   		select * 
   		from prdt_out
   		<where>
-  			<if test="prdtOutCode != null">
-  				prdt_out_code like '%'||#{prdtOutCode}||'%'
+  			<if test="orderDtCode != null">
+  				order_dt_code like '%'||#{orderDtCode}||'%'
   			</if>
   			<if test="prdtOutDate != null">
   				and trunc(prdt_out_date) =trunc(#{prdtOutDate})
@@ -298,7 +298,12 @@
 	  		#{prdtChkCode},
 	  		#{prdtCnt}
 	  	)
-	  	
-  		
   	</insert>
+  	
+  	<!-- 입고처리시 상태바꾸기 -->
+  	<update id="updatePrdt" parameterType="FinPrdtVO">
+	  	 update prdt_chk
+			set prdt_fin_chk = '입고완료'
+			where prdt_chk_code = #{prdtChkCode}
+  	</update>
   </mapper>

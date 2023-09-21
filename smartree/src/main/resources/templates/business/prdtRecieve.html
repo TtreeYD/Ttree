@@ -96,7 +96,7 @@ const recieveGrid = new tui.Grid({
 		},
 		{
 			header: '입고담당자',
-			name: 'recieveManager',
+			name: 'prdtRecieveManager',
 			editor: 'text'
 		}],
 })
@@ -153,6 +153,8 @@ const recieveGrid = new tui.Grid({
                 toastr.options.newestOnTop = false;
                 toastr.options.timeOut= 1250;
                 toastr.success('입고완료');
+                recieveGrid.resetData([]);
+                getprdtCheckList();
 			},
 			error:function(err){
 				console.log(err);

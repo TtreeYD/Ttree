@@ -176,7 +176,7 @@ public class BusinessServiceImpl implements BusinessService{
 			businessmapper.recievePrdt(fpv.getList().get(i));
 			cnt++;
 			if(cnt>0) {
-			
+			businessmapper.updatePrdt(fpv.getList().get(i).getPrdtChkCode());
 			}
 		}
 		return cnt;
