@@ -98,5 +98,9 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialVO> getInMtl(MaterialVO vo) {
 		return materialMapper.getInMtl(vo);
 	}
+	// 재고조회 로트별 조회
+	public List<MaterialVO> getLotMtl(MaterialVO vo) {
+		return materialMapper.getLotMtl(vo);
+	}
 
 }

@@ -27,6 +27,8 @@ public interface MaterialService {
 	public List<MaterialVO> getNeedMtl(MaterialVO vo);
 	// 입고관리 검색모달 조회
 	public List<MaterialVO> getInMtl(MaterialVO vo);
+	// 재고조회 로트별 출력
+	public List<MaterialVO> getLotMtl(MaterialVO vo);
 	// <검색 및 단건조회들> 끝
 	
 	

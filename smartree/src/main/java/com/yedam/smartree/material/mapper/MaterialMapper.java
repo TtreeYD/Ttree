@@ -41,4 +41,7 @@ public interface MaterialMapper {
 	public List<MaterialVO> getNeedMtl(MaterialVO vo);
 	// 입고관리 검색조회
 	public List<MaterialVO> getInMtl(MaterialVO vo);
+	
+	// 재고조회 로트별 출력
+	public List<MaterialVO> getLotMtl(MaterialVO vo);
 }

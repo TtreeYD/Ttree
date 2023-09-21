@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.material.service.MaterialService;
@@ -48,8 +49,10 @@ public class MaterialRestController {
 	
 	// 발주관리 insert
 	@PostMapping("/insertNeedMtl")
-	public int insertNeedMtl(MaterialVO vo) {
-		return materialService.insertNeedMtl(vo);
+	public void insertNeedMtl(@RequestBody List<MaterialVO> materialList) {
+		for(MaterialVO vo : materialList) {
+			materialService.insertNeedMtl(vo);
+		}
 	}
 	// 발주관리 update
 	@PostMapping("/updateNeedMtl")
@@ -61,10 +64,13 @@ public class MaterialRestController {
 	public int deleteNeedMtl(MaterialVO vo) {
 		return materialService.deleteNeedMtl(vo);
 	}
+	
 	// 입고관리 insert
 	@PostMapping("/insertInMtl")
-	public int insertInMtl(MaterialVO vo) {
-		return materialService.insertInMtl(vo);
+	public void insertInMtl(@RequestBody List<MaterialVO> materialList) {
+		for(MaterialVO vo : materialList) {
+			materialService.insertInMtl(vo);
+		}
 	}
 	// 입고관리 update
 	@PostMapping("/updateInMtl")
@@ -86,5 +92,10 @@ public class MaterialRestController {
 	@PostMapping("/getInMtl")
 	public List<MaterialVO> getInMtl(MaterialVO vo){
 		return materialService.getInMtl(vo);
+	}
+	// 자재재고 lot별 검색
+	@PostMapping("/getLotMtl")
+	public List<MaterialVO> getLotMtl(MaterialVO vo){
+		return materialService.getLotMtl(vo);
 	}
 }
