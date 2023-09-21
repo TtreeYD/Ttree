@@ -19,23 +19,27 @@ public class EqmRestController {
 	 @Autowired 
 	 EqmInspService eqminspservice;
 	 
-	
+	// 설비 전체조회
 	@GetMapping("/eqms")
 	public List<EqmVO> getEqms() {
 		return eqmservice.selectEqmList();
 	}
+	// 설비 사용여부 조회
 	@GetMapping("/eqmUcheck")
 	public List<EqmVO> getEqmUcheck(String eqmUcheck) {
 		return eqmservice.selectEqmUcheckList(eqmUcheck);
 	}
+	// 설비 점검 전체조회
 	@GetMapping("/eqmInsps")
 	public List<EqmInspVO> getEqmInsps(){
 		return eqminspservice.selectEqmInspList();
 	}
+	// 설비 점검 판단여부 조회
 	@GetMapping("/eqmInspJudg")
 	public List<EqmInspVO> getEqmInspJudg(String inspJudg){
 		return eqminspservice.selectEqmInspInspJudgList(inspJudg);
 	}
+	// 설비 이름으로 조회
 	@GetMapping("/eqmName")
 	public List<EqmVO> getEqmName(String eqmName){
 		return eqmservice.searchEqm(eqmName);
@@ -44,10 +48,12 @@ public class EqmRestController {
 	public List<EqmInspVO> getEqmInspName(String eqmName){
 		return eqminspservice.searchEqmInsp(eqmName);
 	}
+	// 설비조회 모달창 더블 클릭시 단건조회
 	@GetMapping("/selectEqm")
 	public EqmVO getEqm(EqmVO eqmVO) {
 		return eqmservice.selectEqm(eqmVO);
 	}
+	// 설비삭제
 	@GetMapping("/deleteEqm")
 	public int deleteEqm(EqmVO eqmVO) {
 		return eqmservice.deleteEqm(eqmVO);

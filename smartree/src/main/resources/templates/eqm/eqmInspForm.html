@@ -58,6 +58,12 @@
 					<tr>
 						<th>최근점검일시</th>
 						<td><input type="date" id="recentInspDate" name="recentInspDate" ></td>
+						
+						<th>판정</th>
+						<td>
+							<label for="y" style="margin-left:10px; margin-right:40px;"  ><input type="radio" id="y" name="inspJudg" value="y" > 적합 </label>
+							<label for="n"><input type="radio" id="n" name="inspJudg" value="n" > 부적합 </label>
+						</td>
 					</tr>
 					<tr>
 						<th>담당자</th>
@@ -73,13 +79,7 @@
 						<th>조치내용</th>
 						<td><textarea id="actionDt" name="actionDt" ></textarea></td>
 					</tr>
-					<tr>
-						<th>판정</th>
-						<td>
-							<label for="y" style="margin-left:10px; margin-right:40px;"  ><input type="radio" id="y" name="inspJudg" value="y" > 적합 </label>
-							<label for="n"><input type="radio" id="n" name="inspJudg" value="n" > 부적합 </label>
-						</td>
-					</tr>
+				
 					<tr>
 						<th>차기점검일시</th>
 						<td><input type="date" id="nextInspDate" name="nextInspDate" ></td>
