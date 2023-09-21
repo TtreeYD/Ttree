@@ -156,4 +156,12 @@
    WHERE p.prdt_chk_code = #{prdtChkCode}
   </select>
   
+  <!-- 완제품 합격검사 -->
+  <select id="selectPrdtFin" resultType="CheckVO">
+  select *
+  	from prdt_chk c
+  	JOIN prdt_table t 
+  	  ON c.prdt_code = t.prdt_code
+  WHERE c.prdt_chk_result = '적합'	  
+  </select>
   </mapper>

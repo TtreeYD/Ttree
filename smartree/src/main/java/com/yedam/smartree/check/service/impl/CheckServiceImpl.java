@@ -65,5 +65,10 @@ public class CheckServiceImpl implements CheckService{
 		}
 		return cnt;
 	}
+
+	@Override
+	public List<CheckVO> selectPrdtFin(CheckVO vo) {
+		return checkmapper.selectPrdtFin(vo);
+	}
 	 
 }

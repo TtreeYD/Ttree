@@ -123,9 +123,15 @@ public class CheckRestController {
 		return checkservice.selectProdDtList(vo);
 	}
 	
+	//완제품 검사등록
 	@PostMapping("/insertProdChk")
 	public int insertProdChk(@RequestBody ReqVO<CheckVO> vo) {
-
 		return checkservice.insertProdChk(vo);
+	}
+	
+	//완제품 합격조회
+	@GetMapping("/prdtFinChkList")
+	public List<CheckVO> selectprdtFin(CheckVO vo){
+		return checkservice.selectPrdtFin(vo);
 	}
 }
