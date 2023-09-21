@@ -276,6 +276,7 @@
 			
 			// 공통코드추가
 			$(addCommonCode).on('click', function () {
+				grid.blur()
 				commonCode.push({
 					codeType: '',
 					typeName: ''
@@ -285,6 +286,7 @@
 
 			// 상세코드추가
 			$(addCodeDetail).on('click', function () {
+				grid2.blur();
 				if (!codeType) {
 					alert('공통코드를 선택해주세요');
 					return;
@@ -311,7 +313,11 @@
 					},
 					data: JSON.stringify(delData),
 					success: result => {
-						//alert(result+ '건 삭제완료');	
+						if(result==0){
+							alert('상세코드가 비어있지 않습니다.')
+						} else{
+							alert(result+ '건 삭제완료');	
+						}
 						selCommonCode();
 					},
 					error: err => console.log(err)

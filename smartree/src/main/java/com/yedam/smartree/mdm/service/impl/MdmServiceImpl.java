@@ -9,7 +9,9 @@ import com.yedam.smartree.mdm.mapper.MdmMapper;
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
 import com.yedam.smartree.mdm.service.MdmBpVO;
+import com.yedam.smartree.mdm.service.MdmChkVO;
 import com.yedam.smartree.mdm.service.MdmMtlVO;
+import com.yedam.smartree.mdm.service.MdmPrcsVO;
 import com.yedam.smartree.mdm.service.MdmPrdtVO;
 import com.yedam.smartree.mdm.service.MdmService;
 
@@ -95,7 +97,7 @@ public class MdmServiceImpl implements MdmService {
 		return mdmMapper.searchPrdt(vo);
 	}
 
-// 자재관리
+	// 자재관리
 	@Override
 	public List<MdmMtlVO> selectMtlList() {
 		return mdmMapper.selectMtlList();
@@ -155,6 +157,68 @@ public class MdmServiceImpl implements MdmService {
 	@Override
 	public List<MdmBpVO> searchBp(MdmBpVO vo) {
 		return mdmMapper.searchBp(vo);
+	}
+	
+	// 공정관리
+	@Override
+	public List<MdmPrcsVO> selectPrcsList() {
+		return mdmMapper.selectPrcsList();
+	}
+
+	@Override
+	public int insertPrcs(MdmPrcsVO vo) {
+		return mdmMapper.insertPrcs(vo);
+	}
+
+	@Override
+	public int updatePrcs(MdmPrcsVO vo) {
+		return mdmMapper.updatePrcs(vo);
+	}
+
+	@Override
+	public MdmPrcsVO selectPrcs(String prcsStdCode) {
+		return mdmMapper.selectPrcs(prcsStdCode);
+	}
+	
+	@Override
+	public int deletePrcs(String prcsStdCode) {
+		return mdmMapper.deletePrcs(prcsStdCode);
+	}
+
+	@Override
+	public List<MdmPrcsVO> searchPrcs(MdmPrcsVO vo) {
+		return mdmMapper.searchPrcs(vo);
+	}
+	
+	// 품질검사관리
+	@Override
+	public List<MdmChkVO> selectChkList() {
+		return mdmMapper.selectChkList();
+	}
+
+	@Override
+	public int insertChk(MdmChkVO vo) {
+		return mdmMapper.insertChk(vo);
+	}
+
+	@Override
+	public int updateChk(MdmChkVO vo) {
+		return mdmMapper.updateChk(vo);
+	}
+
+	@Override
+	public MdmChkVO selectChk(String chkStdCode) {
+		return mdmMapper.selectChk(chkStdCode);
+	}
+	
+	@Override
+	public int deleteChk(String chkStdCode) {
+		return mdmMapper.deleteChk(chkStdCode);
+	}
+
+	@Override
+	public List<MdmChkVO> searchChk(MdmChkVO vo) {
+		return mdmMapper.searchChk(vo);
 	}
 
 }

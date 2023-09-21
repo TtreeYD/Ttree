@@ -9,4 +9,5 @@ public class MdmMtlVO {
 	private String mtlType;
 	private int mtlSs;
 	private String mtlUnit;
+	private String mtlUse;
 }

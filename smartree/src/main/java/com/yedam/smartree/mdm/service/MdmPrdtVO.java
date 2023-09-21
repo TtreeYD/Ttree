@@ -9,4 +9,5 @@ public class MdmPrdtVO {
 	private String prdtType;
 	private int prdtSs;
 	private String prdtSize;
+	private String prdtUse;
 }

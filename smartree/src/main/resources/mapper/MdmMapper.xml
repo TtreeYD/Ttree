@@ -98,14 +98,14 @@
 	<!-- 제품관리 -->
 	<!-- 제품 리스트 -->
 	<select id="selectPrdtList">
-		SELECT prdt_code, prdt_name, get_common(prdt_type, '010') prdt_type, prdt_ss
+		SELECT prdt_code, prdt_name, get_common(prdt_type, '010') prdt_type, prdt_ss, prdt_use
 		FROM prdt_table
 		ORDER BY prdt_code
 	</select>
 	
 	<!-- 제품검색 -->
 	<select id="searchPrdt" resultType="MdmPrdtVO" parameterType="MdmPrdtVO">
-		SELECT prdt_code, prdt_name, get_common(prdt_type, '010') prdt_type, prdt_ss
+		SELECT prdt_code, prdt_name, get_common(prdt_type, '010') prdt_type, prdt_ss, prdt_use
 		FROM prdt_table
 		<where>
 			<if test="prdtName != null and !prdtName.equals('')">
@@ -120,7 +120,7 @@
 	
 	<!-- 제품 단건조회 -->
 	<select id="selectPrdt" resultType="MdmPrdtVO">
-		SELECT prdt_code, prdt_name, prdt_type, prdt_ss, prdt_size
+		SELECT prdt_code, prdt_name, prdt_type, prdt_ss, prdt_size, prdt_use
 		FROM prdt_table
 		WHERE prdt_code = #{prdtCode}
 	</select>
@@ -155,14 +155,14 @@
 	<!-- 자재관리 -->
 	<!-- 자재 리스트 -->
 	<select id="selectMtlList">
-		SELECT mtl_code, mtl_name, get_common(mtl_type, '003') mtl_type, mtl_ss
+		SELECT mtl_code, mtl_name, get_common(mtl_type, '003') mtl_type, mtl_ss, mtl_use
 		FROM mtl_table
 		ORDER BY mtl_code
 	</select>
 	
 	<!-- 자재검색 -->
 	<select id="searchMtl" resultType="MdmMtlVO" parameterType="MdmMtlVO">
-		SELECT mtl_code, mtl_name, get_common(mtl_type, '003') mtl_type, mtl_ss
+		SELECT mtl_code, mtl_name, get_common(mtl_type, '003') mtl_type, mtl_ss, mtl_use
 		FROM mtl_table
 		<where>
 			<if test="mtlName != null and !mtlName.equals('')">
@@ -177,14 +177,14 @@
 	
 	<!-- 자재 단건조회 -->
 	<select id="selectMtl" resultType="MdmMtlVO">
-		SELECT mtl_code, mtl_name, mtl_type, mtl_ss, mtl_unit
+		SELECT mtl_code, mtl_name, mtl_type, mtl_ss, mtl_unit, mtl_use
 		FROM mtl_table
 		WHERE mtl_code = #{mtlCode}
 	</select>
 	
 	<!-- 자재 등록 -->
 	<insert id="insertMtl" parameterType="MdmMtlVO">
-		<selectKey keyProperty="MtlCode" order="BEFORE" resultType="String">
+		<selectKey keyProperty="mtlCode" order="BEFORE" resultType="String">
 			SELECT #{mtlType} || NVL( LPAD( MAX( SUBSTR( mtl_code, 5)) +1, 4, '0'), '0001')
 			FROM mtl_table
 			WHERE mtl_type = #{mtlType}
@@ -199,7 +199,8 @@
 		SET mtl_name = #{mtlName},
 			 mtl_type = #{mtlType},
 			 mtl_ss = #{mtlSs},
-			 mtl_unit = #{mtlUnit}
+			 mtl_unit = #{mtlUnit},
+			 mtl_use = #{mtlUse}
 		WHERE mtl_code = #{mtlCode}
 	</update>
 	
@@ -241,7 +242,7 @@
 	
 	<!-- 거래처 등록 -->
 	<insert id="insertBp" parameterType="MdmBpVO">
-		<selectKey keyProperty="BpCode" order="BEFORE" resultType="String">
+		<selectKey keyProperty="bpCode" order="BEFORE" resultType="String">
 			SELECT #{bpType} || NVL( LPAD( MAX( SUBSTR( bp_code, 5)) +1, 4, '0'), '0001')
 			FROM business_partner
 			WHERE bp_type = #{bpType}
@@ -265,5 +266,121 @@
 		DELETE business_partner
 		WHERE bp_code = #{bpCode}
 	</delete>
+	
+	
+	<!-- 공정관리 -->
+	<!-- 공정 리스트 -->
+	<select id="selectPrcsList">
+		SELECT prcs_std_code, prcs_name, get_common(prcs_type, '012') prcs_type, prcs_note
+		FROM prcs_table
+		ORDER BY prcs_std_code
+	</select>
+	
+	<!-- 공정검색 -->
+	<select id="searchPrcs" resultType="MdmPrcsVO" parameterType="MdmPrcsVO">
+		SELECT prcs_std_code, prcs_name, get_common(prcs_type, '012') prcs_type, prcs_note
+		FROM prcs_table
+		<where>
+			<if test="prcsName != null and !prcsName.equals('')">
+				prcs_name LIKE '%' || #{prcsName} || '%'
+			</if>
+			<if test="prcsType != null and !prcsType.equals('')">
+				and prcs_type = #{prcsType}
+			</if>			
+		</where>
+		ORDER BY prcs_std_code
+	</select>
+	
+	<!-- 공정 단건조회 -->
+	<select id="selectPrcs" resultType="MdmPrcsVO">
+		SELECT prcs_std_code, prcs_name, prcs_type, prcs_note, prcs_detail
+		FROM prcs_table
+		WHERE prcs_std_code = #{prcsStdCode}
+	</select>
+	
+	<!-- 공정 등록 -->
+	<insert id="insertPrcs" parameterType="MdmPrcsVO">
+		<selectKey keyProperty="prcsCode" order="BEFORE" resultType="String">
+			SELECT #{prcsType} || NVL( LPAD( MAX( SUBSTR( prcs_std_code, 5)) +1, 4, '0'), '0001')
+			FROM prcs_table
+			WHERE prcs_type = #{prcsType}
+		</selectKey>
+		INSERT INTO prcs_table(prcs_std_code, prcs_name, prcs_type, prcs_note, prcs_detail)
+		VALUES(#{prcsStdCode}, #{prcsName}, #{prcsType}, #{prcsNote}, #{prcsDetail})
+	</insert>
+	
+	<!-- 공정 수정 -->
+	<update id="updatePrcs" parameterType="MdmPrcsVO">
+		UPDATE prcs_table
+		SET prcs_name = #{prcsName},
+			 prcs_type = #{prcsType},
+			 prcs_note = #{prcsNote},
+			 prcs_detail = #{prcsDetail}
+		WHERE prcs_std_code = #{prcsStdCode}
+	</update>
+	
+	<!-- 공정 삭제 -->
+	<delete id="deletePrcs">
+		DELETE prcs_table
+		WHERE prcs_std_code = #{prcsStdCode}
+	</delete>
+	
+	<!-- 품질검사관리 -->
+	<!-- 품질검사 리스트 -->
+	<select id="selectChkList">
+		SELECT chk_std_code, chk_name, get_common(chk_dt, '003') chk_dt, chk_std
+		FROM chk_std
+		ORDER BY chk_std_code
+	</select>
+	
+	<!-- 품질검사검색 -->
+	<select id="searchChk" resultType="MdmChkVO" parameterType="MdmChkVO">
+		SELECT chk_std_code, chk_name, get_common(chk_dt, '003') chk_dt, chk_std
+		FROM chk_std
+		<where>
+			<if test="chkName != null and !chkName.equals('')">
+				chk_name LIKE '%' || #{chkName} || '%'
+			</if>
+			<if test="chkDt != null and !chkDt.equals('')">
+				and chk_dt = #{chkDt}
+			</if>			
+		</where>
+		ORDER BY chk_std_code
+	</select>
+	
+	<!-- 품질검사 단건조회 -->
+	<select id="selectChk" resultType="MdmChkVO">
+		SELECT chk_std_code, chk_name, chk_dt, chk_std, chk_unit
+		FROM chk_std
+		WHERE chk_std_code = #{chkStdCode}
+	</select>
+	
+	<!-- 품질검사 등록 -->
+	<insert id="insertChk" parameterType="MdmChkVO">
+		<selectKey keyProperty="chkCode" order="BEFORE" resultType="String">
+			SELECT #{chkDt} || NVL( LPAD( MAX( SUBSTR( chk_std_code, 5)) +1, 4, '0'), '0001')
+			FROM chk_std
+			WHERE chk_dt = #{chkDt}
+		</selectKey>
+		INSERT INTO chk_std(chk_std_code, chk_name, chk_dt, chk_std, chk_unit)
+		VALUES(#{chkStdCode}, #{chkName}, #{chkDt}, #{chkStd}, #{chkUnit})
+	</insert>
+	
+	<!-- 품질검사 수정 -->
+	<update id="updateChk" parameterType="MdmChkVO">
+		UPDATE chk_std
+		SET chk_name = #{chkName},
+			 chk_dt = #{chkDt},
+			 chk_std = #{chkStd},
+			 chk_unit = #{chkUnit}
+		WHERE chk_std_code = #{chkStdCode}
+	</update>
+	
+	<!-- 품질검사 삭제 -->
+	<delete id="deleteChk">
+		DELETE chk_std
+		WHERE chk_std_code = #{chkStdCode}
+	</delete>
+	
 	
 </mapper>

@@ -1,14 +1,269 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+.input-group {
+	margin-bottom: 10px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+.input-group-prepend{
+	padding: 0;
+}
+</style>
 </head>
 <body>
 	<div layout:fragment="content">
+		<div class="row">
+			<div class="col"></div>
+			<div class="col-3">
+				<h2>공정 정보</h2>
+				<br>
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">공정코드</span>
+				  	</div>
+					<input type="text" class="form-control text-right" readonly id="prcsStdCode"> 
+				</div>
+				
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">공정명</span>
+				  	</div>
+					<input type="text" maxlength="12" class="form-control text-right" placeholder="공정명" id="prcsName">
+				</div>
+				
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">공정구분</span>
+				  	</div>
+					<select class="custom-select text-right" id="prcsType">
+					   <option value="" selected>--</option>
+				  </select>
+				</div>
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">비고</span>
+				  	</div>
+					<input type="text" maxlength="10"	class="form-control text-right" id="prcsNote">
+				</div>
+										
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">공정 상세</span>
+				  	</div>
+					<textarea class="form-control" rows="3" maxlength="100" id="prcsDetail"></textarea>
+					
+				</div>
+				<div class="text-center">
+					<button type="button" id="insertPrcs" class="btn btn-primary">등록</button>
+					<button type="button" id="resetPrcs" class="btn btn-primary">초기화</button>
+					<button type="button" id="deletePrcs" class="btn btn-primary">삭제</button>
+				</div>
+			</div>
+			<div class="col"></div>
+			<div class="col-7">
+				<h2>공정 리스트</h2>
+				<div class="input-group mb-3">
+					<select class="custom-select col-2" id="searchPrcsType">
+				   	<option value="" selected>--</option>
+				  	</select>
+					<input type="text" class="form-control col-2" placeholder="공정명" id="searchPrcsName">
+					<div class="input-group-append">
+				   	<button class="btn btn-outline-secondary" type="button" id="searchPrcs">검색</button>
+					</div>
+				</div> 
+				<div id="prcsGrid"></div>
+			</div>	
+			<div class="col"></div>	
+		</div>
+		<script>
+			var Grid = tui.Grid;
+			
+			// 공정표
+			const prcsGrid = new Grid({
+				el: document.getElementById('prcsGrid'),
+				scrollX: false,
+				minBodyHeight: 400,
+				pagination: true,
+				pageOptions: {
+					useClient: true,
+					perPage: 10,
+				},
+				contextMenu: null,
+				rowHeaders: ['rowNum'],
+				columns: [{
+					header: '공정코드',
+					name: 'prcsStdCode'
+				}, {
+					header: '공정명',
+					name: 'prcsName'					
+				}, {
+					header: '공정구분',
+					name: 'prcsType'					
+				}, {
+					header: '비고',
+					name: 'prcsNote'					
+				}]
+			});
+			
+			// 공정구분 불러오기
+			$.ajax({
+				url: "/mdm/selectCodeDetail",
+				data: {
+					codeType: '012'
+				},
+				success: result => {
+					$(result).each(function (idx, dept) {
+						let optTag = $('<option/>');
+						optTag.val(dept['codeId']);
+						optTag.text(dept['codeName']);
+						$('#prcsType, #searchPrcsType').append(optTag);
+					})
+				},
+				error: err => console.log(err)
+			})
+			
+			selectPrcsList();
+			
+			$('#insertPrcs').on('click', insertPrcs)
+			
+			// 공정등록
+			function insertPrcs() {
+				let vo = {};
+				vo.prcsStdCode = $('#prcsStdCode').val();
+				vo.prcsName = $('#prcsName').val();
+				vo.prcsType = $('#prcsType').val();
+				vo.prcsNote = $('#prcsNote').val();
+				vo.prcsDetail = $('#prcsDetail').val();
+				if(vo.prcsStdCode){
+					// 코드있으면 수정
+					$.ajax({
+						url: '/mdm/updatePrcs',
+						method: 'post',
+						contentType : 'application/json',
+						data: JSON.stringify(vo),
+						success: result =>{
+							alert(result);
+							selectPrcsList();
+						}
+					})
+				} else {
+					// 없으면 등록
+					$.ajax({
+						url: '/mdm/insertPrcs',
+						method: 'post',
+						contentType : 'application/json',
+						data: JSON.stringify(vo),
+						success: result =>{
+							alert(result);
+							selectPrcsList();
+						}
+					})
+				}
+			}
+			
+			$('#resetPrcs').on('click', resetPrcs)
+			
+			// 등록창 초기화
+			function resetPrcs() {
+				$('.text-right').val('')
+			}
+			
+			// 공정삭제
+			$('#deletePrcs').on('click', deletePrcs)
+			
+			function deletePrcs() {
+				let prcsStdCode = $('#prcsStdCode').val()
+				console.log(prcsStdCode)
+				$.ajax({
+					url: '/mdm/deletePrcs',
+					method: 'POST',
+					data: {prcsStdCode : prcsStdCode},
+					success: result => {
+						alert(result);
+						selectPrcsList();
+					},
+					error: err => console.log(err)
+				})
+			}
+			
+			$('#searchPrcs').on('click', searchPrcs)
+			
+			$('#searchPrcsName').on('keypress', function (ev) {
+				if (ev.which == 13) {
+					event.preventDefault();
+					searchPrcs();
+				}
+			})
+			
+			// 공정검색
+			function searchPrcs() {
+				let vo = {};
+				vo.prcsType = $('#searchPrcsType').val();
+				vo.prcsName = $('#searchPrcsName').val();
+				console.log(vo)
+				$.ajax({
+					url: '/mdm/searchPrcs',
+					method: 'POST',
+					contentType : 'application/json',
+					data: JSON.stringify(vo),
+					success: result => {
+						console.log(result)
+						prcsGrid.resetData(result)
+						resetPrcs();
+					},
+					error: err => console.log(err)
+				})
+			}
+			
+			// 공정단건조회
+			prcsGrid.on('click', function (ev) {
+				if (ev.rowKey == undefined) {
+					return;
+				}
+				let prcsStdCode = prcsGrid.getValue(ev.rowKey, 'prcsStdCode')
+				selectPrcs(prcsStdCode)
+			})
+			
+			function selectPrcs(prcsStdCode) {
+				$.ajax({
+					url:'/mdm/selectPrcs',
+					data: {prcsStdCode : prcsStdCode},
+					success: result => {
+						$('#prcsStdCode').val(result.prcsStdCode)
+						$('#prcsName').val(result.prcsName)
+						$('#prcsType').val(result.prcsType)
+						$('#prcsNote').val(result.prcsNote)
+						$('#prcsDetail').val(result.prcsDetail)
+					}
+				})
+			}
+			
+			// 공정리스트 조회
+			function selectPrcsList(){
+				$.ajax({
+					url:'/mdm/selectPrcsList',
+					success: result =>{
+						prcsGrid.resetData(result)
+					}
+				})
+			}
+			
+			// input 글자수제한 
+			function maxLengthChk(object){
+			    if (object.value.length > object.maxLength){
+			      object.value = object.value.slice(0, object.maxLength);
+			    }    
+			  }
+		</script>
 	</div>
 </body>
 </html>

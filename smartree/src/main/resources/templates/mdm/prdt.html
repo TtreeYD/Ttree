@@ -14,6 +14,12 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
+.input-group-prepend{
+	padding: 0;
+}
+.tui-grid-body-area .tui-grid-cell .tui-grid-cell-content{
+ text-align: right;
+}
 </style>
 </head>
 <body>
@@ -24,29 +30,39 @@ input::-webkit-inner-spin-button {
 				<h2>제품 정보</h2>
 				<br>
 				<div class="input-group mb-4">
-					<input type="text" class="form-control col-3" placeholder="제품코드" readonly> 
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">제품코드</span>
+				  	</div>
 					<input type="text" class="form-control text-right" readonly id="prdtCode"> 
 				</div>
 				
 				<div class="input-group mb-4">
-					<input type="text" class="form-control col-3" placeholder="제품명" readonly> 
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">제품명</span>
+				  	</div>
 					<input type="text" maxlength="12" class="form-control text-right" placeholder="제품명" id="prdtName">
 				</div>
 				
 				<div class="input-group mb-4">
-					<input type="text" class="form-control col-3" placeholder="분류" readonly> 
-						<select class="custom-select text-right" id="prdtType">
-						   <option value="" selected>--</option>
-					  </select>
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">분류</span>
+				  	</div>
+					<select class="custom-select text-right" id="prdtType">
+					   <option value="" selected>--</option>
+					</select>
 				</div>
 				<div class="input-group mb-4">
-					<input type="text" class="form-control col-3" placeholder="안전재고" readonly> 
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">안전재고</span>
+				  	</div>
 					<input type="number" min="0" maxlength="5" oninput="maxLengthChk(this)"
 						class="form-control text-right" placeholder="0" id="prdtSs">
 				</div>
 										
 				<div class="input-group mb-4">
-					<input type="text" class="form-control col-3" placeholder="크기(cm)" readonly> 
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">크기(cm)</span>
+				  	</div>
 					<input type="number" min="0" maxlength="5" oninput="maxLengthChk(this)"
 						class="form-control text-right" placeholder="가로" id="prdtSizeW">
 					<input type="number" min="0" maxlength="5" oninput="maxLengthChk(this)"
@@ -54,6 +70,17 @@ input::-webkit-inner-spin-button {
 					<input type="number" min="0" maxlength="5" oninput="maxLengthChk(this)"
 						class="form-control text-right" placeholder="높이" id="prdtSizeH">
 				</div>
+				
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">사용여부</span>
+				  	</div>
+						<select class="custom-select text-right" id="prdtUse">
+						   <option value="Y" selected>Y</option>
+						   <option value="N">N</option>
+					  </select>
+				</div>
+				
 				<div class="text-center">
 					<button type="button" id="insertPrdt" class="btn btn-primary">등록</button>
 					<button type="button" id="resetPrdt" class="btn btn-primary">초기화</button>
@@ -103,6 +130,9 @@ input::-webkit-inner-spin-button {
 				}, {
 					header: '안전재고',
 					name: 'prdtSs'					
+				}, {
+					header: '사용여부',
+					name: 'prdtUse'					
 				}]
 			});
 			
@@ -135,6 +165,7 @@ input::-webkit-inner-spin-button {
 				vo.prdtName = $('#prdtName').val();
 				vo.prdtType = $('#prdtType').val();
 				vo.prdtSs = $('#prdtSs').val();
+				vo.prdtUse = $('#prdtUse').val();
 				vo.prdtSize = prdtSize
 				if(vo.prdtCode){
 					// 코드있으면 수정
@@ -235,6 +266,7 @@ input::-webkit-inner-spin-button {
 						$('#prdtName').val(result.prdtName)
 						$('#prdtType').val(result.prdtType)
 						$('#prdtSs').val(result.prdtSs)
+						$('#prdtUse').val(result.prdtUse)
 						let prdt=[]
 						if(result.prdtSize){
 							prdt = result.prdtSize.split('x');

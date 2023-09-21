@@ -1,14 +1,286 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style type="text/css">
+.input-group {
+	margin-bottom: 10px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+.input-group-prepend{
+	padding: 0;
+}
+</style>
 </head>
 <body>
 	<div layout:fragment="content">
+		<div class="row">
+			<div class="col"></div>
+			<div class="col-3">
+				<h2>품질검사 정보</h2>
+				<br>
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">품질검사코드</span>
+				  	</div>
+					<input type="text" class="form-control text-right" readonly id="chkStdCode"> 
+				</div>
+				
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">품질검사명</span>
+				  	</div>
+					<input type="text" maxlength="12" class="form-control text-right" placeholder="품질검사명" id="chkName">
+				</div>
+				
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">분류</span>
+				  	</div>
+						<select class="custom-select text-right" id="chkDt">
+						   <option value="" selected>--</option>
+					  </select>
+				</div>
+				
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">안전재고</span>
+				  	</div>
+					<input type="number" min="0" maxlength="5" oninput="maxLengthChk(this)"
+						class="form-control text-right" placeholder="0" id="chkStd">
+				</div>
+				
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">단위</span>
+				  	</div>
+					<input type="text" maxlength="10" class="form-control text-right" placeholder="" id="chkUnit">
+				</div>
+				
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">사용여부</span>
+				  	</div>
+						<select class="custom-select text-right" id="chkUse">
+						   <option value="Y" selected>Y</option>
+						   <option value="N">N</option>
+					  </select>
+				</div>
+				
+				<div class="text-center">
+					<button type="button" id="insertChk" class="btn btn-primary">등록</button>
+					<button type="button" id="resetChk" class="btn btn-primary">초기화</button>
+					<button type="button" id="deleteChk" class="btn btn-primary">삭제</button>
+				</div>
+			</div>
+			<div class="col"></div>
+			<div class="col-7">
+				<h2>품질검사 리스트</h2>
+				<div class="input-group mb-3">
+					<select class="custom-select col-2" id="searchChkType">
+				   	<option value="" selected>--</option>
+				  	</select>
+					<input type="text" class="form-control col-2" placeholder="품질검사명" id="searchChkName">
+					<div class="input-group-append">
+				   	<button class="btn btn-outline-secondary" type="button" id="searchChk">검색</button>
+					</div>
+				</div> 
+				<div id="chkGrid"></div>
+			</div>	
+			<div class="col"></div>	
+		</div>
+		<script>
+			var Grid = tui.Grid;
+			
+			// 품질검사표
+			const chkGrid = new Grid({
+				el: document.getElementById('chkGrid'),
+				scrollX: false,
+				minBodyHeight: 400,
+				pagination: true,
+				pageOptions: {
+					useClient: true,
+					perPage: 10,
+				},
+				contextMenu: null,
+				rowHeaders: ['rowNum'],
+				columns: [{
+					header: '품질검사코드',
+					name: 'chkStdCode'
+				}, {
+					header: '품질검사명',
+					name: 'chkName'					
+				}, {
+					header: '분류',
+					name: 'chkDt'					
+				}, {
+					header: '안전재고',
+					name: 'chkStd'					
+				}, {
+					header: '사용여부',
+					name: 'chkUse'					
+				}]
+			});
+			
+			// 품질검사분류 불러오기
+			$.ajax({
+				url: "/mdm/selectCodeDetail",
+				data: {
+					codeType: '003'
+				},
+				success: result => {
+					$(result).each(function (idx, dept) {
+						let optTag = $('<option/>');
+						optTag.val(dept['codeId']);
+						optTag.text(dept['codeName']);
+						$('#chkDt, #searchChkType').append(optTag);
+					})
+				},
+				error: err => console.log(err)
+			})
+			
+			// 등록창 초기화
+			$('#resetChk').on('click', resetChk)
+			
+			function resetChk() {
+				$('.text-right').val('')
+			}
+			
+			// 품질검사등록
+			selectChkList();
+			
+			$('#insertChk').on('click', insertChk)
+			
+			function insertChk() {
+				let vo = {};
+				vo.chkStdCode = $('#chkStdCode').val();
+				vo.chkName = $('#chkName').val();
+				vo.chkDt = $('#chkDt').val();
+				vo.chkStd = $('#chkStd').val();
+				vo.chkUnit = $('#chkUnit').val();
+				vo.chkUse = $('#chkUse').val();
+				if(vo.chkStdCode){
+					// 코드있으면 수정
+					$.ajax({
+						url: '/mdm/updateChk',
+						method: 'post',
+						contentType : 'application/json',
+						data: JSON.stringify(vo),
+						success: result =>{
+							alert(result);
+							selectChkList();
+						}
+					})
+				} else {
+					// 없으면 등록
+					$.ajax({
+						url: '/mdm/insertChk',
+						method: 'post',
+						contentType : 'application/json',
+						data: JSON.stringify(vo),
+						success: result =>{
+							alert(result);
+							selectChkList();
+						}
+					})
+				}
+			}
+			
+			// 품질검사삭제
+			$('#deleteChk').on('click', deleteChk)
+			
+			function deleteChk() {
+				let chkStdCode = $('#chkStdCode').val()
+				console.log(chkStdCode)
+				$.ajax({
+					url: '/mdm/deleteChk',
+					method: 'POST',
+					data: {chkStdCode : chkStdCode},
+					success: result => {
+						alert(result);
+						selectChkList();
+						resetChk();
+					},
+					error: err => console.log(err)
+				})
+			}
+			
+			$('#searchChk').on('click', searchChk)
+			
+			$('#searchChkName').on('keypress', function (ev) {
+				if (ev.which == 13) {
+					event.preventDefault();
+					searchChk();
+				}
+			})
+			
+			// 품질검사검색
+			function searchChk() {
+				let vo = {};
+				vo.chkDt = $('#searchChkType').val();
+				vo.chkName = $('#searchChkName').val();
+				console.log(vo)
+				$.ajax({
+					url: '/mdm/searchChk',
+					method: 'POST',
+					contentType : 'application/json',
+					data: JSON.stringify(vo),
+					success: result => {
+						console.log(result)
+						chkGrid.resetData(result)
+					},
+					error: err => console.log(err)
+				})
+			}
+			
+			// 품질검사단건조회
+			chkGrid.on('click', function (ev) {
+				if (ev.rowKey == undefined) {
+					return;
+				}
+				let chkStdCode = chkGrid.getValue(ev.rowKey, 'chkStdCode')
+				selectChk(chkStdCode)
+			})
+			
+			function selectChk(chkStdCode) {
+				$.ajax({
+					url:'/mdm/selectChk',
+					data: {chkStdCode : chkStdCode},
+					success: result => {
+						$('#chkStdCode').val(result.chkStdCode)
+						$('#chkName').val(result.chkName)
+						$('#chkDt').val(result.chkDt)
+						$('#chkStd').val(result.chkStd)
+						$('#chkUnit').val(result.chkUnit)
+						$('#chkUse').val(result.chkUse)
+					}
+				})
+			}
+			
+			// 품질검사리스트 조회
+			function selectChkList(){
+				$.ajax({
+					url:'/mdm/selectChkList',
+					success: result =>{
+						chkGrid.resetData(result)
+					}
+				})
+			}
+			
+			// input 글자수제한 
+			function maxLengthChk(object){
+			    if (object.value.length > object.maxLength){
+			      object.value = object.value.slice(0, object.maxLength);
+			    }    
+			  }
+		</script>
 	</div>
 </body>
 </html>

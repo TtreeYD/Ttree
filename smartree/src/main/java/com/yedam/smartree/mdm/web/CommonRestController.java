@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
 import com.yedam.smartree.mdm.service.MdmBpVO;
+import com.yedam.smartree.mdm.service.MdmChkVO;
 import com.yedam.smartree.mdm.service.MdmMtlVO;
+import com.yedam.smartree.mdm.service.MdmPrcsVO;
 import com.yedam.smartree.mdm.service.MdmPrdtVO;
 import com.yedam.smartree.mdm.service.MdmService;
 
@@ -59,13 +61,15 @@ public class CommonRestController {
 	// 공통코드삭제
 	@PostMapping("/deleteCommonCode")
 	public int deleteCommonCode(@RequestBody List<CommonCodeVO> delList) {
+		int cnt = 0;
 		for(CommonCodeVO delData : delList) {
 			String codeType = delData.getCodeType();
 			if(mdmService.selectCodeDetail(codeType).isEmpty()) { // 상세목록이 비어있는지 확인
 				mdmService.deleteCommonCode(delData);
+				cnt ++;
 			}
 		}
-		return 0;
+		return cnt;
 	}
 	
 	// 상세코드삭제
@@ -228,6 +232,92 @@ public class CommonRestController {
 	public String deleteBp(String bpCode) {
 		String msg = "삭제실패";
 		if(mdmService.deleteBp(bpCode)>0) msg = "삭제완료";
+		return msg;
+	}
+	
+	// 공정관리
+	// 공정리스트
+	@GetMapping("/selectPrcsList")
+	public List<MdmPrcsVO> selectPrcsList(){
+		return mdmService.selectPrcsList();
+	}
+	
+	// 공정단건조회
+	@GetMapping("/selectPrcs")
+	public MdmPrcsVO selectPrcs(String prcsStdCode) {
+		return mdmService.selectPrcs(prcsStdCode);
+	}
+	
+	// 공정검색
+	@PostMapping("/searchPrcs")
+	public List<MdmPrcsVO> searchPrcs(@RequestBody MdmPrcsVO vo) {
+		return mdmService.searchPrcs(vo);
+	}
+	
+	// 공정등록
+	@PostMapping("/insertPrcs")
+	public String insertPrcs(@RequestBody MdmPrcsVO vo) {
+		String msg ="등록실패";
+		if(mdmService.insertPrcs(vo)>0) msg = "등록완료";
+		return msg;
+	}
+	
+	// 공정수정
+	@PostMapping("/updatePrcs")
+	public String updatePrcs(@RequestBody MdmPrcsVO vo) {
+		String msg = "수정실패";
+		if(mdmService.updatePrcs(vo)>0) msg = "수정완료";
+		return msg;
+	}
+	
+	// 공정삭제
+	@PostMapping("/deletePrcs")
+	public String deletePrcs(String prcsStdCode) {
+		String msg = "삭제실패";
+		if(mdmService.deletePrcs(prcsStdCode)>0) msg = "삭제완료";
+		return msg;
+	}
+	
+	// 품질검사관리
+	// 품질검사리스트
+	@GetMapping("/selectChkList")
+	public List<MdmChkVO> selectChkList(){
+		return mdmService.selectChkList();
+	}
+	
+	// 품질검사단건조회
+	@GetMapping("/selectChk")
+	public MdmChkVO selectChk(String chkStdCode) {
+		return mdmService.selectChk(chkStdCode);
+	}
+	
+	// 품질검사검색
+	@PostMapping("/searchChk")
+	public List<MdmChkVO> searchChk(@RequestBody MdmChkVO vo) {
+		return mdmService.searchChk(vo);
+	}
+	
+	// 품질검사등록
+	@PostMapping("/insertChk")
+	public String insertChk(@RequestBody MdmChkVO vo) {
+		String msg ="등록실패";
+		if(mdmService.insertChk(vo)>0) msg = "등록완료";
+		return msg;
+	}
+	
+	// 품질검사수정
+	@PostMapping("/updateChk")
+	public String updateChk(@RequestBody MdmChkVO vo) {
+		String msg = "수정실패";
+		if(mdmService.updateChk(vo)>0) msg = "수정완료";
+		return msg;
+	}
+	
+	// 품질검사삭제
+	@PostMapping("/deleteChk")
+	public String deleteChk(String chkStdCode) {
+		String msg = "삭제실패";
+		if(mdmService.deleteChk(chkStdCode)>0) msg = "삭제완료";
 		return msg;
 	}
 	
