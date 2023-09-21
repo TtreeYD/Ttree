@@ -5,7 +5,7 @@
     <mapper namespace="com.yedam.smartree.material.mapper.MaterialMapper">
     
     <!-- 자재발주 전체조회 -->
-  	<select id="mtlNeedList" resultType="MaterialVO">
+  	<select id="selectNeedList" resultType="MaterialVO">
 		SELECT b.bp_name, n.mtl_date, n.mtl_manager, MIN(n.mtl_wish_date) mtl_wish_date
 		FROM mtl_need n 
 		JOIN business_partner b ON n.bp_code = b.bp_code
@@ -135,9 +135,10 @@
   	
   	<!-- 발주목록 발주서별 자재내역 출력기능 -->
   	<select id="getPaperMtl" parameterType="MaterialVO">
-		SELECT get_common(t.mtl_type, '003') AS mtl_type, n.mtl_code, t.mtl_name, t.mtl_unit, n.mtl_cnt, get_common(n.mtl_where, '009')mtl_where
+		SELECT b.bp_name, get_common(t.mtl_type, '003') AS mtl_type, n.mtl_code, t.mtl_name, t.mtl_unit, n.mtl_cnt, get_common(n.mtl_where, '009')mtl_where
 		FROM mtl_need n JOIN mtl_table t ON n.mtl_code = t.mtl_code
-		WHERE bp_code = #{bpCode} AND mtl_date = #{mtlDate} AND mtl_manager = #{mtlManager}
+		JOIN business_partner b ON b.bp_code = n.bp_code
+		WHERE b.bp_name = #{bpName}
   	</select>
   	
 
