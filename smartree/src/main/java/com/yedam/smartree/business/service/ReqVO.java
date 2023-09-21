@@ -10,4 +10,6 @@ public class ReqVO<T> {
 	List<T> orderList;
 	List<T> orderDtList;
 	List<T> list;
+	List<T> chkData;
+	List<T> chkDtData;
 }

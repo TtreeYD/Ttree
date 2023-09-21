@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.business.service.BpVO;
+import com.yedam.smartree.business.service.ReqVO;
 import com.yedam.smartree.check.service.CheckService;
 import com.yedam.smartree.check.service.CheckVO;
 import com.yedam.smartree.check.service.MtlCheckService;
@@ -120,5 +121,11 @@ public class CheckRestController {
 	public List<CheckVO> selectProdDtList(CheckVO vo){
 		System.out.println("@@@@@@@@@@@@@@@@@@@" + vo);
 		return checkservice.selectProdDtList(vo);
+	}
+	
+	@PostMapping("/insertProdChk")
+	public int insertProdChk(@RequestBody ReqVO<CheckVO> vo) {
+
+		return checkservice.insertProdChk(vo);
 	}
 }

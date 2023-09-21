@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yedam.smartree.business.service.BpVO;
+import com.yedam.smartree.business.service.ReqVO;
 import com.yedam.smartree.check.mapper.CheckMapper;
 import com.yedam.smartree.check.service.CheckService;
 import com.yedam.smartree.check.service.CheckVO;
@@ -50,6 +51,19 @@ public class CheckServiceImpl implements CheckService{
 	@Override
 	public List<CheckVO> selectProdDtList(CheckVO vo) {
 		return checkmapper.selectProdDtList(vo);
+	}
+
+	@Override
+	public int insertProdChk(ReqVO<CheckVO> vo) {
+		checkmapper.insertProdChk(vo.getChkData().get(0));
+		int cnt=0;
+		String prdtChkCode = vo.getChkData().get(0).getPrdtChkCode();
+		for(int i =0; i<vo.getChkDtData().size(); i++) {
+			vo.getChkDtData().get(i).setPrdtChkCode(prdtChkCode);
+			checkmapper.insertDtProdChk(vo.getChkDtData().get(i));
+			cnt++;
+		}
+		return cnt;
 	}
 	 
 }

@@ -10,31 +10,31 @@
 #grid tbody td, #grid2 tbody td{
 			cursor : pointer;
 		}
-.yellow-background {
-	background-color: yellow;
-}
+
+.tui-grid-cell.red {background-color: red;}
+.tui-grid-cell.green {background-color: lime;}
 </style>
 </head>
 <body>
 <div layout:fragment="content">
 <h2>제품품질검사</h2>
 	<div style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
-		<span>
+		<div>
 			<h3>권민석</h3>
 			<div id="grid" style="width: 800px;"></div>
-		</span> 
-		<span>
+		</div> 
+		<div>
 		<button type="button" id="addBtn" class="btn btn-primary" style="float : right;">저장</button>
 			<h3>권민석</h3>
 			<div id="grid2" style="width: 800px;"></div>
-		</span>
+		</div>
 	</div>
 	
 	
 	
 	
 	<script>
-	window.onload=function(){
+	//window.onload=function(){
 
 	    const grid = new tui.Grid({
 	      el: document.getElementById('grid'),
@@ -65,15 +65,15 @@
 	        {
 	          header: '검사량',
 	          name: 'passCnt',
-	          align: 'center'
+	          align: 'center',
+	          
 	        },
 	        {
 	          header: '제품코드',
 	          name: 'prdtCode',
 	          align: 'center',
-	          className: 'yellow-background'
-	        },
-	       
+	          },
+		
 	      ]
 	    });
 	    const grid2 = new tui.Grid({
@@ -85,7 +85,13 @@
 		        {
 		          header: '공정실적코드',
 		          name: 'prcsRsCode',
-		          align: 'center'
+		          align: 'center',
+		          hidden : true
+		        },
+		        {
+		          header: '검사기준코드',
+		          name: 'chkStdCode',
+		          align: 'center',
 		        },
 		        {
 		          header: '검사명',
@@ -115,11 +121,24 @@
 		          align: 'center',
 		         
 		        },
-		      ]
+		      ],
+		       /* summary: {
+		          height: 40,
+		          position: 'bottom',
+		          columnContent: {
+		        	  prdtChkFit: {
+			              template(valueMap) {
+			            	  const allRowsAreFit = valueMap.every((fit) => fit === '적합');
+			                  return `최종결과: ${allRowsAreFit ? '적합' : '부적합'}`;
+		              }
+		            },
+		          }
+		        }  */
 		    });
 	    getprdtCheckList();
 	    
 	   let prcsRsCode;
+  	   let chkList = {};
 	    //제품검사목록 
 	    function getprdtCheckList(){
 
@@ -155,37 +174,76 @@
 	    	});
 	    }) 
 	    
+	  
 	    //자동 계산
 	       grid2.on('afterChange', (ev) => {
 	      console.log(ev);
 	      let change = ev.changes[0];
 	      let rowData = grid2.getRow(change.rowKey);
 	      console.log(rowData)
-	      let firstNum = parseFloat(rowData.prdtChkVal)
-	      let secNum = parseFloat(rowData.chkStd)
+	      let firstNum = parseFloat(rowData.prdtChkVal);
+	      let secNum = parseFloat(rowData.chkStd);
 	      
 		  	      
 	      if(change.columnName == 'prdtChkVal'){
 	         if(firstNum != null && firstNum != ""){
 	            let prdtChkFit;
+	            let attributes = {}
+	            let data = grid2.getRow(change.rowKey)
+	            
 	            if(firstNum < secNum){
 	            	prdtChkFit = '적합';
+	            	attributes = {
+	            			className:{
+	            				column : {
+	            					prdtChkFit : ['green']
+	            				}
+	            			}
+	            	}
 	            } else if(firstNum >= secNum){
 	            	prdtChkFit = '부적합';
+	            	attributes = {
+	            			className:{
+	            				column : {
+	            					prdtChkFit : ['red']
+	            				}
+	            			}
+	            	}
 	            }
-	            grid2.setValue(change.rowKey, 'prdtChkFit', prdtChkFit);
+            	data.prdtChkFit = prdtChkFit
+            	data._attributes = attributes
+	            grid2.setRow(change.rowKey, data)
 	         }
 	      }
 	      }); 
 
 	   	//저장버튼 이벤트
 	   	$('#addBtn').on('click',function(){
-	   		
+
+	   		chkList.chkData = grid.getData();
+	   		chkList.chkDtData= grid2.getData();
+	   		console.log(chkList);
+	   		let datas = grid2.getData();
+	   		$.ajax({
+				url: '/insertProdChk', 
+				method: 'post',
+				dataType: 'json',
+				contentType : 'application/json',
+				data : JSON.stringify(datas),
+				success: function(result) {
+					console.log(datas);
+					grid.resetData([]);
+					grid2.resetData([]);
+				},
+				error: function(err) {
+					console.log(err);
+				}
+			});
 	   	})
 	   
 	   
 
-	};
+	//};
 	</script>
 	</div>
 </body>
