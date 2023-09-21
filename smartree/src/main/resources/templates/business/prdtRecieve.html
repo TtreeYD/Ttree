@@ -147,6 +147,12 @@ const recieveGrid = new tui.Grid({
 			data:JSON.stringify(data),
 			success:function(result){
 				console.log(result)
+				toastr.options.positionClass = "toast-top-center";
+                toastr.options.escapeHtml = true;
+                toastr.options.closeButton = true;
+                toastr.options.newestOnTop = false;
+                toastr.options.timeOut= 1250;
+                toastr.success('입고완료');
 			},
 			error:function(err){
 				console.log(err);

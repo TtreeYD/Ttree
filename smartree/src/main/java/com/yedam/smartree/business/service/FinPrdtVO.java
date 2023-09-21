@@ -20,6 +20,7 @@ public class FinPrdtVO {
 	private int prdtSaveCnt; // 안전재고
 	private int prdtCnt; // 재고수량
 	private int prdtSum; // 합계
+	private int prdtSs;
 	//입고관련
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
