@@ -20,7 +20,6 @@ public class MaterialController {
 	// 발주목록 전체조회
 	@GetMapping("/mtlNeedList")
 	public String selectNeedList() {
-		
 		return "material/mtlNeedList";
 	}
 	// 재고목록 전체조회

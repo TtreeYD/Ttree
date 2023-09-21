@@ -93,9 +93,16 @@ public class MaterialRestController {
 	public List<MaterialVO> getInMtl(MaterialVO vo){
 		return materialService.getInMtl(vo);
 	}
-	// 자재재고 lot별 검색
+	
+	// 자재재고 lot별 출력
 	@PostMapping("/getLotMtl")
 	public List<MaterialVO> getLotMtl(MaterialVO vo){
 		return materialService.getLotMtl(vo);
 	}
+	// 발주목록 주문서별 출력
+	@PostMapping("/getPaperMtl")
+	public List<MaterialVO> getPaperMtl(MaterialVO vo){
+		return materialService.getPaperMtl(vo);
+	}
+	
 }

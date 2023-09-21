@@ -29,6 +29,8 @@ public interface MaterialService {
 	public List<MaterialVO> getInMtl(MaterialVO vo);
 	// 재고조회 로트별 출력
 	public List<MaterialVO> getLotMtl(MaterialVO vo);
+	// 발주조회 발주서별 출력
+	public List<MaterialVO> getPaperMtl(MaterialVO vo);
 	// <검색 및 단건조회들> 끝
 	
 	
