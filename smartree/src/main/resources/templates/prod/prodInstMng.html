@@ -95,19 +95,28 @@
 	              	type: 'datePicker',
 	              	options: {
 	              		format: 'yyyy-MM-dd',
-              			
-	              	}	
+	              	}
 				  }	
 		        },
 		        {
 		          header: '지시시작일자',
 		          name: 'prodInstSdate',
-		          editor : 'text'
+		          editor: {
+	              	type: 'datePicker',
+	              	options: {
+	              		format: 'yyyy-MM-dd',
+	              	}
+				  }	
 		        },
 		        {
 		          header: '지시종료일자',
 		          name: 'prodInstEdate',
-		          editor : 'text'
+		          editor: {
+	              	type: 'datePicker',
+	              	options: {
+	              		format: 'yyyy-MM-dd',
+	              	}
+				  }	
 		        }
 		      ]
 		    });
