@@ -31,14 +31,14 @@ public class FinPrdtVO {
 	
 	
 	
-		//출고관련
-		private String prdtOutCode;
-		private String prdtDtOutCode;
-		private String orderDtCode;//상세주문코드
-		private int prdtOutCnt;//출고수량
-		private int prdtLeftCnt;//잔여수량
-		@DateTimeFormat(pattern = "yyyy-MM-dd")
-		@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
-		private Date prdtOutDate;//출고날짜
-		private String prdtOutManager;//출고담당자
+	//출고관련
+	private String prdtOutCode;//출고코드
+	private String prdtDtOutCode;//출고상세코드
+	private String orderDtCode;//상세주문코드
+	private int prdtOutCnt;//출고수량
+	private int prdtLeftCnt;//잔여수량
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
+	private Date prdtOutDate;//출고날짜
+	private String prdtOutManager;//출고담당자
 }

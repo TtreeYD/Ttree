@@ -117,5 +117,17 @@ public class BusinessRestController {
 	public int prdtFinOut( BusinessVO businessvo) {
 		return businessService.prdtFinOut(businessvo);
 	}
+	//출고조회 
+	@GetMapping("/prdtOutList")
+	public List<FinPrdtVO> prdtOutList(FinPrdtVO fpv){
+		
+		return businessService.prdtOutList(fpv);
+	}
+	//출고상세조회
+	@GetMapping("/prdtOutDtList")
+	public List<FinPrdtVO> prdtOutDtList(FinPrdtVO fpv){
+		System.out.println(fpv);
+		return businessService.prdtOutDtList(fpv);
+	}
 	
 }

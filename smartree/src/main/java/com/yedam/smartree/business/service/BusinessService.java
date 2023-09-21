@@ -45,6 +45,12 @@ public interface BusinessService {
 	//출고전 orderList
 	public List<BusinessVO> selectOrderBfOutList(BusinessVO businessVO);
 	
+	//출고조회
+	public List<FinPrdtVO> prdtOutList(FinPrdtVO fpv);
+	//출고상세조회
+	public List<FinPrdtVO> prdtOutDtList(FinPrdtVO fpv);
+	
+	
 	
 	
 

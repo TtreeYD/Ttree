@@ -27,6 +27,7 @@
 		       </if>	
 		</where>
   		</select>
+  	
   	<!-- 주문서상세조회 -->
   	<select id="selectOrderDtList" resultType="BusinessVO">
  		select a.*, a.order_dt_cnt - prdt_out_cnt as prdt_left_cnt 
@@ -259,4 +260,27 @@
   			   set dod_state = '출고완료'
   			 where order_code = #{orderCode}
   		</update>
+  		
+  		<!-- 출고조회 -->
+  	<select id="prdtOutList" resultType="FinPrdtVO">
+  		select * 
+  		from prdt_out
+  		<where>
+  			<if test="prdtOutCode != null">
+  				prdt_out_code like '%'||#{prdtOutCode}||'%'
+  			</if>
+  			<if test="prdtOutDate != null">
+  				and trunc(prdt_out_date) =trunc(#{prdtOutDate})
+  			</if>
+  		</where>
+  	</select>
+  	<!-- 출고상세조회 -->
+  	<select id="prdtOutDtList" resultType="FinPrdtVO">
+  		select p.prdt_dt_out_code , p.prdt_lot_no  , f.prdt_code , pt.prdt_name , p.prdt_out_cnt 
+		  from prdt_out_list p join fin_prdt f
+		                    on p.prdt_lot_no = f.prdt_lot_no
+		                    join prdt_table pt 
+		                    on f.prdt_code = pt.prdt_code
+		 where p.prdt_out_code = #{prdtOutCode}
+  	</select>
   </mapper>

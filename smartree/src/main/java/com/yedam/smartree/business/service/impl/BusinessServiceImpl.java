@@ -155,6 +155,16 @@ public class BusinessServiceImpl implements BusinessService{
 	public List<BusinessVO> selectOrderBfOutList(BusinessVO businessVO) {
 		return businessmapper.selectOrderBfOutList(businessVO);
 	}
+	//출고조회
+	@Override
+	public List<FinPrdtVO> prdtOutList(FinPrdtVO fpv) {
+		return businessmapper.prdtOutList(fpv);
+	}
+	//출고상세조회
+	@Override
+	public List<FinPrdtVO> prdtOutDtList(FinPrdtVO fpv) {
+		return businessmapper.prdtOutDtList(fpv);
+	}
 	
 	
 
