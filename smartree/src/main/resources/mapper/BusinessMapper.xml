@@ -174,10 +174,10 @@
   	
   	<!-- 완제품재고조회 -->
   	<select id="selectFinPrdt" resultType="FinPrdtVO">
-  		select p.prdt_name , p.prdt_code  , sum(f.prdt_cnt) prdt_sum , f.prdt_save_cnt
+  		select p.prdt_name , p.prdt_code  , sum(f.prdt_cnt) prdt_sum , p.prdt_ss
 		  from fin_prdt f join prdt_table p 
 		        on f.prdt_code = p.prdt_code
-	  group by p.prdt_name, p.prdt_code,  f.prdt_save_cnt
+	  group by p.prdt_name, p.prdt_code,  p.prdt_ss
   	</select>
   	
   	<!-- Lot별 완제품 재고조회 -->
