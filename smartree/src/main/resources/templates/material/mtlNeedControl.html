@@ -82,8 +82,8 @@ background-color: cadetblue;
 		<!-- /.modal -->
 		<script>
 			// 안전재고 미달목록 출력/숨기기
-			let searchModalData = [];
-			let mtlDate;
+			let mtlInfo = [];
+			
 		    function pop(){
         	    $('#mtlLowGrid').toggle("size", 500);
        	    }		
@@ -125,7 +125,7 @@ background-color: cadetblue;
 					}, {
 						header : '납기요청일',
 						name : 'mtlWishDate',
-						align: 'center'
+						align: 'center'						
 					}, {
 						header: '담당자',
 						name: 'mtlManager',
@@ -262,12 +262,14 @@ background-color: cadetblue;
 					    sortingType: 'asc'
 					}, {
 						header : '거래처이름',
-						name : 'bpName',
+						name : 'bpCode',
 						sortable: true,
-					    sortingType: 'asc'
+					    sortingType: 'asc',
+						editor:{type: 'text'}
 					}, {
 						header : '수량',
-						name : 'mtlCnt'
+						name : 'mtlCnt',
+						editor:{type: 'text'}
 					}, {
 						header : '단위',
 						name : 'mtlUnit'
@@ -276,7 +278,8 @@ background-color: cadetblue;
 						name : 'mtlManager'
 					}, {
 						header : '납기요청일',
-						name : 'mtlWishDate'
+						name : 'mtlWishDate',
+						editor: 'datePicker'
 					}, {
 						header : '상태',
 						name : 'mtlWhereNm'
@@ -326,7 +329,8 @@ background-color: cadetblue;
                 }); */
 				
 				//안전재고미달 ajax
-		        $.ajax({
+		        
+				$.ajax({
 			          url: '/mtlMinus',
 			          method: 'get',
 			          dataType: 'json',
@@ -346,28 +350,29 @@ background-color: cadetblue;
 			            console.log(err);
 			          }
 			        })
-			        
-				// 아래리스트 ajax
-		        $.ajax({
-		          url: '/insertNeedMtl',
-		          method: 'POST',
-		          dataType: 'json',
-		          success: function (result) {
-		            //날짜변환
-		            $(result).each(function (idx, obj) {
-		              for (let head of header) {
-
-		                if (head.slice(-4).toLowerCase() == 'date') {
-		                  obj[head] = getDate(obj[head]);
-		                }
-		              }
-		            });
-		            mtlNeedGrid.resetData(eval(result));
-		          },
-		          error: function (err) {
-		            console.log(err);
-		          }
-		        })
+                
+				// 발주 ajax
+			$('#mtlSave').on('click', mtlSave)
+			function mtlSave() {
+                mtlNeedGrid.blur();
+				if(!mtlNeedGrid.isModified()) {
+					alert('발주할 내역이 없습니다.');
+					return;
+				}
+				$.ajax({
+					url: '/insertNeedMtl',
+					type: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					data: JSON.stringify(mtlNeedGrid.getData()),
+					success: result => {
+						alert("등록완료");
+						mtlNeedGrid.resetData([]);
+					},
+					error: err => console.log(err)
+				})
+			}
 		        // 모달검색 ajax
 		        $.ajax({
 		          url: '/getNeedMtl',
@@ -410,6 +415,7 @@ background-color: cadetblue;
 					});
 			});
 		</script>
+	</div>
 	</div>
 </body>
 </html>

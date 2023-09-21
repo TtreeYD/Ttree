@@ -36,7 +36,7 @@ public class MaterialVO {
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private Date mtlInDate; 						// 자재입고일
 	private String mtlInManager; 					// 입고담당자
-	private int mtlLotCnt; 							// 자재 재고수량
+	private int mtlLotCnt; 							// 총재고수량
 	private String mtlChkCode; 						// 자재검사코드
 	
 	
@@ -82,11 +82,18 @@ public class MaterialVO {
 													// 자재이름
 													// lot 번호
 	private String dtProdInstCode;					// 생산지시상세코드
-	private int holdingCnt;							// 자재수량
+	private int holdingCnt;							// 홀드자재수량
 	
 	// 발주관리-안전재고 미달목록
 	private int mtlSs;								// 자재 안전재고
-	private int mtlNow;							// 자재 수량차
+	private int mtlNow;								// 자재 수량차
 	
 	// 입고관리 - 검사완료 목록
+	
+	// 재고조회 - 재고수량 - lot수량 수량차
+	private int mtlUse;								// 사용가능수량		
+	
+	
+	// 발주 insert
+	private String bpCode; 
 }

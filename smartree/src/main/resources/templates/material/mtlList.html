@@ -11,13 +11,17 @@
 margin-top: 0px;
 float: right;
 }
+.tui-grid-body-area .tui-grid-cell .tui-grid-cell-content{
+ text-align: center;
+}
+
 </style>
 
 </head>
 <body>
 	<div layout:fragment="content">
-		<h3>자재재고목록</h3>
-		<div>
+		<div class="row">
+<!-- 		<div>
 			<span>자재종류</span>
 			<select id="mtlPick">
 				<option value="" selected>원자재</option>
@@ -34,21 +38,93 @@ float: right;
 			</select>
 			<br>
 			<button type="button" id="searchBtn" class="btn btn-primary">조회</button>
-			<button type="button" class="btn btn-info btn-icon-text excelDownload">Excel 
-			<i class="bi bi-printer"></i>
-            </button>
+		</div> -->
+		
+		<div class="col-5">
+			<h2>자재재고목록</h2>
+				<div class="input-group mb-3">
+					<select class="custom-select col-2" id="searchMtlType">
+				   	<option value="" selected>--</option>
+				  	</select>
+					<input type="text" class="form-control col-3" placeholder="자재명" id="searchMtlName">
+					<div class="input-group-append">
+				   	<button class="btn btn-outline-secondary" type="button" id="searchMtl">검색</button>
+					</div>
+				</div> 
+			<div id="mtlGrid"></div>
 		</div>
-		<div id="mtlGrid"></div>
+		<div class="col-7">
+			<h2>자재LOT목록</h2>
+				<div class="input-group mb-3" style="float: right;">
+					<select class="custom-select col-2" id="searchMtlType">
+				   	<option value="" selected>--</option>
+				  	</select>
+					<input type="text" class="form-control col-3" placeholder="LOT" id="searchLot">
+					<div class="input-group-append">
+				   	<button class="btn btn-outline-secondary" type="button" id="searchLot">검색</button>
+					</div>
+				</div> 
+			<div id=mtlLotGrid></div>
+		</div>
+
+
+		</div>
+
+		<button type="button" class="btn btn-info btn-icon-text excelDownload">Excel 
+		<i class="bi bi-printer"></i>
+           </button>
+		
 		<script>
+		
 		document.addEventListener("DOMContentLoaded",() => {
-				
+			let commonCode = [];
+			let codeDetail = [];
+			let codeType;
+			let cdl;	
+			
+			// 자재목록 그리드 sql문에서 자재당 하나씩만 나오게만듬
 				const mtlGrid = new tui.Grid({
 					el : document.getElementById('mtlGrid'),
 					scrollX : false,
 					scrollY : false,
 					rowHeaders : [ "rowNum" ],
+					minBodyHeight: 450,
 					pageOptions: {
 			            perPage: 10,
+			            useClient: true,
+			          },
+					columns : [ {
+						header : '자재코드',
+						name : 'mtlCode',
+						sortable: true,
+					},{
+						header : '분류',
+						name : 'mtlType',
+						sortable: true						
+					}, {
+						header : '자재이름',
+						name : 'mtlName'
+					}, {
+						header : '최종입고일자',
+						name : 'mtlInDate'
+					}, {
+						header : '총재고수량',
+						name : 'mtlLotCnt'
+					}, ]
+				});
+				
+				const header = ['mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode', 'mtlName']
+				
+				// lot목록 그리드
+				const mtlLotGrid = new tui.Grid({
+					el : document.getElementById('mtlLotGrid'),
+					data: [],
+					scrollX : false,
+					scrollY : false,
+					rowHeaders : [ "rowNum" ],
+					minBodyHeight: 450,
+					pageOptions: {
+			            perPage: 5,
 			            useClient: true,
 			          },
 					columns : [ {
@@ -57,31 +133,29 @@ float: right;
 						sortable: true,
 					    sortingType: 'asc'
 					}, {
+						header : '분류',
+						name : 'mtlType'
+					}, {
 						header : '자재코드',
 						name : 'mtlCode'
 					}, {
 						header : '자재이름',
 						name : 'mtlName'
 					}, {
-						header : '자재입고수량',
-						name : 'mtlInCnt'
-					}, {
 						header : '자재입고일자',
 						name : 'mtlInDate'
 					}, {
-						header : '담당자',
-						name : 'mtlManager'
+						header : '자재입고수량',
+						name : 'mtlInCnt'
 					}, {
-						header : '자재재고수량',
-						name : 'mtlLotCnt'
+						header : '홀드수량',
+						name : 'holdingCnt'
 					}, {
-						header : '자재검사코드',
-						name : 'mtlChkCode'
+						header : '사용가능수량',
+						name : 'mtlUse'
 					}   ]
 				});
-				
-				const header = ['mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode', 'mtlName']
-
+				// 재고목록 ajax
 		        $.ajax({
 		          url: '/mtlExist',
 		          method: 'get',
@@ -102,6 +176,72 @@ float: right;
 		            console.log(err);
 		          }
 		        })
+		        // 자재의 모든lot 조회 출력기능
+		        function lotFnc(mtlCode){
+		        $.ajax({
+		          url: '/getLotMtl',
+		          method: 'POST',
+		          data: { mtlCode : mtlCode },
+		          success: function (result) {
+		            //날짜변환
+		            $(result).each(function (idx, obj) {
+		              for (let head of header) {
+
+		                if (head.slice(-4).toLowerCase() == 'date') {
+		                  obj[head] = getDate(obj[head]);
+		                }
+		              }
+		            });
+		            mtlLotGrid.resetData(eval(result));
+		          },
+		          error: function (err) {
+		            console.log(err);
+		          }
+		        });
+				}
+			// 자재분류 불러오기
+			$.ajax({
+				url: "/mdm/selectCodeDetail",
+				data: {
+					codeType: '003'
+				},
+				success: result => {
+					$(result).each(function (idx, dept) {
+						let optTag = $('<option/>');
+						optTag.val(dept['codeId']);
+						optTag.text(dept['codeName']);
+						$('#mtlType, #searchMtlType').append(optTag);
+					})
+				},
+				error: err => console.log(err)
+			})		    
+		    // 자재검색
+			function searchMtl() {
+				let vo = {};
+				vo.mtlType = $('#searchMtlType').val();
+				vo.mtlName = $('#searchMtlName').val();
+				console.log(vo)
+				$.ajax({
+					url: '/mdm/searchMtl',
+					method: 'POST',
+					contentType : 'application/json',
+					data: JSON.stringify(vo),
+					success: result => {
+						console.log(result)
+						mtlGrid.resetData(result)
+					},
+					error: err => console.log(err)
+				})
+			}
+
+			
+			mtlGrid.on('click', function (ev) {
+				if (ev.rowKey == undefined) {
+					return;
+				}
+				mtlCode = mtlGrid.getValue(ev.rowKey, 'mtlCode')
+				lotFnc(mtlCode)
+			})
 		        
 		        //엑셀 다운로드 버튼으로 만드는 기능
 		        const excelDownload = document.querySelector(".excelDownload");
@@ -116,6 +256,6 @@ float: right;
 
 		</script>
 	</div>
-	
+	</div>
 </body>
 </html>

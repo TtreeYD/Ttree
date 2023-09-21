@@ -34,15 +34,17 @@
 									<div class="mb-3">
 									<span>자재입고일</span>
 									<div class="input-group">
-										<input class="form-control" id="mtlInDate" type="date" style="width: 150px;">
-										<input class="form-control" id="mtlInDate" type="date" style="width: 150px;">
+										<input class="form-control mr-2" id="StartMtlInDate" type="date" style="width: 150px;">
+										<div class="mt-2">~</div>
+										<input class="form-control ml-2" id="EndMtlInDate" type="date" style="width: 150px;">
 									</div>			
 									</div>
 									<div>
 									<span>검사완료일</span>
 									<div class="input-group">
-										 <input class="form-control" id="mtlChkDate" type="date" style="width: 150px;">
-										 <input class="form-control" id="mtlChkDate" type="date" style="width: 150px;">
+										<input class="form-control mr-2" id="StartMtlChkDate" type="date" style="width: 150px;">
+										<div class="mt-2">~</div>
+										<input class="form-control ml-2" id="EndMtlChkDate" type="date" style="width: 150px;">
 									</div>
 									</div>
 								</div>
@@ -50,7 +52,7 @@
 							<div class="col-6">
 								<div class="d-flex flex-column align-items-center">
 									<div class="mb-3">
-									<span>자재이름</span> <input class="form-control" id="mtlName" type="text" style="width: 300px;">
+									<span>자재이름</span> <input class="form-control mb-3" id="mtlName" type="text" style="width: 300px;">
 									<span>담당자</span> <input class="form-control" id="mtlManager" type="text" style="width: 300px;">
 									</div>
 								</div>
@@ -225,11 +227,6 @@
 			            useClient: true,
 			          },
 					columns : [ {
-						header : '자재LOT',
-						name : 'mtlLotNum',
-						sortable: true,
-					    sortingType: 'asc'
-					}, {
 						header : '자재코드',
 						name : 'mtlCode'
 					}, {
@@ -237,7 +234,8 @@
 						name : 'mtlName'
 					}, {
 						header : '자재입고수량',
-						name : 'mtlInCnt'
+						name : 'mtlInCnt',
+						editor:{type:'text'}
 					}, {
 						header : '자재입고일자',
 						name : 'mtlInDate'
@@ -250,7 +248,31 @@
 					}   ]
 				});
 				
-				const header = ['mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode','mtlChkDate','mtlStatusNm', 'mtlName']
+				const header = ['mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode','mtlChkDate','mtlStatusNm', 'mtlName']
+				// 입고 ajax
+				$('#mtlSave').on('click', mtlSave)
+				function mtlSave() {
+					mtlInGrid.blur();
+					if(!mtlInGrid.isModified()) {
+						alert('발주할 내역이 없습니다.');
+						return;
+					}
+					$.ajax({
+						url: '/insertInMtl',
+						type: 'POST',
+						headers: {
+							'Content-Type': 'application/json'
+						},
+						data: JSON.stringify(mtlInGrid.getData()),
+						success: result => {
+							alert("등록완료");
+							mtlInGrid.resetData([]);
+						},
+						error: err => console.log(err)
+					})
+				}
+				
+				
 				// 검사완료 자재목록
 				$.ajax({
 		          url: '/mtlChecked',
@@ -273,27 +295,7 @@
 		          }
 		        })
 				
-				// 입고 아래리스트
-		        $.ajax({
-		          url: '/insertInMtl',
-		          method: 'POST',
-		          dataType: 'json',
-		          success: function (result) {
-		            //날짜변환
-		            $(result).each(function (idx, obj) {
-		              for (let head of header) {
-
-		                if (head.slice(-4).toLowerCase() == 'date') {
-		                  obj[head] = getDate(obj[head]);
-		                }
-		              }
-		            });
-		            mtlInGrid.resetData(eval(result));
-		          },
-		          error: function (err) {
-		            console.log(err);
-		          }
-		        })
+				
 		        // 모달검색 ajax
 		        $.ajax({
 		          url: '/getInMtl',
@@ -337,6 +339,6 @@
 	});
 		</script>
 	</div>
-	
+	</div>
 </body>
 </html>
