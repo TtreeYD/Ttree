@@ -9,9 +9,229 @@
 </head>
 <body>
 	<div layout:fragment="content">
-		<h1>야호</h1>
-	<script>
-	
+		<h2>생산지시관리</h2>
+		
+		<div style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
+			<div>
+				<span class="btn-group" role="group" aria-label="Basic example" style="float: right;">
+					<button type="button" class="btn btn-primary" id="insertListBtn">새지시</button>
+					<button type="button" class="btn btn-primary" id="resetBtn">초기화</button>
+					<button type="button" class="btn btn-primary" id="prodListBtn">생산계획</button>
+					<button type="button" class="btn btn-primary" id="saveBtn">저장</button>
+					<button type="button" class="btn btn-primary" id="delBtn">삭제</button>
+				</span>
+				<h3>생산지시</h3>
+				 
+				<div id="grid" style="width: 800px;"></div>
+			</div> 
+			<div>
+				<h3>생산지시상세</h3>
+				<div id="grid2" style="width: 800px;"></div>
+			</div>
+		</div>
+		
+		<div class="modal fade" tabindex="-1" role="dialog" id="prodModal">
+			<div class="modal-dialog modal-dialog-centered modal-xl"
+				role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">생산계획 조회</h4>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="grid3"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+		<script>
+		window.onload=function() {
+			const grid = new tui.Grid({
+			el: document.getElementById('grid'),
+		      scrollX: false,
+		      scrollY: false,
+		      pageOptions: {
+	            perPage: 5,
+	            useClient: true,
+	          },
+	          bodyHeight : 200,
+		      columns: [
+	    	  	{
+		          header: '지시코드',
+		          name: 'prodInstCode',
+		          hidden : true
+		        },
+		        {
+		          header: '계획명',
+		          name: 'prodPlanName'
+		        },
+		        {
+		          header: '계획량',
+		          name: 'prodPlanCnt'
+		        },
+		        {
+		          header: '지시명',
+		          name: 'prodInstName',
+		          editor : 'text'
+		        },
+		        {
+		          header: '지시자명',
+		          name: 'prodInstManager',
+		          editor : 'text'
+		        },
+		        {
+		          header: '지시일자',
+		          name: 'prodInstdate',
+		          editor: {
+	              	type: 'datePicker',
+	              	options: {
+	              		format: 'yyyy-MM-dd',
+              			
+	              	}	
+				  }	
+		        },
+		        {
+		          header: '지시시작일자',
+		          name: 'prodInstSdate',
+		          editor : 'text'
+		        },
+		        {
+		          header: '지시종료일자',
+		          name: 'prodInstEdate',
+		          editor : 'text'
+		        }
+		      ]
+		    });
+		    const grid2 = new tui.Grid({
+				el: document.getElementById('grid2'),
+		      	scrollX: false,
+		     	scrollY: false,
+	          	bodyHeight : 200,
+		     	columns: [
+			        {
+			          header: '생산지시상세코드',
+			          name: 'dtProdInstCode'
+			        },
+			        {
+			          header: '생산지시코드',
+			          name: 'prodInstCode',
+			          hidden : true
+			        },
+			        {
+			          header: '지시량',
+			          name: 'prodInstCnt'
+			        },
+			        {
+			          header: '기지시량',
+			          name: ''
+			        },
+			        {
+			          header: '미지시량',
+			          name: ''
+			        },
+			        {
+			          header: '지시우선순위',
+			          name: 'prodInstRank',
+			        },
+			        {
+			          header: '생산지시완료여부',
+			          name: 'prodInstYn',
+			          hidden : true
+			        },
+		      	]
+		    });
+		    const grid3 = new tui.Grid({
+		    	// 생산계획 모달 그리드
+		      	el: document.getElementById('grid3'),
+		      	scrollX: false,
+		      	scrollY: false,
+		      	pageOptions: {
+		            perPage: 5,
+		            useClient: true,
+	          	},
+		      	columns: [
+	    	  		{
+		              header: '계획코드',
+		              name: 'prodPlanCode'
+		            },
+			    	{
+		              header: '계획명',
+		              name: 'prodPlanName'
+		            },
+		            {
+		              header: '담당자',
+		              name: 'prodName'
+		            },
+		            {
+		              header: '생산계획일자',
+		              name: 'prodPlanDate',
+		            },
+		            {
+		              header: '생산량',
+		              name: 'prodPlanCnt',
+		              hidden : true
+		            }
+	   	       ]
+	 	   });
+		    
+	  		//페이지 초기화버튼
+			$('#resetBtn').on('click', resetList)
+			
+			function resetList(){
+				grid.resetData([]);
+				grid2.resetData([]);
+				grid3.resetData([]);
+			}
+		 	// 생산계획버튼클릭시 뜨는 모달창
+			$('#prodListBtn').on('click', prodIngList);
+			
+			function prodIngList(){
+				$.ajax({
+					url:'/selectProdPlan',
+					method:'get',
+			    	dataType:'json',
+					success:function(result){
+						grid3.resetData(result);
+						$("#prodModal").modal('show');
+						setTimeout(() => grid3.refreshLayout(), 200);
+					},
+					error:function(err){
+						console.log(err);
+					}
+				})
+			}
+			//생산계획안 그리드 클릭 시 생산지시로 넘어가는 이벤트
+			grid3.on('dblclick', (ev) => {
+				if(ev.rowKey == undefined){
+					return;
+				}
+				let prodPlanCode = grid3.getValue(ev.rowKey, 'prodPlanCode');
+				console.log(prodPlanCode);
+				$.ajax({
+					url : '/selectGetProdPlan',
+					method : 'get',
+					data : { prodPlanCode : prodPlanCode },
+					success : function(result){
+						console.log(result);
+						grid.resetData(result);
+					 	$("#prodModal").modal('hide');	
+					},
+					error : function(err){
+						console.log(err);
+					}
+				})
+			})
+		}
+		
 	</script>
 	</div>
 </body>

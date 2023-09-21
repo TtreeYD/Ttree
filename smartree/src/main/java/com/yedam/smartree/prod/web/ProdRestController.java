@@ -61,4 +61,8 @@ public class ProdRestController {
 	public List<PrdtProdVO> selectPrdtList(PrdtProdVO vo){
 		return service.selectPrdt(vo);
 	}
+	@GetMapping("/selectGetProdPlan")
+	public List<ProdVO> selectGetProdPlan(ProdVO vo){
+		return service.selectGetProdList(vo);
+	}
 }

@@ -141,4 +141,10 @@
   		</where>
   	</select>
   	
+  	<select id="selectGetProd" resultType="ProdVO">
+		select p.prod_plan_name, dtp.prod_plan_cnt
+		from prod_plan p join dt_prod_plan dtp
+		                 on p.prod_plan_code = dtp.prod_plan_code
+		where p.prod_plan_code = #{prodPlanCode}
+  	</select>
   </mapper>

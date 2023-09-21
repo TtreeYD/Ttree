@@ -33,4 +33,6 @@ public interface ProdMapper {
 	public void insertAndUpdateDtProd(ProdVO vo);
 	
 	public List<PrdtProdVO> selectPrdt(PrdtProdVO vo);
+	
+	public List<ProdVO> selectGetProd(ProdVO vo);
 }

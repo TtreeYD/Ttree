@@ -102,6 +102,11 @@ public class ProdServiceImpl implements ProdService {
 		return prodMapper.selectPrdt(vo);
 	}
 
+	@Override
+	public List<ProdVO> selectGetProdList(ProdVO vo) {
+		return prodMapper.selectGetProd(vo);
+	}
+
 	
 	
 }
