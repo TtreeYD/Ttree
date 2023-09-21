@@ -143,6 +143,15 @@
 	    
 	   let prcsRsCode;
   	   let chkList = {};
+  	   
+  	 	toastr.options = {
+  			  positionClass: "toast-top-center",
+  			  escapeHtml: true,
+  			  closeButton: true,
+ 			  newestOnTop: false,
+  			  timeOut: 1250
+  			};
+  	   
 	    //제품검사목록 
 	    function getprdtCheckList(){
 
@@ -236,11 +245,6 @@
 				data : JSON.stringify(chkList),
 				success: function(result) {
 					if(result > 0){
-						toastr.options.positionClass = "toast-top-center";
-						toastr.options.escapeHtml = true;
-				      	toastr.options.closeButton = true;
-				        toastr.options.newestOnTop = false;
-					    toastr.options.progressBar = true;
 						toastr.success('저장완료');
 						$.ajax({
 							url : '/updatePrdtFinChk',
