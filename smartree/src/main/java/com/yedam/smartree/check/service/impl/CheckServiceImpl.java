@@ -55,20 +55,40 @@ public class CheckServiceImpl implements CheckService{
 
 	@Override
 	public int insertProdChk(ReqVO<CheckVO> vo) {
-		checkmapper.insertProdChk(vo.getChkData().get(0));
+		boolean check = true;
 		int cnt=0;
+		checkmapper.insertProdChk(vo.getChkData().get(0));
 		String prdtChkCode = vo.getChkData().get(0).getPrdtChkCode();
+		String prdtCode = vo.getChkData().get(0).getPrdtCode();
+		System.out.println("1111111111111111"+ prdtChkCode);
 		for(int i =0; i<vo.getChkDtData().size(); i++) {
 			vo.getChkDtData().get(i).setPrdtChkCode(prdtChkCode);
+			vo.getChkDtData().get(i).setPrdtCode(prdtCode);
 			checkmapper.insertDtProdChk(vo.getChkDtData().get(i));
 			cnt++;
+			if(vo.getChkDtData().get(i).getPrdtChkFit().equals("부적합")) {
+				check=false;
+			}
+			
 		}
+		if(!check) {
+			checkmapper.updatePrdtChk(vo.getChkData().get(0));
+			System.out.println(vo.getChkData().get(0));
+			System.out.println("2131231231231231");
+		}
+		
 		return cnt;
+		
 	}
 
 	@Override
 	public List<CheckVO> selectPrdtFin(CheckVO vo) {
 		return checkmapper.selectPrdtFin(vo);
+	}
+
+	@Override
+	public int updateFinChk(CheckVO vo) {
+		return checkmapper.updateFinChk(vo);
 	}
 	 
 }

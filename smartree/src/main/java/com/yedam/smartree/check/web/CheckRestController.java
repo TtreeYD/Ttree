@@ -134,4 +134,10 @@ public class CheckRestController {
 	public List<CheckVO> selectprdtFin(CheckVO vo){
 		return checkservice.selectPrdtFin(vo);
 	}
+	
+	//완제품 검사완료
+	@GetMapping("/updatePrdtFinChk")
+	public int updatePrdtFinChk(CheckVO vo) {
+		return checkservice.updateFinChk(vo);
+	}
 }

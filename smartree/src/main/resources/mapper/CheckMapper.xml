@@ -65,24 +65,18 @@
   
   <!-- 완제품검사상세목록 -->
   <select id="selectProdDtList" resultType="CheckVO">
-  SELECT 
+SELECT 
          s.chk_name, 
          s.chk_std,
          
-         p.prcs_rs_code,
-    
          c.chk_std_code,
          c.prdt_chk_num
-  FROM prdt_chk p 
-  JOIN dt_prdt_chk d
-    ON p.prdt_chk_code = d.prdt_chk_code
-  JOIN prdt_chk_list c
-    ON d.chk_std_code = c.chk_std_code
+  FROM prdt_chk_list c
   JOIN chk_std s
     ON c.chk_std_code = s.chk_std_code
   
    WHERE c.prdt_code = #{prdtCode}
-   	 AND p.prcs_rs_code = #{prcsRsCode}
+
   </select>  
   <!-- 완제품검사 저장 -->
   	<insert id="insertProdChk" parameterType="CheckVO">
@@ -93,17 +87,15 @@
   						 prdt_chk_code,
   						 prdt_code,
   						 prcs_rs_code,
-  						 prdt_chk_date,
-  						 prdt_chk_cnt,
-  						 prdt_chk_result
+  						 prdt_chk_cnt
+
   						)
   	values (
   			#{prdtChkCode},
   			#{prdtCode},
   			#{prcsRsCode},
-  			#{prdtChkDate},
-  			#{prdtChkCnt},
-  			#{prdtChkResult}
+  			#{passCnt}
+
   	)					
   	</insert>
   <!-- 완제품검사상세 저장 -->
@@ -117,7 +109,7 @@
   							prdt_manager
   						   )
   	values (
-  		 'PDC' || LPAD(prdt_chk_seq.NEXTVAL, 5, '0'),
+  		 #{prdtChkCode},
   		 #{prdtCode},
   		 #{chkStdCode},
   		 #{prdtChkVal},
@@ -125,6 +117,13 @@
   		 #{prdtManager}
   	) 
   </insert>  
+  
+  <!-- 완제품 결과수정 -->
+  <update id="updatePrdtChk" parameterType="CheckVO">
+  	update prdt_chk
+  	set prdt_chk_result = '부적합'
+  	where prdt_chk_code = #{prdtChkCode}
+  </update>
   
   <!-- 완제품검사조회목록 -->
   <select id="selectPrdtCheckList" resultType="CheckVO">
@@ -144,8 +143,8 @@
          c.chk_name, 
          c.chk_std,
           
-         d.prdt_chk_val, 
-         d.prdt_chk_result
+         d.prdt_chk_val
+        
          
     FROM prdt_chk p 
     JOIN dt_prdt_chk d 
@@ -164,4 +163,10 @@
   	  ON c.prdt_code = t.prdt_code
   WHERE c.prdt_chk_result = '적합'	  
   </select>
+  
+  <update id="updateFinChk" parameterType="CheckVO">
+  update process
+  set prod_yn = 'c'
+  WHERE prcs_code = #{prcsCode}
+  </update>
   </mapper>
