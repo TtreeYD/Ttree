@@ -39,9 +39,9 @@
   		 
   		ORDER BY eqm_code
   	</select>
-  	<!-- 설비조회 -->
+  	<!-- 설비조회 단건조회-->
   	<select id="selectEqm" resultType="EqmVO">
-  	select eqm_code,eqm_name,eqm_ucheck,insp_cycle,eqm_min_temp,eqm_max_temp,eqm_manager,mfg_comp,mfg_date,eqm_img
+  	select eqm_code,eqm_name,eqm_ucheck,insp_cycle,eqm_min_temp,eqm_max_temp,eqm_manager,mfg_comp,mfg_date,eqm_img,eqm_division
   	from EQM
   	where eqm_code=#{eqmCode} and eqm_name = #{eqmName} and  mfg_comp = #{mfgComp}
   	</select>
@@ -64,6 +64,7 @@
   			   ,MFG_COMP
   			   ,MFG_DATE
   			   ,EQM_IMG
+  			   ,EQM_DIVISION
   			)
    values
            ( 
@@ -77,6 +78,7 @@
    			   ,#{mfgComp}
    			   ,#{mfgDate}   
    			   ,#{eqmImg} 
+   			   ,#{eqmDivision}
            )
   	
   	
@@ -118,6 +120,9 @@
   			</if>
   			<if test="eqmImg != null and !eqmImg.equals('')">
   			       EQM_IMG =#{eqmImg}
+  			</if>
+  			<if test="eqmDivision != null and !eqmDivision.equals('')">
+  			       EQM_DIVISION =#{eqmDivision}
   			</if>
   		
   		</set>

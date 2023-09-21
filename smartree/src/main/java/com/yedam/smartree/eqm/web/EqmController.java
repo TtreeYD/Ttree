@@ -84,7 +84,7 @@ public class EqmController {
 		// model.addAttribute("eqmInspVO", new EqmInspVO());
 		return "eqm/eqmInspForm";
 	}
-
+	// 설비 점검 등록 - 등록
 	@PostMapping("/eqmInspForm")
 	public String registerEqmInspFormProcess(EqmInspVO eqmInspVO) {
 		eqminspservice.insertEqmInsp(eqmInspVO);
