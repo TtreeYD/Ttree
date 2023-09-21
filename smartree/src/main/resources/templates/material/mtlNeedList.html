@@ -106,6 +106,9 @@ float: right;
 			            useClient: true,
 			          },
 					columns : [ {
+						header : '거래처명',
+						name : 'bpName'
+					},{
 						header : '분류',
 						name : 'mtlType'
 					}, {
@@ -127,7 +130,7 @@ float: right;
 				});
 				// 발주목록 ajax
 		        $.ajax({
-		          url: '/mtlNeedList',
+		          url: '/mtlNeeds',
 		          method: 'get',
 		          dataType: 'json',
 		          success: function (result) {
@@ -202,7 +205,6 @@ float: right;
 					error: err => console.log(err)
 				})
 			}
-
 			
 			mtlNeedGrid.on('click', function (ev) {
 				if (ev.rowKey == undefined) {
