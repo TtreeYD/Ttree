@@ -10,8 +10,22 @@
 <body>
   <div layout:fragment="content">
   <h1>주문서조회</h1>
-    <div id="grid"></div>
+		
+		<label>주문코드</label> 
+		<input type="text" id="prdtOutCode"> 
 
+		<label >접수일자</label> 
+		<input type="date" id="prdtOutDate"> 
+
+		<label >납기일자</label>
+		<input type="date" id="prdtOutDate"> 
+	
+		<button type="button" id="searchDataBtn" class="btn btn-primary"
+			style="margin: 5px;">조회</button>
+		<button type="button" id="resetBtn" class="btn btn-primary"
+			style="margin: 4px;" >초기화</button>
+    <div id="grid"></div>
+	
     <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
       <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content" style="height:500px">
@@ -46,16 +60,10 @@
           columns: [{
             header: '주문상세코드',
             name: 'orderDtCode',
-            filter: {
-              type: 'text', showApplyBtn: true, showClearBtn: true
-            }
           },
           {
             header: '제품명',
             name: 'prdtName',
-            filter: {
-              type: 'text', showApplyBtn: true, showClearBtn: true
-            }
           },
           {
             header: '주문량',
@@ -86,24 +94,14 @@
           columns: [{
             header: '주문코드',
             name: 'orderCode',
-            filter: {
-              type: 'text', showApplyBtn: true, showClearBtn: true
-            }
-
           },
           {
             header: '업체코드',
             name: 'bpCode',
-            filter: {
-              type: 'text', showApplyBtn: true, showClearBtn: true
-            }
           },
           {
             header: '업체명',
             name: 'bpName',
-            filter: {
-              type: 'text', showApplyBtn: true, showClearBtn: true
-            }
           },
           {
             header: '주문일자',

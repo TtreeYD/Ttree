@@ -5,33 +5,24 @@
 <meta charset="UTF-8">
 <title>완제품출고조회</title>
 <style>
-.input-group {
-	margin-bottom: 10px;
-	width: 530px;
-}
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-}
+
 </style>
 </head>
 <body>
 <div layout:fragment="content">
-	<h1 style="margin-bottom: 50px;">완제품출고조회</h1>
-	<div class="input-group mb-4">
-		<input type="text" class="form-control col-3" placeholder="출고코드" readonly> 
-		<input type="text" class="form-control text-right" style="width:200px;" id="prdtOutCode"> 
-	</div>
-	<div class="input-group mb-4">
-		<input type="date" class="form-control col-3" placeholder="출고날짜" readonly> 
-		<input type="date" class="form-control text-right" style="width:200px;" id="prdtOutDate"> 
-	</div>
-	<div style="display: flex;  margin-top:10px;">
-		<button type="button" id="searchDataBtn" class="btn btn-primary"
-			style="margin: 5px;">조회</button>
-		<button type="button" id="resetBtn" class="btn btn-primary"
-			style="margin: 4px;" >초기화</button>
-	</div>
+	<h1>완제품출고조회</h1>
+	
+		
+		<label for="prdtOutCode">주문상세코드</label> 
+		<input type="text"  id="prdtOutCode"> 
+
+	
+		<label>출고날짜</label>
+		<input type="date" id="prdtOutDate"> 
+	
+
+		<button type="button" id="searchDataBtn" class="btn btn-primary" style="margin-left:20px;">조회</button>
+		<button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
 	<div id="prdtOut"></div>
 	
 	<div class="modal fade" tabindex="-1" role="dialog" id="prdtDtOutModal">
@@ -159,7 +150,7 @@ input::-webkit-inner-spin-button {
 			})
 		}
 		$('#searchDataBtn').on('click',function(){
-			data.prdtOutCode = $('#prdtOutCode').val();
+			data.orderDtCode = $('#prdtOutCode').val();
 			data.prdtOutDate = $('#prdtOutDate').val();
 			searchData(data);
 		})

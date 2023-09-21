@@ -9,19 +9,16 @@
 
 <body>
 	<div layout:fragment="content">
-		<div style="margin: 0 auto;">
-			<label style="text-align:center; margin-left: 300px">제품명</label>
-			<input type="text" id="prdt" class="form-control" placeholder="제품명을 입력하세요" name="ordercd"
-				style="width:300px;display: inline-block; margin:0 auto">
-			<label  style="margin-top:10px; margin-left:50px">Lot번호</label>
-			<input type="text" id="lotNo" class="form-control" name="plsdate" style="width:300px; display: inline-block;" placeholder="Lot번호를 입력하세요" />
-		</div>
-			<div style="display: flex; justify-content: center; margin-top:10px;">
+			<label>제품명</label>
+			<input type="text"  id="prdt"> 
+			<label>Lot번호</label>
+			<input type="text"  id="lotNo"> 
+		
 				<button type="button" id="searchDataBtn" class="btn btn-primary"
 					style="margin: 5px;">조회</button>
 				<button type="button" id="resetBtn" class="btn btn-primary"
 					style="margin: 4px;" >초기화</button>
-			</div>
+
 		<hr>
 		<h1>제품별 수량</h1>
 		
@@ -70,7 +67,10 @@
 					el: document.getElementById('lotPrdtGrid'),
 					scrollX: false,
 					scrollY: false,
-					
+					pageOptions: {
+			            perPage: 5,
+			            useClient: true,
+			          },
 					rowHeaders: ["rowNum"],
 					columns: [
 						{

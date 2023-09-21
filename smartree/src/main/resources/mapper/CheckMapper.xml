@@ -161,7 +161,8 @@ SELECT
   	from prdt_chk c
   	JOIN prdt_table t 
   	  ON c.prdt_code = t.prdt_code
-  WHERE c.prdt_chk_result = '적합'	  
+  WHERE c.prdt_chk_result = '적합'
+  		and c.prdt_fin_chk = '입고전'	  
   </select>
   
   <update id="updateFinChk" parameterType="CheckVO">
