@@ -44,4 +44,14 @@ public class BusinessController {
 		
 		return "business/prdtOut";
 	}
+	//출고조회 페이지이동
+	@GetMapping("prdtOutCheck")
+	public String prdtOutCheck() {
+		return "business/prdtOutList";
+	}
+	//입고관리 페이지이동
+	@GetMapping("prdtRecieve")
+	public String prdtRecieve() {
+		return "business/prdtRecieve";
+	}
 }

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>완제품출고조회</title>
+<style>
+.input-group {
+	margin-bottom: 10px;
+	width: 530px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+</style>
+</head>
+<body>
+<div layout:fragment="content">
+	<h1 style="margin-bottom: 50px;">완제품출고조회</h1>
+	<div class="input-group mb-4">
+		<input type="text" class="form-control col-3" placeholder="출고코드" readonly> 
+		<input type="text" class="form-control text-right" style="width:200px;" id="prdtOutCode"> 
+	</div>
+	<div class="input-group mb-4">
+		<input type="date" class="form-control col-3" placeholder="출고날짜" readonly> 
+		<input type="date" class="form-control text-right" style="width:200px;" id="prdtOutDate"> 
+	</div>
+	<div style="display: flex;  margin-top:10px;">
+		<button type="button" id="searchDataBtn" class="btn btn-primary"
+			style="margin: 5px;">조회</button>
+		<button type="button" id="resetBtn" class="btn btn-primary"
+			style="margin: 4px;" >초기화</button>
+	</div>
+	<div id="prdtOut"></div>
+	
+	<div class="modal fade" tabindex="-1" role="dialog" id="prdtDtOutModal">
+	      <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+	        <div class="modal-content" style="height:500px">
+	          <div class="modal-header">
+	            <h2>주문서상세조회</h2>
+	          </div>
+	          <div class="modal-body">
+	            <div id="prdtDtOut"></div>
+	          </div>
+	          <div class="modal-footer">
+	            <button type="button" class="btn btn-default" id="pdfbtn"
+	              style="transform:translateX(-940px)">PDF저장</button>
+	            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	          </div>
+	        </div><!-- /.modal-content -->
+	      </div><!-- /.modal-dialog -->
+	    </div><!-- /.modal -->
+
+<script>
+	let data = {};
+	const prdtOutGrid = new tui.Grid({
+	    el: document.getElementById('prdtOut'),
+	    scrollX: false,
+	    scrollY: false,
+	    rowHeaders: ["rowNum"],
+	    pageOptions: {
+            perPage: 5,
+            useClient: true,
+          },
+	    columns: [{
+	      header: '출고코드',
+	      name: 'prdtOutCode',
+	      
+	    },
+	    {
+	      header: '주문상세코드',
+	      name: 'orderDtCode',
+	      
+	    },
+	    {
+	      header: '출고담당자',
+	      name: 'prdtOutManager'
+	    },
+	    {
+	      header: '출고날짜',
+	      name: 'prdtOutDate',
+	      
+	    }],	
+	  });
+	
+	
+	const prdtDtOutGrid = new tui.Grid({
+        el: document.getElementById('prdtDtOut'),
+        scrollX: false,
+        scrollY: false,
+        rowHeaders: ["rowNum"],
+        pageOptions: {
+            perPage: 5,
+            useClient: true,
+          },
+        columns: [{
+          header: '출고상세코드',
+          name: 'prdtDtOutCode',      
+        },
+        {
+            header: 'lot번호',
+            name: 'prdtLotNo',
+            
+          },
+        {
+          header: '제품코드',
+          name: 'prdtCode',
+          
+        },
+        {
+            header: '제품명',
+            name: 'prdtName',
+            
+          },
+        {
+          header: '출고량',
+          name: 'prdtOutCnt'
+        },
+        ],
+
+      });
+	
+	$(document).ready(function () {
+		searchData();
+		
+		function searchData(data){
+			$.ajax({
+				url:'/prdtOutList',
+				method:'GET',
+				data: data,
+				success:function(result){
+					prdtOutGrid.resetData(result);
+				},
+				error:function(err){
+					console.log(err);
+				}
+				
+				
+			})
+		}
+		function searchDtData(data){
+			$.ajax({
+				url:'/prdtOutDtList',
+				method:'GET',
+				data:{
+					prdtOutCode : data
+					
+				},
+				success:function(result){
+					console.log(result)
+					prdtDtOutGrid.resetData(result);
+					setTimeout(() => prdtDtOutGrid.refreshLayout(), 200);
+					$('#prdtDtOutModal').modal('show');
+				},
+				error:function(err){
+					console.log(err);
+				}
+			})
+		}
+		$('#searchDataBtn').on('click',function(){
+			data.prdtOutCode = $('#prdtOutCode').val();
+			data.prdtOutDate = $('#prdtOutDate').val();
+			searchData(data);
+		})
+		$('#resetBtn').on('click',function(){
+			$('#prdtOutCode').val('');
+			$('#prdtOutDate').val('');
+		})
+		prdtOutGrid.on('click', function(ev){
+			data= prdtOutGrid.getValue(ev.rowKey , 'prdtOutCode');
+			console.log(data);
+			if(data != null){
+				searchDtData(data);
+				
+			}
+			
+		})
+		
+		
+		
+	});
+</script>
+</div>
+</body>
+</html>
