@@ -19,4 +19,7 @@ public interface CheckService {
 	//완제품 검사조회목록
 	public List<CheckVO> selectPrdtCheckList(CheckVO vo);
 	public List<CheckVO> selectdtList(CheckVO vo);
+	
+	//완제품 합격조회
+	public List<CheckVO> selectPrdtFin(CheckVO vo);
 }

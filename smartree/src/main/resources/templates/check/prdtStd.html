@@ -314,11 +314,7 @@
 				 $('#delBtn').on('click', function() {
 					  let selectedRows = grid2.getCheckedRows(); 
 					  if (selectedRows.length == 0) {
-						  Swal.fire({
-								icon: 'warning',
-								title: '선택된 행이 없습니다.',
-								text: '',
-							});
+						  toastr.warning('선택된 행이 없습닌다');
 					  } else {
 					    selectedRows.forEach(function(row) {
 					    	console.log(row);
