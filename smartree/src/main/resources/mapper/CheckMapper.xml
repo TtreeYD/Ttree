@@ -70,7 +70,8 @@
          s.chk_std,
          
          p.prcs_rs_code,
-         
+    
+         c.chk_std_code,
          c.prdt_chk_num
   FROM prdt_chk p 
   JOIN dt_prdt_chk d
@@ -83,11 +84,55 @@
    WHERE c.prdt_code = #{prdtCode}
    	 AND p.prcs_rs_code = #{prcsRsCode}
   </select>  
+  <!-- 완제품검사 저장 -->
+  	<insert id="insertProdChk" parameterType="CheckVO">
+  	<selectKey keyProperty="prdtChkCode" resultType="String" order="BEFORE">
+  		select 'PDC' || LPAD(prdt_chk_seq.NEXTVAL, 5, '0') as prdtChkCode from dual
+  	</selectKey>
+  	insert into prdt_chk(
+  						 prdt_chk_code,
+  						 prdt_code,
+  						 prcs_rs_code,
+  						 prdt_chk_date,
+  						 prdt_chk_cnt,
+  						 prdt_chk_result
+  						)
+  	values (
+  			#{prdtChkCode},
+  			#{prdtCode},
+  			#{prcsRsCode},
+  			#{prdtChkDate},
+  			#{prdtChkCnt},
+  			#{prdtChkResult}
+  	)					
+  	</insert>
+  <!-- 완제품검사상세 저장 -->
+    <insert id="insertDtProdChk" parameterType="CheckVO">
+  	insert into dt_prdt_chk(
+  							prdt_chk_code,
+  							prdt_code,
+  							chk_std_code,
+  							prdt_chk_val,
+  							prdt_chk_fit,
+  							prdt_manager
+  						   )
+  	values (
+  		 'PDC' || LPAD(prdt_chk_seq.NEXTVAL, 5, '0'),
+  		 #{prdtCode},
+  		 #{chkStdCode},
+  		 #{prdtChkVal},
+  		 #{prdtChkFit},
+  		 #{prdtManager}
+  	) 
+  </insert>  
   
   <!-- 완제품검사조회목록 -->
   <select id="selectPrdtCheckList" resultType="CheckVO">
   	select *
-  	from prdt_chk
+  	from prdt_chk c
+  	JOIN prdt_table t 
+  	  ON c.prdt_code = t.prdt_code
+  	  
   </select>
   
   <!-- 완제품검사상세조회목록 -->
