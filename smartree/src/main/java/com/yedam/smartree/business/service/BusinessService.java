@@ -50,6 +50,9 @@ public interface BusinessService {
 	//출고상세조회
 	public List<FinPrdtVO> prdtOutDtList(FinPrdtVO fpv);
 	
+	//입고처리
+	public int recievePrdt(ReqVO<FinPrdtVO> fpv);
+	
 	
 	
 	

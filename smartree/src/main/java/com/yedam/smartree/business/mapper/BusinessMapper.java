@@ -66,6 +66,8 @@ public interface BusinessMapper {
 	public List<FinPrdtVO> prdtOutList(FinPrdtVO fpv);
 	//출고상세조회
 	public List<FinPrdtVO> prdtOutDtList(FinPrdtVO fpv);
+	//입고처리
+	public int recievePrdt(FinPrdtVO fpv);
 	
 	
 	

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.business.service.BpVO;
@@ -128,6 +129,13 @@ public class BusinessRestController {
 	public List<FinPrdtVO> prdtOutDtList(FinPrdtVO fpv){
 		System.out.println(fpv);
 		return businessService.prdtOutDtList(fpv);
+	}
+	
+	//입고처리
+	@PostMapping("/recievePrdt")
+	public int recievePrdt(@RequestBody ReqVO<FinPrdtVO> fpv){
+		
+		return businessService.recievePrdt(fpv);
 	}
 	
 }

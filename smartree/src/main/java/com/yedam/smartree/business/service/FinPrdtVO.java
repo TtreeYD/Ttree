@@ -20,12 +20,11 @@ public class FinPrdtVO {
 	private int prdtSaveCnt; // 안전재고
 	private int prdtCnt; // 재고수량
 	private int prdtSum; // 합계
-	
 	//입고관련
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private Date prdtRecieveDate; // 입고날짜
-	private String recieveManager; // 입고담당자
+	private String prdtRecieveManager; // 입고담당자
 	private int prdtRecieveCnt; // 입고수량
 	private String prdtChkCode; // 완제품검사코드
 	

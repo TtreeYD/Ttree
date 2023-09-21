@@ -283,4 +283,22 @@
 		                    on f.prdt_code = pt.prdt_code
 		 where p.prdt_out_code = #{prdtOutCode}
   	</select>
+  	<!-- 입고처리 -->
+  	<insert id="recievePrdt" parameterType="FinPrdtVO">
+  		<selectKey keyProperty="prdtLotNo" resultType="String" order="BEFORE">
+	  		select 'PLN'|| LPAD(prdt_recieve_seq.NEXTVAL , 7 , '0') as prdtLotNo from dual
+	  	</selectKey>
+	  	insert into fin_prdt(prdt_lot_no , prdt_code , prdt_recieve_cnt , prdt_recieve_date , prdt_recieve_manager , prdt_chk_code , prdt_cnt)
+	  	values(
+	  		#{prdtLotNo},
+	  		#{prdtCode},
+	  		#{prdtRecieveCnt},
+	  		#{prdtRecieveDate},
+	  		#{prdtRecieveManager},
+	  		#{prdtChkCode},
+	  		#{prdtCnt}
+	  	)
+	  	
+  		
+  	</insert>
   </mapper>

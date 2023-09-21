@@ -165,6 +165,22 @@ public class BusinessServiceImpl implements BusinessService{
 	public List<FinPrdtVO> prdtOutDtList(FinPrdtVO fpv) {
 		return businessmapper.prdtOutDtList(fpv);
 	}
+	//입고처리
+	@Override
+	public int recievePrdt(ReqVO<FinPrdtVO> fpv) {
+		System.out.println("1111111111111"+fpv);
+		int cnt=0;
+		for(int i = 0 ; i<fpv.getList().size();i++) {
+			int grc = fpv.getList().get(i).getPrdtRecieveCnt();
+			fpv.getList().get(i).setPrdtCnt(grc);
+			businessmapper.recievePrdt(fpv.getList().get(i));
+			cnt++;
+			if(cnt>0) {
+			
+			}
+		}
+		return cnt;
+	}
 	
 	
 
