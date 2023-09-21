@@ -204,6 +204,14 @@
 						]
 					});
 					
+					toastr.options = {
+			  			  positionClass: "toast-top-center",
+			  			  escapeHtml: true,
+			  			  closeButton: true,
+			 			  newestOnTop: false,
+			  			  timeOut: 1250
+			  			};
+					
 					
 				$('#insertBtn').on('click', function() {
 				let newGrid = grid.appendRow({

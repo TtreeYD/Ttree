@@ -207,6 +207,15 @@
                      setTimeout(() => grid3.refreshLayout(), 200);
                  })
 				
+                 toastr.options = {
+	  			  positionClass: "toast-top-center",
+	  			  escapeHtml: true,
+	  			  closeButton: true,
+	 			  newestOnTop: false,
+	  			  timeOut: 1250
+	  			};
+                 
+                 
                // 검사량 - 불량량 이벤트  
 				 grid2.on('focusChange', (ev) => {
 		            const { rowKey, columnName } = ev;
@@ -229,11 +238,6 @@
 			  //모달 조회 클릭이벤트
 			  $('#searchDataBtn').on('click', function() {
 				if(!($('#mtlDate').val())){
-					toastr.options.positionClass = "toast-top-center";
-					toastr.options.escapeHtml = true;
-				      toastr.options.closeButton = true;
-				      toastr.options.newestOnTop = false;
-				      toastr.options.timeOut= 1250;
 				      
 					toastr.warning('날짜를 선택하세요');
 					return;
