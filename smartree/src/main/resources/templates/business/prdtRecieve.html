@@ -9,7 +9,10 @@
 <div layout:fragment="content">
 <h1>입고대기품목</h1>
 <div id="chkListGrid" ></div>
-
+<h1 style="margin-top:50px;">입고품목</h1>
+<div class="btn-group" role="group" aria-label="Basic example" style="float : right;">
+	<button class="btn btn-primary" style="float:right" id="recieveDtBtn">입고</button>
+</div>
 <div id="recieveGrid"></div>
 
 
@@ -33,6 +36,11 @@ const chkListGrid = new tui.Grid({
 		{
 			header: '제품코드',
 			name: 'prdtCode',
+
+		},
+		{
+			header: '제품명',
+			name: 'prdtName',
 
 		},
 		{
@@ -77,17 +85,19 @@ const recieveGrid = new tui.Grid({
 		{
 			header: '입고량',
 			name: 'prdtRecieveCnt',
+			editor: 'text'
 
 		},
 		{
 			header: '입고날짜',
 			name: 'prdtRecieveDate',
+			editor: 'datePicker'
 
 		},
 		{
 			header: '입고담당자',
 			name: 'recieveManager',
-
+			editor: 'text'
 		}],
 })
 
@@ -107,14 +117,28 @@ const recieveGrid = new tui.Grid({
 		})
 	}
 	chkListGrid.on('dblclick',function(ev){
-		console.log(chkListGrid.getFocusedCell().rowKey)
-		chkListGrid.removeRow(chkListGrid.getFocusedCell().rowKey)
-		
-		recieveGrid.appendRow({
-			prdtChkCode: prdtChkCode
-			prdtCode : prdtCode
-		})
+		let rowKey = chkListGrid.getFocusedCell().rowKey
+		if(rowKey != null && rowKey >=0){
+			let prdtChkCode = chkListGrid.getValue(rowKey , 'prdtChkCode');
+			let prdtCode = chkListGrid.getValue(rowKey , 'prdtCode');
+			let prdtName = chkListGrid.getValue(rowKey , 'prdtName');
+			let prdtChkCnt = chkListGrid.getValue(rowKey , 'prdtChkCnt');
+			chkListGrid.removeRow(rowKey);
+			recieveGrid.appendRow(
+				{
+				prdtChkCode: prdtChkCode,
+				prdtCode : prdtCode,
+				prdtName : prdtName,
+				prdtRecieveCnt : prdtChkCnt
+				},
+				{at:0}
+			);
+		}
+	});
+	$('#recieveDtBtn').on('click',function(){
+		console.log(recieveGrid.getData())
 	})
+	
 </script>
 </div>
 </body>
