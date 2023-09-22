@@ -44,7 +44,7 @@
 	        #{prodPlanNote},
 	        #{prodRank}
 	    )
-	</insert>
+	</insert> 
 	 <insert id="insertAndUpdateDtProd" parameterType="ProdVO">
 		{call in_dtProd_up_dtProd(
 			#{prodPlanCode},
@@ -147,4 +147,16 @@
 		                 on p.prod_plan_code = dtp.prod_plan_code
 		where p.prod_plan_code = #{prodPlanCode}
   	</select>
+  	
+  	<insert id="insertProdInst" parameterType="ProdVO">
+	    insert into prod_inst
+	    values(
+	        'PIN' || LPAD(prod_inst_seq.NEXTVAL, 7, '0'),
+	        #{prodInstName},
+	        #{prodInstManager},
+	        #{prodInstdate},
+	        #{prodInstSdate},
+	        #{prodInstEdate}
+	    )
+	</insert> 
   </mapper>
