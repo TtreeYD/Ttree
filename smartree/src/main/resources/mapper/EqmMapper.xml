@@ -43,7 +43,7 @@
   	<select id="selectEqm" resultType="EqmVO">
   	select eqm_code,eqm_name,eqm_ucheck,insp_cycle,eqm_min_temp,eqm_max_temp,eqm_manager,mfg_comp,mfg_date,eqm_img,eqm_division
   	from EQM
-  	where eqm_code=#{eqmCode} and eqm_name = #{eqmName} and  mfg_comp = #{mfgComp}
+  	where eqm_code=#{eqmCode} 
   	</select>
   	
   	
@@ -119,7 +119,7 @@
   			       MFG_DATE =#{mfgDate},
   			</if>
   			<if test="eqmImg != null and !eqmImg.equals('')">
-  			       EQM_IMG =#{eqmImg}
+  			       EQM_IMG =#{eqmImg},
   			</if>
   			<if test="eqmDivision != null and !eqmDivision.equals('')">
   			       EQM_DIVISION =#{eqmDivision}

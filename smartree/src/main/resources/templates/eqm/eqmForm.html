@@ -39,11 +39,7 @@
 	float: right;
 }
 
-#form {
-	position: relative;
-	width: 1500px;
-	border: 0px;
-}
+
 
 #im {
 	position: relative;
@@ -53,7 +49,7 @@
 
 #buttons {
 	position: relative;
-	left: 155px;
+	left: 40px;
 	bottom: 100px;
 }
 
@@ -66,13 +62,13 @@
 			data-toggle="modal" data-target="#searchEqmModal">설비조회</button>
 		<div id="form">
 			<form name="infoForm" action="eqmForm" method="post"
-				th:object="${eqmVO}">
+				th:object="${eqmVO}" enctype="multipart/form-data">
 				<table id="equipTable">
 					<tr>
 						<th>설비코드</th>
 						<td><input type="text" th:field="*{eqmCode}" name="eqmCode"
 							id="eqmCode" style="background-color: #d3d3d3" readonly /></td>
-						<th>설비명</th>
+						<th>설비명 *</th>
 						<td><input type="text" th:field="*{eqmName}" name="eqmName"
 							id="eqmName" /></td>
 					</tr>
@@ -81,8 +77,8 @@
 						<th>사용여부</th>
 						<td><label for="y"
 							style="margin-left: 10px; margin-right: 40px"><input
-								type="radio" id="y" th:field="*{eqmUcheck}" name="eqmUcheck"
-								value="y" /> Yes </label> <label for="n"><input type="radio"
+								type="radio" id="y"  name="eqmUcheck"
+								value="y" checked/> Yes </label> <label for="n"><input type="radio"
 								id="n" th:field="*{eqmUcheck}" name="eqmUcheck" value="n" /> No
 						</label></td>
 						<th>공정구분</th>
@@ -102,22 +98,21 @@
 							~ <input type="text" id="eqmMaxTemp" 
 							name="eqmMaxTemp" placeholder="최고" /> ℃</td>
 
-						<th>관리인</th>
+						<th>관리인 *</th>
 						<td><input type="text" id="eqmManager"
-							th:field="*{eqmManager}" name="eqmManager" /></td>
+							 name="eqmManager" /></td>
 					</tr>
 					<tr>
 						<th>점검주기</th>
 						<td><input type="text" name="inspCycle" id="inspCycle"
 							th:field="*{inspCycle}" />일</td>
 						<th>이미지</th>
-						<td><input type="file" name="eqmImg" id="eqmImg"
-							th:field="*{eqmImg}" accept="image/*" /></td>
+						<td><input type="file" name="file" id="eqmImg"	 accept="image/*" /></td>
 					</tr>
 					<tr>
-						<th>제조업체</th>
+						<th>제조업체 *</th>
 						<td><input type="text" id="mfgComp" name="mfgComp"
-							th:field="*{mfgComp}" /></td>
+							 /></td>
 					</tr>
 
 					<tr>
@@ -132,7 +127,7 @@
 				</div>
 
 				<div id="buttons">
-					<button type="submit" id="" class="btn btn-primary">등록</button>
+					<button type="button" id="saveBtn" class="btn btn-primary">저장</button>
 					<button type="button" id="resetBtn" class="btn btn-primary">
 						취소</button>
 					<button type="button" id="deleteBtn" class="btn btn-primary">
@@ -171,8 +166,35 @@
 		</div>
 		<!-- 모달창 끝 -->
 
-		<script>
-        $(document).ready(function () {
+<script>		
+    $(document).ready(function () {
+        	
+        $("#selectBtn").on("click", getEqmList);
+		$("#saveBtn").on("click",saveEqm);
+		
+		function saveEqm(){
+			//설비명 테스트
+			if(infoForm.eqmName.value==''){
+				swal("설비명을 입력하세요", "", "warning");
+				infoForm.eqmName.focus();
+				return;
+			}
+		 	// 관리자 테스트
+			if(infoForm.eqmManager.value==''){
+				swal("관리인를 입력하세요", "", "warning");
+				infoForm.eqmManger.focus();
+				return;
+			}
+			// 제조업체 테스트
+			if(infoForm.mfgComp.value==''){
+				swal("제조업체를 입력하세요", "", "warning");
+				intoForm.eqmManger.focus();
+				return;
+			}
+			 
+			infoForm.submit();
+		}
+		
           const grid2 = new tui.Grid({
             el: document.getElementById("grid2"),
             scrollX: false,
@@ -194,7 +216,6 @@
             ],
           });
 
-          $("#selectBtn").on("click", getEqmList);
 
           // 전체설비 조회
           function getEqmList() {
@@ -258,49 +279,54 @@
               return;
             }
             let data = grid2.getValue(ev.rowKey, "eqmCode");
-            let data1 = grid2.getValue(ev.rowKey, "eqmName");
-            let data2 = grid2.getValue(ev.rowKey, "mfgComp");
-            // console.log(data);
-            $.ajax({
-              url: "/selectEqm",
-              method: "get",
-              data: {
-                eqmCode: data,
-                eqmName: data1,
-                mfgComp: data2,
-              },
-              success: function (result) {
-                console.log(result);
-                console.log(result.eqmName);
-                console.log(result.eqmImg);
-                console.log(result.eqmDivision);
-
-                $("#searchEqmModal").modal("hide");
-                $("#eqmCode").val(result.eqmCode);
-                $("#eqmName").val(result.eqmName);
-
-                if (result.eqmUcheck == "y") {
-                  $("#y").prop("checked", true);
-                } else {
-                  $("#n").prop("checked", true);
-                }
-                //$('#eqmUcheck').val(result.eqmUcheck);
-                $("#eqmMinTemp").val(result.eqmMinTemp);
-                $("#eqmMaxTemp").val(result.eqmMaxTemp);
-                $("#eqmManager").val(result.eqmManager);
-                $("#inspCycle").val(result.inspCycle);
-               $("#preview").attr("src",result.eqmImg);
-               // $('#eqmImg').val(result.eqmImg);
-                $("#mfgComp").val(result.mfgComp);
-                $("#mfgDate").val(result.mfgDate);
-                $("#eqmDivision").val(result.eqmDivision);
-              },
-              error: function (err) {
-                console.log(err);
-              },
-            });
+            getEqm(data);
+           
           });
 
+          // 코드확인 
+        let eqmCode= '[[${eqmCode}]]'
+      	if(eqmCode !=''){
+      		swal("저장 완료!", "설비가 저장되었습니다.", "success");
+      		getEqm(eqmCode);
+      	}
+          
+          function getEqm(data){
+        	  $.ajax({
+                  url: "/selectEqm",
+                  method: "get",
+                  data: {
+                    eqmCode: data
+                  },
+                  success: function (result) {
+
+                    $("#searchEqmModal").modal("hide");
+                    $("#eqmCode").val(result.eqmCode);
+                    $("#eqmName").val(result.eqmName);
+
+                    if (result.eqmUcheck == "y") {
+                      $("#y").prop("checked", true);
+                    } else {
+                      $("#n").prop("checked", true);
+                    }
+                    //$('#eqmUcheck').val(result.eqmUcheck);
+                    $("#eqmMinTemp").val(result.eqmMinTemp);
+                    $("#eqmMaxTemp").val(result.eqmMaxTemp);
+                    $("#eqmManager").val(result.eqmManager);
+                    $("#inspCycle").val(result.inspCycle);
+                   $("#preview").attr("src","/eqm/display?fileName=/"+result.eqmImg);
+                   // $('#eqmImg').val(result.eqmImg);
+                    $("#mfgComp").val(result.mfgComp);
+                    $("#mfgDate").val(result.mfgDate);
+                    $("#eqmDivision").val(result.eqmDivision);
+                  },
+                  error: function (err) {
+                    console.log(err);
+                  },
+                });
+          }
+          
+          
+          
           // 초기화
           $("#resetBtn").on("click", function () {
             $("#eqmCode").val("");
@@ -320,6 +346,8 @@
           // 삭제버튼
           $("#deleteBtn").click(function () {
             swal({
+       
+            	
               title: "정말 삭제하시겠습니까?",
               text: "",
               icon: "warning",
@@ -329,6 +357,12 @@
               if (message) {
                 var eqmCode = $("#eqmCode").val();
 
+                if(eqmCode=='' ){
+                	swal("삭제할 설비가 없습니다", "", "warning");
+                	return;
+                }
+                
+                
                 $.ajax({
                   url: "/deleteEqm",
                   method: "GET",
@@ -337,7 +371,7 @@
                     console.log(data);
                     //삭제 후 <input> 태그 칸 값 비우기
                     $("input").val("");
-                    swal("삭제 성공!", "설비가 삭제되었습니다.", "success");
+                    swal("삭제 완료!", "설비가 삭제되었습니다.", "success");
                   },
                   error: function (reject) {
                     console.log(reject);
@@ -362,22 +396,6 @@
           
           
           
-
-    /*       // 확장자가 이미지 파일인지 확인
-          function isImageFile(file) {
-            var ext = file.name.split(".").pop().toLowerCase(); // 파일명에서 확장자를 가져온다.
-
-            return $.inArray(ext, ["jpg", "jpeg", "gif", "png"]) === -1
-              ? false
-              : true;
-          }
-
-          // 파일의 최대 사이즈 확인
-          function isOverSize(file) {
-            var maxSize = 3 * 500 * 500; // 3MB로 제한
-
-            return file.size > maxSize ? true : false;
-          } */
         });
       </script>
 	</div>

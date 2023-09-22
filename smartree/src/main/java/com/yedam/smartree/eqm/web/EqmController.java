@@ -1,11 +1,35 @@
 package com.yedam.smartree.eqm.web;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.yedam.smartree.eqm.service.EqmInspService;
 import com.yedam.smartree.eqm.service.EqmInspVO;
@@ -21,7 +45,10 @@ import com.yedam.smartree.eqm.service.EqmVO;
 @Controller
 @RequestMapping("/eqm")
 public class EqmController {
-
+	
+	@Value("${file.upload.path}")
+	private String uploadPath;
+	
 	@Autowired
 	EqmService eqmservice;
 
@@ -50,19 +77,40 @@ public class EqmController {
 
 	// 설비 등록 - 등록, 수정
 	@PostMapping("/eqmForm")
-	public String registerEqmProcess(EqmVO eqmVO) {
+	public String registerEqmProcess(MultipartFile file, EqmVO eqmVO,  RedirectAttributes attributes) {
+
+		// 파일업로드
+		
+		// 파일명 가져오기
+		String originalName = file.getOriginalFilename();
+		String fileName = originalName.substring(originalName.lastIndexOf("//")+1);
+		
+	    //날짜 폴더 생성
+        String folderPath = makeFolder();
+        
+        // 유니크한 이름 때문에
+        String uuid = UUID.randomUUID().toString();        
+        String uploadFileName = folderPath + "/" + uuid + "_" + fileName;
+        eqmVO.setEqmImg(uploadFileName);
+
+        //uploadFile에 파일을 업로드 하는 메서드 transferTo(file)   	
+        String saveName = uploadPath + "/" + uploadFileName;
+        Path savePath = Paths.get(saveName);		
+        try{
+        	file.transferTo(savePath); // 파일의 핵심
+        } catch (IOException e) {
+             e.printStackTrace();	             
+        }
+        		
 		// eqmcode 없으면 등록 / 있으면 수정
-
-	//	eqmservice.insertEqm(eqmVO);
-
-				
-		  if(eqmVO.getEqmCode() == "" ) { 
-			  eqmservice.insertEqm(eqmVO);
-		 }else{
-		     eqmservice.updateEqm(eqmVO);
-		  }
-		 
-
+		if (eqmVO.getEqmCode().equals("")) {
+			eqmservice.insertEqm(eqmVO);
+		} else {
+			eqmservice.updateEqm(eqmVO);
+		}
+		
+		// ?eqmCode= 안보이게 / 
+		attributes.addFlashAttribute("eqmCode", eqmVO.getEqmCode());
 		return "redirect:eqmForm";
 	}
 
@@ -86,9 +134,72 @@ public class EqmController {
 	}
 	// 설비 점검 등록 - 등록
 	@PostMapping("/eqmInspForm")
-	public String registerEqmInspFormProcess(EqmInspVO eqmInspVO) {
+	public String registerEqmInspFormProcess(EqmInspVO eqmInspVO,RedirectAttributes attributes) {
 		eqminspservice.insertEqmInsp(eqmInspVO);
+		attributes.addFlashAttribute("eqmCode", eqmInspVO.getEqmCode());
+		attributes.addFlashAttribute("inspCode", eqmInspVO.getInspCode());
 		return "redirect:eqmInspForm";
 	}
+	
+	/////////////////////////////////////
+	
+
+	private String makeFolder() {
+		String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));	// 경로에서 사용하는 /는 인지 못함
+		// LocalDate를 문자열로 포멧
+		String folderPath = str;//.replace("/", File.separator); // <- 그래서 separator 사용
+		File uploadPathFoler = new File(uploadPath, folderPath);
+		// File newFile= new File(dir,"파일명");
+		if (uploadPathFoler.exists() == false) {
+			uploadPathFoler.mkdirs();
+			// 만약 uploadPathFolder가 존재하지않는다면 makeDirectory하라는 의미입니다.
+			// mkdir(): 디렉토리에 상위 디렉토리가 존재하지 않을경우에는 생성이 불가능한 함수
+			// mkdirs(): 디렉토리의 상위 디렉토리가 존재하지 않을 경우에는 상위 디렉토리까지 모두 생성하는 함수
+		}
+		return folderPath;
+	}
+	
+	// 이미지 보여주기
+	@GetMapping("/display")
+	@ResponseBody
+	public ResponseEntity<byte[]> getFile(String fileName){
+		File file = new File(uploadPath + fileName);
+		ResponseEntity<byte[]> result = null;
+		
+		try {
+			HttpHeaders header = new HttpHeaders();
+			
+			header.add("Content-Type", Files.probeContentType(file.toPath()));
+			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
+			
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	
+	
+	// 파일 업로드 처리
+	private String getFolder() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+
+		String str = sdf.format(date);
+
+		return str.replace("-", File.separator);
+	}
+	
+	private String setImagePath(String uploadFileName) {
+		return uploadFileName.replace(File.separator, "/");
+	}
+	
+	
+	
+
+	
 
 }
+
+
+
+
