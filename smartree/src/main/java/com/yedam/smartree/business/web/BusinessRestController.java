@@ -29,6 +29,7 @@ public class BusinessRestController {
 	public List<BusinessVO> getOrders(){
 		return businessService.selectOrderList();
 	}
+	
 	//리스트DtListAjax || 주문서관리-주문서검색후 더블클릭(위의 주문정보정보는 클릭했을때let searchModalData; 검색버튼 클릭 할때 그 result를 담아준다.
 	//										그리고 해당 열 더블 클릭 할때 ev.rowKey값으로 해당열의 값 받아서 뿌려주고 상세페이지만 데이터가져오면되서 dtorder 가져오는리스트 같이사용)
 	@GetMapping("/orderDtList")
@@ -107,6 +108,16 @@ public class BusinessRestController {
 	public List<FinPrdtVO> prdtSearchList(FinPrdtVO fpvo){
 		return businessService.prdtSearchList(fpvo);
 	}
+	//미출고 주문서 조회
+	@GetMapping("/bfOutList")
+	public List<BusinessVO> selectOrderBfOutList(BusinessVO businessVO){
+		return businessService.selectOrderBfOutList(businessVO);
+	}
+	//기출고 주문서 조회
+	@GetMapping("/searchFinOrder")
+	public List<FinPrdtVO> searchFinOrder(){
+		return businessService.searchFinOrder();
+	}
 	//출고관리 lot별
 	@PostMapping("/prdtOutProcess")
 	public int prdtOutProcess(@RequestBody ReqVO<FinPrdtVO> finPrdtVO) {
@@ -136,6 +147,12 @@ public class BusinessRestController {
 	public int recievePrdt(@RequestBody ReqVO<FinPrdtVO> fpv){
 		
 		return businessService.recievePrdt(fpv);
+	}
+	//출고취소처리
+	@PostMapping("/cancleOutPrdt")
+	public int cancleOutPrdt(@RequestBody List<BusinessVO> businessVO) {
+		System.out.println(businessVO);
+		return businessService.cancleOutPrdt(businessVO);
 	}
 	
 }
