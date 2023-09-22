@@ -52,6 +52,10 @@ public interface BusinessService {
 	
 	//입고처리
 	public int recievePrdt(ReqVO<FinPrdtVO> fpv);
+	//기출고 주문서조회
+	public List<FinPrdtVO> searchFinOrder();
+	//출고취소처리
+	public int cancleOutPrdt(List<BusinessVO> businessVO);
 	
 	
 	

@@ -27,7 +27,24 @@
 		       </if>	
 		</where>
   		</select>
-  	
+  	<!-- 기출고 주문서조회 -->
+  	<select id="searchFinOrder" resultType="BusinessVO">
+  		select o.order_code , b.bp_code , b.bp_name , o.order_date , o.dod_date , o.dod_state , o.order_manager
+  		  	  from orders o join business_partner b
+  		  				on o.bp_code = b.bp_code  	
+  		  <where>
+  		  		dod_state = '출고완료'
+		 	<if test="orderCode != null">	 	
+		 		and o.order_code like '%'||#{orderCode}||'%'
+		 	</if>
+		 	<if test="orderDate != null ">
+		       	and trunc(o.order_date) = trunc(#{orderDate})
+		 	</if>
+		       <if test="dodDate!= null ">
+		       	and trunc(o.dod_date) = trunc(#{dodDate}) 
+		       </if>	
+		</where>
+  	</select>
   	<!-- 주문서상세조회 -->
   	<select id="selectOrderDtList" resultType="BusinessVO">
  		select a.*, a.order_dt_cnt - prdt_out_cnt as prdt_left_cnt 
@@ -130,7 +147,7 @@
 	  		#{prdtCode},
 	  		#{orderDtCnt},
 	  		#{orderCode}
-	  	)
+	  	)}
   	</insert> 
   	
   	<!-- 주문서삭제 -->
@@ -306,4 +323,12 @@
 			set prdt_fin_chk = '입고완료'
 			where prdt_chk_code = #{prdtChkCode}
   	</update>
+  	<!-- 출고취소 -->
+  	<insert id="cancleOutPrdt" parameterType="BusinessVO">
+  		{call p_cancle_out(
+	  		#{orderDtCode}
+	  	)}
+  	</insert>
+  	
+  	
   </mapper>

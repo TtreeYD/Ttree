@@ -9,11 +9,15 @@
 <body>
 	<div layout:fragment="content">	
 		<div class="btn-group" role="group" aria-label="Basic example" style="float : right;">
-			<button class="btn btn-primary" style="float:right" id="searchOrderModal">주문서검색</button>
+			<button class="btn btn-primary" style="float:right" id="searchOrderModal">미출고주문서검색</button>
+			<button class="btn btn-primary" style="float:right" id="searchFinOrderModal">기출고주문서검색</button>
 		</div>
 		<h2>주문서</h2>
 		<div id="orderGrid"></div>
 		<h2 style="margin-top:90px;">상세주문서</h2>
+		<div class="btn-group" role="group" aria-label="Basic example" style="float : right;">
+			<button class="btn btn-primary" style="float:right" id="cancleOutPrdt">출고취소</button>
+		</div>
 		<div id="orderDtGrid" ></div>
 		
 		<div class="modal fade" tabindex="-1" role="dialog" id="orderModal">
@@ -26,7 +30,7 @@
             <div id="searchGrid"></div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" id="closeBtn">Close</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -41,18 +45,16 @@
           <div class="modal-header">
             <h2>lot별재고조회</h2>
           </div>
-          <div class="modal-body">
-          <label for="ordercd" style="text-align:center;">담당자</label>
-						<input type="text" id="outmanager" class="form-control" placeholder="담당자를 입력하세요" name="ordercd"
-							style="width:300px">
-		  <label for="ordercd" style="text-align:center;">출고날짜</label>
-		  <input type="date" id="outdate" class="form-control"  name="ordercd"
-							style="width:300px">
+          <div>
+          <label for="ordercd" >담당자</label>
+		  <input type="text" id="outmanager"  placeholder="담당자를 입력하세요" name="ordercd">
+		  <label for="ordercd" >출고날짜</label>
+		  <input type="date" id="outdate" name="ordercd">
             <div id="lotPrdtGrid"></div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" id="saveBtn" >저장</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -61,14 +63,12 @@
 		<script th:inline="javascript">
 		var rowCheck;
 		var valueCheck;
-		var data = [[${prdtOut}]]
 		var Grid = tui.Grid
 		var check = 0;
 		const searchOrderGrid = new Grid({
 			el: document.getElementById('searchGrid'),
 			scrollX: false,
 			scrollY: false,
-			data: data,
 			rowHeaders: ["rowNum"],
 			pageOptions: {
 	            perPage: 5,
@@ -141,7 +141,7 @@
 			el: document.getElementById('orderDtGrid'),
 			scrollX: false,
 			scrollY: false,
-			rowHeaders: ["rowNum"],
+			rowHeaders: ["checkbox"],
 			
 			columns: [
 				{
@@ -182,6 +182,10 @@
 					scrollX: false,
 					scrollY: false,
 					rowHeaders: ["rowNum"],
+					pageOptions: {
+			            perPage: 5,
+			            useClient: true,
+			          },
 					columns: [
 						{
 							header: 'Lot번호',
@@ -222,10 +226,41 @@
 				         	
 				})
 			$(document).ready(function () {
-				//주문서검색클릭이벤트
+				//미출고주문서검색클릭이벤트
 				$('#searchOrderModal').on('click',function(){
-					setTimeout(() => searchOrderGrid.refreshLayout(), 300);
-					$('#orderModal').modal('show')
+					$.ajax({
+						url:'/bfOutList',
+						method:'GET',
+						success:function(result){
+							searchOrderGrid.resetData(result);
+							setTimeout(() => searchOrderGrid.refreshLayout(), 300);
+							$('#orderModal').modal('show')
+						},
+						error:function(err){
+							console.log(err)
+						}
+					})
+					
+				})
+				//기출고주문서검색클릭이벤트
+				$('#searchFinOrderModal').on('click',function(){
+					
+					$.ajax({
+						url:'/searchFinOrder',
+						method:'GET',
+						success:function(result){
+							searchOrderGrid.resetData(result);
+							setTimeout(() => searchOrderGrid.refreshLayout(), 300);
+							$('#orderModal').modal('show')
+						},
+						error:function(err){
+							console.log(err);
+						}
+					})
+				})
+				$('#closeBtn').on('click',function(){
+					console.log(123)
+					searchOrderGrid.resetData([]);
 				})
 				
 				let ordercode;//주문정보 orderCode 저장
@@ -251,12 +286,6 @@
 							OrderDtGrid.resetData(result);
 							
 							$('#orderModal').modal('hide')
-							if(result[0].prdtLeftCnt == 0 && check==1){
-								alert('이미 출고된 주문서입니다.');	
-								OrderGrid.resetData([]);
-								OrderDtGrid.resetData([]);
-								return;
-							}else{
 								let count=0;
 							for(let i =0 ; i< result.length ; i++){
 								count+=result[i].prdtLeftCnt;
@@ -270,18 +299,16 @@
 									data:{
 										orderCode : result[0].orderCode
 									},		
-									success:function(result){
-										OrderGrid.resetData([]);
-										OrderDtGrid.resetData([]);
-										check=1;
-										
+									success:function(result){	
+										//전체출고완료 시 그리드 값 비워주기
+										console.log(result)
 									},
 									error:function(err){
 										console.log(err);
 									}
 								})
 							}
-							}
+							
 							
 						},
 						error:function(err){
@@ -293,25 +320,34 @@
 				//주문상세클릭이벤트
 				OrderDtGrid.on('click',function(ev){
 					let data = OrderDtGrid.getValue(ev.rowKey,'prdtCode');
-					$('#orderdtcode').val(OrderDtGrid.getValue(ev.rowKey,"orderDtCode"))
-					$.ajax({
-						url:'/lotPrdtOutList',
-						method:'GET',
-						data:{
-							prdtCode : data
-						},
-						success:function(result){
-							rowCheck = ev.rowKey
-						
-							lotPrdtGrid.resetData(result);	
-							setTimeout(() => lotPrdtGrid.refreshLayout(), 300);
-							$('#prdtModal').modal('show');
-						},
-						error:function(err){
-							console.log(err);
-						}
-					})
+					
+					if(ev.targetType == 'cell'){
+						lotPrdtOutList(data);
+					}
+					rowCheck = ev.rowKey
 				})
+				
+				function lotPrdtOutList(data){
+						
+						$.ajax({
+							url:'/lotPrdtOutList',
+							method:'GET',
+							data:{
+								prdtCode : data
+							},
+							success:function(result){
+								
+							
+								lotPrdtGrid.resetData(result);	
+								setTimeout(() => lotPrdtGrid.refreshLayout(), 300);
+								$('#prdtModal').modal('show');
+							},
+							error:function(err){
+								console.log(err);
+							}
+						})
+					
+				}
 				
 				//제품수량선택 후 저장버튼클릭
 				$('#saveBtn').on('click',function(){
@@ -351,6 +387,33 @@
 							})
 
 						}
+				})
+				let prdtcode ;
+				$('#cancleOutPrdt').on('click',function(){
+					let dtData = OrderDtGrid.getCheckedRows();
+					console.log(dtData)
+					$.ajax({
+						url:'/cancleOutPrdt',
+						method:'POST',
+						dataType: 'json',
+						contentType : 'application/json',
+						data:JSON.stringify(dtData),
+						success:function(result){
+							toastr.options.positionClass = "toast-top-center";
+			                toastr.options.escapeHtml = true;
+			                toastr.options.closeButton = true;
+			                toastr.options.newestOnTop = false;
+			                toastr.options.timeOut= 1250;
+			                toastr.success('취소완료');
+			                OrderDtGrid.resetData([]);
+			                OrderGrid.resetData([]);
+						},
+						error:function(err){
+							console.log(err);
+						}
+					})
+					
+						
 				})
 			});
 		</script>

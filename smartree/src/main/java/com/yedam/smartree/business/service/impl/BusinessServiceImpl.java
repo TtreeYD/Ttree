@@ -181,6 +181,21 @@ public class BusinessServiceImpl implements BusinessService{
 		}
 		return cnt;
 	}
+	@Override
+	public List<FinPrdtVO> searchFinOrder() {
+		return businessmapper.searchFinOrder();
+	}
+	@Override
+	public int cancleOutPrdt(List<BusinessVO> businessVO) {
+		System.out.println("111111111111111111"+businessVO);
+		int cnt=0;
+		for(int i = 0 ; i<businessVO.size();i++) {
+			System.out.println(businessVO.get(i).getOrderDtCode());
+			businessmapper.cancleOutPrdt(businessVO.get(i));
+			cnt++;
+		}
+		return cnt;//
+	}
 	
 	
 

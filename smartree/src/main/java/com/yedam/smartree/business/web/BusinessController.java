@@ -38,10 +38,7 @@ public class BusinessController {
 	
 	//출고관리 페이지 이동
 	@GetMapping("prdtOut")
-	public String selectprdtOut(Model model , BusinessVO businessVO) {
-		model.addAttribute("prdtOut" , businessService.selectOrderBfOutList(businessVO) );
-		System.out.println(model);
-		
+	public String selectprdtOut() {
 		return "business/prdtOut";
 	}
 	//출고조회 페이지이동

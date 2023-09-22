@@ -70,6 +70,10 @@ public interface BusinessMapper {
 	public int recievePrdt(FinPrdtVO fpv);
 	//입고처리된 완제품 상태변경
 	public int updatePrdt(String prdtChkCode);
+	//기출고 주문서조회
+	public List<FinPrdtVO> searchFinOrder();
+	//출고취소처리
+	public int cancleOutPrdt(BusinessVO businessVO);
 	
 	
 	
