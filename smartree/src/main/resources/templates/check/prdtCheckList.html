@@ -8,35 +8,54 @@
 <meta charset="UTF-8">
 <title>SMARTREE</title>
 <style>
-	.column {
-		background-color: aqua;
-	}
-	#grid tbody td{
-			cursor : pointer;
-		}
+#grid tbody td {
+	cursor: pointer;
+}
+
+.tui-grid-cell.red {
+	background-color: rgb(227, 52, 52);
+	color: white;
+	font-weight: bolder;
+}
+
+.tui-grid-cell.green {
+	background-color: rgb(31, 193, 31);
+	color: white;
+	font-weight: bolder;
+}
+
+.tui-grid-row-odd.rowrow{
+	background-color: rgb(31, 193, 31);
+	color: white;
+	font-weight: bolder;
+}
+.lightgrey .tui-grid-cell-current-row td{
+	background-color: lightgray;
+	font-weight: bold;
+}
 </style>
 </head>
 
 <body>
-   <div layout:fragment="content">
-<h2>제품품질검사조회</h2>
-	<div style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
-		<span>
-			<h3>정호현</h3>
-			<div id="grid" style="width: 800px;"></div>
-		</span> 
-		<span>
-			<h3>정호현</h3>
-			<div id="grid2" style="width: 800px;"></div>
-		</span>
-	</div>
-	
-	
-	
-	
-	<script>
-	window.onload=function(){
+	<div layout:fragment="content">
+		<h2>제품품질검사조회</h2>
+		<div
+			style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
+			<div>
+				<h3>정호현</h3>
+				<div id="grid" class="lightgrey" style="width: 800px;"></div>
+			</div> <div>
+				<h3>정호현</h3>
+				<div id="grid2" style="width: 800px;"></div>
+			</div>
+		</div>
 
+
+
+
+		<script>
+	window.onload=function(){
+		
 	    const grid = new tui.Grid({
 	      el: document.getElementById('grid'),
 	      scrollX: false,
@@ -50,36 +69,43 @@
 	      columns: [
 	        {
 	          header: '제품검사코드',
-	          name: 'prdtChkCode'
+	          name: 'prdtChkCode',
+	          align: 'center'
 	        },
 	        {
 	          header: '공정실적코드',
 	          name: 'prcsRsCode',
+	          align: 'center'
 	        },
 	        {
 	          header: '제품코드',
 	          name: 'prdtCode',
+	          align: 'center'
 	        },
 	        {
 	          header: '제품명',
 	          name: 'prdtName',
+	          align: 'center'
 	        },
 	        {
 	          header: '검사량',
 	          name: 'prdtChkCnt',
+	          align: 'center'
 	        },
 	        {
 	          header: '검사결과',
 	          name: 'prdtChkResult',
+	          align: 'center'
 	        },
 	        {
 	          header: '검사날짜',
 	          name: 'prdtChkDate',
+	          align: 'center'
 	        },
 	        {
 	          header: '담당자',
 	          name: 'prdtManager',
-	          getColumnClassName: 'y-background'
+	          align: 'center'
 	        },
 	      ]
 	    });
@@ -91,35 +117,41 @@
 		      columns: [
 		        {
 		          header: '제품검사코드',
-		          name: 'prdtChkCode'
+		          name: 'prdtChkCode',
+		          align: 'center'
 		        },
 		        {
 		          header: '공정실적코드',
-		          name: 'prcsRsCode'
+		          name: 'prcsRsCode',
+		          align: 'center'
 		        },
 		        {
 		          header: '검사명',
-		          name: 'chkName'
+		          name: 'chkName',
+		          align: 'center'
 		        },
 		        {
 		          header: '검사기준',
-		          name: 'chkStd'
+		          name: 'chkStd',
+		          align: 'center'
 		        },
 		        {
 		          header: '검사값',
-		          name: 'prdtChkVal'
+		          name: 'prdtChkVal',
+		          align: 'center'
 		        },
 		        {
 		          header: '적합여부',
-		          name: 'prdtChkResult',
-	        	  className: 'y-background'
-		        },
+		          name: 'prdtChkFit',
+		          align: 'center',
+		          },   
 		      ]
 		    });
 	    getprdtCheckList();
 	    
 	 // 제품검사목록 조회
-	    function getprdtCheckList(){
+	    function getprdtCheckList(ev){
+			
 	    	$.ajax({
 	    		url:'/prdtCheckList',
 	    		method:'get',
@@ -137,14 +169,38 @@
 	    // 제품검사상세목록 조회
 	    grid.on('click',(ev)=>{
 	    	const prdtChkCode = grid.getValue(ev.rowKey, 'prdtChkCode')  
+	    	const rowData = grid.getRow(ev.rowKey);
+			console.log(rowData);
+			console.log(ev);
+			console.log(ev.rowKey);
+			console.log(rowData.rowKey);
 	    	$.ajax({
 	    		url:'/dtList',
 	    		method:'get',
 	    		data : {  prdtChkCode  },
 	       	 	dataType:'json',
 	    		success:function(result){
-	    			console.log(result);
+	    			for(let item of result){
+	    				if(item.prdtChkFit==='적합'){
+	    					item._attributes= {
+	    	            			className:{
+	    	            				column : {
+	    	            					prdtChkFit : ['green']
+	    	            				}
+	    	            			}
+	    		            	}
+	    				} else {
+	    					item._attributes= {
+	    	            			className:{
+	    	            				column : {
+	    	            					prdtChkFit : ['red']
+	    	            				}
+	    	            			}
+	    		            	}
+	    				}
+	    			}
 	    			grid2.resetData(result);
+
 	    		},
 	    		error:function(err){
 	    			console.log(err);
@@ -152,6 +208,7 @@
 	    	});
 	    });
 	    
+	   // $(data-column-name["prdtChkFit"]) data-column-name.val())
 	};
 	</script>
 	</div>

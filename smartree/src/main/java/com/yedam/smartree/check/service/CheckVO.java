@@ -22,6 +22,7 @@ public class CheckVO {
 	private String prdtChkStdCode;
 	private String prdtChkVal;
 	private String prdtChkFit;
+	private String prdtChkSit;
 	
 	private String prdtName;
 	

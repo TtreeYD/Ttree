@@ -14,7 +14,8 @@ public interface CheckService {
 	//완제품 검사목록
 	public List<CheckVO> selectProdCheckList(CheckVO vo);
 	public List<CheckVO> selectProdDtList(CheckVO vo);
-	public int insertProdChk(ReqVO<CheckVO> vo);
+	//완제품 검사저장(수정)
+	public int updateProdChk(ReqVO<CheckVO> vo);
 	
 	//완제품 검사조회목록
 	public List<CheckVO> selectPrdtCheckList(CheckVO vo);
@@ -23,7 +24,6 @@ public interface CheckService {
 	//완제품 합격조회
 	public List<CheckVO> selectPrdtFin(CheckVO vo);
 	
-	//검사완료 업데이트
-	public int updateFinChk(CheckVO vo);
+
 
 }
