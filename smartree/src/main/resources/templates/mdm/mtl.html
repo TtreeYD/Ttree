@@ -30,21 +30,21 @@ input::-webkit-inner-spin-button {
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">자재코드</span>
 				  	</div>
-					<input type="text" class="form-control text-right" readonly id="mtlCode"> 
+					<input type="text" class="form-control text-right col" readonly id="mtlCode"> 
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">자재명</span>
 				  	</div>
-					<input type="text" maxlength="12" class="form-control text-right" placeholder="자재명" id="mtlName">
+					<input type="text" maxlength="12" class="form-control text-right col" placeholder="자재명" id="mtlName">
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">분류</span>
 				  	</div>
-						<select class="custom-select text-right" id="mtlType">
+						<select class="custom-select text-right col" id="mtlType">
 						   <option value="" selected>--</option>
 					  </select>
 				</div>
@@ -54,21 +54,21 @@ input::-webkit-inner-spin-button {
 				    	<span class="input-group-text col">안전재고</span>
 				  	</div>
 					<input type="number" min="0" maxlength="5" oninput="maxLengthChk(this)"
-						class="form-control text-right" placeholder="0" id="mtlSs">
+						class="form-control text-right col" placeholder="0" id="mtlSs">
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">단위</span>
 				  	</div>
-					<input type="text" maxlength="10" class="form-control text-right" placeholder="" id="mtlUnit">
+					<input type="text" maxlength="10" class="form-control text-right col" placeholder="" id="mtlUnit">
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">사용여부</span>
 				  	</div>
-						<select class="custom-select text-right" id="mtlUse">
+						<select class="custom-select text-right col" id="mtlUse">
 						   <option value="Y" selected>Y</option>
 						   <option value="N">N</option>
 					  </select>

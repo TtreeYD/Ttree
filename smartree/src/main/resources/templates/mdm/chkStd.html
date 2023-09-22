@@ -28,50 +28,38 @@ input::-webkit-inner-spin-button {
 				<br>
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
-				    	<span class="input-group-text col">품질검사코드</span>
+				    	<span class="input-group-text col">검사코드</span>
 				  	</div>
-					<input type="text" class="form-control text-right" readonly id="chkStdCode"> 
+					<input type="text" class="form-control text-right col" readonly id="chkStdCode"> 
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
-				    	<span class="input-group-text col">품질검사명</span>
+				    	<span class="input-group-text col">검사명</span>
 				  	</div>
-					<input type="text" maxlength="12" class="form-control text-right" placeholder="품질검사명" id="chkName">
+					<input type="text" maxlength="12" class="form-control text-right col" placeholder="품질검사명" id="chkName">
 				</div>
+				
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
-				    	<span class="input-group-text col">분류</span>
+				    	<span class="input-group-text col">검사기준</span>
 				  	</div>
-						<select class="custom-select text-right" id="chkDt">
-						   <option value="" selected>--</option>
-					  </select>
-				</div>
-				
-				<div class="input-group mb-4">
-					<div class="input-group-prepend col-3">
-				    	<span class="input-group-text col">안전재고</span>
-				  	</div>
-					<input type="number" min="0" maxlength="5" oninput="maxLengthChk(this)"
-						class="form-control text-right" placeholder="0" id="chkStd">
+					<input type="text" maxlength="10" class="form-control text-right col" placeholder="0" id="chkStd">
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">단위</span>
 				  	</div>
-					<input type="text" maxlength="10" class="form-control text-right" placeholder="" id="chkUnit">
+					<input type="text" maxlength="10" class="form-control text-right col" placeholder="" id="chkUnit">
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
-				    	<span class="input-group-text col">사용여부</span>
+				    	<span class="input-group-text col">공정 상세</span>
 				  	</div>
-						<select class="custom-select text-right" id="chkUse">
-						   <option value="Y" selected>Y</option>
-						   <option value="N">N</option>
-					  </select>
+					<textarea class="form-control col" rows="3" maxlength="100" id="chkDt"></textarea>
 				</div>
 				
 				<div class="text-center">
@@ -118,33 +106,13 @@ input::-webkit-inner-spin-button {
 					header: '품질검사명',
 					name: 'chkName'					
 				}, {
-					header: '분류',
-					name: 'chkDt'					
-				}, {
-					header: '안전재고',
+					header: '검사기준',
 					name: 'chkStd'					
 				}, {
 					header: '사용여부',
-					name: 'chkUse'					
+					name: 'chkUnit'					
 				}]
 			});
-			
-			// 품질검사분류 불러오기
-			$.ajax({
-				url: "/mdm/selectCodeDetail",
-				data: {
-					codeType: '003'
-				},
-				success: result => {
-					$(result).each(function (idx, dept) {
-						let optTag = $('<option/>');
-						optTag.val(dept['codeId']);
-						optTag.text(dept['codeName']);
-						$('#chkDt, #searchChkType').append(optTag);
-					})
-				},
-				error: err => console.log(err)
-			})
 			
 			// 등록창 초기화
 			$('#resetChk').on('click', resetChk)

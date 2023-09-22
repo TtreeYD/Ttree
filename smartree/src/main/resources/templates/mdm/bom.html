@@ -6,12 +6,112 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
+<style type="text/css">
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+.input-group-prepend{
+	padding: 0;
+}
+</style>
 </head>
 <body>
 	<div layout:fragment="content">
-			
-	
-	
+		<div class="row">
+			<div class="col"></div>
+			<div class="col-4">
+				<h2>제품정보</h2>
+				<div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+				  <div class="btn-group" role="group" aria-label="First group">
+				    <button type="button" class="btn btn-secondary">1</button>
+				    <button type="button" class="btn btn-secondary">2</button>
+				    <button type="button" class="btn btn-secondary">3</button>
+				    <button type="button" class="btn btn-secondary">4</button>
+				  </div>
+				  <div class="input-group">
+				    <div class="input-group-prepend col-3">
+				      <div class="input-group-text col" id="btnGroupAddon2">@</div>
+				    </div>
+				    <input type="text" class="form-control col" placeholder="Input group example" aria-label="Input group example" aria-describedby="btnGroupAddon2">
+				  </div>
+				</div>
+				<div id="prdtGrid"></div>
+			</div>
+			<div class="col"></div>
+			<div class="col-7">
+				<h2>BOM정보</h2>
+					<button type="button" id="insertPrcs" class="btn btn-primary">등록</button>
+					<button type="button" id="insertPrcs" class="btn btn-primary">등록</button>
+					<button type="button" id="deletePrcs" class="btn btn-primary">삭제</button>
+				<div id="bomGrid"></div>
+			</div>
+			<div class="col"></div>
+		</div>
+
+
+		<script>
+		var Grid = tui.Grid;
+		
+		const bomGrid = new Grid({
+			el: document.getElementById('bomGrid'),
+			scrollX: false,
+			bodyHeight: 400,
+			pagination: true,
+			pageOptions: {
+				useClient: true,
+				perPage: 10,
+			},
+			contextMenu: null,
+			rowHeaders:[{type: 'rowNum', header:'공정순서', width: 80}],
+	      draggable: true,
+			columns: [{
+				header: '공정코드',
+				name: '2',
+				width: 180
+			}, {
+				header: '공정명',
+				name: '3',
+			}, {
+				header: '소모자재',
+				name: '4',
+				width: 200
+			}, {
+				header: '소모량',
+				name: '5',
+				width: 100
+			}, {
+				header: '단위',
+				name: '6',
+				width: 100
+			}]
+		});	
+		
+		const prdtGrid = new Grid({
+			el: document.getElementById('prdtGrid'),
+			scrollX: false,
+			bodyHeight: 400,
+			pagination: true,
+			pageOptions: {
+				useClient: true,
+				perPage: 10,
+			},
+			contextMenu: null,
+	      draggable: true,
+			columns: [{
+				header: '제품코드',
+				name: '2',
+			}, {
+				header: '제품명',
+				name: '3',
+			}, {
+				header: '분류',
+				name: '4',
+			}]
+		});	
+		</script>	
 	</div>
 </body>
 </html>
