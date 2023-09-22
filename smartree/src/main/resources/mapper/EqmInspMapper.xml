@@ -39,6 +39,12 @@
   	ORDER BY eqm_code
   	</select>
   	
+  	<!-- 설비점검 단건조회  -->
+  	<select id= "selectEqmInsp" resultType="EqmInspVO">
+  		select INSP_CODE,RECENT_INSP_DATE,REPAIR_DATE,INSP_DT,ACTION_DT,INSP_JUDG,NEXT_INSP_DATE,REGISTER_DATE,INSP_MANAGER
+  		from EQM_INSP
+  		where INSP_CODE = #{inspCode}
+  	</select>
   	
   	<!-- 설비점검 등록 -->
   	<insert id="insertEqmInsp" parameterType="EqmInspVO">

@@ -58,4 +58,9 @@ public class EqmRestController {
 	public int deleteEqm(EqmVO eqmVO) {
 		return eqmservice.deleteEqm(eqmVO);
 	}
+	// 설비점검 단건조회
+	@GetMapping("/selectEqmInsp")
+	public EqmInspVO getEqmInsp(EqmInspVO eqmInspVO){
+		return eqminspservice.selectEqmInsp(eqmInspVO);
+	}
 }
