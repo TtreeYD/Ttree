@@ -104,7 +104,7 @@ margin : 10px;
 						<div id="bpGrid"></div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="closeBtn">닫기</button>
 					</div>
 				</div>
 				<!-- /.modal-content -->
@@ -296,7 +296,7 @@ margin : 10px;
 					    sortingType: 'asc'
 					}, {
 						header : '거래처이름',
-						name : 'bpCode',
+						name : 'bpName',
 						sortable: true,
 					    sortingType: 'asc',
 						editor:{type: 'text'}
@@ -433,7 +433,7 @@ margin : 10px;
 					mtlCode: '',
 					mtlName: '',
 					mtlDate: '',
-					bpCode: '',
+					bpName: '',
 					mtlCnt: '',
 					mtlUnit: '',
 					mtlManager: '',
@@ -488,7 +488,7 @@ margin : 10px;
 				});
 				// 그리드 클릭시 모달 팝업
 				mtlNeedGrid.on('click', (ev)=>{
-		          if (ev.columnName === 'bpCode') {
+		          if (ev.columnName === 'bpName') {
 						$.ajax({
 							url:'/mdm/selectBpList',
 				            method: 'get',
@@ -505,25 +505,18 @@ margin : 10px;
 		            }
 				        });
                 // 거래처목록 더블클릭시 발주목록으로 이동시키기
-                bpGrid.on('dblclick', () => {
-                    let rowKey =
-                    	bpGrid.getFocusedCell().rowKey;
-		                    if (rowKey != null && rowKey >= 0) {
-		                        let bpName = bpGrid.getValue(
-		                            rowKey,
-		                            "bpName"
-		                        );
-		                    	bpGrid.removeRow(rowKey);
-		                    	bpGrid.blur();
-		
-		                        mtlNeedGrid.appendRow(
-		                            {
-		                            	bpName: bpName,
-		                            },
-		                            { at: 0 }
-		                        );
-		                    }
-                });
+				bpGrid.on('dblclick', () => {
+				    let rowKey = bpGrid.getFocusedCell().rowKey;
+				    if (rowKey != null && rowKey >= 0) {
+				        let bpName = bpGrid.getValue(rowKey, "bpName");
+						// 선택한 행에 값이 들어가게 행 키값 지정해주기
+				        let mtlRowKey = mtlNeedGrid.getFocusedCell().rowKey;
+				        if (mtlRowKey != null && mtlRowKey >= 0) {
+				            mtlNeedGrid.setValue(mtlRowKey, "bpName", bpName);
+				        }
+				        $("#closeBtn").click();
+				    }
+				});
 				
 			});
 		</script>

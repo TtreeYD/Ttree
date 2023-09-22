@@ -56,10 +56,17 @@
   	
   	<!-- 발주관리 insert -->
   	<insert id="insertNeedMtl" parameterType="MaterialVO" statementType="CALLABLE">
-  		INSERT INTO mtl_need (mtl_code, bp_code, mtl_name, mtl_cnt, mtl_unit, mtl_manager, mtl_wish_date, mtl_type)
-  		VALUES(
-  		#{mtlCode}, #{bpCode}, #{mtlName}, #{mtlCnt}, #{mtlUnit}, #{mtlManager}, #{mtlWishDate}, #{mtlType}
-  		)
+		INSERT INTO mtl_need (mtl_code, bp_code, mtl_name, mtl_cnt, mtl_unit, mtl_manager, mtl_wish_date, mtl_type)
+		VALUES (
+		    #{mtlCode},
+		    (SELECT bp_code FROM business_partner WHERE bp_name = #{bpName}),
+		    #{mtlName},
+		    #{mtlCnt},
+		    #{mtlUnit},
+		    #{mtlManager},
+		    #{mtlWishDate},
+		    #{mtlType}
+		)
   	</insert>
   	
   	<!-- 발주관리 update -->
@@ -137,7 +144,7 @@
   	
   	<!-- 발주목록 발주서별 자재내역 출력기능 -->
   	<select id="getPaperMtl" parameterType="MaterialVO">
-		SELECT b.bp_name, get_common(t.mtl_type, '003') AS mtl_type, n.mtl_code, t.mtl_name, t.mtl_unit, n.mtl_cnt, n.mtl_date , get_common(n.mtl_where, '009')mtl_where
+		SELECT b.bp_code, b.bp_name, get_common(t.mtl_type, '003') AS mtl_type, n.mtl_code, t.mtl_name, t.mtl_unit, n.mtl_cnt, n.mtl_date , get_common(n.mtl_where, '009')mtl_where
 		FROM mtl_need n JOIN mtl_table t ON n.mtl_code = t.mtl_code
 		JOIN business_partner b ON b.bp_code = n.bp_code
 		WHERE b.bp_name = #{bpName} AND TO_CHAR(n.mtl_date, 'yy/MM/dd') = #{mtlDate}
