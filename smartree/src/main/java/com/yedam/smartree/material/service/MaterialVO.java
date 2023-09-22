@@ -96,4 +96,7 @@ public class MaterialVO {
 	
 	// 발주 insert
 	private String bpCode; 
+	// 발주 조회 - 발주서 기준 조회
+	private String mtlWhere;							// 자재상태(주문완료,검수완료,입고완료)
+	
 }

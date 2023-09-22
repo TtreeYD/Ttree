@@ -91,7 +91,7 @@ float: right;
 					} ]
 				});
 				
-				const header = ['mtlWishDate','bpName', 'mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode', 'mtlName']
+				const header = ['mtlWhere','mtlWishDate','bpName', 'mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode', 'mtlName']
 				
 				// lot목록 그리드
 				const mtlNeedListGrid = new tui.Grid({
@@ -149,11 +149,11 @@ float: right;
 		          }
 		        })
 		        // 자재의 모든lot 조회 출력기능
-		        function PaperFnc(bpName){
+		        function PaperFnc(bpName, mtlDate){
 		        $.ajax({
 		          url: '/getPaperMtl',
 		          method: 'POST',
-		          data: { bpName : bpName },
+		          data: { bpName : bpName , mtlDate : mtlDate},
 		          success: function (result) {
 		            //날짜변환
 		            $(result).each(function (idx, obj) {
@@ -211,7 +211,9 @@ float: right;
 					return;
 				}
 				bpName = mtlNeedGrid.getValue(ev.rowKey, 'bpName')
-				PaperFnc(bpName)
+				mtlDate = mtlNeedGrid.getValue(ev.rowKey, 'mtlDate')
+				PaperFnc(bpName,mtlDate)
+				
 			})
 		        
 		        //엑셀 다운로드 버튼으로 만드는 기능
