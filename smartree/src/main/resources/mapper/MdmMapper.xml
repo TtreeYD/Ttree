@@ -328,14 +328,14 @@
 	<!-- 품질검사관리 -->
 	<!-- 품질검사 리스트 -->
 	<select id="selectChkList">
-		SELECT chk_std_code, chk_name, get_common(chk_dt, '003') chk_dt, chk_std
+		SELECT chk_std_code, chk_name, chk_dt, chk_std, chk_unit
 		FROM chk_std
 		ORDER BY chk_std_code
 	</select>
 	
 	<!-- 품질검사검색 -->
 	<select id="searchChk" resultType="MdmChkVO" parameterType="MdmChkVO">
-		SELECT chk_std_code, chk_name, get_common(chk_dt, '003') chk_dt, chk_std
+		SELECT chk_std_code, chk_name, chk_std, chk_unit
 		FROM chk_std
 		<where>
 			<if test="chkName != null and !chkName.equals('')">

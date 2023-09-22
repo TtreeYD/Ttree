@@ -30,21 +30,21 @@ input::-webkit-inner-spin-button {
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">공정코드</span>
 				  	</div>
-					<input type="text" class="form-control text-right" readonly id="prcsStdCode"> 
+					<input type="text" class="form-control text-right col" readonly id="prcsStdCode"> 
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">공정명</span>
 				  	</div>
-					<input type="text" maxlength="12" class="form-control text-right" placeholder="공정명" id="prcsName">
+					<input type="text" maxlength="12" class="form-control text-right col" placeholder="공정명" id="prcsName">
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">공정구분</span>
 				  	</div>
-					<select class="custom-select text-right" id="prcsType">
+					<select class="custom-select text-right col" id="prcsType">
 					   <option value="" selected>--</option>
 				  </select>
 				</div>
@@ -52,16 +52,16 @@ input::-webkit-inner-spin-button {
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">비고</span>
 				  	</div>
-					<input type="text" maxlength="10"	class="form-control text-right" id="prcsNote">
+					<input type="text" maxlength="10"	class="form-control text-right col" id="prcsNote">
 				</div>
 										
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">공정 상세</span>
 				  	</div>
-					<textarea class="form-control" rows="3" maxlength="100" id="prcsDetail"></textarea>
-					
+					<textarea class="form-control col" rows="3" maxlength="100" id="prcsDetail"></textarea>
 				</div>
+				
 				<div class="text-center">
 					<button type="button" id="insertPrcs" class="btn btn-primary">등록</button>
 					<button type="button" id="resetPrcs" class="btn btn-primary">초기화</button>
