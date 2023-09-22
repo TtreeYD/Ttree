@@ -12,7 +12,7 @@
 	  			mtl_manager
 		FROM	mtl_need
         <where>
-        	mtl_where = '주문완료'
+        	mtl_where = 'MT01'
           <if test="mtlDate != null">
             AND mtl_date >= #{mtlDate} AND mtl_date <![CDATA[<]]> #{mtlDate}+1
           </if>

@@ -31,11 +31,12 @@ public class CheckRestController {
 	@Autowired
 	CheckService checkservice;
 	
+	//자재검사목록
 	@GetMapping("/mtlcheck")
 	public List<MtlCheckVO> getmtlcheck(MtlCheckVO vo){
 		return mtlcheckservice.selectMtl(vo);
 	}
-	
+	//자재검사목록
 	@PostMapping("/mtlcheck")
 	@ResponseBody
 	public List<MtlCheckVO> mtlcheck(MtlCheckVO vo){
@@ -44,7 +45,7 @@ public class CheckRestController {
 		return mtlcheckservice.selectMtl(vo);
 	}
 	
-	
+	//자재검사저장
 	@ResponseBody
 	@PostMapping("/mtlinsert")
 	public int mtlinsert(@RequestBody List<MtlCheckVO> checkList) {
@@ -57,35 +58,37 @@ public class CheckRestController {
 		return cnt;
 	}
 	
+	//자재이름검색
 	@GetMapping("/mtlName")
 	public List<MtlCheckVO> getMtlName(String mtlName){
 		return mtlcheckservice.searchMtl(mtlName);
 	}
+	//자재날짜검색
 	@GetMapping("/mtlDate")
 	public List<MtlCheckVO> getMtlDate(String mtlDate){
 		return mtlcheckservice.searchMtlDate(mtlDate);
 	}
-	
+	//검사된자재검색
 	@GetMapping("/mtlallchk")
 	public List<MtlCheckVO> getMtlAllChk(){
 		return mtlcheckservice.selectChkAll();
 	}
-	
+	//검사된자재수정
 	@PostMapping("/updatemtlchk")
 	public int mtlupdate(MtlCheckVO vo) {
 		return mtlcheckservice.updateChkMtl(vo);
 	}
-	
+	//완제품목록
 	@GetMapping("/selectprdt")
 	public List<BpVO> getPrdtList(BpVO vo){
 		return checkservice.selectPrdtList(vo);
 	}
-	
+	//제품기준목록
 	@GetMapping("/prdtStdList")
 	public List<CheckVO> getPrdtStdList(CheckVO vo){
 		return checkservice.selectPrdtStdList(vo);
 	}
-	
+	//제품기준저장
 	@PostMapping("/insertPrdtChkList")
 	public List<Integer> insertPrdtChkList(@RequestBody List<CheckVO> vo) {
 		List<Integer> results = new ArrayList<>();
@@ -113,20 +116,20 @@ public class CheckRestController {
 	// 완제품검사할목록조회
 	@GetMapping("/prodCheckList")
 	public List<CheckVO> selectProdCheckList(CheckVO vo){
+		System.out.println("@@@@@@@@@@@@@@@@@@@" + vo);
 		return checkservice.selectProdCheckList(vo);		
 	}
 	
 	// 완제품검사할 상세목록조회
 	@GetMapping("/prodDtList")
 	public List<CheckVO> selectProdDtList(CheckVO vo){
-		System.out.println("@@@@@@@@@@@@@@@@@@@" + vo);
 		return checkservice.selectProdDtList(vo);
 	}
 	
-	//완제품 검사등록
-	@PostMapping("/insertProdChk")
-	public int insertProdChk(@RequestBody ReqVO<CheckVO> vo) {
-		return checkservice.insertProdChk(vo);
+	//완제품 검사저장(수정)
+	@PostMapping("/updateProdChk")
+	public int updateProdChk(@RequestBody ReqVO<CheckVO> vo) {
+		return checkservice.updateProdChk(vo);
 	}
 	
 	//완제품 합격조회
@@ -135,9 +138,4 @@ public class CheckRestController {
 		return checkservice.selectPrdtFin(vo);
 	}
 	
-	//완제품 검사완료
-	@GetMapping("/updatePrdtFinChk")
-	public int updatePrdtFinChk(CheckVO vo) {
-		return checkservice.updateFinChk(vo);
-	}
 }

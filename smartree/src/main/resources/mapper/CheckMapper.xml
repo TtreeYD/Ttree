@@ -44,22 +44,25 @@
   
   <!-- 완제품검사목록 -->
   <select id="selectProdCheckList" resultType="CheckVO">
-  	select p.pass_cnt, 
-  		   p.prcs_rs_code,
-  		   p.prdt_code,
-  		    
-  		   d.prod_inst_code, 
-  		   
-  		   i.prod_inst_date
-	from process_result p
-	JOIN process r 
-	  ON p.prcs_code = r.prcs_code
-    JOIN dt_prod_inst d 
-      ON r.dt_prod_inst_code = d.dt_prod_inst_code
-    JOIN prod_inst i 
-      ON d.prod_inst_code = i.prod_inst_code
-      
-	WHERE r.prod_yn = 'y'
+  	SELECT i.prod_inst_code,
+		   i.prod_inst_date,
+		   
+		   r.prcs_rs_code,
+		   
+	       c.prdt_chk_cnt,
+		   c.prdt_code,
+		   c.prdt_chk_code
+	FROM prdt_chk c
+	JOIN process_result r 
+	  ON c.prcs_rs_code = r.prcs_rs_code
+	JOIN process p 
+	  ON r.prcs_code = p.prcs_code
+	JOIN dt_prod_inst d 
+	  ON p.dt_prod_inst_code = d.dt_prod_inst_code
+	JOIN prod_inst i 
+	  ON d.prod_inst_code = i.prod_inst_code
+	  
+	WHERE prdt_chk_sit = 'n'
 
   </select>
   
@@ -76,28 +79,14 @@ SELECT
     ON c.chk_std_code = s.chk_std_code
   
    WHERE c.prdt_code = #{prdtCode}
+   ORDER BY c.chk_std_code
 
   </select>  
-  <!-- 완제품검사 저장 -->
-  	<insert id="insertProdChk" parameterType="CheckVO">
-  	<selectKey keyProperty="prdtChkCode" resultType="String" order="BEFORE">
-  		select 'PDC' || LPAD(prdt_chk_seq.NEXTVAL, 5, '0') as prdtChkCode from dual
-  	</selectKey>
-  	insert into prdt_chk(
-  						 prdt_chk_code,
-  						 prdt_code,
-  						 prcs_rs_code,
-  						 prdt_chk_cnt
-
-  						)
-  	values (
-  			#{prdtChkCode},
-  			#{prdtCode},
-  			#{prcsRsCode},
-  			#{passCnt}
-
-  	)					
-  	</insert>
+  <!-- 완제품검사 저장업데이트 -->
+  	<update id="updateProdChk" parameterType="CheckVO">
+  	UPDATE prdt_chk
+  	SET prdt_chk_sit = 'y'
+  	</update>
   <!-- 완제품검사상세 저장 -->
     <insert id="insertDtProdChk" parameterType="CheckVO">
   	insert into dt_prdt_chk(
@@ -127,11 +116,25 @@ SELECT
   
   <!-- 완제품검사조회목록 -->
   <select id="selectPrdtCheckList" resultType="CheckVO">
-  	select *
-  	from prdt_chk c
-  	JOIN prdt_table t 
-  	  ON c.prdt_code = t.prdt_code
-  	  
+  	SELECT p.prdt_chk_code,
+       p.prcs_rs_code,
+       p.prdt_code,
+       p.prdt_chk_cnt,
+       p.prdt_chk_result,
+       t.prdt_name,
+       MAX(p.prdt_chk_date) AS prdt_chk_date,
+       MAX(d.prdt_manager) AS prdt_manager
+	FROM prdt_chk p
+	JOIN dt_prdt_chk d 
+	  ON p.prdt_code = d.prdt_code
+	JOIN prdt_table t 
+	  ON d.prdt_code = t.prdt_code
+	GROUP BY p.prdt_chk_code,
+			 p.prcs_rs_code,
+			 p.prdt_code,
+			 p.prdt_chk_cnt,
+		     p.prdt_chk_result,
+		     t.prdt_name
   </select>
   
   <!-- 완제품검사상세조회목록 -->
@@ -143,8 +146,8 @@ SELECT
          c.chk_name, 
          c.chk_std,
           
-         d.prdt_chk_val
-        
+         d.prdt_chk_val,
+         d.prdt_chk_fit
          
     FROM prdt_chk p 
     JOIN dt_prdt_chk d 
@@ -165,9 +168,4 @@ SELECT
   		and c.prdt_fin_chk = '입고전'	  
   </select>
   
-  <update id="updateFinChk" parameterType="CheckVO">
-  update process
-  set prod_yn = 'c'
-  WHERE prcs_code = #{prcsCode}
-  </update>
   </mapper>

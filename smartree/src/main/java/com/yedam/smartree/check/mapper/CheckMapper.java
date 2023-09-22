@@ -13,8 +13,8 @@ public interface CheckMapper {
 	//완제품 검사목록
 	public List<CheckVO> selectProdCheckList(CheckVO vo);
 	public List<CheckVO> selectProdDtList(CheckVO vo);
-	//제품 검사등록
-	public void insertProdChk(CheckVO vo);
+	//제품 검사저장(수정)
+	public void updateProdChk(CheckVO vo);
 	//제품 검사 상세등록
 	public void insertDtProdChk(CheckVO vo);
 	
@@ -28,6 +28,5 @@ public interface CheckMapper {
 	//적합 업데이트
 	public int updatePrdtChk(CheckVO vo);
 	
-	//검사완료 업데이트
-	public int updateFinChk(CheckVO vo);
+
 }
