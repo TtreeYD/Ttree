@@ -8,12 +8,19 @@
 <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <meta charset="UTF-8">
 <title>자재입고관리</title>
-
+<style>
+.tui-grid-body-area .tui-grid-cell .tui-grid-cell-content{
+ text-align: center;
+}
+#chkBtn{
+margin : 10px;
+}
+</style>
 </head>
 <body>
 	<div layout:fragment="content">
 		<h3>자재입고관리</h3>
-		<a href="javascript:pop()" style="margin:20px">검사완료 자재목록<a>
+		<button type="button" id="chkBtn" class="btn btn-info">검사완료 자재목록</button>
 		<div id="mtlCheckGrid"></div>
 		<br>
 			<div class="col-14">
@@ -82,9 +89,10 @@
 			let searchModalData = [];
 			let mtlDate;
 		// 검사완료 목록 출력/숨기기
-	    function pop(){
-    	    $('#mtlCheckGrid').toggle("size", 500);
-   	    }		     
+			$('#chkBtn').on('click', function (){
+        	    $('#mtlCheckGrid').toggle("size", 500);
+       	    });
+	     
 		document.addEventListener("DOMContentLoaded",() => {
 				// 모달창
 				const mtlInmodalGrid = new tui.Grid({

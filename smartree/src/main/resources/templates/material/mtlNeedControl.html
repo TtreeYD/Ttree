@@ -12,16 +12,26 @@
 .selec {
 background-color: cadetblue;
 }
+
+.tui-grid-body-area .tui-grid-cell .tui-grid-cell-content{
+ text-align: center;
+}
+#minusBtn{
+margin : 10px;
+}
+
+
 </style>
 </head>
 <body>
 	<div layout:fragment="content">
-	<h3>자재발주관리</h3>	
-		<a href="javascript:pop()" style="margin:20px">안전재고미달목록<a>
+	<h3>자재발주관리</h3>
+		<button type="button" id="minusBtn" class="btn btn-info">안전재고 미달목록</button>
 		<div id="mtlLowGrid"></div>
 		<br>
 		<div class="col-14">
-				<div class="btn-group" role="group" aria-label="Basic example" style="float:right;">
+		<div class="btn-group" role="group" aria-label="Basic example" style="float:right;">
+			<button type="button" id="addRow" class="btn btn-primary">추가</button>
 			<button type="button" id="mtlSearch" class="btn btn-primary" data-toggle="modal" data-target="#myModal">조회</button>
 			<button type="button" id="mtlSave" class="btn btn-primary">발주</button>
 		</div>
@@ -80,15 +90,39 @@ background-color: cadetblue;
 			<!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
-		<script>
-			// 안전재고 미달목록 출력/숨기기
-			let mtlInfo = [];
-			
-		    function pop(){
-        	    $('#mtlLowGrid').toggle("size", 500);
-       	    }		
 		
+			<div id="bpModal" class="modal fade" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-xl" role="document" style="width:600px; height:500px;" >
+				<div class="modal-content" style="height: 700px">
+					<div class="container text-center">
+					<br>
+						<h2>거래처목록</h2>
+						<div class="modal-header row justify-content-evenly">
+						</div>
+					</div>
+					<div class="modal-body">
+						<div id="bpGrid"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+		<script>
+			let mtlInfo = [];
+			let bucket = [];
+			
+			// 안전재고 미달목록 출력/숨기기
+			$('#minusBtn').on('click', function (){
+        	    $('#mtlLowGrid').toggle("size", 500);
+       	    });	
+			
 		    document.addEventListener("DOMContentLoaded",() => {
+			            
 				// 모달창
 				const needModalGrid = new tui.Grid({
 					el: document.getElementById('needModalGrid'),
@@ -280,9 +314,6 @@ background-color: cadetblue;
 						header : '납기요청일',
 						name : 'mtlWishDate',
 						editor: 'datePicker'
-					}, {
-						header : '상태',
-						name : 'mtlWhereNm'
 					}   ]
 				});
 				
@@ -394,6 +425,22 @@ background-color: cadetblue;
 		            console.log(err);
 		          }
 		        })
+		    // 행추가 기능    
+		    $(addRow).on('click', function () {
+		    	mtlNeedGrid.blur()
+				bucket.push({
+					mtlType: '',
+					mtlCode: '',
+					mtlName: '',
+					mtlDate: '',
+					bpCode: '',
+					mtlCnt: '',
+					mtlUnit: '',
+					mtlManager: '',
+					mtlWishDate: ''
+				})
+				mtlNeedGrid.resetData(bucket)
+			})
 				// 모달창의 조회버튼을 누를때 조건에 맞게 검색해주기
 				$('#searchDataBtn').on('click',function(ev){
 					$.ajax({
@@ -413,6 +460,71 @@ background-color: cadetblue;
 					})
 						
 					});
+		    	// 거래처 선택 모달
+				// 거래처표
+				const bpGrid = new tui.Grid({
+					el: document.getElementById('bpGrid'),
+					data:[],
+					scrollX: false,
+					pagination: true,
+					pageOptions: {
+						useClient: true,
+						perPage: 10,
+					},
+					rowHeaders: ['rowNum'],
+					columns: [{
+						header: '거래처코드',
+						name: 'bpCode'
+					}, {
+						header: '거래처명',
+						name: 'bpName'					
+					}, {
+						header: '주거래품목',
+						name: 'bpMain'					
+					}, {
+						header: '연락처',
+						name: 'bpTell'					
+					}]
+				});
+				// 그리드 클릭시 모달 팝업
+				mtlNeedGrid.on('click', (ev)=>{
+		          if (ev.columnName === 'bpCode') {
+						$.ajax({
+							url:'/mdm/selectBpList',
+				            method: 'get',
+				            data:[],
+							success: function (result) {
+								bpGrid.resetData(result);
+					              setTimeout(() => bpGrid.refreshLayout(), 200);
+					              $("#bpModal").modal('show');
+					            },
+					            error: function (err) {
+					              console.log(err)
+					            }
+					          })
+		            }
+				        });
+                // 거래처목록 더블클릭시 발주목록으로 이동시키기
+                bpGrid.on('dblclick', () => {
+                    let rowKey =
+                    	bpGrid.getFocusedCell().rowKey;
+		                    if (rowKey != null && rowKey >= 0) {
+		                        let bpName = bpGrid.getValue(
+		                            rowKey,
+		                            "bpName"
+		                        );
+		                    	bpGrid.removeRow(rowKey);
+		                    	bpGrid.blur();
+		
+		                        mtlNeedGrid.appendRow(
+		                            {
+		                            	bpName: bpName,
+		                            },
+		                            { at: 0 }
+		                        );
+		                    }
+                });
+				
 			});
 		</script>
 	</div>
