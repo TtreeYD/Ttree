@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface BusinessService {
 	//주문서목록
-	public List<BusinessVO> selectOrderList();
+	public List<BusinessVO> selectOrderList(BusinessVO businessVO);
 	//주문서상세
 	public List<BusinessVO> selectOrderDtList(BusinessVO businessVO);
 	//주문서 검색
@@ -56,6 +56,10 @@ public interface BusinessService {
 	public List<FinPrdtVO> searchFinOrder();
 	//출고취소처리
 	public int cancleOutPrdt(List<BusinessVO> businessVO);
+	//입고조회
+	public List<FinPrdtVO> prdtRecieveList(FinPrdtVO fpv);
+	//입고취소처리
+	public int cancleRecivePrdt(List<FinPrdtVO> fpv);
 	
 	
 	

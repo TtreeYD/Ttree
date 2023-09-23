@@ -11,8 +11,10 @@ import com.yedam.smartree.business.service.ReqVO;
 
 public interface BusinessMapper {
 
-	public List<BusinessVO> selectOrderList();
+	public List<BusinessVO> selectOrderList(BusinessVO businessVO);
+	
 	public List<BusinessVO> selectOrderDtList(BusinessVO businessVO);
+	
 	public List<BusinessVO> getOrder(BusinessVO businessVO);
 	//public List<BusinessVO> clickOrder(BusinessVO businessVO);
 	
@@ -74,6 +76,13 @@ public interface BusinessMapper {
 	public List<FinPrdtVO> searchFinOrder();
 	//출고취소처리
 	public int cancleOutPrdt(BusinessVO businessVO);
+	//입고조회
+	public List<FinPrdtVO> prdtRecieveList(FinPrdtVO fpv);
+	
+	//입고취소처리
+	public int cancleRecivePrdt(FinPrdtVO finPrdtVO);
+	//입고취소처리 후 검사테이블 입고상태 변경
+	public int updateChkState(FinPrdtVO finPrdtVO);
 	
 	
 	

@@ -12,12 +12,47 @@
 <h1 style="margin-top:50px;">입고품목</h1>
 <div class="btn-group" role="group" aria-label="Basic example" style="float : right;">
 	<button class="btn btn-primary" style="float:right" id="recieveDtBtn">입고</button>
+	<button class="btn btn-primary" style="float:right" id="recieveDtCancleBtn">입고취소</button>
 </div>
 <div id="recieveGrid"></div>
 
 
+<!-- 입고목록- 입고취소 -->
+<div class="modal fade" tabindex="-1" role="dialog" id="recieveListModal">
+      <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+        <div class="modal-content" style="height:500px">
+          <div class="modal-header">
+            <h2>입고목록</h2>
+          </div>
+          <div class="modal-body">
+	        <label for="prdtOutCode">제품명</label> 
+			<input type="text"  id="prdtName"> 
+			<label>입고날짜</label>
+			<input type="date" id="prdtRecieveDate">
+			<button type="button" id="searchDataBtn" class="btn btn-primary" style="margin-left:20px;">조회</button>
+			<button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
+            <button type="button" id="recieveCancle" class="btn btn-primary" style="float:right;" >입고취소</button>
+            <div id="searchGrid"></div>
+            
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" id="closeBtn">닫기</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+
 
 <script>
+data={};
+toastr.options = {
+	  			  positionClass: "toast-top-center",
+	  			  escapeHtml: true,
+	  			  closeButton: true,
+	 			  newestOnTop: false,
+	  			  timeOut: 1250
+	  			};
 const chkListGrid = new tui.Grid({
 	el: document.getElementById('chkListGrid'),
 	scrollX: false,
@@ -64,7 +99,7 @@ const recieveGrid = new tui.Grid({
 	el: document.getElementById('recieveGrid'),
 	scrollX: false,
 	scrollY: false,
-	rowHeaders: ["rowNum"],
+	rowHeaders: ["checkbox"],
 	
 	columns: [
 		{
@@ -101,6 +136,44 @@ const recieveGrid = new tui.Grid({
 		}],
 })
 
+const recieveListGrid = new tui.Grid({
+    el: document.getElementById('searchGrid'),
+    scrollX: false,
+    scrollY: false,
+    rowHeaders: ["checkbox"],
+    pageOptions: {
+        perPage: 5,
+        useClient: true,
+      },
+    columns: [{
+      header: '완제품Lot번호',
+      name: 'prdtLotNo',
+      
+    },
+    {
+      header: '제품코드',
+      name: 'prdtCode',
+      
+    },
+    {
+      header: '제품명',
+      name: 'prdtName'
+    },
+    {
+      header: '입고량',
+      name: 'prdtRecieveCnt',
+      
+    },
+    {
+      header: '입고일자',
+      name: 'prdtRecieveDate'
+	},
+	{
+      header: '입고담당자',
+      name: 'prdtRecieveManager'
+	}],	
+  });
+
 	getprdtCheckList();
 	// 제품검사목록 조회
 	function getprdtCheckList(){
@@ -136,6 +209,7 @@ const recieveGrid = new tui.Grid({
 		}
 	});
 	$('#recieveDtBtn').on('click',function(){
+		recieveGrid.blur();
 		let data={}; 
 		data.list= recieveGrid.getData();
 		console.log(data)
@@ -146,12 +220,6 @@ const recieveGrid = new tui.Grid({
 			contentType : 'application/json',
 			data:JSON.stringify(data),
 			success:function(result){
-				console.log(result)
-				toastr.options.positionClass = "toast-top-center";
-                toastr.options.escapeHtml = true;
-                toastr.options.closeButton = true;
-                toastr.options.newestOnTop = false;
-                toastr.options.timeOut= 1250;
                 toastr.success('입고완료');
                 recieveGrid.resetData([]);
                 getprdtCheckList();
@@ -161,7 +229,59 @@ const recieveGrid = new tui.Grid({
 			}
 		})
 	})
+	//입고취소버튼클릭
+	$('#recieveDtCancleBtn').on('click',function(){
+		recieveFinDt();//입고된목록조회
+	})
 	
+	//입고된목록중 조건검색
+	$('#searchDataBtn').on('click',function(){
+		data.prdtName = $('#prdtName').val();
+		data.prdtRecieveDate = $('#prdtRecieveDate').val();
+		recieveFinDt(data);
+	})
+	//검색 초기화버튼
+	$('#resetBtn').on('click',function(){
+		$('#prdtName').val('');
+		$('#prdtRecieveDate').val('');
+	})
+	
+	
+	$('#recieveCancle').on('click',function(){
+		let data = recieveListGrid.getCheckedRows();
+		$.ajax({
+			url:'/cancleRecivePrdt',
+			method:'POST',
+			dataType: 'json',
+			contentType : 'application/json',
+			data:JSON.stringify(data),
+			success:function(result){
+				console.log(result);
+			},
+			error:function(err){
+				console.log(err);
+			}
+		})
+	})
+	
+	
+	//등록된 입고목록리스트 
+	function recieveFinDt(data){
+		$.ajax({
+			url:'/recieveList',
+			method:'GET',
+			data:data,
+			success:function(result){
+				console.log(result);
+				recieveListGrid.resetData(result);
+				setTimeout(() => recieveListGrid.refreshLayout(), 300);
+				$('#recieveListModal').modal('show')
+			},
+			error:function(err){
+				console.log(err);
+			}
+		})
+	}
 </script>
 </div>
 </body>

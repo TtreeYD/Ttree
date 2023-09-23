@@ -51,4 +51,9 @@ public class BusinessController {
 	public String prdtRecieve() {
 		return "business/prdtRecieve";
 	}
+	//입고조회 페이지 이동
+	@GetMapping("prdtRecieveList")
+	public String prdtRecieveList() {
+		return "business/prdtRecieveList";
+	}
 }

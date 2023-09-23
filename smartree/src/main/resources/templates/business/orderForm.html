@@ -31,8 +31,8 @@
 				<div class="modal-content">
 					<h2 style="margin:30px">주문서검색</h2>
 					<div style="margin: 0 auto;">
-						<label for="ordercd" style="text-align:center;">주문코드</label>
-						<input type="text" id="ordercd" class="form-control" placeholder="주문코드를 입력하세요" name="ordercd"
+						<label for="bpname" style="text-align:center;">업체명</label>
+						<input type="text" id="bpname" class="form-control" placeholder="업체명을 입력하세요" name="ordercd"
 							style="width:500px">
 						<label for="plsdate" style="margin-top:10px">접수일자</label>
 						<input type="date" id="plsdate" class="form-control" name="plsdate" style="width:500px">
@@ -49,7 +49,7 @@
 						<div id="searchModal"></div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 					</div>
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
@@ -67,7 +67,7 @@
 						<div id="bpListModal"></div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 					</div>
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
@@ -84,7 +84,7 @@
 						<div id="prdtListModal"></div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 					</div>
 				</div><!-- /.modal-content -->
 			</div><!-- /.modal-dialog -->
@@ -99,6 +99,13 @@
 			let dtOrderRowNum;
 			let newOrderData={};//새주문서 data에 넣어줄 객체생성
 			let updateDtOrder;
+			toastr.options = {
+		  			  positionClass: "toast-top-center",
+		  			  escapeHtml: true,
+		  			  closeButton: true,
+		 			  newestOnTop: false,
+		  			  timeOut: 1250
+		  			};
 			$(document).ready(function () {
 				//주문그리드
 				const order = new tui.Grid({
@@ -257,7 +264,7 @@
 						url:'/selectOrder',
 						method: 'POST',
 						data:{
-							orderCode: $('#ordercd').val(),
+							bpName: $('#bpname').val(),
 							orderDate: $('#plsdate').val(),
 							dodDate:$('#doddate').val()
 
@@ -325,7 +332,7 @@
 					$('#saveBtn').on('click',function(){
 						
 						if(dtOrder.getCheckedRows().length == 0 ){
-							alert('주문상세정보를 선택해주세요');
+							toastr.warning('주문상세정보를 선택해주세요');
 							return;
 						}else{
 							
@@ -348,7 +355,7 @@
 								contentType : 'application/json',
 								data:JSON.stringify(newOrderData),
 								success:function(result){
-									alert('상세주문이 추가되었습니다');
+									toastr.success('상세주문이 추가되었습니다');
 									dtOrder.uncheckAll();
 								},
 								error:function(err){
@@ -370,7 +377,7 @@
 								data:JSON.stringify(newOrderData),
 								success:function(result){
 									
-										alert('수정되었습니다');
+										toastr.success('수정되었습니다');
 										dtOrder.resetData(dtOrder.getData());
 										dtOrder.uncheckAll();
 								},
@@ -397,7 +404,7 @@
 									data:JSON.stringify(newOrderData),
 									success:function(result){
 										if(result > 0 ){
-											alert('등록되었습니다');
+											toastr.success('등록되었습니다');
 											order.resetData([]);
 											dtOrder.resetData([]);
 										}
@@ -423,7 +430,7 @@
 							data:JSON.stringify(newOrderData),
 							success:function(result){
 								if(result > 0 ){
-									alert('삭제되었습니다');
+									toastr.success('삭제되었습니다');
 									order.resetData([]);
 									dtOrder.resetData([]);
 								}
@@ -447,7 +454,7 @@
 							data:JSON.stringify(newOrderData),
 							success:function(result){
 								if(result > 0 ){
-									alert('상세주문'+result+'건이 삭제되었습니다');
+									toastr.success('상세주문'+result+'건이 삭제되었습니다');
 									dtOrder.removeCheckedRows(); //삭제후 인터페이스 삭제처리
 									newDtOrder = dtOrder.getData();//삭제값 다시들어가지않게 인터페이스reset 
 								}
@@ -564,7 +571,7 @@
 								let check = true; 
 								newDtOrder.forEach((order) => {
 									if(order.prdtCode == data) {
-										alert('이미 같은 제품이 있습니다.')
+										toastr.warning('이미 같은 제품이 있습니다.')
 										check=false;
 										return;
 									}

@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.business.service.BpVO;
@@ -26,8 +25,8 @@ public class BusinessRestController {
 	
 	//리스트OrderAjax
 	@GetMapping("/orders")
-	public List<BusinessVO> getOrders(){
-		return businessService.selectOrderList();
+	public List<BusinessVO> getOrders(BusinessVO businessVO){
+		return businessService.selectOrderList(businessVO);
 	}
 	
 	//리스트DtListAjax || 주문서관리-주문서검색후 더블클릭(위의 주문정보정보는 클릭했을때let searchModalData; 검색버튼 클릭 할때 그 result를 담아준다.
@@ -36,7 +35,8 @@ public class BusinessRestController {
 	public List<BusinessVO> getDtOrders(BusinessVO businessVO){
 		return businessService.selectOrderDtList(businessVO);
 	}
-	//주문서관리-주문서검색
+	
+//	//주문서관리-주문서검색 출고전 주문서조회
 	@PostMapping("/selectOrder")
 	public List<BusinessVO> getOrderDt(BusinessVO businessVO) {
 		return businessService.selectOrderBfOutList(businessVO);
@@ -148,11 +148,23 @@ public class BusinessRestController {
 		
 		return businessService.recievePrdt(fpv);
 	}
+	//입고조회
+	@GetMapping("/recieveList")
+	public List<FinPrdtVO> prdtRecieveList(FinPrdtVO fpv){
+		return businessService.prdtRecieveList(fpv);
+	}
 	//출고취소처리
 	@PostMapping("/cancleOutPrdt")
 	public int cancleOutPrdt(@RequestBody List<BusinessVO> businessVO) {
-		System.out.println(businessVO);
 		return businessService.cancleOutPrdt(businessVO);
 	}
+	
+	//입고 취소처리
+	@PostMapping("/cancleRecivePrdt")
+	public int cancleRecivePrdt(@RequestBody List<FinPrdtVO> fpv) {
+		System.out.println(fpv);
+		return businessService.cancleRecivePrdt(fpv);
+	}
+	
 	
 }

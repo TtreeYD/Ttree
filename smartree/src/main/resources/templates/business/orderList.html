@@ -11,11 +11,11 @@
   <div layout:fragment="content">
   <h1>주문서조회</h1>
 		
-		<label>주문코드</label> 
-		<input type="text" id="prdtOutCode"> 
+		<label>업체명</label> 
+		<input type="text" id="bpName"> 
 
 		<label >접수일자</label> 
-		<input type="date" id="prdtOutDate"> 
+		<input type="date" id="orderDate"> 
 
 		<label >납기일자</label>
 		<input type="date" id="prdtOutDate"> 
@@ -38,7 +38,7 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-default" id="pdfbtn"
               style="transform:translateX(-940px)">PDF저장</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -46,10 +46,10 @@
 
 
     <script>
+      var grid;
 
       
       
-      var grid;
       $(document).ready(function () {
 
         const grid2 = new tui.Grid({
@@ -185,6 +185,42 @@
        
 
         });
+        $('#searchDataBtn').on('click',function(){
+        	let data ={}
+        	data.prdtName = $('#bpName').val();
+        	data.orderDate = $('#orderDate').val();
+        	data.dodDate = $('#dodDate').val();
+        	$.ajax({
+        		url:'/orders',
+        		method:'GET',
+        		data: data,
+        		success:function(result){
+        			console.log(result);
+        		},
+        		error:function(err){
+        			console.log(err);
+        		}
+        		
+        	})
+        })
+        $('#searchDataBtn').on('click',function(){
+        	let data ={}
+        	data.bpName = $('#bpName').val();
+        	data.orderDate = $('#orderDate').val();
+        	data.dodDate = $('#dodDate').val();
+        	$.ajax({
+        		url:'/orders',
+        		method:'GET',
+        		data: data,
+        		success:function(result){
+        			grid.resetData(result);        		
+        		},
+        		error:function(err){
+        			console.log(err);
+        		}
+        		
+        	})
+        })
 
 
 

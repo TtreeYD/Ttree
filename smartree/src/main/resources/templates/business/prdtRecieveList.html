@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>완제품입고조회</title>
+</head>
+<body>
+<div layout:fragment="content">
+	<h1>완제품입고조회</h1>
+		<label for="prdtOutCode">제품명</label> 
+		<input type="text"  id="prdtName"> 
+
+	
+		<label>입고날짜</label>
+		<input type="date" id="prdtRecieveDate"> 
+	
+
+		<button type="button" id="searchDataBtn" class="btn btn-primary" style="margin-left:20px;">조회</button>
+		<button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
+		<div id="prdtRecieveList"></div>
+		
+<script>
+	let data={};
+	const recieveListGrid = new tui.Grid({
+	    el: document.getElementById('prdtRecieveList'),
+	    scrollX: false,
+	    scrollY: false,
+	    rowHeaders: ["rowNum"],
+	    pageOptions: {
+	        perPage: 5,
+	        useClient: true,
+	      },
+	    columns: [{
+	      header: '완제품Lot번호',
+	      name: 'prdtLotNo',
+	      
+	    },
+	    {
+	      header: '제품코드',
+	      name: 'prdtCode',
+	      
+	    },
+	    {
+	      header: '제품명',
+	      name: 'prdtName'
+	    },
+	    {
+	      header: '입고량',
+	      name: 'prdtRecieveCnt',
+	      
+	    },
+	    {
+	      header: '입고일자',
+	      name: 'prdtRecieveDate'
+		},
+		{
+	      header: '입고담당자',
+	      name: 'prdtRecieveManager'
+		}],	
+	  });
+	$(document).ready(function () {
+		
+		searchRecieveList();
+		
+		$('#searchDataBtn').on('click',function(){
+			data.prdtName = $('#prdtName').val();
+			data.prdtRecieveDate = $('#prdtRecieveDate').val();
+			console.log(data);
+			searchRecieveList(data);
+		})
+		
+		
+		function searchRecieveList(data){
+			$.ajax({
+				url:'/recieveList',
+				method:'GET',
+				data:data,
+				success:function(result){
+					console.log(result);
+					recieveListGrid.resetData(result);
+				},
+				error:function(err){
+					console.log(err);
+				}
+			})
+		}
+		
+	})
+	
+</script>
+</div>
+</body>
+</html>
