@@ -30,7 +30,7 @@
             <div id="searchGrid"></div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" id="closeBtn">Close</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" id="closeBtn">닫기</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -53,8 +53,8 @@
             <div id="lotPrdtGrid"></div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" id="saveBtn" >저장</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal" >Close</button>
+            <button type="button" class="btn btn-default" id="saveBtn" >출고</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" >닫기	</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -63,9 +63,16 @@
 		<script th:inline="javascript">
 		var rowCheck;
 		var valueCheck;
-		var Grid = tui.Grid
 		var check = 0;
-		const searchOrderGrid = new Grid({
+		var allCheck = false;
+		toastr.options = {
+	  			  positionClass: "toast-top-center",
+	  			  escapeHtml: true,
+	  			  closeButton: true,
+	 			  newestOnTop: false,
+	  			  timeOut: 1250
+	  			};
+		const searchOrderGrid = new tui.Grid({
 			el: document.getElementById('searchGrid'),
 			scrollX: false,
 			scrollY: false,
@@ -292,7 +299,7 @@
 								
 							}
 							if(count==0 ){
-								
+								allCheck = true;
 								$.ajax({
 									url:'/prdtFinOut',
 									method:'POST',
@@ -300,8 +307,6 @@
 										orderCode : result[0].orderCode
 									},		
 									success:function(result){	
-										//전체출고완료 시 그리드 값 비워주기
-										console.log(result)
 									},
 									error:function(err){
 										console.log(err);
@@ -323,8 +328,8 @@
 					
 					if(ev.targetType == 'cell'){
 						lotPrdtOutList(data);
+						rowCheck = ev.rowKey
 					}
-					rowCheck = ev.rowKey
 				})
 				
 				function lotPrdtOutList(data){
@@ -352,12 +357,14 @@
 				//제품수량선택 후 저장버튼클릭
 				$('#saveBtn').on('click',function(){
 					let lotcnt=0;
-					
+					lotPrdtGrid.blur();
 					for(let i = 0 ; i < lotPrdtGrid.getData().length ; i++){
 						lotcnt += Number(lotPrdtGrid.getData()[i].prdtOutCnt)
 					}
+					console.log(lotPrdtGrid.getData());
+					console.log(valueCheck[rowCheck].prdtLeftCnt)
 						if(lotcnt > valueCheck[rowCheck].prdtLeftCnt){
-							alert('미납수량보다 많습니다.')
+							toastr.warning('미납수량보다 많습니다');
 							return;
 						}else{
 							lotPrdtGrid.blur()
@@ -376,9 +383,18 @@
 								contentType : 'application/json',
 								data:JSON.stringify(data),
 								success:function(result){
-									alert('출고되었습니다');
+									toastr.success('출고되었습니다');
 									$('#prdtModal').modal('hide');
 									loadDTList() //페이지 리로드
+									
+									//전체출고완료 시 그리드 값 비워주기
+									if(allCheck){	
+										
+										toastr.success('해당 주문서에 대한 전체 출고가 완료되었습니다');
+										setTimeout(() => OrderDtGrid.resetData([]).refreshLayout(), 50);
+										
+										OrderGrid.resetData([]);
+									}
 									
 								},
 								error:function(err){
@@ -389,6 +405,7 @@
 						}
 				})
 				let prdtcode ;
+				//출고취소버튼클릭
 				$('#cancleOutPrdt').on('click',function(){
 					let dtData = OrderDtGrid.getCheckedRows();
 					console.log(dtData)
@@ -399,14 +416,8 @@
 						contentType : 'application/json',
 						data:JSON.stringify(dtData),
 						success:function(result){
-							toastr.options.positionClass = "toast-top-center";
-			                toastr.options.escapeHtml = true;
-			                toastr.options.closeButton = true;
-			                toastr.options.newestOnTop = false;
-			                toastr.options.timeOut= 1250;
 			                toastr.success('취소완료');
-			                OrderDtGrid.resetData([]);
-			                OrderGrid.resetData([]);
+			                loadDTList()
 						},
 						error:function(err){
 							console.log(err);

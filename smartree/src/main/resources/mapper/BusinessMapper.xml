@@ -8,6 +8,17 @@
   		select o.order_code , b.bp_code , b.bp_name , o.order_date , o.dod_date , o.dod_state , o.order_manager
   		  from orders o join business_partner b
   		  				on o.bp_code = b.bp_code
+  		  <where>
+		 	<if test="bpName != null">	 	
+		 		b.bp_name like '%'||#{bpName}||'%'
+		 	</if>
+		 	<if test="orderDate != null ">
+		       	and trunc(o.order_date) = trunc(#{orderDate})
+		 	</if>
+		       <if test="dodDate!= null ">
+		       	and trunc(o.dod_date) = trunc(#{dodDate}) 
+		       </if>	
+		</where>
   	</select>
   	<!-- 출고 전 주문서조회 -->
   		<select id="selectOrderBfOutList" resultType="BusinessVO">
@@ -16,8 +27,8 @@
   		  				on o.bp_code = b.bp_code  	
   		  <where>
   		  		dod_state = '납기전'
-		 	<if test="orderCode != null">	 	
-		 		and o.order_code like '%'||#{orderCode}||'%'
+		 	<if test="bpName != null">	 	
+		 		and b.bp_name like '%'||#{bpName}||'%'
 		 	</if>
 		 	<if test="orderDate != null ">
 		       	and trunc(o.order_date) = trunc(#{orderDate})
@@ -77,7 +88,7 @@
   	
   	<!-- 제품검색 -->
   	
-  	<select id="getOrder" resultType="BusinessVO">
+<!--   	<select id="getOrder" resultType="BusinessVO">
   		select o.order_code , b.bp_code , b.bp_name , o.order_date , o.dod_date , o.order_manager
   		  from orders o join business_partner b
   		  				on o.bp_code = b.bp_code
@@ -92,7 +103,7 @@
 		       	and trunc(o.dod_date) = trunc(#{dodDate}) 
 		       </if>	
 		</where>
-  	</select>
+  	</select> -->
   	
   	<!-- 주문등록 -->
   	<insert id="insertOrder" parameterType="BusinessVO">
@@ -211,7 +222,7 @@
 		  from fin_prdt f join prdt_table p
 		    		on f.prdt_code = p.prdt_code		    			
 		 where f.prdt_code = #{prdtCode}
-		 order by f.prdt_recieve_date
+		 order by f.prdt_recieve_date desc
   	</select>
   	<!-- 완제품조회 (출고시 수량 0인것들 안보이게 )  -->
   	<select id="selectFinLotOutPrdt" resultType="FinPrdtVO">
@@ -323,6 +334,22 @@
 			set prdt_fin_chk = '입고완료'
 			where prdt_chk_code = #{prdtChkCode}
   	</update>
+  	<!-- 입고조회 -->
+  	<select id="prdtRecieveList" resultType="FinPrdtVO">
+  		select f.prdt_lot_no , f.prdt_code , p.prdt_name , f.prdt_recieve_cnt , f.prdt_recieve_date , f.prdt_recieve_manager , f.prdt_chk_code
+  		from fin_prdt f join prdt_table p
+                        on f.prdt_code = p.prdt_code 
+  		<where>
+  			<if test="prdtName != null">
+  				prdt_name like '%'||#{prdtName}||'%'
+  			</if>
+  			<if test="prdtRecieveDate != null">
+  				and trunc(prdt_recieve_date) = trunc(#{prdtRecieveDate})
+  			</if>
+  		</where>
+  		order by f.prdt_recieve_date desc
+  	</select>
+  	
   	<!-- 출고취소 -->
   	<insert id="cancleOutPrdt" parameterType="BusinessVO">
   		{call p_cancle_out(
@@ -330,5 +357,18 @@
 	  	)}
   	</insert>
   	
+  	<!-- 입고취소 -->
+  	<delete id="cancleRecivePrdt" parameterType="FinPrdtVO">
+  		delete from fin_prdt
+  		where prdt_lot_no = #{prdtLotNo}
+  	</delete>
+  	
+  	<!-- 입고취소 시 검사테이블 입고상태변경 -->
+  	<update id="updateChkState" parameterType="FinPrdtVO">
+  		 update prdt_chk
+			set prdt_fin_chk = '입고전'
+		  where prdt_chk_code = #{prdtChkCode}
+  	</update>
+ 
   	
   </mapper>

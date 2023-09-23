@@ -29,8 +29,6 @@ public class FinPrdtVO {
 	private int prdtRecieveCnt; // 입고수량
 	private String prdtChkCode; // 완제품검사코드
 	
-	
-	
 	//출고관련
 	private String prdtOutCode;//출고코드
 	private String prdtDtOutCode;//출고상세코드

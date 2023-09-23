@@ -17,8 +17,8 @@ public class BusinessServiceImpl implements BusinessService{
 	@Autowired
 	BusinessMapper businessmapper;
 	@Override
-	public List<BusinessVO> selectOrderList() {
-		return businessmapper.selectOrderList();
+	public List<BusinessVO> selectOrderList(BusinessVO businessVO) {
+		return businessmapper.selectOrderList(businessVO);
 	}
 	@Override
 	public List<BusinessVO> selectOrderDtList(BusinessVO businessVO) {
@@ -181,10 +181,12 @@ public class BusinessServiceImpl implements BusinessService{
 		}
 		return cnt;
 	}
+	//출고끝난 주문서검색
 	@Override
 	public List<FinPrdtVO> searchFinOrder() {
 		return businessmapper.searchFinOrder();
 	}
+	//출고취소처리
 	@Override
 	public int cancleOutPrdt(List<BusinessVO> businessVO) {
 		System.out.println("111111111111111111"+businessVO);
@@ -196,10 +198,24 @@ public class BusinessServiceImpl implements BusinessService{
 		}
 		return cnt;//
 	}
-	
-	
+	//입고리스트
+	@Override
+	public List<FinPrdtVO> prdtRecieveList(FinPrdtVO fpv) {
+		return businessmapper.prdtRecieveList(fpv);
+	}
+	//입고취소처리
+	@Override
+	public int cancleRecivePrdt(List<FinPrdtVO> fpv) {
+		int cnt=0;
 
-	
-	
+		for(int i =0; i<fpv.size();i++) {
+			businessmapper.cancleRecivePrdt(fpv.get(i));
+			cnt++;
+			businessmapper.updateChkState(fpv.get(i));
+			System.out.println("111111111111111"+fpv.get(i));
+		}
+
+		return cnt;
+	}
 
 }
