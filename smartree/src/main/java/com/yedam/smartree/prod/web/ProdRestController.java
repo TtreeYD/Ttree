@@ -65,4 +65,10 @@ public class ProdRestController {
 	public List<ProdVO> selectGetProdPlan(ProdVO vo){
 		return service.selectGetProdList(vo);
 	}
+	@PostMapping("/insertProdInst")
+	@ResponseBody
+	public int insertProdInst(@RequestBody RequestVO<ProdVO> vo) {
+		 return service.insertProdInst(vo);
+	}
+	
 }

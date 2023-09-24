@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>생산계획관리</title>
+</head>
+<style>
+</style>
+<body>
+	<div layout:fragment="content">
+	<h2>생산지시관리</h2>
+		<label>지시명 : </label> <input type="text" name="prodInstName"
+			id="prodInstName"><br> <label>담당자 : </label> <input
+			type="text" name="prodInstManager" id="prodInstManager"><br> <label>생산지시일자
+			: </label> <input type="date" name="prodInstDate" id="prodInstDate">
+		<label>생산예상시작일자 : </label> <input type="date" name="prodInstSdate"
+			id="prodInstSdate"> <label>생산예상종료일자 : </label> <input
+			type="date" name="prodInstEdate" id="prodInstEdate">
+			<input type="hidden" name="prodInstCode" id="prodInstCode">
+		<div class="btn-group" role="group" aria-label="Basic example"
+			style="float: right; margin-bottom: 10px;">
+			<button type="button" class="btn btn-primary" id="insertListBtn">새지시</button>
+			<button type="button" class="btn btn-primary" id="resetBtn">초기화</button>
+			<button type="button" class="btn btn-primary" id="prodListBtn">생산계획</button>
+			<button type="button" class="btn btn-primary" id="">검색</button>
+			<button type="button" class="btn btn-primary" id="saveBtn">저장</button>
+			<button type="button" class="btn btn-primary" id="delBtn">삭제</button>
+		</div>
+		<div id="grid" style="height: 400px;"></div>
+		<div
+			style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
+			<span>
+				<div id="grid2" style="width: 600px;"></div>
+			</span> <span>
+				<div id="grid3" style="width: 600px;"></div>
+			</span>
+		</div>
+
+		<div class="modal fade" tabindex="-1" role="dialog" id="prodModal">
+			<div class="modal-dialog modal-dialog-centered modal-xl"
+				role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">생산계획 조회</h4>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="grid5"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
+		<script>
+		let newGrid = [];	// newGrid에 grid 값들을 넣어주고 거기에 새계획 눌렀을 때도 추가하기 위해 만든 변수
+		let rowNum;			// 해당 rowNum 값을 담기위해 만든 변수
+		let grid, grid2, grid3, grid4, grid5, grid6;
+        const header = ['prodInstName','prodInstManager','prodInstDate','prodInstSdate', 'prodInstEdate', 'prodInstCode'];
+        
+        window.onload=function(){
+	    const grid = new tui.Grid({
+	    	// 생산계획 등록및 수정 그리드
+	      	el: document.getElementById('grid'),
+	      	scrollX: false,
+	      	scrollY: false,
+	      	pageOptions: {
+            	perPage: 5,
+            	useClient: true,
+          	},
+          	rowHeaders : ["checkbox"],
+	      	columns: [
+	      		{
+		          header: '생산지시상세코드',
+		          name: 'dtProdInstCode',
+		          hidden : true
+		        },
+		        {
+		          header: '계획명',
+		          name: 'prodPlanName'
+		        },
+		        {
+		          header: '계획량',
+		          name: 'prodPlanCnt'
+		        },
+		        {
+		          header: '지시우선순위',
+		          name: 'prodInstRank',
+		          editor : 'text'
+		        },
+		        {
+		          header: '지시량',
+		          name: 'prodInstCnt',
+	        	  editor : 'text'
+		        },
+		        {
+		          header: '기지시량',
+		          name: 'prodInstCompCnt'
+		        },
+		        {
+		          header: '미지시량',
+		          name: 'prodinstIncompCnt'
+		        },
+		        
+		        {
+		          header: '생산지시완료여부',
+		          name: 'prodInstYn',
+		          hidden : true
+		        },
+	      	]
+	    	});
+	    const grid2 = new tui.Grid({
+	      	// 하단의 제품 그리드
+	      el: document.getElementById('grid2'),
+	      scrollX: false,
+	      scrollY: false,
+	      pageOptions: {
+            perPage: 5,
+            useClient: true,
+          },
+	      columns: [
+			{
+			  header: '제품코드',
+			  name: 'prdtCode'
+			},
+			{
+			  header: '제품명',
+			  name: 'prdtName'
+			},
+			{
+			  header: '수량',
+			  name: 'prdtSs'
+			},
+	      ]
+	    });
+	    const grid3 = new tui.Grid({
+	    	// 하단 자재 그리드
+			el: document.getElementById('grid3'),
+	      	scrollX: false,
+	      	scrollY: false,
+	      	pageOptions: {
+            	perPage: 5,
+            	useClient: true,
+          	},
+	      	columns: [
+	        	{
+		          header: '자재코드',
+		          name: ''
+		        },
+		        {
+		          header: '자재명',
+		          name: ''
+		        },
+		        {
+		          header: '재고수량',
+		          name: ''
+		        },
+	      	]
+	    });
+	    const grid5 = new tui.Grid({
+	    	// 생산계획 모달 그리드
+	      	el: document.getElementById('grid5'),
+	      	scrollX: false,
+	      	scrollY: false,
+	      	pageOptions: {
+	            perPage: 5,
+	            useClient: true,
+          	},
+	      	columns: [
+    	  		{
+	              header: '계획코드',
+	              name: 'prodPlanCode'
+	            },
+		    	{
+	              header: '계획명',
+	              name: 'prodPlanName'
+	            },
+	            {
+	              header: '담당자',
+	              name: 'prodName'
+	            },
+	            {
+	              header: '생산계획일자',
+	              name: 'prodPlanDate',
+	            }
+   	       ]
+ 	   });
+		
+		// 생산계획 버튼 모달
+		$('#prodListBtn').on('click', prodIngList);
+		
+		function prodIngList(){
+			$.ajax({
+				url:'/selectProdPlan',
+				method:'get',
+		    	dataType:'json',
+				success:function(result){
+					grid5.resetData(result);
+					$("#prodModal").modal('show');
+					setTimeout(() => grid5.refreshLayout(), 200);
+				},
+				error:function(err){
+					console.log(err);
+				}
+			})
+		}
+		//페이지 초기화버튼
+		$('#resetBtn').on('click', resetList)
+		
+		function resetList(){
+			var data = grid.getData();
+
+			grid.resetData([]);
+			grid2.resetData([]);
+			grid3.resetData([]);
+			newGrid = [];
+			$('#prodInstCode').val('');
+			$('#prodInstName').val('');
+			$('#prodInstManager').val('');
+			$('#prodInstdate').val('');
+			$('#prodInstSdate').val('');
+			$('#prodInstEdate').val('');
+		}
+		
+			// 저장 버튼
+			$('#saveBtn').on('click',function(){
+				grid.blur();
+				var data = {};
+				data.list = grid.getData();
+				data.vo = {
+					prodInstCode : $('#prodInstCode').val(),
+					prodInstName : $('#prodInstName').val(),
+					prodInstManager : $('#prodInstManager').val(),
+					prodInstdate : $('#prodInstdate').val(),
+					prodInstSdate : $('#prodInstSdate').val(),
+					prodInstEdate : $('#prodInstEdate').val()
+				}
+				console.log(data);
+				console.log(prodInstCode);
+			if(data.vo.prodInstCode != ''){
+				$.ajax({
+		      		url:'/insertProdInst',
+		      		method: 'post',
+					dataType: 'json',
+					contentType : 'application/json',
+					data : JSON.stringify(data),
+		      		success:function(result){
+		      			alert("등록및 수정완료");
+		      			resetList();
+		      		},
+		      		error:function(err){
+		      			console.log(err)
+		      		}
+	    		})
+			}
+		
+			else {
+				data.list = grid.getData();
+				console.log(data);
+				$.ajax({
+		      		url:'/insertProdInst',
+		      		method: 'post',
+					dataType: 'json',
+					contentType : 'application/json',
+					data : JSON.stringify(data),
+					
+		      		success:function(result){
+		      			alert("저장완료");
+		      			resetList();
+		      		},
+		      		error:function(err){
+		      			console.log(err)
+		      		}
+	    		})
+			}
+		})
+		// 삭제버튼
+		$('#delBtn').on('click', delBtnFunc);
+			
+		function delBtnFunc(){
+			var data = {};
+			data.list = grid.getCheckedRows();
+			data.vo = {
+				prodInstCode : $('#prodInstCode').val(),
+				prodInstName : $('#prodInstName').val(),
+				prodInstManager : $('#prodInstManager').val(),
+				prodInstdate : $('#prodInstdate').val(),
+				prodInstSdate : $('#prodInstSdate').val(),
+				prodInstEdate : $('#prodInstEdate').val()
+			}
+			
+			if(data.list.length == grid.getData().length){
+				$.ajax({
+					url:'/',
+					method: 'post',
+					dataType: 'json',
+					contentType : 'application/json',
+					data : JSON.stringify(data),
+					success:function(result){
+						alert("전체삭제완료");
+						resetList();
+					},
+					error:function(err){
+						console.log(err)
+					}
+				})
+			} else {
+				// 삭제 SQL에 WHERE prod_plan_code =  #{prodPlanCode} 라고 했기때문에
+				// prodPlanCode = null 을 주고 똑같은 url을 타도 else에는 단건 삭제가 된다.
+				data.vo.prodInstCode = null;
+				$.ajax({
+					url:'/',
+					method: 'post',
+					dataType: 'json',
+					contentType : 'application/json',
+					data : JSON.stringify(data),
+					success:function(result){
+						alert(result + " 건 삭제완료");
+						resetList();
+					},
+					error:function(err){
+						console.log(err)
+					}
+				})
+			}
+		}
+		
+		// 검색 모달창 더블클릭
+		grid5.on('dblclick',(ev)=>{
+			if(ev.rowKey == undefined){
+				return;
+			}
+			let prodPlanCode = grid5.getValue(ev.rowKey, 'prodPlanCode');
+			$.ajax({
+				url : '/selectGetProdPlan',
+				method : 'get',
+				data : { prodPlanCode : prodPlanCode },
+				success : function(result){
+					console.log(result);
+					grid.resetData(result);
+				 	$("#prodModal").modal('hide');	
+				},
+				error : function(err){
+					console.log(err);
+				}
+			})
+		})
+		$('#insertListBtn').on('click', function() {
+			newGrid.push({
+				prdtName : '',
+				orderDtCnt : '',
+				prodPlanCnt : '',
+				rodRank : '',
+				prodPlanNote : ''
+			});
+			grid.resetData(newGrid);
+		});
+	};
+	  
+    </script>
+	</div>
+</body>
+</html>

@@ -148,15 +148,28 @@
 		where p.prod_plan_code = #{prodPlanCode}
   	</select>
   	
-  	<insert id="insertProdInst" parameterType="ProdVO">
-	    insert into prod_inst
+	<insert id="insertProdInst" parameterType="ProdVO" statementType="CALLABLE">
+    <selectKey keyProperty="prodInstCode" resultType="String" order="BEFORE">
+        select 'PIN' || LPAD(prod_inst_seq.NEXTVAL, 7, '0') as prodInstCode from dual
+    </selectKey>
+    {call in_inst_up_plan(
+    	#{prodInstCode},
+    	#{prodPlanCode},
+        #{prodInstName},
+        #{prodInstManager},
+        #{prodInstdate},
+        #{prodInstSdate},
+        #{prodInstEdate}
+    )}
+	</insert>
+	
+	<insert id="insertDtProdInst" parameterType="ProdVO">
+	    insert into dt_prod_inst (dt_prod_inst_code, prod_inst_rank, prod_inst_cnt, prod_inst_code)
 	    values(
-	        'PIN' || LPAD(prod_inst_seq.NEXTVAL, 7, '0'),
-	        #{prodInstName},
-	        #{prodInstManager},
-	        #{prodInstdate},
-	        #{prodInstSdate},
-	        #{prodInstEdate}
+	        'PID' || LPAD(dt_prod_inst_seq.NEXTVAL, 7, '0'),
+	        #{prodInstRank},
+	        #{prodInstCnt},
+	        #{prodInstCode}
 	    )
 	</insert> 
   </mapper>
