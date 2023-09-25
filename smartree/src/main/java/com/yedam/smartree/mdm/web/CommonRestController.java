@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
+import com.yedam.smartree.mdm.service.MdmBomDtVO;
 import com.yedam.smartree.mdm.service.MdmBpVO;
 import com.yedam.smartree.mdm.service.MdmChkVO;
 import com.yedam.smartree.mdm.service.MdmMtlVO;
@@ -320,5 +321,15 @@ public class CommonRestController {
 		if(mdmService.deleteChk(chkStdCode)>0) msg = "삭제완료";
 		return msg;
 	}
+	
+	
+	// BOM관리
+	
+	// BOM 상세
+	@GetMapping("/selectBomDetail")
+	public List<MdmBomDtVO> selectBomDetail(String prdtCode) {
+		return mdmService.selectBomDetail(prdtCode);
+	}
+	
 	
 }

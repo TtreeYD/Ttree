@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
+import com.yedam.smartree.mdm.service.MdmBomDtVO;
 import com.yedam.smartree.mdm.service.MdmBpVO;
 import com.yedam.smartree.mdm.service.MdmChkVO;
 import com.yedam.smartree.mdm.service.MdmMtlVO;
@@ -66,4 +67,7 @@ public interface MdmMapper {
 	int insertChk(MdmChkVO vo);
 	int updateChk(MdmChkVO vo); 
 	int deleteChk(String chkStdCode);
+	
+	// BOM관리
+	List<MdmBomDtVO> selectBomDetail(String prdtCode);
 }

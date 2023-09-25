@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.yedam.smartree.mdm.mapper.MdmMapper;
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
+import com.yedam.smartree.mdm.service.MdmBomDtVO;
 import com.yedam.smartree.mdm.service.MdmBpVO;
 import com.yedam.smartree.mdm.service.MdmChkVO;
 import com.yedam.smartree.mdm.service.MdmMtlVO;
@@ -219,6 +220,11 @@ public class MdmServiceImpl implements MdmService {
 	@Override
 	public List<MdmChkVO> searchChk(MdmChkVO vo) {
 		return mdmMapper.searchChk(vo);
+	}
+
+	@Override
+	public List<MdmBomDtVO> selectBomDetail(String prdtCode) {
+		return mdmMapper.selectBomDetail(prdtCode);
 	}
 
 }

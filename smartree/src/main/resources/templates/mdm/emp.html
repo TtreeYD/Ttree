@@ -15,8 +15,7 @@
 			</select>
 			<input id="searchName" placeholder="이름">
 			<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
-			<div class="btn-group" role="group" aria-label="Basic example"
-						style="float: right;">
+			<div class="btn-group" role="group" aria-label="Basic example"	style="float: right;">
 				<button type="button" id="addBtn" class="btn btn-primary" 
 					data-toggle="modal" data-target="#empAddModal">사원등록</button>
 				<button type="button" class="btn btn-primary">삭제</button>
@@ -79,7 +78,13 @@
 			const grid = new Grid({
 				el: document.getElementById('empList'),
 				scrollX: false,
-				rowHeaders: ['checkbox'],
+				rowHeaders: ['rowNum','checkbox'],
+				bodyHeight: 500,
+				pagination: true,
+				pageOptions: {
+					useClient: true,
+					perPage: 15,
+				},
 				columns: [{
 						header: 'ID',
 						name: 'empId'

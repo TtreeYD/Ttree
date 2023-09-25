@@ -112,6 +112,11 @@
 				bodyHeight: 600,
 				contextMenu: null,
 				rowHeaders: ['rowNum', 'checkbox'],
+				pagination: true,
+				pageOptions: {
+					useClient: true,
+					perPage: 15,
+				},
 				columns: [{
 					header: '공통코드',
 					name: 'codeType'
@@ -134,6 +139,11 @@
 				bodyHeight: 600,
 				contextMenu: null,
 				rowHeaders: ['rowNum', 'checkbox'],
+				pagination: true,
+				pageOptions: {
+					useClient: true,
+					perPage: 15,
+				},
 				columns: [{
 					header: '상세코드',
 					name: 'codeId',
@@ -199,7 +209,7 @@
 				$.ajax({
 					url: "/mdm/selectCodeDetail",
 					data: {
-						codeType: codeType
+						codeType: ct
 					},
 					success: result => {
 						codeDetail = result
