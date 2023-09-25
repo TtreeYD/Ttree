@@ -20,7 +20,10 @@
 					style="margin: 4px;" >초기화</button>
 
 		<hr>
-		<h1>제품별 수량</h1>
+		<h1 style="display: inline-block;">제품별 수량</h1>
+		<button type="button" class="btn btn-info btn-icon-text excelDownload" id="ExcelBtn" style="float:right">EXCEL저장
+	            <i class="bi bi-printer"></i>
+	            </button>
 		
 
 		
@@ -151,6 +154,9 @@
 						}
 					})
 				}
+				$('#ExcelBtn').on('click',function(){
+					finPrdt.export('xlsx');
+		        })
 			});
 
 

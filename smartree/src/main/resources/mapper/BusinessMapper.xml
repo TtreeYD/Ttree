@@ -60,7 +60,7 @@
   	<select id="selectOrderDtList" resultType="BusinessVO">
  		select a.*, a.order_dt_cnt - prdt_out_cnt as prdt_left_cnt 
  		  from (       
-				         select o.order_code , d.order_dt_code , p.prdt_name , p.prdt_code, d.order_dt_cnt , o.dod_date 
+				         select o.order_code , d.order_dt_code , p.prdt_name , p.prdt_code, d.order_dt_cnt , o.dod_date , o.bp_code 
 				       				 , o.order_date, nvl((select sum(prdt_out_cnt) 
 							                           from prdt_out p join prdt_out_list pol 
 							                                        on p.prdt_out_code = pol.prdt_out_code 
@@ -207,14 +207,6 @@
 		        on f.prdt_code = p.prdt_code
 	  group by p.prdt_name, p.prdt_code,  p.prdt_ss
   	</select>
-  	
-  	<!-- Lot별 완제품 재고조회 -->
-  	<!-- <select id="selectFinLotPrdt" resultType="FinPrdtVO">
-  		select f.prdt_lot_no , f.prdt_code , p.prdt_name , f.prdt_unit , f.prdt_cnt,f.prdt_recieve_date 
-		  from fin_prdt f join prdt_table p
-		    		on f.prdt_code = p.prdt_code
-		 where f.prdt_code = #{prdtCode}
-  	</select> -->
   	
   	<!-- lot별 완제품조회 -->
   	<select id="selectFinLotPrdt" resultType="FinPrdtVO">
