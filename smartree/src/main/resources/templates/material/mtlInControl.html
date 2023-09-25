@@ -46,14 +46,6 @@ margin : 10px;
 										<input class="form-control ml-2" id="endMtlInDate" type="date" style="width: 150px;">
 									</div>			
 									</div>
-									<div>
-									<span>검사완료일</span>
-									<div class="input-group">
-										<input class="form-control mr-2" id="StartMtlChkDate" type="date" style="width: 150px;">
-										<div class="mt-2">~</div>
-										<input class="form-control ml-2" id="EndMtlChkDate" type="date" style="width: 150px;">
-									</div>
-									</div>
 								</div>
 							</div>
 							<div class="col-6">
@@ -73,7 +65,7 @@ margin : 10px;
 							style="margin: 4px;">초기화</button>
 					</div>
 					<div class="modal-body">
-						<div id="mtlInmodalGrid"></div>
+						<div id="mtlInModalGrid"></div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose">닫기</button>
@@ -94,8 +86,8 @@ margin : 10px;
 	     
 		document.addEventListener("DOMContentLoaded",() => {
 				// 모달창
-				const mtlInmodalGrid = new tui.Grid({
-					el: document.getElementById('mtlInmodalGrid'),
+				const mtlInModalGrid = new tui.Grid({
+					el: document.getElementById('mtlInModalGrid'),
 					scrollX: false,	
 					scrollY: false,
 					contextMenu: null,
@@ -131,7 +123,7 @@ margin : 10px;
 					}   ]
 			    });		
 			    $('#mtlSearch').on('click', function(){
-                     setTimeout(() => mtlInmodalGrid.refreshLayout(), 200);
+                     setTimeout(() => mtlInModalGrid.refreshLayout(), 200);
                  })
                  
 				// 검사완료목록
@@ -326,7 +318,7 @@ margin : 10px;
 		                }
 		              }
 		            });
-		            mtlInmodalGrid.resetData(eval(result));
+		            mtlInModalGrid.resetData(eval(result));
 		          },
 		          error: function (err) {
 		            console.log(err);
@@ -340,13 +332,13 @@ margin : 10px;
 						data:{
 							mtlName: $('#mtlName').val(),
 							mtlManager : $('#mtlManager').val(),
-							StartMtlChkDate : $('#StartMtlChkDate').val(),
-							EndMtlChkDate : $('#EndMtlChkDate').val()
+							startMtlInDate : $('#startMtlInDate').val(),
+							endMtlInDate : $('#endMtlInDate').val()
 						},
 						success:function(result){
 							searchModalData = result;
-							mtlInmodalGrid.resetData(result);
-					 		setTimeout(() => mtlInmodalGrid.refreshLayout(), 200);
+							mtlInModalGrid.resetData(result);
+					 		setTimeout(() => mtlInModalGrid.refreshLayout(), 200);
 						},
 						error:function(err){
 							console.log(err);
@@ -354,32 +346,32 @@ margin : 10px;
 					})
 				});
 			// 모달창 리스트 누르면 입고목록으로 집어넣기
-                mtlInmodalGrid.on('dblclick', () => {
+                mtlInModalGrid.on('dblclick', () => {
                     let rowKey =
-                    	mtlInmodalGrid.getFocusedCell().rowKey;
+                    	mtlInModalGrid.getFocusedCell().rowKey;
                     if (rowKey != null && rowKey >= 0) {
-                        let mtlCode = mtlInmodalGrid.getValue(
+                        let mtlCode = mtlInModalGrid.getValue(
                             rowKey,
                             "mtlCode"
                         );
-                        let mtlName = mtlInmodalGrid.getValue(
+                        let mtlName = mtlInModalGrid.getValue(
                             rowKey,
                             "mtlName"
                         );
-                        let mtlPassCnt = mtlInmodalGrid.getValue(
+                        let mtlPassCnt = mtlInModalGrid.getValue(
                             rowKey,
                             "mtlInCnt"
                         );
-                        let mtlChkCode = mtlInmodalGrid.getValue(
+                        let mtlChkCode = mtlInModalGrid.getValue(
                             rowKey,
                             "mtlChkCode"
                         );
-                        let mtlStatusNm = mtlInmodalGrid.getValue(
+                        let mtlStatusNm = mtlInModalGrid.getValue(
                                 rowKey,
                         	"mtlStatusNm"
                         );
-                        mtlInmodalGrid.removeRow(rowKey);
-                        mtlInmodalGrid.blur();
+                        mtlInModalGrid.removeRow(rowKey);
+                        mtlInModalGrid.blur();
 
                         let now = new Date(); // 현재 날짜 및 시간
                         let year = now.getFullYear();
@@ -409,6 +401,14 @@ margin : 10px;
                         $("#modalClose").click();
                     }
                 });
+		// 모달 초기화버튼
+		$('#resetModalBtn').on('click',function(){
+			mtlInModalGrid.resetData([]);
+			$('#startMtlInDate').val('');
+			$('#endMtlInDate').val('');
+			$('#mtlManager').val('');
+			$('#mtlName').val('');
+		});
 	});
 		</script>
 	</div>

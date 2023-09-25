@@ -91,10 +91,31 @@
          FROM mtl_container
             where mtl_code = #{mtlCode}
 		</selectKey>
-  		 INSERT INTO mtl_container(mtl_lot_num, mtl_code, mtl_in_cnt, mtl_in_date, mtl_manager, mtl_lot_cnt, mtl_chk_code )
-  		 VALUES(
-  			#{mtlLotNum},#{mtlCode},#{mtlInCnt},#{mtlInDate},#{mtlManager},#{mtlInCnt},#{mtlChkCode}
-  		 )
+ <choose>
+        <when test="#{mtlLotNum} != null">
+            UPDATE mtl_container
+            SET
+                mtl_code = #{mtlCode},
+                mtl_in_cnt = #{mtlInCnt},
+                mtl_in_date = #{mtlInDate},
+                mtl_manager = #{mtlManager},
+                mtl_lot_cnt = #{mtlInCnt},
+                mtl_chk_code = #{mtlChkCode}
+            WHERE mtl_code = #{mtlCode} AND mtl_lot_num = #{mtlLotNum}
+        </when>
+        <otherwise>
+            INSERT INTO mtl_container(mtl_lot_num, mtl_code, mtl_in_cnt, mtl_in_date, mtl_manager, mtl_lot_cnt, mtl_chk_code )
+            VALUES (
+                #{mtlLotNum},
+                #{mtlCode},
+                #{mtlInCnt},
+                #{mtlInDate},
+                #{mtlManager},
+                #{mtlInCnt},
+                #{mtlChkCode}
+            )
+        </otherwise>
+    </choose>
 	</insert> 	
   	
   	<!-- 입고관리 update -->
@@ -130,7 +151,10 @@
         ON c.mtl_code = t.mtl_code
         JOIN mtl_chk h
         ON c.mtl_chk_code = h.mtl_chk_code
-		WHERE c.mtl_lot_num IS NOT NULL AND t.mtl_name like '%'||#{mtlName}||'%' AND c.mtl_manager like '%'||#{mtlManager}||'%' AND h.mtl_chk_date BETWEEN TO_CHAR(#{startMtlChkDate},'YY/MM/DD') AND TO_CHAR(#{endMtlChkDate},'YY/MM/DD')
+		WHERE c.mtl_lot_num IS NOT NULL AND t.mtl_name like '%'||#{mtlName}||'%' AND c.mtl_manager like '%'||#{mtlManager}||'%'
+		  <if test="startMtlInDate != null and endMtlInDate != null">
+    		AND c.mtl_in_date BETWEEN TO_CHAR(#{startMtlInDate},'YY/MM/DD') AND TO_CHAR(#{endMtlInDate},'YY/MM/DD')
+  		  </if>
   	</select>
   	
   	<!-- 재고조회 로트별 출력기능 -->
