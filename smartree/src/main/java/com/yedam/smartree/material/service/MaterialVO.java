@@ -98,5 +98,11 @@ public class MaterialVO {
 	private String bpCode; 
 	// 발주 조회 - 발주서 기준 조회
 	private String mtlWhere;							// 자재상태(주문완료,검수완료,입고완료)
-	
+	// 입고관리, 발주관리 날짜 검색조건
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
+	private Date startMtlChkDate;					// 검사일자 조건 시작일
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
+	private Date endMtlChkDate;						// 검사일자 조건 종료일
 }
