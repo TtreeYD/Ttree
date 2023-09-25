@@ -46,17 +46,19 @@ margin : 10px;
 							<div class="col-6">
 								<div class="d-flex flex-column align-items-center">
 									<div class="mb-3">
-										<span>자재발주일</span>
-										<div class="input-group">
-											<input class="form-control" id="mtlDate" type="date" style="width: 150px;">
-											<input class="form-control" id="mtlDate" type="date" style="width: 150px;">
-									</div>		
+									<span>자재발주일</span>
+									<div class="input-group">
+										<input class="form-control mr-2" id="StartMtlNeedDate" type="date" style="width: 150px;">
+										<div class="mt-2">~</div>
+										<input class="form-control ml-2" id="EndMtlNeedDate" type="date" style="width: 150px;">
+									</div>			
 									</div>
 									<div>
 									<span>납기요청일</span>
 									<div class="input-group">
-										 <input class="form-control" id="mtlWishDate" type="date" style="width: 150px;">
-										 <input class="form-control" id="mtlWishDate" type="date" style="width: 150px;">
+										<input class="form-control mr-2" id="StartMtlWishDate" type="date" style="width: 150px;">
+										<div class="mt-2">~</div>
+										<input class="form-control ml-2" id="EndMtlWishDate" type="date" style="width: 150px;">
 									</div>
 									</div>
 								</div>
@@ -64,7 +66,7 @@ margin : 10px;
 							<div class="col-6">
 								<div class="d-flex flex-column align-items-center">
 									<div class="mb-3">
-										<span>자재이름</span> <input class="form-control" id="mtlName"	type="text" style="width: 300px;">
+										<span>자재이름</span> <input class="form-control mb-3" id="mtlName" type="text" style="width: 300px;">
 										<span>담당자</span> <input class="form-control" id="mtlManager" type="text" style="width: 300px;">
 									</div>
 								</div>
@@ -73,7 +75,7 @@ margin : 10px;
 					</div>
 					<div style="display: flex; justify-content: center;">
 						<button type="button" id="searchDataBtn" class="btn btn-primary"
-							style="margin: 5px;">조회</button>
+							style="margin: 4px;">조회</button>
 						<button type="button" id="resetModalBtn" class="btn btn-primary"
 							style="margin: 4px;">초기화</button>
 					</div>
@@ -81,8 +83,7 @@ margin : 10px;
 						<div id="needModalGrid"></div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="addModalBtn" class="btn btn-default">저장</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose">닫기</button>
 					</div>
 				</div>
 				<!-- /.modal-content -->
@@ -151,6 +152,10 @@ margin : 10px;
 					}, {
 						header: '거래처',
 						name: 'bpName',
+						align: 'center'
+					}, {
+						header: '수량',
+						name: 'mtlCnt',
 						align: 'center'
 					}, {
 						header: '발주일자',
@@ -279,16 +284,27 @@ margin : 10px;
 			          },
 					columns : [ {
 						header : '분류',
-						name : 'mtlType'
+						name : 'mtlType',
+					    editor: {
+					        type: 'select',
+					        options: {
+					          listItems: [
+					            { text: '원자재', value: 'MA01' },
+					            { text: '부자재', value: 'MA02' }
+					          ]
+					        }
+					      }
 					},
 						{
 						header : '자재코드',
 						name : 'mtlCode',
 						sortable: true,
-					    sortingType: 'asc'
+					    sortingType: 'asc',
+						editor:{type: 'text'}
 					}, {
 						header : '자재이름',
-						name : 'mtlName'
+						name : 'mtlName',
+						editor:{type: 'text'}
 					}, {
 						header : '자재발주일',
 						name : 'mtlDate',
@@ -306,10 +322,20 @@ margin : 10px;
 						editor:{type: 'text'}
 					}, {
 						header : '단위',
-						name : 'mtlUnit'
+						name : 'mtlUnit',
+					    editor: {
+					        type: 'select',
+					        options: {
+					          listItems: [
+					            { text: 'ea', value: 'ea' },
+					            { text: 'box', value: 'box' }
+					          ]
+					        }
+					      }
 					}, {
 						header : '담당자',
-						name : 'mtlManager'
+						name : 'mtlManager',
+						editor:{type: 'text'}
 					}, {
 						header : '납기요청일',
 						name : 'mtlWishDate',
@@ -404,8 +430,8 @@ margin : 10px;
 					error: err => console.log(err)
 				})
 			}
-		        // 모달검색 ajax
-		        $.ajax({
+		        // 모달창에서 미리 보여주기 하고싶으면 켜쇼 ajax
+/* 		        $.ajax({
 		          url: '/getNeedMtl',
 		          method: 'POST',
 		          dataType: 'json',
@@ -424,22 +450,26 @@ margin : 10px;
 		          error: function (err) {
 		            console.log(err);
 		          }
-		        })
+		        }) */
 		    // 행추가 기능    
-		    $(addRow).on('click', function () {
+		    $(addRow).on('click', (ev)=> {
 		    	mtlNeedGrid.blur()
-				bucket.push({
-					mtlType: '',
-					mtlCode: '',
-					mtlName: '',
-					mtlDate: '',
-					bpName: '',
-					mtlCnt: '',
-					mtlUnit: '',
-					mtlManager: '',
-					mtlWishDate: ''
-				})
-				mtlNeedGrid.resetData(bucket)
+		    	        let now = new Date(); // 현재 날짜 및 시간
+                        let year = now.getFullYear();
+                        let month = (
+                            "0" +
+                            (now.getMonth() + 1)
+                        ).substr(-2);
+                        let day = (
+                            "0" + now.getDate()
+                        ).substr(-2);
+                        let mtlDate =
+                            year + "-" + month + "-" + day;
+				mtlNeedGrid.appendRow(
+                        {
+                        	mtlDate: mtlDate
+                        }
+                    );
 			})
 				// 모달창의 조회버튼을 누를때 조건에 맞게 검색해주기
 				$('#searchDataBtn').on('click',function(ev){
@@ -447,7 +477,8 @@ margin : 10px;
 						url:'/getNeedMtl',
 						method: 'POST',
 						data:{
-							mtlName: $('#mtlName').val()
+							mtlName: $('#mtlName').val(),
+							mtlManager : $('#mtlManager').val()
 						},
 						success:function(result){
 							searchModalData = result;
@@ -518,6 +549,61 @@ margin : 10px;
 				    }
 				});
 				
+                // 모달 리스트 클릭시 아래 리스트로 이동
+                needModalGrid.on('dblclick', () => {
+                    let rowKey =
+                    	needModalGrid.getFocusedCell().rowKey;
+
+                    if (rowKey != null && rowKey >= 0) {
+                        let mtlCode = needModalGrid.getValue(
+                            rowKey,
+                            "mtlCode"
+                        );
+                        let mtlName = needModalGrid.getValue(
+                            rowKey,
+                            "mtlName"
+                        );
+                        let mtlType = needModalGrid.getValue(
+                            rowKey,
+                            "mtlType"
+                        );
+                        let mtlCnt = needModalGrid.getValue(
+                            rowKey,
+                            "mtlCnt"
+                        );
+                        
+
+                        needModalGrid.removeRow(rowKey);
+
+                        needModalGrid.blur();
+
+                        let now = new Date(); // 현재 날짜 및 시간
+                        let year = now.getFullYear();
+                        let month = (
+                            "0" +
+                            (now.getMonth() + 1)
+                        ).substr(-2);
+                        let day = (
+                            "0" + now.getDate()
+                        ).substr(-2);
+                        let mtlDate =
+                            year + "-" + month + "-" + day;
+
+                        mtlNeedGrid.appendRow(
+                            {
+                            	mtlCode: mtlCode,
+                            	mtlDate: mtlDate,
+                            	mtlName: mtlName,
+                            	mtlType: mtlType,
+                            	mtlCnt: mtlCnt,
+                            	mtlUnit: 'ea',
+                            	mtlManager: '남태원'
+                            },
+                            { at: 0 }
+                        );
+                        $("#modalClose").click();
+                    }
+                });
 			});
 		</script>
 	</div>

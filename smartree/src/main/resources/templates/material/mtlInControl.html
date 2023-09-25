@@ -41,9 +41,9 @@ margin : 10px;
 									<div class="mb-3">
 									<span>자재입고일</span>
 									<div class="input-group">
-										<input class="form-control mr-2" id="StartMtlInDate" type="date" style="width: 150px;">
+										<input class="form-control mr-2" id="startMtlInDate" type="date" style="width: 150px;">
 										<div class="mt-2">~</div>
-										<input class="form-control ml-2" id="EndMtlInDate" type="date" style="width: 150px;">
+										<input class="form-control ml-2" id="endMtlInDate" type="date" style="width: 150px;">
 									</div>			
 									</div>
 									<div>
@@ -76,8 +76,7 @@ margin : 10px;
 						<div id="mtlInmodalGrid"></div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="addModalBtn" class="btn btn-default">저장</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose">닫기</button>
 					</div>
 				</div>
 				<!-- /.modal-content -->
@@ -106,6 +105,9 @@ margin : 10px;
 			            useClient: true,
 		            },
 					columns: [ {
+						header : 'LOT번호',
+						name : 'mtlLotNum'
+					},{
 						header : '자재코드',
 						name : 'mtlCode'
 					}, {
@@ -113,13 +115,10 @@ margin : 10px;
 						name : 'mtlName'
 					}, {
 						header : '자재입고수량',
-						name : 'mtlPassCnt'
+						name : 'mtlInCnt'
 					}, {
 						header : '자재입고일자',
 						name : 'mtlInDate'
-					}, {
-						header : '검사완료일자',
-						name : 'mtlChkDate'
 					}, {
 						header : '입고담당자',
 						name : 'mtlManager'
@@ -129,7 +128,7 @@ margin : 10px;
 					}, {
 						header : '검사결과',
 						name : 'mtlStatusNm'
-					},   ]
+					}   ]
 			    });		
 			    $('#mtlSearch').on('click', function(){
                      setTimeout(() => mtlInmodalGrid.refreshLayout(), 200);
@@ -152,7 +151,7 @@ margin : 10px;
 						header : '자재이름',
 						name : 'mtlName'
 					}, {
-						header : '자재입고수량',
+						header : '검사완료수량',
 						name : 'mtlPassCnt'
 					}, {
 						header : '검사완료일',
@@ -190,6 +189,10 @@ margin : 10px;
                             rowKey,
                             "mtlChkCode"
                         );
+                        let mtlStatusNm = mtlCheckGrid.getValue(
+                                rowKey,
+                        "mtlStatusNm"
+                        );
                         
 
                         mtlCheckGrid.removeRow(rowKey);
@@ -216,7 +219,8 @@ margin : 10px;
                             	mtlInCnt: mtlPassCnt,
                             	mtlChkCode: mtlChkCode,
                             	/* mtlLotNum: 'testLotNum1', */
-                            	mtlManager: '남태원'
+                            	mtlManager: '미닛맨',
+                            	mtlStatusNm : mtlStatusNm
                             },
                             { at: 0 }
                         );
@@ -253,6 +257,9 @@ margin : 10px;
 					}, {
 						header : '자재검사코드',
 						name : 'mtlChkCode'
+					}, {
+						header : '검사결과',
+						name : 'mtlStatusNm'
 					}   ]
 				});
 				
@@ -305,7 +312,7 @@ margin : 10px;
 				
 				
 		        // 모달검색 ajax
-		        $.ajax({
+/* 		        $.ajax({
 		          url: '/getInMtl',
 		          method: 'POST',
 		          dataType: 'json',
@@ -324,14 +331,17 @@ margin : 10px;
 		          error: function (err) {
 		            console.log(err);
 		          }
-		        })
+		        }) */
 		     // 모달창의 조회버튼을 누를때 조건에 맞게 검색해주기
 				$('#searchDataBtn').on('click',function(ev){
 					$.ajax({
 						url:'/getInMtl',
 						method: 'POST',
 						data:{
-							mtlName: $('#mtlName').val()
+							mtlName: $('#mtlName').val(),
+							mtlManager : $('#mtlManager').val(),
+							StartMtlChkDate : $('#StartMtlChkDate').val(),
+							EndMtlChkDate : $('#EndMtlChkDate').val()
 						},
 						success:function(result){
 							searchModalData = result;
@@ -342,8 +352,63 @@ margin : 10px;
 							console.log(err);
 						}
 					})
-						
-					});
+				});
+			// 모달창 리스트 누르면 입고목록으로 집어넣기
+                mtlInmodalGrid.on('dblclick', () => {
+                    let rowKey =
+                    	mtlInmodalGrid.getFocusedCell().rowKey;
+                    if (rowKey != null && rowKey >= 0) {
+                        let mtlCode = mtlInmodalGrid.getValue(
+                            rowKey,
+                            "mtlCode"
+                        );
+                        let mtlName = mtlInmodalGrid.getValue(
+                            rowKey,
+                            "mtlName"
+                        );
+                        let mtlPassCnt = mtlInmodalGrid.getValue(
+                            rowKey,
+                            "mtlInCnt"
+                        );
+                        let mtlChkCode = mtlInmodalGrid.getValue(
+                            rowKey,
+                            "mtlChkCode"
+                        );
+                        let mtlStatusNm = mtlInmodalGrid.getValue(
+                                rowKey,
+                        	"mtlStatusNm"
+                        );
+                        mtlInmodalGrid.removeRow(rowKey);
+                        mtlInmodalGrid.blur();
+
+                        let now = new Date(); // 현재 날짜 및 시간
+                        let year = now.getFullYear();
+                        let month = (
+                            "0" +
+                            (now.getMonth() + 1)
+                        ).substr(-2);
+                        let day = (
+                            "0" + now.getDate()
+                        ).substr(-2);
+                        let mtlInDate =
+                            year + "-" + month + "-" + day;
+
+                        mtlInGrid.appendRow(
+                            {
+                            	mtlCode: mtlCode,
+                            	mtlName: mtlName,
+                            	mtlInDate: mtlInDate,
+                            	mtlInCnt: mtlPassCnt,
+                            	mtlChkCode: mtlChkCode,
+                            	/* mtlLotNum: 'testLotNum1', */
+                            	mtlManager: '미닛맨',
+                            	mtlStatusNm : mtlStatusNm
+                            },
+                            { at: 0 }
+                        );
+                        $("#modalClose").click();
+                    }
+                });
 	});
 		</script>
 	</div>

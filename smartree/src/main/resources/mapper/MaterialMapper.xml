@@ -112,23 +112,25 @@
   	
   	<!-- 발주관리 검색조회 -->
   	<select id="getNeedMtl" parameterType="MaterialVO">
-  		SELECT n.mtl_code , n.mtl_date, b.bp_name , t.mtl_type , t.mtl_name , n.mtl_cnt , t.mtl_unit , n.mtl_manager , n.mtl_wish_date ,get_common (mtl_where, '009') mtl_where_nm
+  		SELECT n.mtl_code , n.mtl_date, b.bp_name , get_common(t.mtl_type, '003') AS mtl_type , t.mtl_name , n.mtl_cnt , t.mtl_unit , n.mtl_manager , n.mtl_wish_date ,get_common (mtl_where, '009') mtl_where_nm
   		FROM mtl_need n
         JOIN mtl_table t
         ON n.mtl_code = t.mtl_code
         JOIN business_partner b
         ON n.bp_code = b.bp_code
-        WHERE t.mtl_name like '%'||#{mtlName}||'%'
+        WHERE t.mtl_name like '%'||#{mtlName}||'%' AND n.mtl_manager like '%'||#{mtlManager}||'%'
   	</select>
   	
   	
   	<!-- 입고관리 검색조회 -->
   	<select id="getInMtl" parameterType="MaterialVO">
-  		SELECT c.mtl_lot_num, c.mtl_code, t.mtl_name, c.mtl_in_cnt, c.mtl_in_date, c.mtl_manager, c.mtl_lot_cnt, c.mtl_chk_code
+  		SELECT c.mtl_lot_num, c.mtl_code, t.mtl_name, c.mtl_in_cnt, c.mtl_in_date, c.mtl_manager, c.mtl_lot_cnt, c.mtl_chk_code, get_common(h.mtl_chk_status, '009') AS mtl_status_nm, h.mtl_chk_date
         FROM mtl_container c 
         JOIN mtl_table t
         ON c.mtl_code = t.mtl_code
-		WHERE c.mtl_lot_num IS NOT NULL AND t.mtl_name like '%'||#{mtlName}||'%'
+        JOIN mtl_chk h
+        ON c.mtl_chk_code = h.mtl_chk_code
+		WHERE c.mtl_lot_num IS NOT NULL AND t.mtl_name like '%'||#{mtlName}||'%' AND c.mtl_manager like '%'||#{mtlManager}||'%' AND h.mtl_chk_date BETWEEN TO_CHAR(#{startMtlChkDate},'YY/MM/DD') AND TO_CHAR(#{endMtlChkDate},'YY/MM/DD')
   	</select>
   	
   	<!-- 재고조회 로트별 출력기능 -->
