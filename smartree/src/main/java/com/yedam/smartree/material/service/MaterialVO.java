@@ -101,8 +101,8 @@ public class MaterialVO {
 	// 입고관리, 발주관리 날짜 검색조건
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
-	private Date startMtlChkDate;					// 검사일자 조건 시작일
+	private Date startMtlInDate;					// 검사일자 조건 시작일
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
-	private Date endMtlChkDate;						// 검사일자 조건 종료일
+	private Date endMtlInDate;						// 검사일자 조건 종료일
 }
