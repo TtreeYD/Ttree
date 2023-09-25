@@ -5,6 +5,9 @@
 <head>
   <meta charset="UTF-8">
   <title>주문서조회</title>
+<style>
+
+</style>
 </head>
 
 <body>
@@ -36,8 +39,12 @@
             <div id="grid2"></div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" id="pdfbtn"
-              style="transform:translateX(-940px)">PDF저장</button>
+          	<div>
+	            <button type="button" class="btn btn-default" id="pdfbtn">PDF저장</button>
+	            <button type="button" class="btn btn-info btn-icon-text excelDownload" id="ExcelBtn">EXCEL저장
+	            <i class="bi bi-printer"></i>
+	            </button>
+          	</div>
             <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
           </div>
         </div><!-- /.modal-content -->
@@ -64,6 +71,10 @@
           {
             header: '제품명',
             name: 'prdtName',
+          },
+          {
+       	  	 header: '업체코드',
+             name: 'bpCode',
           },
           {
             header: '주문량',
@@ -182,27 +193,8 @@
         $('#pdfbtn').on('click', function () {
           let data = grid2.getData();
           console.log(data)
-       
-
         });
-        $('#searchDataBtn').on('click',function(){
-        	let data ={}
-        	data.prdtName = $('#bpName').val();
-        	data.orderDate = $('#orderDate').val();
-        	data.dodDate = $('#dodDate').val();
-        	$.ajax({
-        		url:'/orders',
-        		method:'GET',
-        		data: data,
-        		success:function(result){
-        			console.log(result);
-        		},
-        		error:function(err){
-        			console.log(err);
-        		}
-        		
-        	})
-        })
+        
         $('#searchDataBtn').on('click',function(){
         	let data ={}
         	data.bpName = $('#bpName').val();
@@ -221,7 +213,10 @@
         		
         	})
         })
-
+		
+        $('#ExcelBtn').on('click',function(){
+        	grid2.export('xlsx');
+        })
 
 
       })

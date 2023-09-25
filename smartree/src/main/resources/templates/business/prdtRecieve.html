@@ -99,7 +99,7 @@ const recieveGrid = new tui.Grid({
 	el: document.getElementById('recieveGrid'),
 	scrollX: false,
 	scrollY: false,
-	rowHeaders: ["checkbox"],
+	rowHeaders: ["rowNum"],
 	
 	columns: [
 		{
@@ -246,7 +246,7 @@ const recieveListGrid = new tui.Grid({
 		$('#prdtRecieveDate').val('');
 	})
 	
-	
+	//입고취소 
 	$('#recieveCancle').on('click',function(){
 		let data = recieveListGrid.getCheckedRows();
 		$.ajax({
@@ -257,6 +257,10 @@ const recieveListGrid = new tui.Grid({
 			data:JSON.stringify(data),
 			success:function(result){
 				console.log(result);
+				toastr.success('입고취소완료');
+				$('#recieveListModal').modal('hide');
+				getprdtCheckList();
+				
 			},
 			error:function(err){
 				console.log(err);
