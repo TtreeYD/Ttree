@@ -6,11 +6,16 @@
   <mapper namespace="com.yedam.smartree.eqm.mapper.EqmMapper">
   <!-- 설비 전체조회 -->
   	<select id="selectEqmList" resultType="EqmVO">
-  		SELECT e.eqm_code,e.eqm_name,e.eqm_ucheck,e.insp_cycle,e.mfg_comp,e.mfg_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE
-		FROM eqm e left join EQM_INSP i
-  		  				ON e.eqm_code = i.eqm_code
-  	 					 
-  		ORDER BY eqm_code
+  		select e.* , (
+                select max(RECENT_INSP_DATE)
+                from eqm_insp i
+                WHERE e.eqm_code = i.eqm_code ) as RECENT_INSP_DATE,
+                 (
+                select max(NEXT_INSP_DATE)
+                from eqm_insp i
+                WHERE e.eqm_code = i.eqm_code ) as NEXT_INSP_DATE
+        from eqm e
+        ORDER BY eqm_code
   	</select>
   	<!-- 사용여부 조회 -->
   	<select id="selectEqmUcheckList" resultType="EqmVO">
@@ -26,14 +31,21 @@
   		ORDER BY eqm_code
   	</select>
   	
-  	<!-- 설비이름으로 검색 -->
+
+	<!-- 설비이름으로 검색 -->
   	  <select id="searchEqm" resultType="EqmVO">
-  		SELECT e.eqm_code,e.eqm_name,e.eqm_ucheck,e.insp_cycle,e.mfg_comp,e.mfg_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE
-		FROM eqm e left join EQM_INSP i
-  		  				ON e.eqm_code = i.eqm_code
+  		select e.* , (
+                select max(RECENT_INSP_DATE)
+                from eqm_insp i
+                WHERE e.eqm_code = i.eqm_code ) as RECENT_INSP_DATE,
+                 (
+                select max(NEXT_INSP_DATE)
+                from eqm_insp i
+                WHERE e.eqm_code = i.eqm_code ) as NEXT_INSP_DATE
+        from eqm e
   		<where>
   			<if test="eqmName != null and !eqmName.equals('')">
-  				eqm_name LIKE '%'||#{eqmName}||'%'
+  				e.eqm_name LIKE '%'||#{eqmName}||'%'
   			</if>
   		</where>  				
   		 
@@ -77,8 +89,9 @@
    			   ,#{inspCycle}
    			   ,#{mfgComp}
    			   ,#{mfgDate}   
-   			   ,#{eqmImg} 
+   			   ,#{eqmImg}
    			   ,#{eqmDivision}
+   			
            )
   	
   	
@@ -129,8 +142,12 @@
   		where eqm_code=#{eqmCode}
   	</update>
   	
-  	
-  	
+  	<!-- 설비 구분으로 조회 -->
+  	<select id="searchEqmDivision" resultType="EqmVO">
+  	select eqm_code,eqm_name,eqm_ucheck,insp_cycle,eqm_min_temp,eqm_max_temp,eqm_manager,mfg_comp,mfg_date,eqm_img,eqm_division
+  	from EQM
+  	where eqm_division = #{eqmDivision} 
+  	</select>
   	
 
   	

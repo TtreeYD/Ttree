@@ -11,5 +11,5 @@ public interface EqmService {
 	public EqmVO selectEqm(EqmVO eqmVO);
 	public int deleteEqm(EqmVO eqmVO);
 	public int updateEqm(EqmVO eqmVO);
-
+	public List<EqmVO> searchEqmDivision(String eqmDivision);
 }

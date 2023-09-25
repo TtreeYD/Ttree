@@ -199,6 +199,7 @@
             el: document.getElementById("grid2"),
             scrollX: false,
             scrollY: false,
+            bodyHeight: 200,
             rowHeaders: ["rowNum"],
             pageOptions: {
               perPage: 5,
@@ -298,7 +299,7 @@
                     eqmCode: data
                   },
                   success: function (result) {
-
+					console.log(result.eqmImg);
                     $("#searchEqmModal").modal("hide");
                     $("#eqmCode").val(result.eqmCode);
                     $("#eqmName").val(result.eqmName);
@@ -314,7 +315,7 @@
                     $("#eqmManager").val(result.eqmManager);
                     $("#inspCycle").val(result.inspCycle);
                    $("#preview").attr("src","/eqm/display?fileName=/"+result.eqmImg);
-                   // $('#eqmImg').val(result.eqmImg);
+                  //$('#eqmImg').val(result.eqmImg);
                     $("#mfgComp").val(result.mfgComp);
                     $("#mfgDate").val(result.mfgDate);
                     $("#eqmDivision").val(result.eqmDivision);

@@ -193,7 +193,12 @@ public class EqmController {
 		return uploadFileName.replace(File.separator, "/");
 	}
 	
-	
+	// 비가동 페이지
+	@GetMapping("/eqmNoperForm")
+	public String EqmNoperForm() {
+		// model.addAttribute("eqmInspVO", new EqmInspVO());
+		return "eqm/eqmNoperForm";
+	}
 	
 
 	

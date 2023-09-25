@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="row">
+			
+			<div class="col-5">
+				<h2>비가동등록</h2>
+				<br>
+			<div class="input-group mb-3">
+					<select class="custom-select col-2" id="eqmDivision" name="eqmDivision">
+			            		<option value="">--</option>
+								<option value="PC01">재단</option>
+								<option value="PC02">가공</option>
+								<option value="PC03">샌딩</option>
+								<option value="PC04">도장</option>
+								<option value="PC05">조립</option>
+					</select>
+					<input type="text" class="form-control col-3" placeholder="설비명" id="searchName">
+					<div class="input-group-append">
+				   	<button class="btn btn-outline-secondary" type="button" id="searchBtn">검색</button>
+					</div>
+				</div> 
+				
+				<div id="noperGrid"></div>
+			</div>
+			
+		
+			<div class="col"></div>
+			
+			<div class="col-5" style="margin-top: 95px">	
+			
+				<br>
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">설비코드</span>
+				  	</div>
+					<input type="text" class="form-control text-center col" readonly id="eqmCode"> 
+				</div>
+				
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">설비명</span>
+				  	</div>
+					<input type="text" maxlength="12" class="form-control text-center col" readonly id="eqmName">
+				</div>
+				
+					<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">담당자</span>
+				  	</div>
+				<input type="text" maxlength="12" class="form-control text-center col"  id="noperManager">
+
+				</div>							
+				
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">사유종류</span>
+				  	</div>
+					<select class="custom-select text-center col" id="reasonKnd">
+					   <option value="" selected>--</option>
+					   <option value="" >점검</option>
+					   <option value="" >기타</option>
+					</select>
+				</div>
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+				    	<span class="input-group-text col">사유</span>
+				  	</div>
+				  	<textarea class="form-control col" rows="3" maxlength="100" id="reason"></textarea>
+				
+				</div>
+				
+				<div class="input-group mb-4">
+					<div class="input-group-prepend col-3">
+						<label class="input-group-text col">비가동시작시간</label>	
+					</div>
+					<input type="text" name="start" id="start">
+				
+					<input type="button" value="시작" id="startBtn">					
+				</div>
+				
+				<div class="input-group mb-4">
+			     	<div class="input-group-prepend col-3">
+					   <label class="input-group-text col">비가동종료시간</label>	</div>
+					<input type="text" name="end" id="end">				
+					<input type="button" value="종료" id="endBtn">
+				</div>
+				
+				
+				
+				<div class="text-center">
+					<button type="button" id="" class="btn btn-primary">등록</button>
+					<button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
+					<button type="button" id="" class="btn btn-primary">삭제</button>
+				</div>
+			</div>
+		
+		
+			<div class="col"></div>	
+			<div class="col"></div>	
+			</div>		
+<script>
+	 var grid;
+     window.onload=function(){
+    	  const grid = new tui.Grid({
+    	      el: document.getElementById('noperGrid'),
+    	      scrollX: false,
+    	      minBodyHeight: 400,
+    	      rowHeaders:["rowNum"],
+    	      pageOptions: {
+    	          perPage: 10,
+    	          useClient: true,
+    	        },
+    	      columns: [
+    	        {
+    	          header: '설비코드',
+    	          name: 'eqmCode',
+    	          align: 'center'
+    	        },
+    	        {
+    	          header: '설비명',
+    	          name: 'eqmName',
+    	          align: 'center'
+    	        },
+    	        {
+      	          header: '설비상태',
+      	          name: '',
+      	          align: 'center'
+      	        }
+    	   
+    	      ]
+    	    });
+    	  
+    	    getEqmList();
+    	    
+    	    // 검색버튼 클릭시 
+    	    $('#searchBtn').on('click',function(){
+    	    	searchEqmName();
+    	    })
+    	    // 검색 - 엔터시
+    	    $('#searchName').on('keypress', function (ev) {
+    			if (ev.which == 13) {
+    				ev.preventDefault();
+    				searchEqmName()
+    			}
+    		})
+    		//시작시간
+    	    $('#startBtn').on('click',function(){
+    	    	let startTime = new Date().toLocaleString();
+            	document.getElementById('start').value=startTime;
+    	    })
+    	    //종료시간
+    	      $('#endBtn').on('click',function(){
+    	    	  let endTime = new Date().toLocaleString();
+    	    		document.getElementById('end').value=endTime;
+    	    })
+    	    
+    	    
+    	  
+    	    $('#eqmDivision').on('change',function(){
+    	    	
+    	    	if($('#searchName').val()){
+    				$('#searchName').val('');
+    			}
+    	    	
+    	    	data =  $("#eqmDivision").val();
+    	    	
+    	    	if(data == ''){
+    	    		 getEqmList();
+    	    	}
+    	    	console.log(data);
+    	    	
+    	        $.ajax({
+                    url: "/eqmDivision",
+                    data: {
+                    	eqmDivision : data
+                    },
+                    success: (result) => {
+                      console.log(result);
+                      grid.resetData(eval(result));
+
+                      /* 	grid2.resetData(result);
+      	   	      			$("#searchEqmModal").modal('show');
+      	   	      			setTimeout(() => grid2.refreshLayout(), 200); */
+                    },
+                    error: (err) => console.log(err),
+                  });
+    	    })
+    	    
+    		// 전체설비 조회
+    	    function getEqmList(){
+    	    	$.ajax({
+    	    		url:'/eqms',
+    	    		method:'get',
+    	        dataType:'json',
+    	    		success:function(result){
+    	    			console.log(result);
+    	    			grid.resetData(eval(result));
+    	    		},
+    	    		error:function(err){
+    	    			console.log(err);
+    	    		}
+    	    	})
+    	    }
+    	  
+    	    // 설비 이름 조회
+            function searcheqmDivision(eqmDivison) {
+              $.ajax({
+                url: "/eqmDivision",
+                data: {
+                	eqmDivison: eqmDivison,
+                },
+                success: (result) => {
+                  console.log(result);
+                  grid.resetData(eval(result));
+
+                  /* 	grid2.resetData(result);
+  	   	      			$("#searchEqmModal").modal('show');
+  	   	      			setTimeout(() => grid2.refreshLayout(), 200); */
+                },
+                error: (err) => console.log(err),
+              });
+            }
+
+        	// 설비 이름 조회
+        	function getEqmName(eqmName){
+        		$.ajax({
+        			url:'/eqmName',
+        			data: {
+        				eqmName : eqmName
+        			},
+        			success: result => {
+        				console.log(result);
+        				grid.resetData(eval(result));
+        			}
+        			,
+        			error: err => console.log(err)
+        		})
+        	}
+        	// 설비 이름 조회 : input에 값
+        	function searchEqmName(){
+        	
+        		$('#eqmDivision').val('');
+        		if($('#searchName').val()){
+        			let eqmName = $('#searchName').val();
+        			getEqmName(eqmName);
+        			
+        		}
+        	}
+            // 설비조회 모달창 더블클릭
+            grid.on("dblclick", (ev) => {
+              if (ev.rowKey == undefined) {
+                return;
+              }
+              let data = grid.getValue(ev.rowKey, "eqmCode");
+              getEqm(data);
+             
+            });
+    	  
+            function getEqm(data){
+          	  $.ajax({
+                    url: "/selectEqm",
+                    method: "get",
+                    data: {
+                      eqmCode: data
+                    },
+                    success: function (result) {
+  					console.log(result.eqmImg);
+                
+                      $("#eqmCode").val(result.eqmCode);
+                      $("#eqmName").val(result.eqmName);
+
+                    },
+                    error: function (err) {
+                      console.log(err);
+                    },
+                  });
+            }
+            
+            // 초기화
+            $("#resetBtn").on("click", function () {
+              $("#eqmCode").val("");
+              $("#eqmName").val("");
+              $("#noperManager").val("");
+              $("#reason").val("");
+              $("#reasonKnd").val("");
+         
+            });
+          
+     }
+   
+	</script>
+	</div>
+	
+</body>
+</html>
