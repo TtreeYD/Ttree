@@ -55,6 +55,11 @@ public class EqmServiceImpl implements EqmService {
 		eqmVO.setEqmCode(eqmCode);
 		return eqmmapper.updateEqm(eqmVO);
 	}
+
+	@Override
+	public List<EqmVO> searchEqmDivision(String eqmDivision) {
+		return eqmmapper.searchEqmDivision(eqmDivision);
+	}
 	
 
 }

@@ -63,4 +63,9 @@ public class EqmRestController {
 	public EqmInspVO getEqmInsp(EqmInspVO eqmInspVO){
 		return eqminspservice.selectEqmInsp(eqmInspVO);
 	}
+	// 설비 구분으로 조회
+	@GetMapping("/eqmDivision")
+	public List<EqmVO> getEqmDivision(String eqmDivision){
+		return eqmservice.searchEqmDivision(eqmDivision);
+	}
 }
