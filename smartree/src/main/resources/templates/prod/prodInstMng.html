@@ -89,6 +89,7 @@
 		<script>
 		let newGrid = [];	// newGrid에 grid 값들을 넣어주고 거기에 새계획 눌렀을 때도 추가하기 위해 만든 변수
 		let rowNum;			// 해당 rowNum 값을 담기위해 만든 변수
+		let getProdPlanCode;
 		let grid, grid2, grid3, grid4, grid5, grid6;
         const header = ['prodInstName','prodInstManager','prodInstDate','prodInstSdate', 'prodInstEdate', 'prodInstCode'];
         
@@ -107,6 +108,11 @@
 	      		{
 		          header: '생산지시상세코드',
 		          name: 'dtProdInstCode',
+		          hidden : true
+		        },
+		        {
+		          header: '생산코드',
+		          name: 'prodPlanCode',
 		          hidden : true
 		        },
 		        {
@@ -214,21 +220,13 @@
 	              header: '지시담당자', 
 	              name: 'prodInstManager'
 	            },
-		    	{
-	              header: '지시우선순위', 
-	              name: 'prodInstRank'
+	            {
+	              header: '지시예상시작일자', 
+	              name: 'prodInstSdate'
 	            },
 	            {
-	              header: '지시량',
-	              name: 'prodInstCnt'
-	            },
-	            {
-	              header: '기지시량',
-	              name: 'prodInstCompCnt',
-	            },
-	            {
-	              header: '미지시량',
-	              name: 'prodInstIncompCnt'
+	              header: '지시예상종료일자', 
+	              name: 'prodInstEdate'
 	            }
    	       ]
  	   });
@@ -422,12 +420,13 @@
 			if(ev.rowKey == undefined){
 				return;
 			}
-			const { rowKey, columnName } = ev;
-			let prodInstCode = grid4.getValue(ev.rowKey, 'prodInstCode');
+			console.log(grid4.getData())
+			let prodPlanCode = grid4.getData()[0].prodPlanCode;
+			console.log(prodPlanCode);
 			$.ajax({
 				url : '/selectGetProdInst',
 				method : 'get',
-				data : { prodInstCode : prodInstCode },
+				data : { prodPlanCode : prodPlanCode },
 				success : function(result){
 					console.log(result);
 					$('#prodInstCode').val(result[0].prodInstCode),
@@ -451,12 +450,15 @@
 				return;
 			}
 			let prodPlanCode = grid5.getValue(ev.rowKey, 'prodPlanCode');
+			 
 			$.ajax({
 				url : '/selectGetProdPlan',
 				method : 'get',
 				data : { prodPlanCode : prodPlanCode },
 				success : function(result){
 					console.log(result);
+					getProdPlanCode = result[0].prodPlanCode;
+					console.log(getProdPlanCode)
 					grid.resetData(result);
 				 	$("#prodModal").modal('hide');	
 				},
@@ -465,7 +467,14 @@
 				}
 			})
 		})
-		
+		// 오늘날짜 input에 넣기
+		 today = new Date();
+	      console.log("today.toISOString() >>>" + today.toISOString());
+	      today = today.toISOString().slice(0, 10);
+	      console.log("today >>>> " + today);
+	      bir = document.getElementById("prodInstDate");
+	      bir.value = today;
+
 	};
 	  
     </script>

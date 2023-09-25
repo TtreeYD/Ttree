@@ -83,10 +83,7 @@
   	</select>
   	
   	<select id="selectProdInst" resultType="ProdVO">
-  		select pi.prod_inst_code, pi.prod_inst_name, pi.prod_inst_manager, dpi.prod_inst_rank, dpi.prod_inst_cnt
-  		from prod_inst pi join dt_prod_inst dpi
-  		on pi.prod_inst_code = dpi.prod_inst_code
-  		where dpi.prod_inst_yn = 'n'
+  		select * from prod_inst
   	</select>
   	
   	<select id="selectProdListView" resultType="ProdVO">
@@ -159,10 +156,17 @@
   	</select>
   	
   	<select id="selectGetProdInst" resultType="ProdVO">
-		select pi.prod_inst_code, pi.prod_inst_name, pi.prod_inst_manager, pi.prod_inst_date, pi.prod_inst_sdate, pi.prod_inst_edate,
-		       dpi.prod_inst_rank, dpi.prod_inst_cnt
-		from prod_inst pi join dt_prod_inst dpi
-		on pi.prod_inst_code = dpi.prod_inst_code
+		select p.prod_plan_name, prdt.prdt_name ,dtp.prod_plan_cnt, p.prod_plan_code, prdt.prdt_code  , dpi.prod_inst_cnt , dpi.prod_inst_rank 
+        , dtp.prod_plan_cnt - dpi.prod_inst_cnt as prod_inst_incomp_cnt, pi.prod_inst_name, pi.prod_inst_manager, pi.prod_inst_date, pi.prod_inst_sdate, pi.prod_inst_edate
+		from prod_plan p join dt_prod_plan dtp
+				         on p.prod_plan_code = dtp.prod_plan_code
+				         join prdt_table prdt
+				         on dtp.prdt_code = prdt.prdt_code
+				         join prod_inst pi  
+				         on pi.prod_plan_code  = p.prod_plan_code
+				         join dt_prod_inst dpi
+				         on pi.prod_inst_code = dpi.prod_inst_code and dpi.prdt_code = dtp.prdt_code
+		where pi.prod_plan_code = #{prodPlanCode}
   	</select>
   	
 	<insert id="insertProdInst" parameterType="ProdVO" statementType="CALLABLE">
@@ -174,7 +178,7 @@
     	#{prodPlanCode},
         #{prodInstName},
         #{prodInstManager},
-        #{prodInstdate},
+       	#{prodInstdate},
         #{prodInstSdate},
         #{prodInstEdate}
     )}
