@@ -23,9 +23,9 @@ public class ProdController {
 	public String selectProdMng() {
 		return "prod/prodPlanMng";
 	}
-	@GetMapping("/prodInstMng2")
+	@GetMapping("/prodInstMng")
 	public String selectProdInstMng() {
-		return "prod/prodInstMng2";
+		return "prod/prodInstMng";
 	}
 	@GetMapping("/prodInstList")
 	public String selectProdInstList() {

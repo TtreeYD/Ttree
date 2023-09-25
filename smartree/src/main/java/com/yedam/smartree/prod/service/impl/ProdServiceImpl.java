@@ -112,12 +112,25 @@ public class ProdServiceImpl implements ProdService {
 		int cnt = 0;
 		// get Header
 		prodMapper.insertProdInst(vo.getVo());
+		String prodInstCode = vo.getVo().getProdInstCode();
 		// 계획 상세 저장하는 for문
 		for(ProdVO pvo : vo.getList()) {
+			pvo.setProdInstCode(prodInstCode);
 			prodMapper.insertDtProdInst(pvo);
+			
 			cnt++;
 		}
 		return cnt;
+	}
+
+	@Override
+	public List<ProdVO> selectProdInstList(ProdVO vo) {
+		return prodMapper.selectProdInst(vo);
+	}
+
+	@Override
+	public List<ProdVO> selectGetProdInstList(ProdVO vo) {
+		return prodMapper.selectGetProdInst(vo);
 	}
 
 	
