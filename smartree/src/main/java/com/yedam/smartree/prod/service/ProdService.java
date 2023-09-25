@@ -17,4 +17,5 @@ public interface ProdService {
 	public int deleteProd(RequestVO<ProdVO> vo);
 	public int insertAndUpdateDtProdPlan(RequestVO<ProdVO> vo);
 	
+	public int insertProdInst(RequestVO<ProdVO> vo);
 }

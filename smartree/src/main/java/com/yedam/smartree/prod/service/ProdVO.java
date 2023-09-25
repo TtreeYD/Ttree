@@ -24,12 +24,25 @@ public class ProdVO {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date prodPlanEdate;
 	private int prodPlanCnt;
+	private String prodPlanNote;
 	
 	private String dtProdPlanCode;
+	private String prodInstCode;
+	private String prodInstName;
+	private String prodInstManager;
+	private Date prodInstdate;
+	private Date prodInstSdate;
+	private Date prodInstEdate;
+	private int prodInstRank;
+	private int prodInstCnt;
+	private int prodInstCompCnt;
+	private int prodinstIncompCnt;
+	private String prodInstYn;
+	
+	
 	private String prdtName;
 	private int prdtSs;
 	private int prodRank;
-	private String prodPlanNote;
 	private String prdtCode;
 	
 	private String orderDtCode;
