@@ -34,6 +34,7 @@
 	font-weight: bold;
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body>
@@ -47,11 +48,9 @@
 			</div> <div>
 				<h3>정호현</h3>
 				<div id="grid2" style="width: 800px;"></div>
+				<button type="button" id="pdfDownload" class="btn btn-primary" style="float : right;">pdf저장</button>
 			</div>
 		</div>
-
-
-
 
 		<script>
 	window.onload=function(){
@@ -208,7 +207,18 @@
 	    	});
 	    });
 	    
-	   // $(data-column-name["prdtChkFit"]) data-column-name.val())
+	    $('#pdfDownload').on('click',function(){
+	        const gridData = grid.getData(); // 그리드 데이터를 가져옵니다.
+	        
+	        // PDF 문서를 생성합니다.
+	        const pdf = new jsPDF();
+	        pdf.autoTable({ html: '#grid' }); // 그리드 데이터를 PDF에 추가합니다.
+	        
+	        // PDF를 다운로드합니다.
+	        pdf.save('grid_data.pdf');
+	    });
+
+
 	};
 	</script>
 	</div>

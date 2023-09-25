@@ -31,7 +31,7 @@ public class CheckRestController {
 	@Autowired
 	CheckService checkservice;
 	
-	//자재검사목록
+	//자재검사목록(모달)
 	@GetMapping("/mtlcheck")
 	public List<MtlCheckVO> getmtlcheck(MtlCheckVO vo){
 		return mtlcheckservice.selectMtl(vo);
@@ -58,7 +58,7 @@ public class CheckRestController {
 		return cnt;
 	}
 	
-	//자재이름검색
+	//자재코드검색
 	@GetMapping("/mtlName")
 	public List<MtlCheckVO> getMtlName(String mtlName){
 		return mtlcheckservice.searchMtl(mtlName);
