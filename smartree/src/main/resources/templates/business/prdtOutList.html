@@ -11,14 +11,10 @@
 <body>
 <div layout:fragment="content">
 	<h1>완제품출고조회</h1>
-	
-		
-		<label for="prdtOutCode">주문상세코드</label> 
-		<input type="text"  id="prdtOutCode"> 
-
-	
-		<label>출고날짜</label>
-		<input type="date" id="prdtOutDate"> 
+			<label for="prdtOutCode" style="margin-bottom: 15px;">주문상세코드</label> 
+			<input type="text"  id="prdtOutCode"> 
+			<label>출고날짜</label>
+			<input type="date" id="prdtOutDate"> 
 	
 
 		<button type="button" id="searchDataBtn" class="btn btn-primary" style="margin-left:20px;">조회</button>
@@ -29,7 +25,7 @@
 	      <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
 	        <div class="modal-content" style="height:500px">
 	          <div class="modal-header">
-	            <h2>주문서상세조회</h2>
+	            <h2>완제품출고상세조회</h2>
 	          </div>
 	          <div class="modal-body">
 	            <div id="prdtDtOut"></div>
@@ -37,7 +33,7 @@
 	          <div class="modal-footer">
 	            <button type="button" class="btn btn-default" id="pdfbtn"
 	              >PDF저장</button>
-	              <button type="button" class="btn btn-info btn-icon-text excelDownload" id="ExcelBtn">EXCEL저장
+	              <button type="button" class="btn btn-info btn-icon-text excelDownload" id="ExcelBtn">EXCEL
 	            <i class="bi bi-printer"></i>
 	            </button>
 	            <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
