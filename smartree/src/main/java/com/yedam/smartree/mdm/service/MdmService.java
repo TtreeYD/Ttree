@@ -55,5 +55,6 @@ public interface MdmService {
 	int updateChk(MdmChkVO vo);
 	int deleteChk(String chkStdCode);
 	
-	
+	// BOM관리
+	List<MdmBomDtVO> selectBomDetail(String prdtCode);
 }
