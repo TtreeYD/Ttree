@@ -79,6 +79,14 @@
   	<select id="selectProd" resultType="ProdVO">
   		select prod_plan_code, prod_plan_name, prod_name, prod_plan_date, order_code
   		from prod_plan
+  		where prod_inst_yn = 'n'
+  	</select>
+  	
+  	<select id="selectProdInst" resultType="ProdVO">
+  		select pi.prod_inst_code, pi.prod_inst_name, pi.prod_inst_manager, dpi.prod_inst_rank, dpi.prod_inst_cnt
+  		from prod_inst pi join dt_prod_inst dpi
+  		on pi.prod_inst_code = dpi.prod_inst_code
+  		where dpi.prod_inst_yn = 'n'
   	</select>
   	
   	<select id="selectProdListView" resultType="ProdVO">
@@ -142,10 +150,19 @@
   	</select>
   	
   	<select id="selectGetProd" resultType="ProdVO">
-		select p.prod_plan_name, dtp.prod_plan_cnt
+		select p.prod_plan_name, prdt.prdt_name ,dtp.prod_plan_cnt, p.prod_plan_code, prdt.prdt_code
 		from prod_plan p join dt_prod_plan dtp
-		                 on p.prod_plan_code = dtp.prod_plan_code
+                 on p.prod_plan_code = dtp.prod_plan_code
+                 join prdt_table prdt
+                 on dtp.prdt_code = prdt.prdt_code
 		where p.prod_plan_code = #{prodPlanCode}
+  	</select>
+  	
+  	<select id="selectGetProdInst" resultType="ProdVO">
+		select pi.prod_inst_code, pi.prod_inst_name, pi.prod_inst_manager, pi.prod_inst_date, pi.prod_inst_sdate, pi.prod_inst_edate,
+		       dpi.prod_inst_rank, dpi.prod_inst_cnt
+		from prod_inst pi join dt_prod_inst dpi
+		on pi.prod_inst_code = dpi.prod_inst_code
   	</select>
   	
 	<insert id="insertProdInst" parameterType="ProdVO" statementType="CALLABLE">

@@ -32,6 +32,10 @@ public class ProdRestController {
 	public List<ProdVO> getProdPlan(ProdVO vo){
 		return service.selectProd(vo);
 	}
+	@GetMapping("/selectProdInst")
+	public List<ProdVO> getProdInst(ProdVO vo){
+		return service.selectProdInstList(vo);
+	}
 	@GetMapping("/selectProdListView")
 	public List<ProdVO> getProdPlanListView(ProdVO vo){
 		return service.selectProdListView(vo);
@@ -64,6 +68,10 @@ public class ProdRestController {
 	@GetMapping("/selectGetProdPlan")
 	public List<ProdVO> selectGetProdPlan(ProdVO vo){
 		return service.selectGetProdList(vo);
+	}
+	@GetMapping("/selectGetProdInst")
+	public List<ProdVO> selectGetProdInst(ProdVO vo){
+		return service.selectGetProdInstList(vo);
 	}
 	@PostMapping("/insertProdInst")
 	@ResponseBody

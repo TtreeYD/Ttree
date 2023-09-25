@@ -30,12 +30,17 @@ public class ProdVO {
 	private String prodInstCode;
 	private String prodInstName;
 	private String prodInstManager;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date prodInstdate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date prodInstSdate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date prodInstEdate;
 	private int prodInstRank;
 	private int prodInstCnt;
-	private int prodInstCompCnt;
 	private int prodinstIncompCnt;
 	private String prodInstYn;
 	
