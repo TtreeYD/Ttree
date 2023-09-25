@@ -42,7 +42,7 @@
 		.toast-warning { 
 		  background-color: #f89406; 
 		} 
-		input {
+		 input :not(tui-grid-row-header-checkbox){
 		  width: 150px;
 		  height: 32px;
 		  font-size: 15px;
@@ -51,27 +51,29 @@
 		  outline: none;
 		  padding-left: 10px;
 		  background-color: rgb(233, 233, 233);
-		}
-		@font-face {
+		} 
+		 @font-face {
 		    font-family: 'Ariado';
 		    src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.0/LINESeedKR-Bd.woff2') format('woff2'); /* 아리따글꼴 파일 경로와 확장자 설정 */
 		    font-weight: normal;
 		    font-style: normal;
     
-		}
+		} 
 		
-		.tui-grid-container {
+		 .tui-grid-container {
 		    font-family: 'Ariado', sans-serif !important;
 		    font-size: 14px !important;
-		}
-		body {
+		} 
+		 body {
 			font-family: 'Ariado', sans-serif
-		}
+		} 
 		
-		.tui-grid-header-area{
+		 .tui-grid-header-area{
 			font-family: 'Ariado', sans-serif;
 			font-size: 18px;
-		}
+		} 
+		
+		
 	</style>
     <!-- content script -->
     <th:block layout:fragment="css"></th:block>
