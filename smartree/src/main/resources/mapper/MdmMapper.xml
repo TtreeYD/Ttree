@@ -382,19 +382,69 @@
 		WHERE chk_std_code = #{chkStdCode}
 	</delete>
 	
-	<!-- BOM상세 조회 -->
-	<select id="selectBomDetail" resultType="MdmBomDtVO">
+	<!-- BOM관리 -->
+	<!-- BOM 리스트조회 -->
+	<select id="selectBomList" resultType="MdmBomVO">
+		SELECT bom_code, bom_date, get_use(bom_use) bom_use
+		FROM bom_table
+		WHERE prdt_code = #{prdtCode}
+	</select>
+	
+	<!-- BOM 상세조회 -->
+	<select id="selectBomDetail" resultType="MdmBomVO">
 		SELECT bd.*, pc.prcs_name, m.mtl_unit, m.mtl_name
 		FROM bom_detail bd
 		JOIN prcs_table pc ON bd.prcs_std_code = pc.prcs_std_code
-		JOIN mtl_table m ON m.mtl_code = bd.mtl_code
-		WHERE bom_code = (SELECT bom_code
+		LEFT OUTER JOIN mtl_table m ON m.mtl_code = bd.mtl_code
+		WHERE bom_code = 
+						<choose>
+							<when test="bomCode !=null and !bomCode.equals('')">
+								#{bomCode}
+							</when>
+							<otherwise>
+							  (SELECT bom_code
 		                  FROM bom_table
 		                  WHERE prdt_code = #{prdtCode}
-		                  AND bom_use = 'Y')
+		                 	AND bom_use = 'Y'
+		                 )
+							</otherwise>
+						</choose>
 		ORDER BY prcs_order
 	</select>
+	<!-- 사용여부 변경 -->
+	<update id="updateBom" parameterType="MdmBomVO">
+		{call update_bom(
+			#{prdtCode},
+			#{bomCode}
+		)}
+	</update>
 	
+	<!-- BOM등록 -->
+	<insert id="insertBom" parameterType="MdmBomVO">
+		<selectKey keyProperty="bomCode" order="BEFORE" resultType="String">
+			SELECT 'BOM' || NVL(LPAD(MAX(SUBSTR(bom_code,4)+1),5,'0'),'00001') FROM bom_table
+		</selectKey>
+		INSERT INTO bom_table(bom_code, prdt_code)
+		VALUES (#{bomCode}, #{prdtCode})		
+	</insert>
+	
+	<!-- BOM삭제 -->
+		
+	<!-- BOM상세 등록 -->
+	<insert id="insertBomDt" parameterType="MdmBomVO">
+		INSERT INTO bom_detail(prcs_order, bom_code, prcs_std_code, mtl_code, mtl_cnt)
+		VALUES(
+					#{prcsOrder}
+					, #{bomCode}
+					, #{prcsStdCode}
+					, NVL(#{mtlCode},'00000000')
+					, #{mtlCnt}
+				)
+	</insert>
+	<delete id="deleteBomDt" parameterType="MdmBomVO">
+		DELETE bom_detail
+		WHERE bom_code = #{bomCode}
+	</delete>
 	
 	
 </mapper>

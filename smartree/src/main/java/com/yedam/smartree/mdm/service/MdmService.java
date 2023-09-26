@@ -2,6 +2,8 @@ package com.yedam.smartree.mdm.service;
 
 import java.util.List;
 
+import com.yedam.smartree.prod.service.RequestVO;
+
 public interface MdmService {
 	// 공통코드관리
 	public List<CommonCodeVO> selectCommonCode();
@@ -56,5 +58,7 @@ public interface MdmService {
 	int deleteChk(String chkStdCode);
 	
 	// BOM관리
-	List<MdmBomDtVO> selectBomDetail(String prdtCode);
+	List<MdmBomVO> selectBomDetail(String prdtCode,String bomCode);
+	List<MdmBomVO> selectBomList(String prdtCode);
+	int bomProcess(RequestVO<MdmBomVO> vo);
 }
