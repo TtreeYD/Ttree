@@ -42,4 +42,5 @@ public class CheckVO {
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private Date prodInstDate;
 	private int passCnt;
+	
 }
