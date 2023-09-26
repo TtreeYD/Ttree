@@ -85,6 +85,9 @@ public class EqmController {
 		String originalName = file.getOriginalFilename();
 		String fileName = originalName.substring(originalName.lastIndexOf("//")+1);
 		
+        // 파일명 변경없으면 변화없게 하기위해서(update)
+		if(!fileName.equals("")) {  
+		
 	    //날짜 폴더 생성
         String folderPath = makeFolder();
         
@@ -101,7 +104,8 @@ public class EqmController {
         } catch (IOException e) {
              e.printStackTrace();	             
         }
-        		
+
+    }	
 		// eqmcode 없으면 등록 / 있으면 수정
 		if (eqmVO.getEqmCode().equals("")) {
 			eqmservice.insertEqm(eqmVO);

@@ -6,7 +6,13 @@
 <head>
 <meta charset="UTF-8">
 <title>설비조회</title>
-
+<style>
+.tui-grid-cell.red {
+	background-color: rgb(227, 52, 52);
+	color: white;
+	font-weight: bolder;
+}
+</style>
 </head>
 <body>
 
@@ -80,6 +86,7 @@
             header: '차기점검일시',
             name: 'nextInspDate',
             align: 'center'
+           
       },
       {
           header: '제조업체',
@@ -137,7 +144,25 @@
         dataType:'json',
     		success:function(result){
     			console.log(result);
-    			grid.resetData(eval(result));
+    		
+    			//
+    			for(let item of result){
+    				//console.log(detDifference(item.nextInspDate))
+    				
+    				if(detDifference(item.nextInspDate)<5){
+    					item._attributes= {
+    	            			className:{
+    	            				column : {
+    	            					nextInspDate : ['red']
+    	            				}
+    	            			}
+    		            	}
+    				} 
+    			}
+    			
+    			//
+    		//	grid.resetData(eval(result));
+    			grid.resetData(result);
     		},
     		error:function(err){
     			console.log(err);
@@ -153,6 +178,24 @@
 			success: result=>{
 				//console.log(eqmUcheck)
 				//console.log(result)
+				//
+				
+				for(let item of result){
+    				//console.log(item.nextInspDate)
+    				console.log(detDifference(item.nextInspDate))
+    				if( (detDifference(item.nextInspDate) >= 0) && (detDifference(item.nextInspDate)<3)){
+    					item._attributes= {
+    	            			className:{
+    	            				column : {
+    	            					nextInspDate : ['red']
+    	            				}
+    	            			}
+    		            	}
+    				} 
+    			}
+				
+				
+				//
 				 grid.resetData(eval(result));
 			},
 			error: err => console.log(err)
@@ -167,7 +210,24 @@
 			},
 			success: result => {
 				console.log(result);
+				//
+				for(let item of result){
+					//console.log(item.nextInspDate)
+    				//console.log(detDifference(item.nextInspDate))
+    				
+    				if(detDifference(item.nextInspDate)<5 ){
+    					item._attributes= {
+    	            			className:{
+    	            				column : {
+    	            					nextInspDate : ['red']
+    	            				}
+    	            			}
+    		            	}
+    				} 
+    			}
+				//
 				grid.resetData(eval(result));
+		//		grid.resetData(result);
 			}
 			,
 			error: err => console.log(err)
@@ -183,6 +243,36 @@
 			
 		}
 	}
+	// 날짜차이 구하는 함수	
+	function detDifference(date){
+		if(date == null){
+			return;
+		}
+		// 현재시간 
+		let now = new Date();
+		//console.log(date)
+		let year = now.getFullYear();
+		let month = now.getMonth()+1;
+		let day = now.getDate();
+		
+		// 받아온날짜 
+		let d = date.substr(0,10)
+		let date_arr =d.split("-");
+		
+		console.log(date_arr[0],date_arr[1],date_arr[2])
+		
+		let stDate = new Date(date_arr[0],date_arr[1],date_arr[2]);
+		let nowDate = new Date(year,month,day);
+		
+		
+		//let btMs = stDate.getTime() - nowDate.getTime();
+		let btMs = nowDate.getTime() - stDate.getTime();
+		
+		let btDay = btMs/(1000*60*60*24);
+		console.log(btMs,btDay)
+		return btDay
+	}
+		
     
   }
           

@@ -82,7 +82,7 @@
 					<div class="input-group-prepend col-3">
 						<label class="input-group-text col">비가동시작시간</label>	
 					</div>
-					<input type="text" name="start" id="start">
+					<input type="text" class="form-control col-4" readonly name="start" id="start">
 				
 					<input type="button" value="시작" id="startBtn">					
 				</div>
@@ -90,7 +90,7 @@
 				<div class="input-group mb-4">
 			     	<div class="input-group-prepend col-3">
 					   <label class="input-group-text col">비가동종료시간</label>	</div>
-					<input type="text" name="end" id="end">				
+					<input type="text" class="form-control col-4" readonly name="end" id="end">				
 					<input type="button" value="종료" id="endBtn">
 				</div>
 				
@@ -154,17 +154,23 @@
     		})
     		//시작시간
     	    $('#startBtn').on('click',function(){
+    	    	if($('#end').val()){
+    	    		$('#end').val('')
+    	    	}
     	    	let startTime = new Date().toLocaleString();
             	document.getElementById('start').value=startTime;
     	    })
     	    //종료시간
     	      $('#endBtn').on('click',function(){
+    	    	 if(!$('#start').val()){
+    	    		 return;
+    	    	 }
     	    	  let endTime = new Date().toLocaleString();
     	    		document.getElementById('end').value=endTime;
     	    })
     	    
     	    
-    	  
+    	  //공정구분으로 설비조회
     	    $('#eqmDivision').on('change',function(){
     	    	
     	    	if($('#searchName').val()){
@@ -264,7 +270,7 @@
               getEqm(data);
              
             });
-    	  
+    	  // 설비코드로 단건조회 후 화면에 설비코드,설비명 값보이게하는 함수
             function getEqm(data){
           	  $.ajax({
                     url: "/selectEqm",
@@ -292,7 +298,8 @@
               $("#noperManager").val("");
               $("#reason").val("");
               $("#reasonKnd").val("");
-         
+              $("#start").val("");
+              $("#end").val("");
             });
           
      }

@@ -19,12 +19,18 @@
   	</select>
   	<!-- 사용여부 조회 -->
   	<select id="selectEqmUcheckList" resultType="EqmVO">
-  		SELECT e.eqm_code,e.eqm_name,e.eqm_ucheck,e.insp_cycle,e.mfg_comp,e.mfg_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE
-		FROM eqm e left join EQM_INSP i
-  		  				ON e.eqm_code = i.eqm_code
+  		select e.* , (
+                select max(RECENT_INSP_DATE)
+                from eqm_insp i
+                WHERE e.eqm_code = i.eqm_code ) as RECENT_INSP_DATE,
+                 (
+                select max(NEXT_INSP_DATE)
+                from eqm_insp i
+                WHERE e.eqm_code = i.eqm_code ) as NEXT_INSP_DATE
+        from eqm e
   		<where>
   			<if test="eqmUcheck != null and !eqmUcheck.equals('')">
-  				eqm_ucheck = #{eqmUcheck}	
+  				e.eqm_ucheck = #{eqmUcheck}	
   			</if>
   		</where>  				
   		 
