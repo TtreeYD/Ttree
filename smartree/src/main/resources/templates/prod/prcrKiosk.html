@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+<style>
+/* TODO : CSS파일을 편집하여 원하는 스타일의 계산기를 만들어보세요 :) */
+/* global */
+* {
+    margin: 0;
+    padding: 0;
+    border: 0px;
+    box-sizing: border-box;
+    font-family: 'Orbitron', sans-serif;
+    color: #555; ;
+  }
+  body {
+    background-image: url('./data/codestates-motif.png');
+  }
+  /*
+    Calculator styles
+  */
+  .container {
+    
+    height: 100vh;
+  }
+ 
+ 
+
+  .calculator__buttons {
+    margin: 0 auto;
+    width: 100%;
+    height: 330px;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .button_box > button {
+    border-radius: 25px;
+    width: 500px;
+    height: 500px;
+    cursor: pointer;
+    outline: none;
+    /* box-shadow: 1px 4px 0 rgb(0,0,0,0.5); */
+  }
+  
+  .button_container{
+    margin: 0 auto;
+    width: 1300px;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+  }
+
+  .button_box {
+    width: 1100px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .button_box > button:active {
+    /* box-shadow: 1px 1px 0 rgb(0,0,0,0.5); */
+    position: relative;
+    top:2px;
+  }
+  
+  
+
+  .button_box > .clear:active {
+    background-color: #0080ff;
+    color:#eee;
+    box-shadow: 0 0 10px inset #204c7cc2;
+  }
+
+  .button_box > button:active > * {
+    color:#eee;
+  }
+  .clear , .calculate{
+    font-size: 100px;
+
+  }
+  .clear > p , .calculate > p{
+    font-size: 80px;
+  }
+  .clear > *:active {
+    color: #eee;
+  }
+  .clear{
+    background-color: #0080ff;
+    color:#eee;
+    box-sizing: border-box;
+  }
+  .calculate{
+    background-color: #6fb7ff;
+  }
+  p{
+    padding-top: 60px;
+  }
+ 
+  body{
+    margin: 0;
+  }
+
+
+</style>
+</head>
+<body>
+	<div class="container">
+	    <div class="button_container">
+	        <div class="button_box">
+               <button class="clear"><i class="fa-solid fa-circle-play fa-2xl"></i><p>생산진행</p></button>
+               <button class="calculate"><i class="fa-solid fa-chart-line fa-2xl"></i><p>생산현황</p></button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
