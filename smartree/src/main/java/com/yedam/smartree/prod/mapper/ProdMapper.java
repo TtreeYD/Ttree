@@ -51,4 +51,9 @@ public interface ProdMapper {
 	public int deleteProdInst(ProdVO vo);
 	
 	public int deleteDtProdInst(ProdVO vo);
+	
+	//생산지시조회
+	public List<ProdVO> selectGetDtInst(ProdVO vo);
+	//키오스크 :생산지시불러오기
+	public List<ProdVO> selectGetProcess(ProdVO vo);
 }

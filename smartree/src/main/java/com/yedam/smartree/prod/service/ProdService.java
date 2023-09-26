@@ -23,6 +23,10 @@ public interface ProdService {
 	public int updateProdInst(RequestVO<ProdVO> vo);
 	
 	public int deleteProdInst(RequestVO<ProdVO> vo);
+	//생산지시조회
+	public List<ProdVO> selectGetDtInst(ProdVO vo);
+	////키오스크 :생산지시불러오기
+	public List<ProdVO> selectGetProcess(ProdVO vo);
 	
 	//public int updateProd(RequestVO<ProdVO> vo);
 }
