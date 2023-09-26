@@ -91,7 +91,7 @@
          FROM mtl_container
             where mtl_code = #{mtlCode}
 		</selectKey>
- <choose>
+	<choose>
         <when test="#{mtlLotNum} != null">
             UPDATE mtl_container
             SET
@@ -112,7 +112,7 @@
                 #{mtlInDate},
                 #{mtlManager},
                 #{mtlInCnt},
-                #{mtlChkCode}
+                'MT03'
             )
         </otherwise>
     </choose>
@@ -140,6 +140,12 @@
         JOIN business_partner b
         ON n.bp_code = b.bp_code
         WHERE t.mtl_name like '%'||#{mtlName}||'%' AND n.mtl_manager like '%'||#{mtlManager}||'%'
+          <if test="startMtlNeedDate != null and endMtlNeedDate != null">
+    		AND n.mtl_date BETWEEN TO_CHAR(#{startMtlNeedDate},'YY/MM/DD') AND TO_CHAR(#{endMtlNeedDate},'YY/MM/DD')
+  		  </if>
+  		  <if test="startMtlWishDate != null and endMtlWishDate != null">
+    		AND n.mtl_wish_date BETWEEN TO_CHAR(#{startMtlWishDate},'YY/MM/DD') AND TO_CHAR(#{endMtlWishDate},'YY/MM/DD')
+  		  </if>
   	</select>
   	
   	
@@ -176,9 +182,34 @@
 		WHERE b.bp_name = #{bpName} AND TO_CHAR(n.mtl_date, 'yy/MM/dd') = #{mtlDate}
   	</select>
   	
-
-  	
-  	
+	<!-- 발주조회 검색기능 -->
+	<select id="searchNeed" parameterType="MaterialVO">
+		SELECT b.bp_name, n.mtl_date, n.mtl_manager, MIN(n.mtl_wish_date) mtl_wish_date
+		FROM mtl_need n 
+		JOIN business_partner b ON n.bp_code = b.bp_code
+		WHERE b.bp_name LIKE '%'||#{bpName}||'%'
+		<if test="startMtlNeedDate != null and endMtlNeedDate != null">
+    		AND n.mtl_date BETWEEN TO_CHAR(#{startMtlNeedDate},'YY/MM/DD') AND TO_CHAR(#{endMtlNeedDate},'YY/MM/DD')
+  		</if>
+  		GROUP BY b.bp_name, n.mtl_date, n.mtl_manager, n.mtl_wish_date
+	</select>
+	<!-- 재고조회 검색기능 -->
+  	<select id="searchCont" parameterType="MaterialVO">
+		WITH c as (SELECT c.mtl_code, MAX(mtl_in_date)mtl_in_date,SUM(mtl_lot_cnt)mtl_lot_cnt 
+	       		   FROM mtl_container c 
+	   	           GROUP BY c.mtl_code)
+		SELECT c.mtl_code, get_common(mtl_type, '003') AS mtl_type, t.mtl_name, mtl_in_date, mtl_lot_cnt
+		FROM c
+		JOIN mtl_table t 
+		ON c.mtl_code = t.mtl_code
+		WHERE t.mtl_name LIKE '%'||#{mtlName}||'%'
+		<if test= "mtlType != null and !mtlType.equals('')">
+			AND mtl_type = #{mtlType}
+		</if>
+	</select>
+	
+	<!-- 재고조회 체크박스 -->
+  		
   	
   	<!-- 출고자재를 자재목록에서 빼주는 procedure -->
   	

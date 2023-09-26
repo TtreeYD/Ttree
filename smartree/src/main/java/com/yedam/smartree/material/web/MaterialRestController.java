@@ -104,5 +104,14 @@ public class MaterialRestController {
 	public List<MaterialVO> getPaperMtl(MaterialVO vo){
 		return materialService.getPaperMtl(vo);
 	}
-	
+	// 발주조회 조건검색
+	@PostMapping("/searchNeed")
+	public List<MaterialVO> searchNeed(MaterialVO vo){
+		return materialService.searchNeed(vo);
+	}	
+	// 재고조회 조건검색
+	@PostMapping("/searchCont")
+	public List<MaterialVO> searchCont(MaterialVO vo){
+		return materialService.searchCont(vo);
+	}	
 }

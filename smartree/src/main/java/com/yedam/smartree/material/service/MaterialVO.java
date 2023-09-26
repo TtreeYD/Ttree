@@ -105,4 +105,16 @@ public class MaterialVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private Date endMtlInDate;						// 검사일자 조건 종료일
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
+	private Date startMtlNeedDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
+	private Date endMtlNeedDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
+	private Date startMtlWishDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
+	private Date endMtlWishDate;
 }
