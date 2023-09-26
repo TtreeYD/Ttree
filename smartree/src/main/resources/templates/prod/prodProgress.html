@@ -48,34 +48,39 @@ const instGrid = new tui.Grid({
 	},
 	columns : [
 		{
-	          header: '생산지시코드',
-	          name: 'prodPlanName'
+	          header: '지시상세코드',
+	          name: 'dtProdInstCode'
 	        },
 	        {
 	          header: '제품코드',
-	          name: 'prodInstName'
+	          name: 'prdtCode'
 	        },
 	        {
 	          header: '제품명',
-	          name: 'prodInstRank'
+	          name: 'prdtName'
 	        },
 	        {
 	          header: '지시량',
-	          name: 'prodPlanCnt'
+	          name: 'prodInstCnt'
 	        },
 	        {
 	          header: '지시우선순위',
-	          name: 'prodInstCnt'
+	          name: 'prcsNum'
 	        },
+	        {
+	          header: '납기일자',
+	          name: 'prodInstEdate'
+	        }
 
 	]})
 	
 $(document).ready(function (){
 	$.ajax({
-		url:'',
-		method:'',
+		url:'/selectGetProcess',
+		method:'GET',
 		success:function(result){
 			console.log(result);
+			instGrid.resetData(result);
 		},
 		error:function(err){
 			console.log(err);

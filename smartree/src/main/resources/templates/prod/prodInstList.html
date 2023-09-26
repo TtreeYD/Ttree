@@ -13,7 +13,7 @@
 		<div style="float:right; margin-bottom: 10px">
 			<div class="input-group" >
 				<div class="form-outline">
-					<input type="search" id="form1" class="form-control" placeholder="상세코드 또는 제품명"/> 
+					<input type="search" id="form1" class="form-control" placeholder="지시코드 또는 제품명"/> 
 				</div>
 				<button type="button" class="btn btn-primary" id="searchBtn">
 					<i class="fas fa-search"></i>
@@ -22,59 +22,92 @@
 		</div>
 		<div id="grid" style="height: 400px;"></div>
 	<script>
-		let grid;
-		
-		$(document).ready(function (){
-			const grid = new tui.Grid({
-				el : document.getElementById('grid'),
-				scrollX : false,
-				scrollY : false,
-				pageOptions : {
-					perPage : 10,
-					useClient : true
-				},
-				columns : [
+		const grid = new tui.Grid({
+			el : document.getElementById('grid'),
+			scrollX : false,
+			scrollY : false,
+			pageOptions : {
+				perPage : 10,
+				useClient : true
+			},
+			columns : [
 					{
-				          header: '계획명',
-				          name: 'prodPlanName'
-				        },
-				        {
-				          header: '생산지시명',
-				          name: 'prodInstName'
-				        },
-				        {
-				          header: '지시우선순위',
-				          name: 'prodInstRank'
-				        },
-				        {
-				          header: '계획량',
-				          name: 'prodPlanCnt'
-				        },
-				        {
-				          header: '지시량',
-				          name: 'prodInstCnt'
-				        },
-				        {
-				          header: '기지시량',
-				          name: ''
-				        },
-				        {
-				          header: '미지시량',
-				          name: ''
-				        },
-				]
-			}) // end of grid.
-			$.ajax({
-				url : '',
-				method : 'get',
-				dataType : 'json',
-				success : function(result){
-					
-				},
-				error : function(err){
-					console.log(err);
-				}
+			          header: '지시코드',
+			          name: 'prodInstCode'
+			        },
+			        {
+			          header: '지시상세코드',
+			          name: 'dtProdInstCode'
+			        },
+			        {
+			          header: '계획코드',
+			          name: 'prodPlanCode'
+			        },
+			        {
+			          header: '지시명',
+			          name: 'prodInstName'
+			        },
+			        {
+			          header: '제품코드',
+			          name: 'prdtCode'
+			        },
+			        {
+			          header: '제품명',
+			          name: 'prdtName'
+			        },
+			        {
+			          header: '지시량',
+			          name: 'prodInstCnt'
+			        },
+			        {
+			          header: '지시일자',
+			          name: 'prodInstSdate'
+			        },
+			        {
+			          header: '완료예정일자',
+			          name: 'prodInstEdate'
+			        },
+			        {
+			          header: '지시우선순위',
+			          name: 'prodInstRank'
+			        },
+			        {
+			          header: '지시완료여부',
+			          name: 'prodInstYn'
+			        },
+			]
+		}) 
+		$(document).ready(function (){
+			getSelectInstList();
+			
+			$('#searchBtn').on('click',function(){
+				let data={};
+				data.prodInstCode = $('#form1').val();
+				data.prdtName = $('#form1').val();
+				getSelectInstList(data);
 			})
+			function getSelectInstList(data){
+				$.ajax({
+					url : '/selectGetDtInst',
+					method : 'get',
+					data: data,
+					success : function(result){
+						 for(let i =0 ; i<result.length ; i++){
+							if(result[i].prodInstYn == 'n'){
+								result[i].prodInstYn = '지시전';
+							}else{
+								result[i].prodInstYn = '지시완료';
+							}
+						 } 
+							grid.resetData(result);
+							console.log(result);
+					},
+					error : function(err){
+						console.log(err);
+					}
+				})
+			}
+			
 		})
 	</script>
 	</div>

@@ -116,6 +116,15 @@ public class ProdRestController {
 	public int deleteProdInst(@RequestBody RequestVO<ProdVO> vo) {
 		return service.deleteProdInst(vo);
 	}
+	//생산지시조회
+	@GetMapping("/selectGetDtInst")
+	public List<ProdVO> selectGetDtInst(ProdVO vo){
+		return service.selectGetDtInst(vo);
+	}
+	//키오스크 :생산지시불러오기
+	@GetMapping("/selectGetProcess")
+	public List<ProdVO> selectGetProcess(ProdVO vo){
+		return service.selectGetProcess(vo);
+	}
 	
-
 }

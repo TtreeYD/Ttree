@@ -155,6 +155,16 @@ public class ProdServiceImpl implements ProdService {
 		}
 		return cnt;
 	}
+	//생산지시조회
+	@Override
+	public List<ProdVO> selectGetDtInst(ProdVO vo) {
+		return prodMapper.selectGetDtInst(vo);
+	}
+	//키오스크 :생산지시불러오기
+	@Override
+	public List<ProdVO> selectGetProcess(ProdVO vo) {
+		return prodMapper.selectGetProcess(vo);
+	}
 
 	
 	

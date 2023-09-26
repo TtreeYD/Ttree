@@ -45,7 +45,7 @@ public class ProdVO {
 	private int prodInstCnt;
 	private int prodinstIncompCnt;
 	private String prodInstYn;
-	
+	private int prcsNum;
 	
 	private String prdtName;
 	private int prdtSs;
