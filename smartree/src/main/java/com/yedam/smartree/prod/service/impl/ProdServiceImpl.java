@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessVO;
@@ -29,10 +30,14 @@ public class ProdServiceImpl implements ProdService {
 	}
 	
 	@Override
+	@Transactional
 	public int insertProdPlan(RequestVO<ProdVO> vo) {
 		int cnt = 0;
 		// get Header
 		prodMapper.insertProdPlan(vo.getVo());
+		if(vo.getVo().getResult().equals("error")) {
+			return 0 ;
+		}
 		String prodPlanCode = vo.getVo().getProdPlanCode();
 		System.out.println();
 		// 계획 상세 저장하는 for문
@@ -60,17 +65,13 @@ public class ProdServiceImpl implements ProdService {
 		return prodMapper.selectProdListView(vo);
 	}
 
-	@Override
-	public int updateProd(RequestVO<ProdVO> vo) {
-		int cnt = 0;
-		prodMapper.updateProd(vo.getVo());
-		
-		for(ProdVO pvo : vo.getList()) {
-			prodMapper.updateDtProd(pvo);
-			cnt++;
-		}
-		return cnt;
-	}
+	/*
+	 * @Override public int updateProd(RequestVO<ProdVO> vo) { int cnt = 0;
+	 * prodMapper.updateProd(vo.getVo());
+	 * 
+	 * for(ProdVO pvo : vo.getList()) { prodMapper.updateDtProd(pvo); cnt++; }
+	 * return cnt; }
+	 */
 
 	@Override
 	public int deleteProd(RequestVO<ProdVO> vo) {
@@ -131,6 +132,28 @@ public class ProdServiceImpl implements ProdService {
 	@Override
 	public List<ProdVO> selectGetProdInstList(ProdVO vo) {
 		return prodMapper.selectGetProdInst(vo);
+	}
+
+	@Override
+	public int updateProdInst(RequestVO<ProdVO> vo) {
+		int cnt = 0;
+		prodMapper.updateProdInst(vo.getVo());
+		for(ProdVO pvo : vo.getList()) {
+			prodMapper.updateDtProdInst(pvo);
+			cnt++;
+		}
+		return cnt;
+	}
+
+	@Override
+	public int deleteProdInst(RequestVO<ProdVO> vo) {
+		int cnt = 0;
+		prodMapper.deleteProdInst(vo.getVo());
+		for(ProdVO pvo : vo.getList()) {
+			prodMapper.deleteDtProdInst(pvo);
+			cnt++;
+		}
+		return cnt;
 	}
 
 	
