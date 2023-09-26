@@ -116,4 +116,6 @@ public class ProdRestController {
 	public int deleteProdInst(@RequestBody RequestVO<ProdVO> vo) {
 		return service.deleteProdInst(vo);
 	}
+	
+
 }

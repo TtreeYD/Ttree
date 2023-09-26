@@ -36,4 +36,21 @@ public class ProdController {
 	public String selectProdInstList() {
 		return "prod/prodInstList";
 	}
+	
+	@GetMapping("/prcrKiosk")
+	public String prcrKiosk() {
+		return "prod/prcrKiosk";
+				
+	}
+	//키오스크생산진행페이지이동
+	@GetMapping("/prodProgress")
+	public String prodProgress() {
+		return "prod/prodProgress";
+	}
+	//키오스크생산현황페이지이동
+	@GetMapping("/prodSituation")
+	public String prodSituation() {
+		return "prod/prodSituation";
+	}
+
 }
