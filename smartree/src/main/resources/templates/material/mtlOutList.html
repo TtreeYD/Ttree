@@ -21,47 +21,22 @@ float: right;
 <body>
 	<div layout:fragment="content">
 		<div class="row">
-<!-- 		<div>
-			<span>자재종류</span>
-			<select id="mtlPick">
-				<option value="" selected>원자재</option>
-				<option value="" selected>부자재</option>
-				<option value="" selected>-전체-</option>
-			</select>
-			<input id="mtlName" placeholder="">
-			<br>
-			<span>재고상황</span>
-			<select id="mtlStatus">
-				<option value="" selected>안전</option>
-				<option value="" selected>부족</option>
-				<option value="" selected>-전체-</option>
-			</select>
-			<br>
-			<button type="button" id="searchBtn" class="btn btn-primary">조회</button>
-		</div> -->
-		
 		<div class="col-5">
 			<h2>자재목록</h2>
 				<div class="input-group mb-3">
-					<select class="custom-select col-2" id="searchMtlType">
-				   	<option value="" selected>--</option>
-				  	</select>
 					<input type="text" class="form-control col-3" placeholder="자재명" id="searchMtlName">
 					<div class="input-group-append">
-				   	<button class="btn btn-outline-secondary" type="button" id="searchMtl">검색</button>
+				   	<button class="btn btn-outline-secondary" type="button" id="searchMtl" style="padding: 3px; padding-left: 20px; padding-right: 20px;">검색</button>
 					</div>
 				</div> 
 			<div id="mtlGrid"></div>
 		</div>
 		<div class="col-7">
 			<h2>출고내역</h2>
-				<div class="input-group mb-3" style="float: right;">
-					<select class="custom-select col-2" id="searchMtlType">
-				   	<option value="" selected>--</option>
-				  	</select>
-					<input type="text" class="form-control col-3" placeholder="LOT" id="searchLot">
+				<div class="input-group mb-3">
+					<input type="text" class="form-control col-3" placeholder="자재명" id="searchMtlName">
 					<div class="input-group-append">
-				   	<button class="btn btn-outline-secondary" type="button" id="searchLot">검색</button>
+				   	<button class="btn btn-outline-secondary" type="button" id="searchMtl" style="padding: 3px; padding-left: 20px; padding-right: 20px;">검색</button>
 					</div>
 				</div> 
 			<div id=mtlLotGrid></div>

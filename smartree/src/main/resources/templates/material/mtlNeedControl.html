@@ -26,7 +26,7 @@ margin : 10px;
 <body>
 	<div layout:fragment="content">
 	<h3>자재발주관리</h3>
-		<button type="button" id="minusBtn" class="btn btn-info">안전재고 미달목록</button>
+		<button type="button" id="minusBtn" class="btn btn-info" style="background-color: orange; border-color:orange;">안전재고 미달목록</button>
 		<div id="mtlLowGrid"></div>
 		<br>
 		<div class="col-14">
@@ -48,17 +48,17 @@ margin : 10px;
 									<div class="mb-3">
 									<span>자재발주일</span>
 									<div class="input-group">
-										<input class="form-control mr-2" id="StartMtlNeedDate" type="date" style="width: 150px;">
+										<input class="form-control mr-2" id="startMtlNeedDate" type="date" style="width: 150px;">
 										<div class="mt-2">~</div>
-										<input class="form-control ml-2" id="EndMtlNeedDate" type="date" style="width: 150px;">
+										<input class="form-control ml-2" id="endMtlNeedDate" type="date" style="width: 150px;">
 									</div>			
 									</div>
 									<div>
 									<span>납기요청일</span>
 									<div class="input-group">
-										<input class="form-control mr-2" id="StartMtlWishDate" type="date" style="width: 150px;">
+										<input class="form-control mr-2" id="startMtlWishDate" type="date" style="width: 150px;">
 										<div class="mt-2">~</div>
-										<input class="form-control ml-2" id="EndMtlWishDate" type="date" style="width: 150px;">
+										<input class="form-control ml-2" id="endMtlWishDate" type="date" style="width: 150px;">
 									</div>
 									</div>
 								</div>
@@ -478,7 +478,11 @@ margin : 10px;
 						method: 'POST',
 						data:{
 							mtlName: $('#mtlName').val(),
-							mtlManager : $('#mtlManager').val()
+							mtlManager : $('#mtlManager').val(),
+							startMtlNeedDate : $('#startMtlNeedDate').val(),
+							endMtlNeedDate : $('#endMtlNeedDate').val(),
+							startMtlWishDate : $('#startMtlWishDate').val(),
+							endMtlWishDate : $('#endMtlWishDate').val(),
 						},
 						success:function(result){
 							searchModalData = result;
@@ -571,6 +575,14 @@ margin : 10px;
                             rowKey,
                             "mtlCnt"
                         );
+                        let bpName = needModalGrid.getValue(
+                                rowKey,
+                                "bpName"
+                            );
+                        let mtlWishDate = needModalGrid.getValue(
+                                rowKey,
+                                "mtlWishDate"
+                            );
                         
 
                         needModalGrid.removeRow(rowKey);
@@ -596,6 +608,8 @@ margin : 10px;
                             	mtlName: mtlName,
                             	mtlType: mtlType,
                             	mtlCnt: mtlCnt,
+                            	bpName: bpName,
+                            	mtlWishDate: mtlWishDate,
                             	mtlUnit: 'ea',
                             	mtlManager: '남태원'
                             },
@@ -604,6 +618,16 @@ margin : 10px;
                         $("#modalClose").click();
                     }
                 });
+        		// 모달 초기화버튼
+        		$('#resetModalBtn').on('click',function(){
+        			needModalGrid.resetData([]);
+        			$('#startMtlNeedDate').val('');
+        			$('#endMtlNeedDate').val('');
+        			$('#startMtlWishDate').val('');
+        			$('#endMtlWishDate').val('');
+        			$('#mtlManager').val('');
+        			$('#mtlName').val('');
+        		});
 			});
 		</script>
 	</div>

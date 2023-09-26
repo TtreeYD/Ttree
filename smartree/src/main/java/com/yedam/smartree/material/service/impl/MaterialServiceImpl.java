@@ -99,12 +99,24 @@ public class MaterialServiceImpl implements MaterialService {
 		return materialMapper.getInMtl(vo);
 	}
 	// 재고조회 로트별 조회
+	@Override
 	public List<MaterialVO> getLotMtl(MaterialVO vo) {
 		return materialMapper.getLotMtl(vo);
 	}
 	// 발주목록 발주서별 출력
+	@Override
 	public List<MaterialVO> getPaperMtl(MaterialVO vo) {
 		return materialMapper.getPaperMtl(vo);
+	}
+	// 발주조회 조건검색
+	@Override
+	public List<MaterialVO> searchNeed(MaterialVO vo) {
+		return materialMapper.searchNeed(vo);
+	}
+	// 재고조회 조건검색
+	@Override
+	public List<MaterialVO> searchCont(MaterialVO vo) {
+		return materialMapper.searchCont(vo);
 	}
 
 }
