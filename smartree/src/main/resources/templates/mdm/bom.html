@@ -27,26 +27,53 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			<div class="col"></div>
 			<div class="col-4">
 				<h2>제품정보</h2>
-				<div class="input-group mb-3">
-					<input type="text" class="form-control col-3" placeholder="제품명"
-						id="searchPrdtName">
-					<div class="input-group-append">
-						<button class="btn btn-primary col" type="button" id="searchPrdt">검색</button>
+				<div class="mb-3 clearfix">
+					<div class="input-group float-left">
+						<input type="text" class="form-control" placeholder="제품명"
+							id="searchPrdtName">
+						<div class="input-group-append">
+							<button class="btn btn-primary col" type="button" id="searchPrdt">검색</button>
+						</div>
 					</div>
 				</div>
 				<div id="prdtGrid"></div>
 			</div>
 			<div class="col"></div>
-			<div class="col-7"  >
+			<div class="col-7">
 				<h2>BOM정보</h2>
-				<div class="text-right mb-3 clearfix">
-					<button type="button" id="insertBom" class="btn btn-primary float-left">BOM등록</button>
-					<button type="button" id="addBom" class="btn btn-primary">추가</button>
-					<button type="button" id="deleteBom" class="btn btn-primary">삭제</button>
+				<div class="mb-3 clearfix">
+					<div class="btn-group float-left" role="group" aria-label="Basic example">
+						<button type="button" id="insertBomBtn" class="btn btn-primary">BOM등록</button>
+						<button type="button" id="bomListBtn" class="btn btn-primary">BOM조회</button>
+						<button type="button" id="newBomBtn" class="btn btn-primary">새BOM작성</button>
+					</div>
+					<input type="hidden" id="bomCode" name="bomCode">
+					
+					<div class="btn-group float-right" role="group" aria-label="Basic example">
+						<button type="button" id="addBomBtn" class="btn btn-primary">공정추가</button>
+						<button type="button" id="deleteBomBtn" class="btn btn-primary">삭제</button>
+					</div>
 				</div>
-				<div id="bomGrid"></div>
+				<div id="bomDtGrid"></div>
 			</div>
 			<div class="col"></div>
+		</div>
+		
+		<!-- BOM조회 모달 -->
+		<div class="modal fade" tabindex="-1" role="dialog" id="bomModal">
+			<div class="modal-dialog modal-dialog-centered modal-lg"
+				role="document">
+				<div class="modal-content">
+					<h2 style="margin: 30px">BOM리스트</h2>
+
+					<div class="modal-body">
+						<div id="bomGrid"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" data-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
 		</div>
 
 		<!-- 공정조회 모달 -->
@@ -65,8 +92,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				</div>
 			</div>
 		</div>
-		
-	 	<!-- 제품조회모달 -->
+
+		<!-- 제품조회모달 -->
 		<div class="modal fade" tabindex="-1" role="dialog" id="mtlModal">
 			<div class="modal-dialog modal-dialog-centered modal-lg"
 				role="document">
@@ -85,12 +112,13 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 		</div>
 
 		<script>
-		let prcsRow;
-		let mtlRow;
+		let selRow;
+		let prdtCode;
 		var Grid = tui.Grid;
 		
-		const bomGrid = new Grid({
-			el: document.getElementById('bomGrid'),
+		
+		const bomDtGrid = new Grid({
+			el: document.getElementById('bomDtGrid'),
 			scrollX: false,
 			bodyHeight: 400,
 			rowHeaders:[{type:'checkbox'}],
@@ -117,10 +145,12 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			}, {
 				header: '공정명',
 				name: 'prcsName'
-			}, {
+			},{
+				name:'mtlCode',
+				hidden: true
+			},{
 				header: '소모자재',
 				name: 'mtlName',
-				width: 250
 			}, {
 				header: '소모량',
 				name: 'mtlCnt',
@@ -161,6 +191,30 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			}]
 		});	
 		
+		// BOM표
+		const bomGrid = new Grid({
+			el: document.getElementById('bomGrid'),
+			scrollX: false,
+			minBodyHeight: 250,
+			pagination: true,
+			pageOptions: {
+				useClient: true,
+				perPage: 5,
+			},
+			contextMenu: null,
+			rowHeaders: ['rowNum'],
+			columns: [{
+				header: 'BOM코드',
+				name: 'bomCode'
+			}, {
+				header: '생성일자',
+				name: 'bomDate'					
+			}, {
+				header: '사용여부',
+				name: 'bomUse'					
+			}]
+		});
+		
 		// 공정표
 		const prcsGrid = new Grid({
 			el: document.getElementById('prcsGrid'),
@@ -192,7 +246,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 		const mtlGrid = new Grid({
 			el: document.getElementById('mtlGrid'),
 			scrollX: false,
-			minBodyHeight: 200,
+			minBodyHeight: 250,
 			pagination: true,
 			pageOptions: {
 				useClient: true,
@@ -238,16 +292,13 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			let vo = {};
 			vo.prdtType = $('#searchPrdtType').val();
 			vo.prdtName = $('#searchPrdtName').val();
-			console.log(vo)
 			$.ajax({
 				url: '/mdm/searchPrdt',
 				method: 'POST',
 				contentType : 'application/json',
 				data: JSON.stringify(vo),
 				success: result => {
-					console.log(result)
 					prdtGrid.resetData(result)
-					resetPrdt();
 				},
 				error: err => console.log(err)
 			})
@@ -257,44 +308,80 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			if (ev.rowKey == undefined) {
 				return;
 			}
-			let prdtCode = prdtGrid.getValue(ev.rowKey, 'prdtCode')
+			prdtCode = prdtGrid.getValue(ev.rowKey, 'prdtCode')
 			selectBomDetail(prdtCode)
 		})
 		
 		// 상세코드표시
-		function selectBomDetail(pc){
+		function selectBomDetail(pc,bc){
 			$.ajax({
 				url: "/mdm/selectBomDetail",
 				data: {
-					prdtCode: pc
+					prdtCode: pc,
+					bomCode: bc
 				},
 				success: result => {
-					bomGrid.resetData(eval(result))
+					bomDtGrid.resetData([])
+					for(let data of result){
+						let gridData = bomDtGrid.getData()
+						let cnt = 0;
+						let rowKey;
+						for(let gd of gridData){
+							if(gd.prcsOrder===data.prcsOrder) {
+								cnt++;
+								rowKey = gd.rowKey
+								data.prcsOrder = ''
+								data.prcsStdCode = ''
+								data.prcsName = ''
+							}
+						}
+						if(cnt){
+							bomDtGrid.appendRow(data,{parentRowKey:rowKey})
+							let childRows = bomDtGrid.getChildRows(rowKey)
+							for(let cr of childRows){
+								bomDtGrid.disableCell(cr.rowKey,'prcsOrder')
+							}
+						} else {
+							bomDtGrid.appendRow(data)
+						}
+					}
+					//bomDtGrid.resetData(eval(result))
+					if(result[0]){
+						$('#bomCode').val(result[0].bomCode)
+					} else {
+						$('#bomCode').val('')
+					}
 				},
 				error: err => console.log(err)
 			})
 		}
 		
 		// bom추가
-		$('#addBom').on('click', ()=>{
-			bomGrid.appendRow()
+		$('#addBomBtn').on('click', ()=>{
+			if(!prdtCode){
+				alert('제품을 먼저 선택해 주세요')
+				return
+			}
+			bomDtGrid.appendRow()
 		})
 		
 		// bom더블클릭 이벤트
-		bomGrid.on('dblclick', (ev) => {
-			if(bomGrid.getValue(ev.rowKey,'_attributes').tree.parentRowKey==0 || bomGrid.getValue(ev.rowKey,'_attributes').tree.parentRowKey) {
+		bomDtGrid.on('dblclick', (ev) => {
+			if(bomDtGrid.getValue(ev.rowKey,'_attributes').tree.parentRowKey==0 || bomDtGrid.getValue(ev.rowKey,'_attributes').tree.parentRowKey) {
 				return;
 			}
+			
 			if (ev.rowKey == undefined) {
 				return;
 			}
+			
+			selRow = ev.rowKey;
+			
 			if (ev.columnName == 'prcsStdCode') {
-				prcsRow = ev.rowKey;
 				prcsList();
 			}
 			
 			if (ev.columnName == 'mtlName') {
-				mtlRow = ev.rowKey;
 				mtlList();
 			}
 			
@@ -313,7 +400,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			})
 		}
 		
-		// 공정조회
+		// 자재조회
 		function mtlList() {
 			$.ajax({
 				url:'/mdm/selectMtlList',
@@ -337,30 +424,44 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 		function addBomPrcs(rowKey){
 			let prcsStdCode = prcsGrid.getValue(rowKey, 'prcsStdCode')
 			let prcsName = prcsGrid.getValue(rowKey, 'prcsName')
-			bomGrid.setValue(prcsRow, 'prcsStdCode', prcsStdCode)
-			bomGrid.setValue(prcsRow, 'prcsName', prcsName)
+			bomDtGrid.setValue(selRow, 'prcsStdCode', prcsStdCode)
+			bomDtGrid.setValue(selRow, 'prcsName', prcsName)
 			$('#prcsModal').modal('hide');
 		}
+		
+	/* 	// 자재 => bom
+		mtlGrid.on('dblclick', (ev) => {
+			if(ev.rowKey == undefined) return;
+			
+			addBomMtl(ev.rowKey)
+		})
+		
+		function addBomMtl(rowKey){
+			let mtlCode = mtlGrid.getValue(rowKey, 'mtlCode')
+			let mtlName = mtlGrid.getValue(rowKey, 'mtlName')
+			let mtlUnit = mtlGrid.getValue(rowKey, 'mtlUnit')
+			bomDtGrid.setValue(selRow, 'mtlCode', mtlCode)
+			bomDtGrid.setValue(selRow, 'mtlName', mtlName)
+			bomDtGrid.setValue(selRow, 'mtlUnit', mtlUnit)
+			$('#mtlModal').modal('hide');
+		} */
 		
 		// 자재 => bom
 		$('#addBomMtl').on('click', () => {
 			let datas = mtlGrid.getCheckedRows()
-			console.log(datas)
 			for(let data in datas){
 				delete datas[data].rowKey
 				delete datas[data]._attributes
-				if(data == 0 && !bomGrid.getValue(mtlRow,'mtlName')){
-					bomGrid.setValue(mtlRow,'mtlName',datas[data]['mtlName'])
-					bomGrid.setValue(mtlRow,'mtlUnit',datas[data]['mtlUnit'])
+				if(data == 0 && !bomDtGrid.getValue(selRow,'mtlName')){
+					bomDtGrid.setValue(selRow,'mtlCode',datas[data]['mtlCode'])
+					bomDtGrid.setValue(selRow,'mtlName',datas[data]['mtlName'])
+					bomDtGrid.setValue(selRow,'mtlUnit',datas[data]['mtlUnit'])
 					continue
 				}
-				datas[data].prcsOrder = bomGrid.getValue(mtlRow,'prcsOrder')
-				datas[data].prcsStdCode = bomGrid.getValue(mtlRow,'prcsStdCode')
-				datas[data].prcsName = bomGrid.getValue(mtlRow,'prcsName')
-				if(datas[data].mtlName==bomGrid.getValue(mtlRow,'mtlName')){
+				if(datas[data].mtlName == bomDtGrid.getValue(selRow,'mtlName')){
 					continue
 				}
-				let chkMtl = bomGrid.getChildRows(mtlRow)
+				let chkMtl = bomDtGrid.getChildRows(selRow)
 				let chk = true
 				for(let mtl of chkMtl){
 					if(mtl.mtlName == datas[data].mtlName) {
@@ -371,18 +472,98 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					addBomMtl(datas[data])
 				}
 			}
+			let childRows = bomDtGrid.getChildRows(selRow)
+			for(let cr of childRows){
+				bomDtGrid.disableCell(cr.rowKey,'prcsOrder')
+			}
 			$('#mtlModal').modal('hide');
 		})
 		
 		function addBomMtl(obj){
 			//console.log(obj)
-			bomGrid.appendTreeRow(obj,{parentRowKey: mtlRow, offset:0})
+			bomDtGrid.appendTreeRow(obj,{parentRowKey: selRow, offset:0})
 		}
 		
 		// 삭제버튼
-		$('#deleteBom').on('click', () => {
-			bomGrid.removeRows(bomGrid.getCheckedRowKeys())
+		$('#deleteBomBtn').on('click', () => {
+			if(!prdtCode){
+				alert('제품을 먼저 선택해 주세요')
+				return
+			}
+			let delList = bomDtGrid.getCheckedRowKeys()
+			for(let del of delList){
+				bomDtGrid.removeTreeRow(del)
+			}
 		})
+		
+		// 새로만들기
+		$('#newBomBtn').on('click', () => {
+			if(!prdtCode){
+				alert('제품을 먼저 선택해 주세요')
+				return
+			}
+			bomDtGrid.clear()
+			$('#bomCode').val('')
+		})
+		
+		// BOM조회
+		$('#bomListBtn').on('click',() => {
+			if(!prdtCode){
+				alert('제품을 먼저 선택해 주세요')
+				return
+			}
+			$.ajax({
+				url:'/mdm/selectBomList',
+				data:{
+					prdtCode : prdtCode
+				},
+				success: result =>{
+					$('#bomModal').modal('show');
+					bomGrid.resetData(result)
+					setTimeout(() => bomGrid.refreshLayout(), 200);
+				},
+				error: err => console.log(err)
+			})
+		})
+		
+		// BOM등록
+		$('#insertBomBtn').on('click', () => {
+			let vo = {
+				prdtCode : prdtCode,
+				bomCode : $('#bomCode').val()
+			}
+			let list = bomDtGrid.getData()
+			for(let data of list){
+				let parentKey = data._attributes.tree.parentRowKey
+				if(parentKey==0 || parentKey){
+					data.prcsOrder = bomDtGrid.getRow(parentKey).prcsOrder
+					data.prcsStdCode = bomDtGrid.getRow(parentKey).prcsStdCode
+				}
+			}
+			let bomData = {
+				vo : vo,
+				list : list
+			}
+			$.ajax({
+		 		url:'/mdm/bomProcess',
+				method:'POST',
+				dataType: 'json',
+				contentType : 'application/json',
+				data:JSON.stringify(bomData),
+				success: result => {
+					if(result) alert('등록완료')
+				},
+				error: err => console.log(err)
+			})
+		})
+		
+		bomGrid.on('dblclick', (ev) => {
+			let bomCode = bomGrid.getValue(ev.rowKey, 'bomCode')
+			console.log(bomCode)
+			selectBomDetail(prdtCode,bomCode)
+			$('#bomModal').modal('hide');
+		})
+		
 		</script>
 	</div>
 </body>

@@ -8,13 +8,14 @@ import org.springframework.stereotype.Service;
 import com.yedam.smartree.mdm.mapper.MdmMapper;
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
-import com.yedam.smartree.mdm.service.MdmBomDtVO;
+import com.yedam.smartree.mdm.service.MdmBomVO;
 import com.yedam.smartree.mdm.service.MdmBpVO;
 import com.yedam.smartree.mdm.service.MdmChkVO;
 import com.yedam.smartree.mdm.service.MdmMtlVO;
 import com.yedam.smartree.mdm.service.MdmPrcsVO;
 import com.yedam.smartree.mdm.service.MdmPrdtVO;
 import com.yedam.smartree.mdm.service.MdmService;
+import com.yedam.smartree.prod.service.RequestVO;
 
 @Service
 public class MdmServiceImpl implements MdmService {
@@ -223,8 +224,33 @@ public class MdmServiceImpl implements MdmService {
 	}
 
 	@Override
-	public List<MdmBomDtVO> selectBomDetail(String prdtCode) {
-		return mdmMapper.selectBomDetail(prdtCode);
+	public List<MdmBomVO> selectBomDetail(String prdtCode,String bomCode) {
+		return mdmMapper.selectBomDetail(prdtCode,bomCode);
+	}
+
+	@Override
+	public List<MdmBomVO> selectBomList(String prdtCode) {
+		return mdmMapper.selectBomList(prdtCode);
+	}
+
+	@Override
+	public int bomProcess(RequestVO<MdmBomVO> reqVO) {
+		MdmBomVO bomInfo = reqVO.getVo(); // bom_table
+		List<MdmBomVO> bomList = reqVO.getList(); // bom_detail list;
+		int cnt = 0;
+		
+		mdmMapper.updateBom(bomInfo);
+		if(bomInfo.getBomCode().isEmpty()) {
+			mdmMapper.insertBom(bomInfo);
+		} else {
+			mdmMapper.deleteBomDt(bomInfo);
+		}
+		String bomCode = bomInfo.getBomCode();
+		for(MdmBomVO vo : bomList) {
+			vo.setBomCode(bomCode);
+			cnt += mdmMapper.insertBomDt(vo);
+		}
+		return cnt;
 	}
 
 }
