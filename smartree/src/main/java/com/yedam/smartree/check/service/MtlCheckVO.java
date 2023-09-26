@@ -27,4 +27,6 @@ public class MtlCheckVO {
 	private String mtlManager;
 	private String mtlChkStatus;
 	private String mtlWhere;
+	
+	private String result;
 }
