@@ -7,12 +7,27 @@
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
 <link href="../startbootstrap/css/kiosk.css" rel="stylesheet" type="text/css">
+
+<!-- 그리드관련 link -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.chart/latest/tui-chart.css"> 
+
+
+<!-- 그리드관련 script -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.js"></script>
+<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+<script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tui-grid@4.21.16/dist/tui-grid.min.js"></script>
+
+
 <script src="https://kit.fontawesome.com/4791395687.js" crossorigin="anonymous"></script>
-<script
-  src="https://code.jquery.com/jquery-3.7.1.js"
-  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-  crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="crossorigin="anonymous"></script>
 </head>
+
 <body>
 <div class="header">
         <div class="header-content">
@@ -21,5 +36,52 @@
         </div>
     </div>
 <h1>생산진행</h1>
+<div id="instGrid"></div>
+
+<script>
+const instGrid = new tui.Grid({
+	el : document.getElementById('instGrid'),
+	scrollX : false,
+	scrollY : false,
+	header:{
+		height:200
+	},
+	columns : [
+		{
+	          header: '생산지시코드',
+	          name: 'prodPlanName'
+	        },
+	        {
+	          header: '제품코드',
+	          name: 'prodInstName'
+	        },
+	        {
+	          header: '제품명',
+	          name: 'prodInstRank'
+	        },
+	        {
+	          header: '지시량',
+	          name: 'prodPlanCnt'
+	        },
+	        {
+	          header: '지시우선순위',
+	          name: 'prodInstCnt'
+	        },
+
+	]})
+	
+$(document).ready(function (){
+	$.ajax({
+		url:'',
+		method:'',
+		success:function(result){
+			console.log(result);
+		},
+		error:function(err){
+			console.log(err);
+		}
+	})
+})
+</script>
 </body>
 </html>

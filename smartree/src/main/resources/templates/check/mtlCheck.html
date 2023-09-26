@@ -195,8 +195,8 @@
                  
                  
                // 검사량 - 불량량 이벤트  
-				 grid2.on('focusChange', (ev) => {
-		            const { rowKey, columnName } = ev;
+				 grid2.on('afterChange', (ev) => {
+		            /* const { rowKey, columnName } = ev;
 					
 		            if (columnName === 'mtlChkCnt' || columnName === 'mtlErrorCnt' || columnName === 'mtlPassCnt' || columnName === 'mtlChkManager') {
 		                const mtlChkCnt = parseFloat(grid2.getValue(rowKey, 'mtlChkCnt')) || 0;
@@ -210,7 +210,16 @@
 		                }
 		                
 		                grid2.refreshLayout();
-		            }
+		            } */
+		            	let rowKey = ev.changes[0].rowKey
+		            	const mtlChkCnt = Number(grid2.getValue(rowKey, 'mtlChkCnt')) || 0;
+		                const mtlErrorCnt = Number(grid2.getValue(rowKey, 'mtlErrorCnt')) || 0;
+		                const mtlPassCnt = Math.max(0, mtlChkCnt - mtlErrorCnt);
+		                if (mtlErrorCnt > mtlChkCnt) {
+		                	toastr.warning('불량량이 검사량을 초과합니다');
+		                }
+		                grid2.setValue(rowKey, 'mtlPassCnt', mtlPassCnt);
+		            
 		        });
                  
 			  //모달 조회 클릭이벤트
