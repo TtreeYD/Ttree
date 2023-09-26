@@ -27,12 +27,14 @@ public class ProdVO {
 	private String prodPlanNote;
 	
 	private String dtProdPlanCode;
+	
+	private String dtProdInstCode;
 	private String prodInstCode;
 	private String prodInstName;
 	private String prodInstManager;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date prodInstdate;
+	private Date prodInstDate;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Date prodInstSdate;
@@ -53,4 +55,5 @@ public class ProdVO {
 	private String orderDtCode;
 	private int orderDtCnt;
 	
+	private String result;
 }

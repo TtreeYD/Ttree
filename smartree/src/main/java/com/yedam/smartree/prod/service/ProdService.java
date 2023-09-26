@@ -15,9 +15,14 @@ public interface ProdService {
 	public List<ProdVO> selectGetProdList(ProdVO vo);
 	public List<ProdVO> selectGetProdInstList(ProdVO vo);
 	public int insertProdPlan(RequestVO<ProdVO> vo);
-	public int updateProd(RequestVO<ProdVO> vo);
 	public int deleteProd(RequestVO<ProdVO> vo);
 	public int insertAndUpdateDtProdPlan(RequestVO<ProdVO> vo);
 	
 	public int insertProdInst(RequestVO<ProdVO> vo);
+
+	public int updateProdInst(RequestVO<ProdVO> vo);
+	
+	public int deleteProdInst(RequestVO<ProdVO> vo);
+	
+	//public int updateProd(RequestVO<ProdVO> vo);
 }

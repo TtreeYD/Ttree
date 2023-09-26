@@ -26,6 +26,10 @@ public interface ProdMapper {
 	
 	public int updateDtProd(ProdVO vo);
 	
+	public int updateProdInst(ProdVO vo);
+	
+	public int updateDtProdInst(ProdVO vo);
+	
 	public int deleteProd(ProdVO vo);
 	
 	public int deleteDtProd(ProdVO vo);
@@ -43,4 +47,8 @@ public interface ProdMapper {
 	public List<ProdVO> selectProdInst(ProdVO vo);
 	
 	public List<ProdVO> selectGetProdInst(ProdVO vo);
+	
+	public int deleteProdInst(ProdVO vo);
+	
+	public int deleteDtProdInst(ProdVO vo);
 }

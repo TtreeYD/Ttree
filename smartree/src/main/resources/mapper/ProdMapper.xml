@@ -5,17 +5,24 @@
   <mapper namespace="com.yedam.smartree.prod.mapper.ProdMapper">
   	<select id="selectProdList" resultType="ProdVO">
   		select *
-		from dt_prod_plan dtp join prod_plan p 
-		on dtp.prod_plan_code = p.prod_plan_code
-		join  prdt_table pt 
-		on dtp.prdt_code = pt.prdt_code
+  		
+		  from dt_prod_plan dtp 
+		  join prod_plan p     on dtp.prod_plan_code = p.prod_plan_code
+		  join  prdt_table pt  on dtp.prdt_code = pt.prdt_code
+		  
   	</select>
   	
   	<select id="selectAllOrderAndPrdt" resultType="BusinessVO">
-  		select o.order_code , b.bp_code , b.bp_name , o.order_date , o.dod_date , o.dod_state , o.order_manager
+  		select o.order_code , 
+  		       o.order_date , 
+  		       o.dod_date , 
+  		       o.dod_state , 
+  		       o.order_manager,
+  		       b.bp_code , 
+  		       b.bp_name 
   		from orders o join business_partner b
  		  				on o.bp_code = b.bp_code
-		  				where o.prod_plan_yn = 'n'
+	    where o.prod_plan_yn = 'n'
   	</select>
   	
   	
@@ -30,12 +37,13 @@
         #{prodPlanDate},
         #{prodName},
         #{prodPlanSdate},
-        #{prodPlanEdate}
+        #{prodPlanEdate},
+        #{result , mode=OUT, jdbcType=VARCHAR, javaType=string}
     )}
 	</insert>
 	
 	<insert id="insertDtProdPlan" parameterType="ProdVO">
-	    insert into dt_prod_plan
+	    insert into dt_prod_plan 
 	    values(
 	        'PPD' || LPAD(dt_prod_plan_seq.NEXTVAL, 7, '0'),
 	        #{prodPlanCode},
@@ -62,10 +70,10 @@
 	</insert> 
   	<select id="searchProdPlan" resultType="ProdVO">
   		select *
-		from dt_prod_plan dtp join prod_plan p 
-		on dtp.prod_plan_code = p.prod_plan_code
-		join  prdt_table pt
-		on dtp.prdt_code = pt.prdt_code
+		  from dt_prod_plan dtp join prod_plan p 
+		                          on dtp.prod_plan_code = p.prod_plan_code
+		                        join prdt_table pt
+		                          on dtp.prdt_code = pt.prdt_code
 		<where>
 			<if test="dtProdPlanCode != null and !dtProdPlanCode.equals('')">
 				dtp.dt_prod_plan_code like '%' || #{dtProdPlanCode} || '%'
@@ -156,8 +164,21 @@
   	</select>
   	
   	<select id="selectGetProdInst" resultType="ProdVO">
-		select p.prod_plan_name, prdt.prdt_name ,dtp.prod_plan_cnt, p.prod_plan_code, prdt.prdt_code  , dpi.prod_inst_cnt , dpi.prod_inst_rank 
-        , dtp.prod_plan_cnt - dpi.prod_inst_cnt as prod_inst_incomp_cnt, pi.prod_inst_name, pi.prod_inst_manager, pi.prod_inst_date, pi.prod_inst_sdate, pi.prod_inst_edate
+		select p.prod_plan_name, 
+		       prdt.prdt_name,
+		       dtp.prod_plan_cnt, 
+		       p.prod_plan_code, 
+		       prdt.prdt_code, 
+		       dpi.prod_inst_cnt, 
+		       dpi.prod_inst_rank,
+		       dtp.prod_plan_cnt - dpi.prod_inst_cnt as prod_inst_incomp_cnt,
+		       pi.prod_inst_name,
+		       pi.prod_inst_manager,
+		       pi.prod_inst_date,
+		       pi.prod_inst_sdate,
+		       pi.prod_inst_edate,
+		       pi.prod_inst_code,
+		       dpi.dt_prod_inst_code
 		from prod_plan p join dt_prod_plan dtp
 				         on p.prod_plan_code = dtp.prod_plan_code
 				         join prdt_table prdt
@@ -167,6 +188,7 @@
 				         join dt_prod_inst dpi
 				         on pi.prod_inst_code = dpi.prod_inst_code and dpi.prdt_code = dtp.prdt_code
 		where pi.prod_plan_code = #{prodPlanCode}
+		  and dpi.prod_inst_yn = 'n'
   	</select>
   	
 	<insert id="insertProdInst" parameterType="ProdVO" statementType="CALLABLE">
@@ -178,19 +200,47 @@
     	#{prodPlanCode},
         #{prodInstName},
         #{prodInstManager},
-       	#{prodInstdate},
+       	#{prodInstDate},
         #{prodInstSdate},
         #{prodInstEdate}
     )}
 	</insert>
 	
 	<insert id="insertDtProdInst" parameterType="ProdVO">
-	    insert into dt_prod_inst (dt_prod_inst_code, prod_inst_rank, prod_inst_cnt, prod_inst_code)
+	    insert into dt_prod_inst (dt_prod_inst_code, prod_inst_rank, prod_inst_cnt, prod_inst_code, prdt_code)
 	    values(
 	        'PID' || LPAD(dt_prod_inst_seq.NEXTVAL, 7, '0'),
 	        #{prodInstRank},
 	        #{prodInstCnt},
-	        #{prodInstCode}
+	        #{prodInstCode},
+	        #{prdtCode}
 	    )
 	</insert> 
+	
+	<update id="updateProdInst" parameterType="ProdVO">
+  		update prod_inst
+  		set prod_inst_name = #{prodInstName},
+  		    prod_inst_manager = #{prodInstManager},
+  		    prod_inst_date = #{prodInstDate},
+  		    prod_inst_sdate = #{prodInstSdate},
+  		    prod_inst_edate = #{prodInstEdate}
+  		where prod_inst_code = #{prodInstCode}
+  	</update>
+  	
+  	<update id="updateDtProdInst" parameterType="ProdVO">
+  		update dt_prod_inst
+  		set prod_inst_rank = #{prodInstRank},
+  		    prod_inst_cnt = #{prodInstCnt}
+  		where dt_prod_inst_code = #{dtProdInstCode}
+  	</update>
+  	
+  	<delete id="deleteProdInst" parameterType="ProdVO">
+  		delete from prod_inst
+  		where prod_inst_code = #{prodInstCode}
+  	</delete>
+  	
+  	<delete id="deleteDtProdInst" parameterType="ProdVO">
+  		delete from dt_prod_inst
+  		where dt_prod_inst_code = #{dtProdInstCode}
+  	</delete>
   </mapper>

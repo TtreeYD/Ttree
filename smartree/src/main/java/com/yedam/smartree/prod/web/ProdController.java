@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.yedam.smartree.prod.service.ProdService;
 
-
+/*
+ * 
+   23.09.26 권민석
+   생산계획, 생산지시
+ * 
+ */
 
 @Controller
 @RequestMapping("/prod")
