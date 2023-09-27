@@ -1,6 +1,7 @@
 package com.yedam.smartree.prod.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.yedam.smartree.business.service.BusinessVO;
 
@@ -12,7 +13,7 @@ public interface ProdService {
 	public List<ProdVO> searchProdList(ProdVO vo);
 	public List<ProdVO> selectProdListView(ProdVO vo);
 	public List<PrdtProdVO> selectPrdt(PrdtProdVO vo);
-	public List<ProdVO> selectGetProdList(ProdVO vo);
+	public Map<String, Object> selectGetProdList(ProdVO vo);
 	public List<ProdVO> selectGetProdInstList(ProdVO vo);
 	public int insertProdPlan(RequestVO<ProdVO> vo);
 	public int deleteProd(RequestVO<ProdVO> vo);

@@ -1,14 +1,16 @@
 package com.yedam.smartree.prod.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessVO;
 import com.yedam.smartree.prod.mapper.ProdMapper;
+import com.yedam.smartree.prod.service.MtlNeedVO;
 import com.yedam.smartree.prod.service.PrdtProdVO;
 import com.yedam.smartree.prod.service.ProdService;
 import com.yedam.smartree.prod.service.ProdVO;
@@ -104,8 +106,18 @@ public class ProdServiceImpl implements ProdService {
 	}
 
 	@Override
-	public List<ProdVO> selectGetProdList(ProdVO vo) {
-		return prodMapper.selectGetProd(vo);
+	public Map<String, Object> selectGetProdList(ProdVO vo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		//prodMapper.selectGetProd(vo)
+		map.put("list", prodMapper.selectGetProd(vo));
+		Map<String, Object> mtlNeed = new HashMap<String, Object>();
+		List<MtlNeedVO> list = prodMapper.getMtlNeed(vo);
+		
+		for(MtlNeedVO mtl : list) {
+			
+		}
+		map.put("mtlNeed", prodMapper.getMtlNeed(vo));
+		return map;
 	}
 
 	@Override
