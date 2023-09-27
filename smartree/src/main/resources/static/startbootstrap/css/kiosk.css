@@ -7,7 +7,7 @@
     font-family: 'Orbitron', sans-serif;
     color: #555; 
     font-family: 'Ariado', sans-serif;
-    font-size: 50px;
+    font-size: 40px;
   }
    @font-face {
 	    font-family: 'Ariado';
@@ -17,7 +17,7 @@
 	} 
   body {
     background-image: url('./data/codestates-motif.png');
-    overflow: hidden;
+    overflow:hidden;
     margin: 0;
   }
   /*

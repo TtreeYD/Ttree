@@ -54,6 +54,7 @@ public class ProdVO {
 	
 	private String orderDtCode;
 	private int orderDtCnt;
+	private int prdtProdCnt;
 	
 	private String result;
 }

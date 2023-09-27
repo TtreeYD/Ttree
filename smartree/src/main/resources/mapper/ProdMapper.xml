@@ -285,7 +285,7 @@
   	</select>
   	<!-- 키오스크 :생산지시불러오기 -->
   	<select id="selectGetProcess" resultType="ProdVO">
-  		select d.dt_prod_inst_code , d.prdt_code , pt.prdt_name , p.prcs_num , p.prdt_total , pi.prod_inst_edate 
+  		select d.dt_prod_inst_code , d.prdt_code , pt.prdt_name , p.prcs_num , p.prdt_total , pi.prod_inst_edate , p.prdt_prod_cnt
 		  from dt_prod_inst d join process p
                         on d.dt_prod_inst_code = p.dt_prod_inst_code
                     join prod_inst pi
