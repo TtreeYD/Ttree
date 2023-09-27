@@ -3,6 +3,7 @@ package com.yedam.smartree.prod.service;
 import java.util.List;
 
 import com.yedam.smartree.business.service.BusinessVO;
+import com.yedam.smartree.material.service.MaterialVO;
 
 public interface ProdService {
 	public List<ProdVO> selectProdList();

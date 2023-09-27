@@ -30,7 +30,7 @@
 			<button type="button" class="btn btn-primary" id="saveBtn">저장</button>
 			<button type="button" class="btn btn-primary" id="delBtn">삭제</button>
 		</div>
-		<div id="grid" style="height: 400px;"></div>
+		<div id="grid" ></div>
 		<div
 			style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
 			<span>
@@ -125,10 +125,7 @@
 	      	el: document.getElementById('grid'),
 	      	scrollX: false,
 	      	scrollY: false,
-	      	pageOptions: {
-            	perPage: 5,
-            	useClient: true,
-          	},
+          	bodyHeight : 400,
           	rowHeaders : ["checkbox"],
 	      	columns: [
 		        {
@@ -157,54 +154,8 @@
 		        },
 	      	]
 	    	});
-	    const grid2 = new tui.Grid({
-	      	// 하단의 제품 그리드
-	      el: document.getElementById('grid2'),
-	      scrollX: false,
-	      scrollY: false,
-	      pageOptions: {
-            perPage: 5,
-            useClient: true,
-          },
-	      columns: [
-			{
-			  header: '제품코드',
-			  name: 'prdtCode'
-			},
-			{
-			  header: '제품명',
-			  name: 'prdtName'
-			},
-			{
-			  header: '수량',
-			  name: 'prdtSs'
-			},
-	      ]
-	    });
-	    const grid3 = new tui.Grid({
-	    	// 하단 자재 그리드
-			el: document.getElementById('grid3'),
-	      	scrollX: false,
-	      	scrollY: false,
-	      	pageOptions: {
-            	perPage: 5,
-            	useClient: true,
-          	},
-	      	columns: [
-	        	{
-		          header: '자재코드',
-		          name: ''
-		        },
-		        {
-		          header: '자재명',
-		          name: ''
-		        },
-		        {
-		          header: '재고수량',
-		          name: ''
-		        },
-	      	]
-	    });
+	    
+	    
 	    const grid4 = new tui.Grid({
 	    	// 주문서 모달 그리드
 			el: document.getElementById('grid4'),
@@ -290,7 +241,18 @@
 				},
 			]
 	    });
-		
+	    
+		//제품코드가져오기
+	    function selectPrdtList(){
+			$.ajax({
+				url:'/mdm/selectPrdtList',
+				success: result =>{
+					grid2.resetData(result)
+				}
+			})
+		}
+	    
+	    
 		// 주문서 모달창
 		$('#loadOrders').on('click', loadOrders);
 		
@@ -508,6 +470,7 @@
 				$('#prodName').val(result[0].prodName);
    	         	grid.resetData(result);
    	            $("#prodModal").modal('hide');
+   	            
       		},
       		error:function(err){
       			console.log(err)
@@ -577,6 +540,8 @@
 		console.log("today >>>> " + today);
 		bir = document.getElementById("prodPlanDate");
 		bir.value = today;
+		
+		
 	};
 	  
     </script>

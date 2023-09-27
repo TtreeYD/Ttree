@@ -9,6 +9,7 @@
 		  from dt_prod_plan dtp 
 		  join prod_plan p     on dtp.prod_plan_code = p.prod_plan_code
 		  join  prdt_table pt  on dtp.prdt_code = pt.prdt_code
+		  order by p.prod_plan_date DESC
 		  
   	</select>
   	
@@ -23,6 +24,7 @@
   		from orders o join business_partner b
  		  				on o.bp_code = b.bp_code
 	    where o.prod_plan_yn = 'n'
+	    
   	</select>
   	
   	
@@ -88,10 +90,19 @@
   		select prod_plan_code, prod_plan_name, prod_name, prod_plan_date, order_code
   		from prod_plan
   		where prod_inst_yn = 'n'
+  		order by prod_plan_date desc
   	</select>
-  	
+  	<!-- 생산지시관리 - 생산지시 modal -->
   	<select id="selectProdInst" resultType="ProdVO">
-  		select * from prod_inst
+  		select prod_inst_name
+  			  ,prod_plan_code
+  			  ,prod_inst_code
+  		      ,prod_inst_manager
+  		      ,prod_inst_date
+  		      ,prod_inst_sdate
+  		      ,prod_inst_edate
+		  from prod_inst
+		  order by prod_inst_date desc
   	</select>
   	
   	<select id="selectProdListView" resultType="ProdVO">
@@ -191,7 +202,7 @@
 		where pi.prod_plan_code = #{prodPlanCode}
 		  and dpi.prod_inst_yn = 'n'
   	</select>
-  	
+  	<!-- 생산지시등록 -->
 	<insert id="insertProdInst" parameterType="ProdVO" statementType="CALLABLE">
     <selectKey keyProperty="prodInstCode" resultType="String" order="BEFORE">
         select 'PIN' || LPAD(prod_inst_seq.NEXTVAL, 7, '0') as prodInstCode from dual
@@ -206,18 +217,29 @@
         #{prodInstEdate}
     )}
 	</insert>
-	
+	<!-- 생산지시상세등록 -->
 	<insert id="insertDtProdInst" parameterType="ProdVO">
+		 <selectKey keyProperty="dtProdInstCode" resultType="String" order="BEFORE">
+        	select 'PID' || LPAD(dt_prod_inst_seq.NEXTVAL, 7, '0') as dtProdInstCode from dual
+    	</selectKey>
 	    insert into dt_prod_inst (dt_prod_inst_code, prod_inst_rank, prod_inst_cnt, prod_inst_code, prdt_code)
 	    values(
-	        'PID' || LPAD(dt_prod_inst_seq.NEXTVAL, 7, '0'),
+	        #{dtProdInstCode},
 	        #{prodInstRank},
 	        #{prodInstCnt},
 	        #{prodInstCode},
 	        #{prdtCode}
 	    )
 	</insert> 
-	
+	<!-- 공정흐름도 등록 -->
+	<insert id="insertProcess" parameterType="ProdVO">
+		{call insert_process(
+			#{dtProdInstCode},
+			#{prdtCode},
+			#{prodInstCnt}
+		)}
+	</insert>
+
 	<update id="updateProdInst" parameterType="ProdVO">
   		update prod_inst
   		set prod_inst_name = #{prodInstName},
@@ -259,15 +281,19 @@
 				or pt.prdt_name like '%' || #{prdtName} || '%'
 			</if>
 		</where>
+		order by p.prod_inst_date desc
   	</select>
   	<!-- 키오스크 :생산지시불러오기 -->
   	<select id="selectGetProcess" resultType="ProdVO">
-  		select d.dt_prod_inst_code , d.prdt_code , pt.prdt_name , p.prcs_num , d.prod_inst_cnt , pi.prod_inst_edate 
+  		select d.dt_prod_inst_code , d.prdt_code , pt.prdt_name , p.prcs_num , p.prdt_total , pi.prod_inst_edate 
 		  from dt_prod_inst d join process p
                         on d.dt_prod_inst_code = p.dt_prod_inst_code
                     join prod_inst pi
                         on pi.prod_inst_code = d.prod_inst_code
                     join prdt_table pt
                         on pt.prdt_code = d.prdt_code
+           where p.prdt_total != p.prdt_prod_cnt 
   	</select>
+  	
+  	
   </mapper>

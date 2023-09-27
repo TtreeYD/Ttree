@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessVO;
+import com.yedam.smartree.material.service.MaterialVO;
 import com.yedam.smartree.prod.mapper.ProdMapper;
 import com.yedam.smartree.prod.service.PrdtProdVO;
 import com.yedam.smartree.prod.service.ProdService;
@@ -107,7 +108,7 @@ public class ProdServiceImpl implements ProdService {
 	public List<ProdVO> selectGetProdList(ProdVO vo) {
 		return prodMapper.selectGetProd(vo);
 	}
-
+	//생산지시 등록
 	@Override
 	public int insertProdInst(RequestVO<ProdVO> vo) {
 		int cnt = 0;
@@ -118,8 +119,15 @@ public class ProdServiceImpl implements ProdService {
 		for(ProdVO pvo : vo.getList()) {
 			pvo.setProdInstCode(prodInstCode);
 			prodMapper.insertDtProdInst(pvo);
-			
+			String dtInstCode = pvo.getDtProdInstCode();
+			pvo.setDtProdInstCode(dtInstCode);
 			cnt++;
+			//완제품공정흐름도 등록
+			System.out.println("11111111111111111"+pvo);
+			prodMapper.insertProcess(pvo);
+			
+			
+			
 		}
 		return cnt;
 	}
@@ -165,6 +173,7 @@ public class ProdServiceImpl implements ProdService {
 	public List<ProdVO> selectGetProcess(ProdVO vo) {
 		return prodMapper.selectGetProcess(vo);
 	}
+
 
 	
 	
