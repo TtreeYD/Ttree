@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.yedam.smartree.business.service.BusinessVO;
+import com.yedam.smartree.material.service.MaterialVO;
 
 public interface ProdService {
 	public List<ProdVO> selectProdList();

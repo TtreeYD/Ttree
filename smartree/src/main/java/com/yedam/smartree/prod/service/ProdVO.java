@@ -46,7 +46,7 @@ public class ProdVO {
 	private int prodinstIncompCnt;
 	private String prodInstYn;
 	private int prcsNum;
-	
+	private int prdtTotal;
 	private String prdtName;
 	private int prdtSs;
 	private int prodRank;

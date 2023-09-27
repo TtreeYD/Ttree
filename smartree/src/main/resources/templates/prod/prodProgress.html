@@ -44,12 +44,14 @@ const instGrid = new tui.Grid({
 	scrollX : false,
 	scrollY : false,
 	header:{
-		height:200
+		height:100
 	},
+	rowHeight:100,
 	columns : [
 		{
 	          header: '지시상세코드',
-	          name: 'dtProdInstCode'
+	          name: 'dtProdInstCode',
+	          
 	        },
 	        {
 	          header: '제품코드',
@@ -61,10 +63,10 @@ const instGrid = new tui.Grid({
 	        },
 	        {
 	          header: '지시량',
-	          name: 'prodInstCnt'
+	          name: 'prdtTotal'
 	        },
 	        {
-	          header: '지시우선순위',
+	          header: '공정순서',
 	          name: 'prcsNum'
 	        },
 	        {
