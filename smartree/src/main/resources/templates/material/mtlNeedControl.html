@@ -91,7 +91,7 @@ margin : 10px;
 			<!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
-		
+		<!-- 거래처모달 -->
 			<div id="bpModal" class="modal fade" tabindex="-1" role="dialog">
 			<div class="modal-dialog modal-xl" role="document" style="width:600px; height:500px;" >
 				<div class="modal-content" style="height: 700px">
@@ -113,15 +113,35 @@ margin : 10px;
 			<!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
+		<!-- 자재모달 -->
+		<div id="matModal" class="modal fade" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-xl" role="document" style="width:600px; height:500px;" >
+				<div class="modal-content" style="height: 700px">
+					<div class="container text-center">
+					<br>
+						<h2>자재목록</h2>
+						<div class="modal-header row justify-content-evenly">
+						</div>
+					</div>
+					<div class="modal-body">
+						<div id="matGrid"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="matCloseBtn">닫기</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 		<script>
 			let mtlInfo = [];
 			let bucket = [];
-			
 			// 안전재고 미달목록 출력/숨기기
 			$('#minusBtn').on('click', function (){
         	    $('#mtlLowGrid').toggle("size", 500);
-       	    });	
-			
+       	    });
 		    document.addEventListener("DOMContentLoaded",() => {
 			            
 				// 모달창
@@ -239,6 +259,10 @@ margin : 10px;
                             rowKey,
                             "mtlNow"
                         );
+                        let mtlUnit = needModalGrid.getValue(
+                            rowKey,
+                            "mtlUnit"
+                        );
                         
 
                         mtlLowGrid.removeRow(rowKey);
@@ -264,7 +288,7 @@ margin : 10px;
                             	mtlName: mtlName,
                             	mtlType: mtlType,
                             	mtlCnt: (-1)*mtlNow,
-                            	mtlUnit: 'ea',
+                            	mtlUnit: mtlUnit,
                             	mtlManager: '남태원'
                             },
                             { at: 0 }
@@ -539,7 +563,7 @@ margin : 10px;
 					          })
 		            }
 				        });
-                // 거래처목록 더블클릭시 발주목록으로 이동시키기
+	              // 거래처목록 더블클릭시 발주목록으로 이동시키기
 				bpGrid.on('dblclick', () => {
 				    let rowKey = bpGrid.getFocusedCell().rowKey;
 				    if (rowKey != null && rowKey >= 0) {
@@ -552,6 +576,72 @@ margin : 10px;
 				        $("#closeBtn").click();
 				    }
 				});
+
+		    	// 자재 선택 모달
+				// 자재목록
+				const matGrid = new tui.Grid({
+					el: document.getElementById('matGrid'),
+					data:[],
+					scrollX: false,
+					pagination: true,
+					pageOptions: {
+						useClient: true,
+						perPage: 10,
+					},
+					rowHeaders: ['rowNum'],
+					columns: [{
+						header: '자재코드',
+						name: 'mtlCode'
+					}, {
+						header: '자재명',
+						name: 'mtlName'					
+					}, {
+						header: '분류',
+						name: 'mtlType'					
+					}, {
+						header: '단위',
+						name: 'mtlUnit'
+					}]
+				});
+				// 그리드 클릭시 모달 팝업
+				mtlNeedGrid.on('click', (ev)=>{
+		          if (ev.columnName === 'mtlName' || ev.columnName === 'mtlCode') {
+						$.ajax({
+							url:'/mdm/selectMtlList',
+							success: function (result){
+								matGrid.resetData(result)
+					            setTimeout(() => matGrid.refreshLayout(), 200);
+					            $("#matModal").modal('show');
+							},
+					        error: function (err) {
+					            console.log(err)
+					        }
+							})
+		           		}
+				});
+                // 자재목록 더블클릭시 발주목록으로 이동시키기
+				matGrid.on('dblclick', () => {
+				    let rowKey = matGrid.getFocusedCell().rowKey;
+				    if (rowKey != null && rowKey >= 0) {
+				        let mtlName = matGrid.getValue(rowKey, "mtlName");
+				        let mtlCode = matGrid.getValue(rowKey, "mtlCode");
+				        let mtlUnit = matGrid.getValue(rowKey, "mtlUnit");
+				        let mtlType = matGrid.getValue(rowKey, "mtlType");
+						// 선택한 행에 값이 들어가게 행 키값 지정해주기
+				        let mtlRowKey = mtlNeedGrid.getFocusedCell().rowKey;
+				        if (mtlRowKey != null && mtlRowKey >= 0) {
+				            mtlNeedGrid.setValue(mtlRowKey, "mtlName", mtlName);
+				            mtlNeedGrid.setValue(mtlRowKey, "mtlCode", mtlCode);
+				            mtlNeedGrid.setValue(mtlRowKey, "mtlUnit", mtlUnit);
+				            mtlNeedGrid.setValue(mtlRowKey, "mtlType", mtlType);
+				        }
+				        $("#matCloseBtn").click();
+				    }
+				});
+
+ 
+				
+				
 				
                 // 모달 리스트 클릭시 아래 리스트로 이동
                 needModalGrid.on('dblclick', () => {
@@ -578,11 +668,15 @@ margin : 10px;
                         let bpName = needModalGrid.getValue(
                                 rowKey,
                                 "bpName"
-                            );
+                        );
                         let mtlWishDate = needModalGrid.getValue(
                                 rowKey,
                                 "mtlWishDate"
-                            );
+                        );
+                        let mtlUnit = needModalGrid.getValue(
+                                rowKey,
+                                "mtlUnit"
+                        );
                         
 
                         needModalGrid.removeRow(rowKey);
@@ -610,7 +704,7 @@ margin : 10px;
                             	mtlCnt: mtlCnt,
                             	bpName: bpName,
                             	mtlWishDate: mtlWishDate,
-                            	mtlUnit: 'ea',
+                            	mtlUnit: mtlUnit,
                             	mtlManager: '남태원'
                             },
                             { at: 0 }

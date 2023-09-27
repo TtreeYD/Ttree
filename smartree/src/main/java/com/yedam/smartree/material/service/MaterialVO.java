@@ -26,6 +26,7 @@ public class MaterialVO {
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private Date mtlWishDate; 						// 납기요청일ㅇ
 	private String mtlWhereNm; 						// 상태 ㅇ
+	private String needCode;						// 발주목록 수정을위한 고유번호
 	
 	
 	// 자재목록
