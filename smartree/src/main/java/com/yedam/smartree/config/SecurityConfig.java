@@ -17,10 +17,10 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
-			.authorizeHttpRequests((requests) -> requests	
-				.antMatchers("/", "/login/**","/common/**","/font/**","/startbootstrap/**").permitAll()
-				.anyRequest().authenticated()
-					//.anyRequest().permitAll()
+			      .authorizeHttpRequests((requests) -> requests	
+				//.antMatchers("/", "/login/**","/common/**","/font/**","/startbootstrap/**").permitAll()
+				//.anyRequest().authenticated()
+					.anyRequest().permitAll()
 			)
 			.formLogin((form) -> form
 				.loginPage("/")
