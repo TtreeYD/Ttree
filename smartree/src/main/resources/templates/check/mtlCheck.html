@@ -6,13 +6,33 @@
 <head>
 <meta charset="UTF-8">
 <title>SMARTREE</title>
+<style>
+.pl{
+    width: 118px;
+    border: 1px solid #C4C4C4;
+    box-sizing: border-box;
+    border-radius: 10px;
+    padding: 5px 15px;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 16px;
+}
 
+.pl:focus{
+    border: 1px solid #9B51E0;
+    box-sizing: border-box;
+    border-radius: 10px;
+    outline: 3px solid #F8E4FF;
+    border-radius: 10px;
+}
+</style>
 </head>
 
 <body>
 	<div layout:fragment="content">
 	<h2>자재검사</h2>
-		<label>검색 옵션 : </label> <select id="searchOption">
+		<label>검색 옵션 : </label> <select id="searchOption" class="pl">
 			<option value="mtlChkNO">미검사조회</option>
 			<option value="mtlChkOK">검사조회</option>
 		</select> <!-- <input type="text" id="searchName" placeholder="검색어를 입력하시오"> -->

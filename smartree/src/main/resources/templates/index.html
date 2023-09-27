@@ -1,20 +1,72 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
-
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-
     <meta charset="UTF-8">
     <title>SMARTREE</title>
-    <!-- commit -->
+<link href="../startbootstrap/css/login.css" rel="stylesheet" type="text/css">
 </head> 
 
 <body >
-	<div layout:fragment="content">
-    	<h1>초기페이지입니다</h1>
-	</div>
+    	<div id="container" class="container">
+    <!-- FORM SECTION -->
+    <div class="row">
+      <!-- SIGN IN -->
+      <div class="col align-items-center flex-col sign-in">
+        <div class="form-wrapper align-items-center">
+          <div class="form sign-in">
+            <div class="input-group">
+              <i class='bx bxs-user'></i>
+              <input type="text" placeholder="Username">
+            </div>
+            <div class="input-group">
+              <i class='bx bxs-lock-alt'></i>
+              <input type="password" placeholder="Password">
+            </div>
+            <button>
+              Sign in
+            </button>
+          </div>
+        </div>
+        <div class="form-wrapper">
+    
+        </div>
+      </div>
+      <!-- END SIGN IN -->
+    </div>
+    <!-- END FORM SECTION -->
+    <!-- CONTENT SECTION -->
+    <div class="row content-row">
+      <!-- SIGN IN CONTENT -->
+      <div class="col align-items-center flex-col">
+        <div class="text sign-in">
+          <h2>
+            Welcome
+          </h2>
+  
+        </div>
+        <div class="img sign-in">
+    
+        </div>
+      </div>
+      <!-- END SIGN IN CONTENT -->
+    </div>
+    <!-- END CONTENT SECTION -->
+  </div>
+  
+  <script>
+	  let container = document.getElementById('container')
+	
+	  toggle = () => {
+	    container.classList.toggle('sign-in')
+	  }
+	
+	  setTimeout(() => {
+	    container.classList.add('sign-in')
+	  }, 200)	
+  
+  
+  </script>
+  
 </body>
 
 </html>

@@ -85,9 +85,10 @@
 			FROM emp_list
 			WHERE emp_dept = #{empDept}			
 		</selectKey>
-			INSERT INTO emp_list(emp_id, emp_name, emp_dept, emp_class, emp_phone)
+			INSERT INTO emp_list(emp_id, emp_pw, emp_name, emp_dept, emp_class, emp_phone)
 			values(
 					#{empId}
+					, #{empPw}
 					, #{empName}
 					, #{empDept}
 					, #{empClass}
