@@ -96,6 +96,18 @@
 					)
 	</insert>
 	
+	<!-- 사원id 단건조회 -->
+	<select id="selectEmp">
+		SELECT emp_id,
+			   emp_name,
+			   emp_dept,
+			   emp_class,
+			   emp_pw,
+			   emp_phone,
+			   'ROLE_'||UPPER(emp_dept) emp_auth
+		FROM   emp_list
+	</select>
+	
 	<!-- 제품관리 -->
 	<!-- 제품 리스트 -->
 	<select id="selectPrdtList">
