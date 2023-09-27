@@ -26,6 +26,44 @@
 
 <script src="https://kit.fontawesome.com/4791395687.js" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="crossorigin="anonymous"></script>
+<style>
+* {
+text-align:center;
+}
+input[type="range"] {
+overflow: hidden;
+height: 30px;
+-webkit-appearance: none;
+margin: 10px 0;
+width: 100%;
+background: transparent;
+
+
+}
+
+input[type="range"]:focus {
+outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+width: 100%;
+height: 100%;
+cursor: pointer;
+border-radius: 5px;
+border: 2px solid #d64242;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+-webkit-appearance: none;
+width: 0px;
+height:0px;
+background: #ff494f;
+box-shadow: 1px 1px 7px #d16a6e;
+cursor: pointer;
+box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
+}
+
+</style>
 </head>
 
 <body>
@@ -34,18 +72,44 @@
             <h1>생산키오스크</h1>
             <i class="fa-solid fa-house"></i>
         </div>
-    </div>
-<h1>생산진행</h1>
+ </div>
+ <div style="overflow:scroll;height:100vh">
 <div id="instGrid"></div>
+ </div>
 
 <script>
+class CustomSliderRenderer {
+    constructor(props) {
+      const el = document.createElement('input');
+      const { min, max } = props.columnInfo.renderer.options;
+
+      el.type = 'range';
+      el.min = String(min);
+      el.max = String(max);
+      el.disabled = true;
+
+      this.el = el;
+      this.render(props);
+    }
+
+    getElement() {
+      return this.el;
+    }
+
+    render(props) {
+      this.el.value = String(props.value);
+    }
+}
 const instGrid = new tui.Grid({
 	el : document.getElementById('instGrid'),
 	scrollX : false,
 	scrollY : false,
 	header:{
-		height:100
-	},
+		height:100,
+		width:20
+		
+	}
+	,
 	rowHeight:100,
 	columns : [
 		{
@@ -66,6 +130,17 @@ const instGrid = new tui.Grid({
 	          name: 'prdtTotal'
 	        },
 	        {
+	          header: '진행상황',
+	          name: 'prcsPct',
+	          renderer: {
+	              type: CustomSliderRenderer,
+	              options: {
+	                min: 0,
+	                max: 100
+	              }
+	            }
+	        },
+	        {
 	          header: '공정순서',
 	          name: 'prcsNum'
 	        },
@@ -82,6 +157,13 @@ $(document).ready(function (){
 		method:'GET',
 		success:function(result){
 			console.log(result);
+			for(let data of result){
+				if(data.prdtProdCnt){
+					data.prcsPct = (data.prdtProdCnt/data.prdtTotal)*100;
+				} else {
+					data.prcsPct = 0;	
+				}
+			}
 			instGrid.resetData(result);
 		},
 		error:function(err){

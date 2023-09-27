@@ -118,7 +118,13 @@
 		let rowNum;			// 해당 rowNum 값을 담기위해 만든 변수
 		let grid, grid2, grid3, grid4, grid5, grid6;
         const header = ['prodPlanName','prodPlanDate','prodPlanSdate','prodPlanEdate'];
-        
+        toastr.options = {
+	  			  positionClass: "toast-top-center",
+	  			  escapeHtml: true,
+	  			  closeButton: true,
+	 			  newestOnTop: false,
+	  			  timeOut: 1250
+	  			};
         window.onload=function(){
 	    const grid = new tui.Grid({
 	    	// 생산계획 등록및 수정 그리드
@@ -336,7 +342,7 @@
 					contentType : 'application/json',
 					data : JSON.stringify(data),
 		      		success:function(result){
-		      			alert("등록및 수정완료");
+		      			toastr.success("등록및 수정완료");
 		      			resetList();
 		      		},
 		      		error:function(err){
@@ -356,7 +362,7 @@
 					data : JSON.stringify(data),
 					
 		      		success:function(result){
-		      			alert("저장완료");
+		      			toastr.success("저장완료");
 		      			resetList();
 		      		},
 		      		error:function(err){
@@ -389,7 +395,7 @@
 					contentType : 'application/json',
 					data : JSON.stringify(data),
 					success:function(result){
-						alert("전체삭제완료");
+						toastr.success("전체삭제완료");
 						resetList();
 					},
 					error:function(err){
@@ -407,7 +413,7 @@
 					contentType : 'application/json',
 					data : JSON.stringify(data),
 					success:function(result){
-						alert(result + " 건 삭제완료");
+						toastr.success(result + " 건 삭제완료");
 						resetList();
 					},
 					error:function(err){
@@ -512,6 +518,7 @@
 			if(ev.rowKey==undefined){
         		return;
         	}
+			
 			let data = grid6.getData()[ev.rowKey]
 			
 			data.prodPlanCode = $('#prodPlanCode').val();
@@ -520,7 +527,7 @@
 			 let check = true; 
 			 newGrid.forEach((order) => {
 						if(order.prdtCode == data.prdtCode) {
-							alert('이미 같은 제품이 있습니다.')
+							toastr.warning('이미 같은 제품이 있습니다.')
 							check=false;
 							return;
 						}
