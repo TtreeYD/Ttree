@@ -164,7 +164,7 @@
 		        },
 		        {
 		          header: '요구량',
-		          name: 'mtlNeed'
+		          name: 'mtlTotalNeed'
 		        },
 		        {
 		          header: '홀드수량',
@@ -422,6 +422,7 @@
 		})
 		
 		let mtlNeed = [];
+		let mtlZero = [];
 		// 생산계획 모달창 더블클릭
 		grid5.on('dblclick',(ev)=>{
 			if(ev.rowKey == undefined){
@@ -434,11 +435,16 @@
 				method : 'get',
 				data : { prodPlanCode : prodPlanCode },
 				success : function(result){
-					console.log(result);
 					getProdPlanCode = result.list[0].prodPlanCode;
-					console.log(getProdPlanCode)
 					mtlNeed = result.mtlNeed
-					grid3.resetData(mtlNeed)
+					
+					// 중복제거후 자재표에 넣기
+					mtlZero = result.mtlNeed.filter(function(item1, idx1){
+						return result.mtlNeed.findIndex(function(item2, idx2){
+							return item1.mtlCode == item2.mtlCode
+						}) == idx1;
+					})
+					grid3.resetData(mtlZero)
 					grid.resetData(result.list);
 				 	$("#prodModal").modal('hide');	
 				},
@@ -450,14 +456,25 @@
 		
 		grid.on('afterChange', (ev) => {
 			console.log(grid.getData())
-			let mtlNeedList = [];
+			grid3.resetData(mtlZero)
+			let mtlNeedList = {}
+			console.log(mtlZero)
 			for(let data of grid.getData()){
 				for(let need of mtlNeed){
-					
+					if(data.prdtCode === need.prdtCode){
+						//console.log(need.mtlCode+' '+data.prodInstCnt*need.mtlNeed)
+						if(!mtlNeedList[need.mtlCode]){
+							mtlNeedList[need.mtlCode] = data.prodInstCnt*need.mtlNeed
+						} else{
+							mtlNeedList[need.mtlCode] += data.prodInstCnt*need.mtlNeed
+						}
+					}
 				}
-				data.prdtCode
-				data.prodInstCnt
 			}
+			for(let data of grid3.getData()){
+				grid3.setValue(data.rowKey,"mtlTotalNeed",mtlNeedList[data.mtlCode])
+			}
+			console.log(mtlNeedList)
 		})
 		
 		// 오늘날짜 input에 넣기
