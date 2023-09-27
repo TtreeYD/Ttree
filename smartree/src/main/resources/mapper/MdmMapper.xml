@@ -81,7 +81,7 @@
 	<!-- 사원 등록 -->
 	<insert id="addEmp" parameterType="EmpVO">
 		<selectKey keyProperty="empId" resultType="String" order="BEFORE">
-			SELECT #{empDept} || NVL( LPAD( SUBSTR( MAX(emp_id), 5) +1, 4, '0'), '0001')
+			SELECT #{empDept} || NVL( LPAD( MAX(SUBSTR(emp_id, 5)) +1, 4, '0'), '0001')
 			FROM emp_list
 			WHERE emp_dept = #{empDept}			
 		</selectKey>

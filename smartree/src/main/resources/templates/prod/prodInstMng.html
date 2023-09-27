@@ -5,7 +5,7 @@
 	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>생산계획관리</title>
+<title>생산지시관리</title>
 </head>
 <style>
 </style>
@@ -155,19 +155,20 @@
 	      	columns: [
 	        	{
 		          header: '자재코드',
-		          name: ''
+		          name: 'mtlCode',
+		          hidden: true
 		        },
 		        {
 		          header: '자재명',
-		          name: ''
+		          name: 'mtlName'
 		        },
 		        {
-		          header: '재고수량',
-		          name: ''
+		          header: '요구량',
+		          name: 'mtlNeed'
 		        },
 		        {
 		          header: '홀드수량',
-		          name: ''
+		          name: 'holdingCnt'
 		        }
 	      	]
 	    });
@@ -415,6 +416,8 @@
 				}
 			})
 		})
+		
+		let mtlNeed = [];
 		// 생산계획 모달창 더블클릭
 		grid5.on('dblclick',(ev)=>{
 			if(ev.rowKey == undefined){
@@ -428,9 +431,11 @@
 				data : { prodPlanCode : prodPlanCode },
 				success : function(result){
 					console.log(result);
-					getProdPlanCode = result[0].prodPlanCode;
+					getProdPlanCode = result.list[0].prodPlanCode;
 					console.log(getProdPlanCode)
-					grid.resetData(result);
+					mtlNeed = result.mtlNeed
+					grid3.resetData(mtlNeed)
+					grid.resetData(result.list);
 				 	$("#prodModal").modal('hide');	
 				},
 				error : function(err){
@@ -438,6 +443,19 @@
 				}
 			})
 		})
+		
+		grid.on('afterChange', (ev) => {
+			console.log(grid.getData())
+			let mtlNeedList = [];
+			for(let data of grid.getData()){
+				for(let need of mtlNeed){
+					
+				}
+				data.prdtCode
+				data.prodInstCnt
+			}
+		})
+		
 		// 오늘날짜 input에 넣기
 		today = new Date();
 		console.log("today.toISOString() >>>" + today.toISOString());

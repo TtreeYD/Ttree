@@ -1,16 +1,15 @@
 package com.yedam.smartree.prod.web;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.business.service.BusinessVO;
-import com.yedam.smartree.prod.service.PrdtProdVO;
 import com.yedam.smartree.prod.service.ProdService;
 import com.yedam.smartree.prod.service.ProdVO;
 import com.yedam.smartree.prod.service.RequestVO;
@@ -97,7 +96,7 @@ public class ProdRestController {
 	
 	// 생산지시에 미지시생산계획
 	@GetMapping("/selectGetProdPlan")
-	public List<ProdVO> selectGetProdPlan(ProdVO vo){
+	public Map<String, Object> selectGetProdPlan(ProdVO vo){
 		return service.selectGetProdList(vo);
 	}
 	
