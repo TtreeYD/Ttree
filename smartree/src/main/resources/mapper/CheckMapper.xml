@@ -62,7 +62,7 @@
 	JOIN prod_inst i 
 	  ON d.prod_inst_code = i.prod_inst_code
 	  
-	WHERE prdt_chk_sit = 'n'
+	WHERE c.prdt_chk_sit = 'n'
 
   </select>
   

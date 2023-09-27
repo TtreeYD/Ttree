@@ -2,7 +2,10 @@ package com.yedam.smartree.mdm.web;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,6 +32,9 @@ import com.yedam.smartree.prod.service.RequestVO;
 @RestController
 public class CommonRestController {
 
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
 	@Autowired
 	MdmService mdmService;
 
@@ -92,7 +98,7 @@ public class CommonRestController {
 	public List<EmpVO> selectEmpList(String empDept, String empName) {
 		return mdmService.selectEmpList(empDept, empName);
 	}
-
+	
 	//	사원 등록
 	@PostMapping("/insertEmp")
 	public String addEmp(@RequestBody EmpVO empInfo) {
