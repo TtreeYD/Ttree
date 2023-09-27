@@ -2,10 +2,7 @@ package com.yedam.smartree.mdm.web;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,9 +28,6 @@ import com.yedam.smartree.prod.service.RequestVO;
 @RequestMapping("/mdm")
 @RestController
 public class CommonRestController {
-
-	@Autowired
-	PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	MdmService mdmService;
