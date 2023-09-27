@@ -5,7 +5,7 @@
 	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>생산계획관리</title>
+<title>생산지시관리</title>
 </head>
 <style>
 </style>
@@ -162,19 +162,20 @@
 	      	columns: [
 	        	{
 		          header: '자재코드',
-		          name: ''
+		          name: 'mtlCode',
+		          hidden: true
 		        },
 		        {
 		          header: '자재명',
-		          name: ''
+		          name: 'mtlName'
 		        },
 		        {
-		          header: '재고수량',
-		          name: ''
+		          header: '요구량',
+		          name: 'mtlTotalNeed'
 		        },
 		        {
 		          header: '홀드수량',
-		          name: ''
+		          name: 'holdingCnt'
 		        }
 	      	]
 	    });
@@ -426,6 +427,9 @@
 				}
 			})
 		})
+		
+		let mtlNeed = [];
+		let mtlZero = [];
 		// 생산계획 모달창 더블클릭
 		grid5.on('dblclick',(ev)=>{
 			if(ev.rowKey == undefined){
@@ -438,10 +442,17 @@
 				method : 'get',
 				data : { prodPlanCode : prodPlanCode },
 				success : function(result){
-					console.log(result);
-					getProdPlanCode = result[0].prodPlanCode;
-					console.log(getProdPlanCode)
-					grid.resetData(result);
+					getProdPlanCode = result.list[0].prodPlanCode;
+					mtlNeed = result.mtlNeed
+					
+					// 중복제거후 자재표에 넣기
+					mtlZero = result.mtlNeed.filter(function(item1, idx1){
+						return result.mtlNeed.findIndex(function(item2, idx2){
+							return item1.mtlCode == item2.mtlCode
+						}) == idx1;
+					})
+					grid3.resetData(mtlZero)
+					grid.resetData(result.list);
 				 	$("#prodModal").modal('hide');	
 				},
 				error : function(err){
@@ -449,6 +460,30 @@
 				}
 			})
 		})
+		
+		grid.on('afterChange', (ev) => {
+			console.log(grid.getData())
+			grid3.resetData(mtlZero)
+			let mtlNeedList = {}
+			console.log(mtlZero)
+			for(let data of grid.getData()){
+				for(let need of mtlNeed){
+					if(data.prdtCode === need.prdtCode){
+						//console.log(need.mtlCode+' '+data.prodInstCnt*need.mtlNeed)
+						if(!mtlNeedList[need.mtlCode]){
+							mtlNeedList[need.mtlCode] = data.prodInstCnt*need.mtlNeed
+						} else{
+							mtlNeedList[need.mtlCode] += data.prodInstCnt*need.mtlNeed
+						}
+					}
+				}
+			}
+			for(let data of grid3.getData()){
+				grid3.setValue(data.rowKey,"mtlTotalNeed",mtlNeedList[data.mtlCode])
+			}
+			console.log(mtlNeedList)
+		})
+		
 		// 오늘날짜 input에 넣기
 		today = new Date();
 		console.log("today.toISOString() >>>" + today.toISOString());

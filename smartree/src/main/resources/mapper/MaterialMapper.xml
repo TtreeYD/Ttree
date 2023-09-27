@@ -10,6 +10,7 @@
 		FROM mtl_need n 
 		JOIN business_partner b ON n.bp_code = b.bp_code
 		GROUP BY b.bp_name, n.mtl_date, n.mtl_manager
+		ORDER BY n.mtl_date DESC
   	</select>
   	
   	<!-- 재고목록 전체조회 -->
@@ -38,7 +39,7 @@
 		WITH c as (SELECT c.mtl_code,SUM(mtl_lot_cnt)mtl_lot_cnt 
 		           FROM mtl_container c 
 		      	   GROUP BY c.mtl_code)
-		SELECT c.mtl_code, get_common(mtl_type, '003') AS mtl_type, t.mtl_name, mtl_lot_cnt, mtl_ss, (mtl_lot_cnt - mtl_ss)mtl_now
+		SELECT c.mtl_code, get_common(mtl_type, '003') AS mtl_type, t.mtl_name, mtl_lot_cnt, mtl_ss, (mtl_lot_cnt - mtl_ss)mtl_now, mtl_unit 
 		FROM c
 		JOIN mtl_table t ON c.mtl_code = t.mtl_code
 		<![CDATA[
@@ -50,13 +51,14 @@
   	<select id="selectChkMtl" resultType="MaterialVO">
 		SELECT mtl_code, mtl_name, mtl_pass_cnt, mtl_chk_date, mtl_chk_manager, mtl_chk_code, get_common(mtl_chk_status, '009') AS mtl_status_nm
 		FROM mtl_chk JOIN mtl_table USING(mtl_code)
+		WHERE mtl_chk_status = 'MT02'
   	</select>
   	
   	
   	
   	<!-- 발주관리 insert -->
   	<insert id="insertNeedMtl" parameterType="MaterialVO" statementType="CALLABLE">
-		INSERT INTO mtl_need (mtl_code, bp_code, mtl_name, mtl_cnt, mtl_unit, mtl_manager, mtl_wish_date, mtl_type)
+		INSERT INTO mtl_need (mtl_code, bp_code, mtl_name, mtl_cnt, mtl_unit, mtl_manager, mtl_wish_date, mtl_type, need_code)
 		VALUES (
 		    #{mtlCode},
 		    (SELECT bp_code FROM business_partner WHERE bp_name = #{bpName}),
@@ -65,7 +67,8 @@
 		    #{mtlUnit},
 		    #{mtlManager},
 		    #{mtlWishDate},
-		    #{mtlType}
+		    #{mtlType},
+		    'need'||mtl_seq.nextval
 		)
   	</insert>
   	
@@ -91,19 +94,6 @@
          FROM mtl_container
             where mtl_code = #{mtlCode}
 		</selectKey>
-	<choose>
-        <when test="#{mtlLotNum} != null">
-            UPDATE mtl_container
-            SET
-                mtl_code = #{mtlCode},
-                mtl_in_cnt = #{mtlInCnt},
-                mtl_in_date = #{mtlInDate},
-                mtl_manager = #{mtlManager},
-                mtl_lot_cnt = #{mtlInCnt},
-                mtl_chk_code = #{mtlChkCode}
-            WHERE mtl_code = #{mtlCode} AND mtl_lot_num = #{mtlLotNum}
-        </when>
-        <otherwise>
             INSERT INTO mtl_container(mtl_lot_num, mtl_code, mtl_in_cnt, mtl_in_date, mtl_manager, mtl_lot_cnt, mtl_chk_code )
             VALUES (
                 #{mtlLotNum},
@@ -112,10 +102,8 @@
                 #{mtlInDate},
                 #{mtlManager},
                 #{mtlInCnt},
-                'MT03'
+                #{mtlChkCode}
             )
-        </otherwise>
-    </choose>
 	</insert> 	
   	
   	<!-- 입고관리 update -->
@@ -176,7 +164,7 @@
   	
   	<!-- 발주목록 발주서별 자재내역 출력기능 -->
   	<select id="getPaperMtl" parameterType="MaterialVO">
-		SELECT b.bp_code, b.bp_name, get_common(t.mtl_type, '003') AS mtl_type, n.mtl_code, t.mtl_name, t.mtl_unit, n.mtl_cnt, n.mtl_date , get_common(n.mtl_where, '009')mtl_where
+		SELECT b.bp_code, b.bp_name, get_common(t.mtl_type, '003') AS mtl_type, n.mtl_code, t.mtl_name, t.mtl_unit, n.mtl_cnt, n.mtl_date , get_common(n.mtl_where, '009')mtl_where, n.need_code
 		FROM mtl_need n JOIN mtl_table t ON n.mtl_code = t.mtl_code
 		JOIN business_partner b ON b.bp_code = n.bp_code
 		WHERE b.bp_name = #{bpName} AND TO_CHAR(n.mtl_date, 'yy/MM/dd') = #{mtlDate}
@@ -191,7 +179,7 @@
 		<if test="startMtlNeedDate != null and endMtlNeedDate != null">
     		AND n.mtl_date BETWEEN TO_CHAR(#{startMtlNeedDate},'YY/MM/DD') AND TO_CHAR(#{endMtlNeedDate},'YY/MM/DD')
   		</if>
-  		GROUP BY b.bp_name, n.mtl_date, n.mtl_manager, n.mtl_wish_date
+  		GROUP BY b.bp_name, n.mtl_date, n.mtl_manager
 	</select>
 	<!-- 재고조회 검색기능 -->
   	<select id="searchCont" parameterType="MaterialVO">

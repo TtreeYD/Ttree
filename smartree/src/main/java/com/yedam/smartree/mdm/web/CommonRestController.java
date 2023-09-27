@@ -28,7 +28,7 @@ import com.yedam.smartree.prod.service.RequestVO;
 @RequestMapping("/mdm")
 @RestController
 public class CommonRestController {
-
+	
 	@Autowired
 	MdmService mdmService;
 
@@ -92,7 +92,7 @@ public class CommonRestController {
 	public List<EmpVO> selectEmpList(String empDept, String empName) {
 		return mdmService.selectEmpList(empDept, empName);
 	}
-
+	
 	//	사원 등록
 	@PostMapping("/insertEmp")
 	public String addEmp(@RequestBody EmpVO empInfo) {

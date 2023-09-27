@@ -36,7 +36,7 @@
         #{orderCode},
         #{prodPlanCode},
         #{prodPlanName},
-        #{prodPlanDate},
+        NVL(#{prodPlanDate},sysdate),
         #{prodName},
         #{prodPlanSdate},
         #{prodPlanEdate},
@@ -172,6 +172,17 @@
                  join prdt_table prdt
                  on dtp.prdt_code = prdt.prdt_code
 		where p.prod_plan_code = #{prodPlanCode}
+  	</select>
+  	
+  	<select id="getMtlNeed" resultType="MtlNeedVO">
+  		SELECT prdt_code, mtl_code, get_mtl_name(mtl_code) mtl_name, SUM(mtl_cnt) mtl_need
+		FROM bom_detail JOIN bom_table USING(bom_code)
+		                JOIN dt_prod_plan USING(prdt_code)
+		                JOIN prod_plan USING(prod_plan_code)
+		WHERE prod_plan_code = #{prodPlanCode}
+		AND mtl_cnt is not null
+		GROUP BY prdt_code, mtl_code
+		ORDER BY prdt_code
   	</select>
   	
   	<select id="selectGetProdInst" resultType="ProdVO">

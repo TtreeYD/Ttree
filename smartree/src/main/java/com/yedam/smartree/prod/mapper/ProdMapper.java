@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.yedam.smartree.business.service.BusinessVO;
 import com.yedam.smartree.material.service.MaterialVO;
+import com.yedam.smartree.prod.service.MtlNeedVO;
 import com.yedam.smartree.prod.service.PrdtProdVO;
 import com.yedam.smartree.prod.service.ProdVO;
 
@@ -59,5 +60,10 @@ public interface ProdMapper {
 	public List<ProdVO> selectGetProcess(ProdVO vo);
 
 	public int insertProcess(ProdVO pvo);
+
+	
+	
+	// 자재 요구량 계산
+	public List<MtlNeedVO> getMtlNeed(ProdVO vo);
 
 }

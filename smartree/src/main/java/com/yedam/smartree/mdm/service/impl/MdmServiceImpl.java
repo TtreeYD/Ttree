@@ -20,6 +20,10 @@ import com.yedam.smartree.prod.service.RequestVO;
 @Service
 public class MdmServiceImpl implements MdmService {
 
+	/*
+	 * @Autowired PasswordEncoder passwordEncoder;
+	 */
+	
 	@Autowired
 	MdmMapper mdmMapper;
 	
@@ -61,11 +65,13 @@ public class MdmServiceImpl implements MdmService {
 	public List<EmpVO> selectEmpList(String empDept, String empName) {
 		return mdmMapper.selectEmpList(empDept,empName);
 	}
+			
+	/*
+	 * @Override public int addEmp(EmpVO vo) {
+	 * vo.setEmpPw(passwordEncoder.encode(vo.getEmpPw())); return
+	 * mdmMapper.addEmp(vo); }
+	 */
 	
-	@Override
-	public int addEmp(EmpVO vo) {
-		return mdmMapper.addEmp(vo);
-	}
 	
 	// 제품관리
 	@Override
@@ -251,6 +257,12 @@ public class MdmServiceImpl implements MdmService {
 			cnt += mdmMapper.insertBomDt(vo);
 		}
 		return cnt;
+	}
+
+	@Override
+	public int addEmp(EmpVO vo) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

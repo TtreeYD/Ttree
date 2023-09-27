@@ -37,7 +37,7 @@ float: right;
 			<div id="mtlNeedGrid"></div>
 		</div>
 		<div class="col-7">
-			<h2 style="margin-bottom:56px;">발주자재</h2>
+			<h2 style="margin-bottom: 60px;">발주자재</h2>
 			<div id=mtlNeedListGrid></div>
 		</div>
 
@@ -83,7 +83,7 @@ float: right;
 					} ]
 				});
 				
-				const header = ['mtlWhere','mtlWishDate','bpName', 'mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode', 'mtlName']
+				const header = ['mtlWhere','mtlWishDate','bpName', 'mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode', 'mtlName','startMtlNeedDate','endMtlNeedDate','startMtlWishDate','endMtlWishDate','mtlWishDate','needCode']
 				
 				// lot목록 그리드
 				const mtlNeedListGrid = new tui.Grid({
@@ -150,7 +150,6 @@ float: right;
 		            //날짜변환
 		            $(result).each(function (idx, obj) {
 		              for (let head of header) {
-
 		                if (head.slice(-4).toLowerCase() == 'date') {
 		                  obj[head] = getDate(obj[head]);
 		                }
