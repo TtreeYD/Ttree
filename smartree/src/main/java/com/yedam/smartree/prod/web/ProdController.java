@@ -2,8 +2,10 @@ package com.yedam.smartree.prod.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.yedam.smartree.prod.service.ProdService;
 
@@ -51,6 +53,11 @@ public class ProdController {
 	@GetMapping("/prodSituation")
 	public String prodSituation() {
 		return "prod/prodSituation";
+	}
+	@GetMapping("/prcrDtProgress")
+	public String prcrDtProgress(Model model,@RequestParam("data") String data) {
+		model.addAttribute("data" , data);
+		return "prod/prcrDtProgress";
 	}
 
 }

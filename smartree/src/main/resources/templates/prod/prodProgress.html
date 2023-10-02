@@ -70,7 +70,7 @@ box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
 <div class="header">
         <div class="header-content">
             <h1>생산키오스크</h1>
-            <i class="fa-solid fa-house"></i>
+            <i class="fa-solid fa-house" onclick="backHome()"></i>
         </div>
  </div>
  <div style="overflow:scroll;height:100vh">
@@ -105,14 +105,18 @@ const instGrid = new tui.Grid({
 	scrollX : false,
 	scrollY : false,
 	header:{
-		height:100,
-		width:20
+		height:100
 		
 	}
 	,
 	rowHeight:100,
 	columns : [
-		{
+			{
+	          header: '공정흐름도코드',
+	          name: 'prcsCode',
+	          hidden: true
+	        },
+			{
 	          header: '지시상세코드',
 	          name: 'dtProdInstCode',
 	          
@@ -170,7 +174,16 @@ $(document).ready(function (){
 			console.log(err);
 		}
 	})
+	//공정 실적 상세 클릭
+	instGrid.on('click',function(ev){
+		let data = instGrid.getValue(ev.rowKey,  'prcsCode');
+		window.location.href = '/prod/prcrDtProgress?data=' + encodeURIComponent(data);
+	})
+	
 })
+	function backHome(){
+		$(location).attr('href', '/prod/prcrKiosk');
+	}
 </script>
 </body>
 </html>

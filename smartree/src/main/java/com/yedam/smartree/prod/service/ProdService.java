@@ -29,6 +29,8 @@ public interface ProdService {
 	public List<ProdVO> selectGetDtInst(ProdVO vo);
 	////키오스크 :생산지시불러오기
 	public List<ProdVO> selectGetProcess(ProdVO vo);
+	//공정흐름상세보기
+	public List<ProdVO> getProcess(ProdVO vo);
 	
 	//public int updateProd(RequestVO<ProdVO> vo);
 }
