@@ -58,6 +58,54 @@
 			</div>
 		</div>
 		<script>
+			
+			class CustomSliderRenderer {
+				constructor(props) {
+					const el = document.createElement('input');
+				
+				   el.type = 'button';
+				   if(!props.value){
+						props.value = '  초기화  ';
+				   }
+				   this.el = el;
+				   this.render(props);
+				   $(el).on('click', () => {
+						let eid = grid.getValue(props.rowKey,'empId')
+						if(eid='ST010001'){
+							alert('관리자의 비밀번호는 초기화 할 수 없습니다.')
+							return
+						}
+						let newPw = String(Math.floor(Math.random()*10000))
+						newPw = newPw.padStart(4,'0');
+						let vo = {}
+						vo.empId = eid;
+						vo.empPw = newPw;
+						$.ajax({
+							url : "/mdm/resetPw",
+							type: "POST",
+							contentType: "application/json",
+							data: JSON.stringify(vo),
+							success: result => {
+								if(result===1){
+									alert('새로운 비밀번호는 '+newPw+'입니다.')
+								}
+							},
+							error: err => console.log(err)
+
+						})
+					});
+					
+				}
+				
+				getElement() {
+					return this.el;
+				}
+				
+				render(props) {
+					this.el.value = String(props.value);
+				}
+			}
+			
 			// 부서정보 불러오기
 			$.ajax({
 				url: "/mdm/selectCodeDetail",
@@ -109,9 +157,13 @@
 						name: 'empPhone'
 					},
 					{
-						header: '초기화',
-						name: '',
-						width: 100
+						header: '비밀번호 초기화',
+						name: 'reset',
+						width: 150,
+						align: 'center',
+						renderer:{
+							type : CustomSliderRenderer
+						}
 					},
 				],
 			});

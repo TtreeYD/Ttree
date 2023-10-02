@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.business.service.BusinessVO;
+
+import com.yedam.smartree.prod.service.PrcsResultVO;
+
 import com.yedam.smartree.prod.service.ProdService;
 import com.yedam.smartree.prod.service.ProdVO;
 import com.yedam.smartree.prod.service.RequestVO;
@@ -132,5 +135,9 @@ public class ProdRestController {
 		return service.getProcess(vo);
 	}
 	
-	
+	// 실적조회
+	@GetMapping("/selectPrcsResult")
+	public List<PrcsResultVO> selectPrcsResult(){
+		return service.selectPrcsResult();
+	}
 }

@@ -54,10 +54,16 @@ public class ProdController {
 	public String prodSituation() {
 		return "prod/prodSituation";
 	}
+
 	@GetMapping("/prcrDtProgress")
 	public String prcrDtProgress(Model model,@RequestParam("data") String data) {
 		model.addAttribute("data" , data);
 		return "prod/prcrDtProgress";
+
+	@GetMapping("/prodPrcsResult")
+	public String prodPrcsResult() {
+		return "prod/prodPrcsResult";
+
 	}
 
 }

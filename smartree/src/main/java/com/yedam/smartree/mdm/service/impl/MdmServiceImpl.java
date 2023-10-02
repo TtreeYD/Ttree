@@ -72,6 +72,11 @@ public class MdmServiceImpl implements MdmService {
 	 * mdmMapper.addEmp(vo); }
 	 */
 	
+	@Override
+	public int resetPw(EmpVO vo) {
+		return mdmMapper.resetPw(vo);
+	}
+	
 	
 	// 제품관리
 	@Override
@@ -264,5 +269,7 @@ public class MdmServiceImpl implements MdmService {
 		// TODO Auto-generated method stub
 		return 0;
 	}
+
+	
 
 }

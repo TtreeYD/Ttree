@@ -28,6 +28,7 @@ public interface MdmMapper {
 	List<EmpVO> selectEmpList(@Param("empDept")String empDept, @Param("empName")String empName);
 	int addEmp(EmpVO vo);
 	EmpVO selectEmp(String id);
+	int resetPw(EmpVO vo);
 	
 	// 제품관리
 	List<MdmPrdtVO> selectPrdtList();

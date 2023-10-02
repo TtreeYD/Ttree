@@ -65,7 +65,11 @@
 	
 	<!-- 사원 리스트 -->
 	<select id="selectEmpList" resultType="EmpVO">
-		SELECT *
+		SELECT 	emp_id,
+				   emp_name,
+				   get_common(emp_dept, '001') emp_dept,
+				   emp_class,
+				   emp_phone
 		FROM emp_list
 		<where>
 			<if test="empDept !=null and !empDept.equals('')">
@@ -95,6 +99,12 @@
 					, #{empPhone}
 					)
 	</insert>
+	<!-- 비밀번호 초기화 -->
+	<update id="resetPw" parameterType="EmpVO">
+		UPDATE emp_list
+		SET	 emp_pw = #{empPw}
+		WHERE	 emp_id = #{empId}
+	</update>
 	
 	<!-- 사원id 단건조회 -->
 	<select id="selectEmp">
@@ -107,6 +117,7 @@
 			   'ROLE_'||UPPER(emp_dept) emp_auth
 		FROM   emp_list
 	</select>
+	
 	
 	<!-- 제품관리 -->
 	<!-- 제품 리스트 -->

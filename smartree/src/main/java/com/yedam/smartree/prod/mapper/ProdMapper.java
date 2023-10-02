@@ -3,8 +3,8 @@ package com.yedam.smartree.prod.mapper;
 import java.util.List;
 
 import com.yedam.smartree.business.service.BusinessVO;
-import com.yedam.smartree.material.service.MaterialVO;
 import com.yedam.smartree.prod.service.MtlNeedVO;
+import com.yedam.smartree.prod.service.PrcsResultVO;
 import com.yedam.smartree.prod.service.PrdtProdVO;
 import com.yedam.smartree.prod.service.ProdVO;
 
@@ -68,4 +68,8 @@ public interface ProdMapper {
 	//공정흐름상세보기
 	public List<ProdVO> getProcess(ProdVO vo);
 
+	
+	// 실적조회
+	List<PrcsResultVO> selectPrcsResult();
+	
 }

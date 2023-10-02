@@ -12,6 +12,7 @@ import com.yedam.smartree.business.service.BusinessVO;
 import com.yedam.smartree.material.service.MaterialVO;
 import com.yedam.smartree.prod.mapper.ProdMapper;
 import com.yedam.smartree.prod.service.MtlNeedVO;
+import com.yedam.smartree.prod.service.PrcsResultVO;
 import com.yedam.smartree.prod.service.PrdtProdVO;
 import com.yedam.smartree.prod.service.ProdService;
 import com.yedam.smartree.prod.service.ProdVO;
@@ -187,8 +188,13 @@ public class ProdServiceImpl implements ProdService {
 	}
 
 	@Override
+
 	public List<ProdVO> getProcess(ProdVO vo) {
 		return prodMapper.getProcess(vo);
+
+	public List<PrcsResultVO> selectPrcsResult() {
+		return prodMapper.selectPrcsResult();
+
 	}
 
 

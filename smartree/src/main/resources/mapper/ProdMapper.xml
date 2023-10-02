@@ -305,6 +305,7 @@
                         on pt.prdt_code = d.prdt_code
            where p.prdt_total != p.prdt_prod_cnt 
   	</select>
+
   	<!-- 키오스크: 공정흐름상세보기 -->
   	<select id="getProcess" resultType="ProdVO">
   		select p.prcs_code , d.dt_prod_inst_code , d.prdt_code , pt.prdt_name , p.prcs_num , p.prdt_total , pi.prod_inst_edate , p.prdt_prod_cnt
@@ -317,4 +318,23 @@
           where p.prcs_code = #{prcsCode}
   	</select>
   	
+
+  	<!-- 실적조회 -->
+  	<select id="selectPrcsResult" resultType="PrcsResultVO">
+  		SELECT 	prod_inst_code
+					, prod_inst_name
+					, process_result.prdt_code
+					, prcs_std_code
+					, get_prcs_name(prcs_std_code) prcs_name
+					, manager
+					, prcs_sdate
+					, prcs_edate
+					, prod_cnt
+					, err_cnt
+					, pass_cnt
+  		FROM process_result JOIN process USING(prcs_code)
+  								  JOIN dt_prod_inst USING(dt_prod_inst_code)
+  								  JOIN prod_inst USING(prod_inst_code)
+  	</select>
+
   </mapper>
