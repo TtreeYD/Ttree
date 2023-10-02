@@ -63,7 +63,42 @@ box-shadow: 1px 1px 7px #d16a6e;
 cursor: pointer;
 box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
 }
+.bigbutton{
+width:200px;
+height:200px;
+border-radius: 25px;
+display: inline-block;
+border: 1px solid black;
 
+
+
+margin-top: -200px; /* 여기를 조절하여 위로 이동시킬 수 있습니다 */
+position: relative; /* 추가된 부분 */
+}
+ button:active {
+    box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
+    position: relative;
+    top:2px;
+  }
+  
+.buttons-container {
+    position: absolute;
+    top: 600px; /* 원하는 만큼 위로 이동 */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+    width: 400px; /* 요소들 간격을 조절하기 위한 너비 설정 */
+    margin-left: 250px;
+    
+}
+
+.buttons-container button , input {
+    width: 200px; /* 버튼의 너비 조절 */
+    height:50px;
+    border-radius: 25px;
+    border: 1px solid black;
+}
 </style>
 </head>
 <body>
@@ -75,8 +110,14 @@ box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
  </div>
 	<div id="instDtGrid"></div>
 	<div id="eqmGrid" style="width: 600px;margin-top: 250px;"></div>
-
-
+	<div class="buttons-container">
+		<input type="button" readonly value="불량등록" style="font-size: 20px;"> 
+		<button>-</button>
+		<input type="button" value="0">
+		<button>+</button>
+	</div>
+	<button class="bigbutton" style="margin-left:500px; background-color: rgb(94, 155, 248);">작업시작</button>
+    <button class="bigbutton" id ="endbtn" style="margin-left:200px; background-color: rgb(201, 68, 101);">작업종료</button>
 <script th:inline="javascript">
 var data = [[${data}]]
 console.log(data)
@@ -190,6 +231,9 @@ $(document).ready(function (){
 			}
 		})
 	}
+	$('#endbtn').on('click',function(){
+		console.log(123);
+	})
 })
 </script>
 </body>
