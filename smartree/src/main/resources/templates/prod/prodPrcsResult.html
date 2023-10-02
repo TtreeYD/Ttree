@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layout/layout}">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div id="resultGrid"></div>
+
+		<script>
+			const resultGrid = new tui.Grid({
+				el: document.getElementById('resultGrid'),
+				scrollX: false,
+				scrollY: false,
+				columns: [
+					{
+					  header: '생산지시코드',
+					  name: 'prodInstCode',
+					  hidden: true
+					},
+					{
+					  header: '지시명',
+					  name: 'prodInstName'
+					},
+					{
+					  header: '제품명',
+					  name: 'prdtCode'
+					},
+					{
+					  header: '공정기준코드',
+					  name: 'prcsStdCode',
+					  hidden: true
+					},
+					{
+					  header: '공정명',
+					  name: 'prcsName'
+					},
+					{
+					  header: '담당자',
+					  name: 'manager'
+					},
+					{
+					  header: '시작일시',
+					  name: 'prcsSdate'
+					},
+					{
+					  header: '종료일시',
+					  name: 'prcsEdate'
+					},
+					{
+					  header: '생산량',
+					  name: 'prodCnt'
+					},
+					{
+					  header: '불량량',
+					  name: 'errCnt'
+					},
+					{
+					  header: '합격량',
+					  name: 'passCnt'
+					}
+				]
+			});
+			$.ajax({
+				url:'/selectPrcsResult',
+				success: result => {
+					console.log(result)
+					resultGrid.resetData(eval(result))
+				},
+				error: err => console.log(err)
+			})
+		</script>
+	</div>
+</body>
+</html>

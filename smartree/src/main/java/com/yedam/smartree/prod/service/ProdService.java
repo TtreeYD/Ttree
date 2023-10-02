@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.yedam.smartree.business.service.BusinessVO;
-import com.yedam.smartree.material.service.MaterialVO;
 
 public interface ProdService {
 	public List<ProdVO> selectProdList();
@@ -31,4 +30,7 @@ public interface ProdService {
 	public List<ProdVO> selectGetProcess(ProdVO vo);
 	
 	//public int updateProd(RequestVO<ProdVO> vo);
+	
+	//실적조회
+	List<PrcsResultVO> selectPrcsResult();
 }
