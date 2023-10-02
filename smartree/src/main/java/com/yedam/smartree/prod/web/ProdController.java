@@ -52,5 +52,10 @@ public class ProdController {
 	public String prodSituation() {
 		return "prod/prodSituation";
 	}
+	
+	@GetMapping("/prodPrcsResult")
+	public String prodPrcsResult() {
+		return "prod/prodPrcsResult";
+	}
 
 }

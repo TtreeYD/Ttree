@@ -306,5 +306,21 @@
            where p.prdt_total != p.prdt_prod_cnt 
   	</select>
   	
-  	
+  	<!-- 실적조회 -->
+  	<select id="selectPrcsResult" resultType="PrcsResultVO">
+  		SELECT 	prod_inst_code
+					, prod_inst_name
+					, process_result.prdt_code
+					, prcs_std_code
+					, get_prcs_name(prcs_std_code) prcs_name
+					, manager
+					, prcs_sdate
+					, prcs_edate
+					, prod_cnt
+					, err_cnt
+					, pass_cnt
+  		FROM process_result JOIN process USING(prcs_code)
+  								  JOIN dt_prod_inst USING(dt_prod_inst_code)
+  								  JOIN prod_inst USING(prod_inst_code)
+  	</select>
   </mapper>
