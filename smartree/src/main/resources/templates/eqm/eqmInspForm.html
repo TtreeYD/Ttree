@@ -32,7 +32,7 @@
             border-radius: 4px;
             box-sizing: border-box;
         }
-       #selectBtn, #buttons{
+       #selectEqmNoperBtn, #buttons{
         	margin-right:300px; float:right;
         }
 </style>
@@ -40,7 +40,7 @@
 <body>
 	<div layout:fragment="content">
 		<h2>설비점검관리</h2>
-		<button type="button" id="selectBtn" class="btn btn-primary" >비가동 조회</button>
+		<button type="button" id="selectEqmNoperBtn" class="btn btn-primary" data-toggle="modal" data-target="#searchEqmNoperModal">비가동 조회</button>
 		<div>
 			<form name="eqmInspForm" action="eqmInspForm" method="post" >
 				<table id="eqmInspTable">
@@ -48,6 +48,7 @@
 						<th>설비코드</th>
 						<td>
 							<input type="text" name="eqmCode" id="eqmCode"  style="background-color:#d3d3d3;" readonly>
+							<input type="hidden" name="noperCode" id="noperCode" readonly >
 						</td>
 						<th>설비명 *</th>
 						<td>
@@ -57,7 +58,8 @@
 					</tr>
 					<tr>
 						<th>최근점검일시</th>
-						<td><input type="date" id="recentInspDate" name="recentInspDate" ></td>
+						<td><input type="datetime-local" id="recentInspDate"  >
+						<input type="hidden"   name="recentInspDate" ></td>
 						
 						<th>판정 *</th>
 						<td>
@@ -71,7 +73,8 @@
 							<input type="text"  name="inspManager" id="inspManager" >
 						</td>
 						<th>수리일시</th>
-						<td><input type="date" id="repairDate" name="repairDate" ></td>
+						<td><input type="datetime-local" id="repairDate"  >
+						<input type="hidden"   name="repairDate" ></td>
 					</tr>
 					<tr>
 						<th>점검내역</th>
@@ -82,9 +85,11 @@
 				
 					<tr>
 						<th>차기점검일시</th>
-						<td><input type="date" id="nextInspDate" name="nextInspDate" ></td>
+						<td><input type="datetime-local" id="nextInspDate">
+						<input type="hidden"  name="nextInspDate" ></td>
 						<th>등록일시</th>
-						<td><input type="datetime-local" id="registerDate" name="registerDate" ></td>
+						<td><input type="datetime-local" id="registerDate" >
+						<input type="hidden"  name="registerDate" ></td>
 					</tr>
 				</table>
 				
@@ -97,7 +102,7 @@
 		</div>
 		
 		
-		<!-- 모달창 시작 -->
+		<!-- 검색 모달창 시작 -->
 			<div class="modal fade " id="searchEqmModal" tabindex="-1" role="dialog">
 			<div class="modal-dialog modal-dialog-centered " role="document">
 				<div class="modal-content">
@@ -130,6 +135,40 @@
 		<!-- 모달창 끝 -->
 		
 		
+			<!-- 비가동조회 모달창 시작 -->
+			<div class="modal fade " id="searchEqmNoperModal" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-dialog-centered " role="document">
+				<div class="modal-content">
+					<div class="modal-header" >
+					 
+						<h5 class="modal-title"  >비가동</h5>
+						
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close" >
+							<span aria-hidden="true">&times;</span>								
+						</button>
+						
+				
+	
+					</div>
+					<div class="modal-body">
+				 			<label for="searchEqmNoperName">설비명</label>
+							<input type= "text" id="searchEqmNoperName" placeholder="설비명을 입력하시오">
+							<button type="button" id="searchEqmNoperBtn" class="btn btn-primary">검색</button>
+						<br> 
+						<br> 
+						<div id="grid3"></div>
+					</div>
+					<div class="modal-footer">
+						<!-- <button type="button" class="btn btn-primary">등록</button> -->
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 모달창 끝 -->
+		
+		
+		
 		<script>
   $(document).ready(function () {
 	    	  
@@ -155,20 +194,27 @@
 				return;
 			}
 			 
+			//날짜변환
+			$('[name="registerDate"]').val($('#registerDate').val().replace("T", ' '))
+			$('[name="repairDate"]').val($('#repairDate').val().replace("T", ' '))
+			$('[name="recentInspDate"]').val($('#recentInspDate').val().replace("T", ' '))
+			$('[name="nextInspDate"]').val($('#nextInspDate').val().replace("T", ' '))
 			eqmInspForm.submit();
 	  }
 	  
-	  
+	        // 검색 모달창
 	    	  const grid2 = new tui.Grid({
 	              el: document.getElementById('grid2'),
 	              scrollX: false,
 	              scrollY: false,
+	              bodyHeight: 200,
 	              rowHeaders: ["rowNum"],
 	              pageOptions: {
 	                  perPage: 5,
 	                  useClient: true,
 	                },
 	              columns: [
+	            	  
 	              {
 	                header: '설비명',
 	                name: 'eqmName',
@@ -182,10 +228,140 @@
 	              ]
 
 	            });
-	    	   	  
+	    	  
+			// 비가동 모달창	    	  
+	    	  const grid3 = new tui.Grid({
+	              el: document.getElementById('grid3'),
+	              scrollX: false,
+	              scrollY: false,
+	              bodyHeight: 200,
+	              rowHeaders: ["rowNum"],
+	              pageOptions: {
+	                  perPage: 5,
+	                  useClient: true,
+	                },
+	              columns: [
+	            	  {
+	  	                header: '비가동코드',
+	  	                name: 'noperCode',
+	  	             
+	  	              },
+	  	            {
+	  	                header: '설비코드',
+	  	                name: 'eqmCode',
+	  	             
+	  	              },
+	  	      
+	              {
+	                header: '설비명',
+	                name: 'eqmName',
+	             
+	              }
+	              ]
+
+	            });
+	    	  
+	    
+	    	  $('#selectEqmNoperBtn').on('click',getEqmNoperList);	  
 	          $('#selectEqmBtn').on('click', getEqmList);
 		      
-	         
+	          
+	          // 비가동 조회
+	   	      function getEqmNoperList(){
+	   		   $('#searchName').val('');
+	   	      	$.ajax({
+	   	      		url:'/eqmNopers',
+	   	      		method:'get',
+	   	          dataType:'json',
+	   	      		success:function(result){
+	   	      	/*    console.log(result);
+                   grid3.resetData(eval(result)); */
+	   	      			
+	             	  	console.log(result);
+	   	      			grid3.resetData(result);
+	   	      			$("#searchEqmNoperModal").modal('show');
+	   	      			setTimeout(() => grid3.refreshLayout(), 200); 
+	   					
+	   	      		},
+	   	      		error:function(err){
+	   	      			console.log(err);
+	   	      		}
+	   	      	})
+	   	      }
+	          
+	   	   // 비가동검색버튼 클릭시 
+		   	    $('#searchEqmNoperBtn').on('click',function(){
+		   	    	searchEqmNoperName();
+		   	    })
+		 		// 비가동 설비 이름 조회 : input에 값
+		   		function searchEqmNoperName(){
+		   			   			
+		   			if($('#searchEqmNoperName').val()){
+		   				let eqmName = $('#searchEqmNoperName').val();
+		   				getEqmNoperName(eqmName);
+		   				
+		   			}
+		   		}
+		   	    
+		   		// 비가동 설비 이름 조회
+		   		function getEqmNoperName(eqmName){
+		   			$.ajax({
+		   				url:'/eqmNoperName',
+		   				data: {
+		   					eqmName : eqmName
+		   				},
+		   				success: result => {
+		   				 console.log(result);
+		   					grid3.resetData(eval(result)); 
+		   					
+		   				/* 	grid2.resetData(result);
+		   	      			$("#searchEqmModal").modal('show');
+		   	      			setTimeout(() => grid2.refreshLayout(), 200); */
+		   				}
+		   				,
+		   				error: err => console.log(err)
+		   			})
+		   		}
+		  	    // 비가동 검색 - 엔터시
+		   	    $('#searchEqmNoperName').on('keypress', function (ev) {
+		   			if (ev.which == 13) {
+		   				ev.preventDefault();
+		   				searchEqmNoperName()
+		   			}
+		   		})
+		   		
+		   	 //  비가동 설비조회 모달창 더블클릭
+		   	   grid3.on('dblclick',(ev)=>{
+		   		   console.log(ev)
+		   			if(ev.rowKey==undefined){
+	        			return;
+	        		}
+		   		   let data = grid3.getValue(ev.rowKey,'eqmCode');
+		   		 getEqmNoper(data);
+		   	
+		   	   })
+		   	    
+		   	   function getEqmNoper(data){
+			   		   $.ajax({
+			   			   url:'/selectEqmNoper',
+			   			   method:'get',
+			   			   data:{
+			   				eqmCode :data		   			
+			   			   },
+			   		   success: function(result){
+			   			
+			   	    	 $('#searchEqmNoperModal').modal('hide');
+			   	    	
+			   			$('#eqmCode').val(result.eqmCode);
+			   			$('#eqmName').val(result.eqmName);
+			   			$('#noperCode').val(result.noperCode);
+			   	
+			   		   },
+			      		error:function(err){	      			
+			          		console.log(err)
+			          	}
+			   		   })
+			   	   }
 	          
 	   	   // 전체설비 조회
 	   	      function getEqmList(){
@@ -341,9 +517,10 @@
 		   		   success: function(result){
 		   			
 		   	    	 $('#searchEqmModal').modal('hide');
+		   	    	
 		   			$('#eqmCode').val(result.eqmCode);
 		   			$('#eqmName').val(result.eqmName);
-		   			
+		   			$('#noperCode').val('');
 		   	
 		   		   },
 		      		error:function(err){	      			
@@ -364,7 +541,8 @@
 		   			$('#inspDt').val('');
 		   			$('#actionDt').val('');
 		   			$('#nextInspDate').val('');
-		   			$('#registerDate').val(''); 			
+		   			$('#registerDate').val(''); 	
+		   			$('#noperCode').val('');
 				});  
 	   	   
 	   	   

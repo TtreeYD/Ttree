@@ -6,6 +6,23 @@
 <head>
 <meta charset="UTF-8">
 <title>설비점검조회</title>
+<style>
+.tui-grid-cell.red {
+	background-color: rgb(227, 52, 52);
+	color: white;
+	font-weight: bolder;
+}
+
+	.tui-grid-cell.redW {
+	color: red;
+	font-weight: bolder;
+}
+
+.tui-grid-cell.greenW {
+	color: green;
+	font-weight: bolder;
+}
+</style>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -16,10 +33,10 @@
     <input type="radio" id="all" name="inspJudg" value="" checked />
     <label for="all">전체</label>
  
- 	<input type="radio" id="y" name="inspJudg" value="y" />
+ 	<input type="radio" id="y" name="inspJudg" value="Y" />
     <label for="y">적합</label>
     
-    <input type="radio" id="n" name="inspJudg" value="n"/>
+    <input type="radio" id="n" name="inspJudg" value="N"/>
     <label for="n">부적합</label>
 	</div>
 	
@@ -141,6 +158,36 @@
         dataType:'json',
     		success:function(result){
     			console.log(result);
+    			
+    			//
+    			for(let item of result){
+    				console.log(item)
+    				if(item.inspJudg == '적합'){
+    					item._attributes= {
+    	            			className:{
+    	            				column : {
+    	            					inspJudg : ['greenW']
+    	            				}
+    	            			}
+    		            	}
+    				}else{
+    					item._attributes= {
+    	            			className:{
+    	            				column : {
+    	            					inspJudg : ['redW']
+    	            				}
+    	            			}
+    		            	}
+    				}
+    				
+    				if((detDifference(item.nextInspDate) >= 0) && (detDifference(item.nextInspDate)<=5)){
+    					item._attributes.className.column.nextInspDate = ['red']
+    	            	
+    				} 
+    			}
+    			
+    			//
+    			
     			grid.resetData(eval(result));
     		},
     		error:function(err){
@@ -157,6 +204,34 @@
 			success: result=>{
 				//console.log(eqmUcheck)
 				//console.log(result)
+				//
+    			for(let item of result){
+    				console.log(item)
+    				if(item.inspJudg == '적합'){
+    					item._attributes= {
+    	            			className:{
+    	            				column : {
+    	            					inspJudg : ['greenW']
+    	            				}
+    	            			}
+    		            	}
+    				}else{
+    					item._attributes= {
+    	            			className:{
+    	            				column : {
+    	            					inspJudg : ['redW']
+    	            				}
+    	            			}
+    		            	}
+    				}
+    				
+    				if((detDifference(item.nextInspDate) >= 0) && (detDifference(item.nextInspDate)<=5)){
+    					item._attributes.className.column.nextInspDate = ['red']
+    	            	
+    				} 
+    			}
+    			
+    			//
 				 grid.resetData(eval(result));
 			},
 			error: err => console.log(err)
@@ -171,6 +246,34 @@
 			},
 			success: result => {
 				console.log(result);
+				//
+    			for(let item of result){
+    				console.log(item)
+    				if(item.inspJudg == '적합'){
+    					item._attributes= {
+    	            			className:{
+    	            				column : {
+    	            					inspJudg : ['greenW']
+    	            				}
+    	            			}
+    		            	}
+    				}else{
+    					item._attributes= {
+    	            			className:{
+    	            				column : {
+    	            					inspJudg : ['redW']
+    	            				}
+    	            			}
+    		            	}
+    				}
+    				
+    				if((detDifference(item.nextInspDate) >= 0) && (detDifference(item.nextInspDate)<=5)){
+    					item._attributes.className.column.nextInspDate = ['red']
+    	            	
+    				} 
+    			}
+    			
+    			//
 				grid.resetData(eval(result));
 			}
 			,
@@ -187,6 +290,37 @@
 			getEqmInspName(eqmName);
 			
 		}
+	}
+    	
+	// 날짜차이 구하는 함수	
+	function detDifference(date){
+		if(date == null){
+			return;
+		}
+		// 현재시간 
+		let now = new Date();
+		//console.log(now)
+		//console.log(date)
+		let year = now.getFullYear();
+		let month = now.getMonth()+1;
+		let day = now.getDate();
+	
+		// 받아온날짜 
+		let d = date.substr(0,10)
+	
+		let date_arr =d.split("-");
+		
+		//console.log(date_arr[0],date_arr[1],date_arr[2])
+		
+		let stDate = new Date(date_arr[0],date_arr[1],date_arr[2]);
+		let nowDate = new Date(year,month,day);
+		
+		
+		let btMs = stDate.getTime() - nowDate.getTime();
+		
+		let btDay = btMs/(1000*60*60*24); //  1000 초 / 1000*60 분 / 1000*60*60 시 / 1000*60*60*24 일 
+		//console.log(btMs,btDay)
+		return btDay
 	}
   }
           

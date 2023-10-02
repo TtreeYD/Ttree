@@ -31,5 +31,8 @@ public class EqmVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "Asia/Seoul")
  	private Date nextInspDate;
-
+	private String eqmState;
+	
+	
+	
 }

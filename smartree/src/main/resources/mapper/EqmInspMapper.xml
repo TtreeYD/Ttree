@@ -6,7 +6,7 @@
   <mapper namespace="com.yedam.smartree.eqm.mapper.EqmInspMapper">
   <!-- 설비점검 전체조회 -->
   	<select id="selectEqmInspList" resultType="EqmInspVO">
-  	    SELECT e.eqm_code,e.eqm_name,i.insp_manager,i.insp_judg,i.repair_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE,i.insp_dt,i.action_dt
+  	    SELECT e.eqm_code,e.eqm_name,i.insp_manager,case when insp_judg ='Y' then '적합' else '부적합' end insp_judg ,i.repair_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE,i.insp_dt,i.action_dt
 		FROM eqm e join EQM_INSP i
   		  				ON e.eqm_code = i.eqm_code
   	 					 
@@ -14,7 +14,7 @@
   	</select>
   	<!-- 판정여부 조회 -->
   	<select id="selectEqmInspInspJudgList" resultType="EqmInspVO">
-  	 SELECT e.eqm_code,e.eqm_name,i.insp_manager,i.insp_judg,i.repair_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE,i.insp_dt,i.action_dt
+  	 SELECT e.eqm_code,e.eqm_name,i.insp_manager, case when insp_judg ='Y' then '적합' else '부적합' end insp_judg,i.repair_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE,i.insp_dt,i.action_dt
      FROM eqm e join EQM_INSP i
   		  			ON e.eqm_code = i.eqm_code
   	 	<where>
@@ -27,7 +27,7 @@
   	</select>
   	<!-- 설비점검이름으로 검색 -->
   	 <select id="searchEqmInsp" resultType="EqmInspVO">
-  	 SELECT e.eqm_code,e.eqm_name,i.insp_manager,i.insp_judg,i.repair_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE,i.insp_dt,i.action_dt
+  	 SELECT e.eqm_code,e.eqm_name,i.insp_manager, case when insp_judg ='Y' then '적합' else '부적합' end insp_judg ,i.repair_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE,i.insp_dt,i.action_dt
      FROM eqm e join EQM_INSP i
   		  			ON e.eqm_code = i.eqm_code
   		<where>
@@ -79,7 +79,68 @@
    			   ,#{eqmCode} 
    			   ,#{noperCode} 
            )
-  	    
-  	    
   	</insert>
+  	
+  	
+  	<!-- 비가동 -->
+  	
+  	  	<!-- 비가동 등록 -->
+  	<insert id="insertEqmNoper" parameterType="EqmNoperVO">
+  		<selectKey keyProperty="noperCode" resultType="String" order="BEFORE">
+  			select 'eno' || LPAD(noper_code_seq.NEXTVAL, 7, '0') as noperCode from dual
+  	    </selectKey>
+  	    INSERT INTO EQM_NOPER
+  			 ( 
+  			    NOPER_CODE
+				,REASON_KND
+				,REASON
+				,NOPER_SDATE
+				,NOPER_LDATE
+				,NOPER_MANAGER
+				,INSP_ICHECK
+				,EQM_CODE
+  			)
+   values
+           ( 
+   				#{noperCode}
+   			   ,#{reasonKnd}
+   			   ,#{reason}
+   			   ,#{noperSdate}
+   			   ,#{noperLdate}
+   			   ,#{noperManager}
+   			   ,#{inspIcheck}
+   			   ,#{eqmCode}   
+           )
+  	</insert>
+  	
+  	<select id ="selectEqmNoper" resultType="EqmNoperVO">
+  		select n.*,e.eqm_name
+  		from EQM_NOPER n join eqm e 
+  						 ON n.eqm_code = e.eqm_code
+  	
+  	</select>
+  	
+  	  	<!--비가동 설비점검이름으로 검색 -->
+  	 <select id="searchEqmNoper" resultType="EqmNoperVO">
+  	 	select n.*,e.eqm_name
+  		from EQM_NOPER n join eqm e 
+  						 ON n.eqm_code = e.eqm_code
+  		<where>
+  			<if test="eqmName != null and !eqmName.equals('')">
+  				eqm_name LIKE '%'||#{eqmName}||'%'
+  			</if>
+  		</where>  	
+  	 					 
+  	ORDER BY n.NOPER_CODE
+  	</select>
+  	
+  	
+  	  	<!-- 설비조회 단건조회-->
+  	<select id="selectEqmNoperCode" resultType="EqmNoperVO">
+  	select  n.* ,e.eqm_name
+  	from  eqm_noper n join  EQM e
+  	           on  n.eqm_code= e.eqm_code
+  	where n.eqm_code=#{eqmCode} 
+  	</select>
+  	
   </mapper>

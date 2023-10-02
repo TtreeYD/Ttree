@@ -84,11 +84,12 @@
 						<th>공정구분</th>
 						<td><select id="eqmDivision" name="eqmDivision"
 							th:field="*{eqmDivision}">
-								<option value="PC01">재단</option>
+								<option value="">--</option>
+								<!-- <option value="PC01">재단</option>
 								<option value="PC02">가공</option>
 								<option value="PC03">샌딩</option>
 								<option value="PC04">도장</option>
-								<option value="PC05">조립</option>
+								<option value="PC05">조립</option> -->
 						</select></td>
 					</tr>
 					<tr>
@@ -191,6 +192,12 @@
 				intoForm.eqmManger.focus();
 				return;
 			}
+			// 온도
+			if( (infoForm.eqmMinTemp.value > infoForm.eqmMaxTemp.value)) {
+				swal("온도를 확인하세요", "최저온도가 최고온도보다 높습니다", "warning");
+				intoForm.eqmMaxTemp.focus();
+				return;
+			}
 			 
 			infoForm.submit();
 		}
@@ -290,7 +297,7 @@
       		swal("저장 완료!", "설비가 저장되었습니다.", "success");
       		getEqm(eqmCode);
       	}
-          
+          // 단건조회 - 화면에 보이게한다
           function getEqm(data){
         	  $.ajax({
                   url: "/selectEqm",
@@ -383,7 +390,7 @@
               }
             });
           });
-
+			// 이미지 보이게한다
           $("#eqmImg").on("change", function (event) {
             var file = event.target.files[0];
 
@@ -395,6 +402,23 @@
             reader.readAsDataURL(file);
           });
           
+			
+ 	 	 // 부서정보 불러오기
+			$.ajax({
+				url: "/mdm/selectCodeDetail",
+				data: {
+					codeType: '012'
+				},
+				success: result => {
+					$(result).each(function (idx, dept) {
+						let optTag = $('<option/>');
+						optTag.val(dept['codeId']);
+						optTag.text(dept['codeName']);
+						$('#eqmDivision').append(optTag);
+					})
+				},
+				error: err => console.log(err)
+			})
           
           
         });

@@ -26,6 +26,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +34,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.yedam.smartree.eqm.service.EqmInspService;
 import com.yedam.smartree.eqm.service.EqmInspVO;
+import com.yedam.smartree.eqm.service.EqmNoperVO;
 import com.yedam.smartree.eqm.service.EqmService;
 import com.yedam.smartree.eqm.service.EqmVO;
 
@@ -202,6 +204,13 @@ public class EqmController {
 	public String EqmNoperForm() {
 		// model.addAttribute("eqmInspVO", new EqmInspVO());
 		return "eqm/eqmNoperForm";
+	}
+	@PostMapping("/eqmNoperForm")
+	@ResponseBody
+	public String registerEqmNoperFormProcess(@RequestBody EqmNoperVO eqmNoperVO) {
+		eqminspservice.insertEqmNoper(eqmNoperVO);
+		return "redirect:eqmNoperForm";
+		
 	}
 	
 
