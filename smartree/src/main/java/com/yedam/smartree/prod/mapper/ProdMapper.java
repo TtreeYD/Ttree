@@ -65,6 +65,8 @@ public interface ProdMapper {
 	
 	// 자재 요구량 계산
 	public List<MtlNeedVO> getMtlNeed(ProdVO vo);
+	//공정흐름상세보기
+	public List<ProdVO> getProcess(ProdVO vo);
 
 	
 	// 실적조회

@@ -45,16 +45,31 @@ public class ProdVO {
 	private int prodInstCnt;
 	private int prodinstIncompCnt;
 	private String prodInstYn;
-	private int prcsNum;
-	private int prdtTotal;
+	
+	
 	private String prdtName;
 	private int prdtSs;
 	private int prodRank;
 	private String prdtCode;
 	
+	
 	private String orderDtCode;
 	private int orderDtCnt;
-	private int prdtProdCnt;
+	
 	
 	private String result;
+	//완제품공정흐름도
+	private String prcsCode;
+	private int prcsNum;
+	private int prdtTotal;
+	private int prdtProdCnt;
+	//공정실적관리
+	private String prcsRsCode;
+	private String eqmCode;
+	private Date prcsSdate;
+	private Date prcsEdate;
+	private int prodCnt;
+	private int errCnt;
+	private int passCnt;
+	private String manager;
 }

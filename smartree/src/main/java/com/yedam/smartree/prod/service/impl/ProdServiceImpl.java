@@ -188,8 +188,13 @@ public class ProdServiceImpl implements ProdService {
 	}
 
 	@Override
+
+	public List<ProdVO> getProcess(ProdVO vo) {
+		return prodMapper.getProcess(vo);
+
 	public List<PrcsResultVO> selectPrcsResult() {
 		return prodMapper.selectPrcsResult();
+
 	}
 
 
