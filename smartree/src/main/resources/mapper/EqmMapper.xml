@@ -6,7 +6,23 @@
   <mapper namespace="com.yedam.smartree.eqm.mapper.EqmMapper">
   <!-- 설비 전체조회 -->
   	<select id="selectEqmList" resultType="EqmVO">
-  		select e.* , (
+  		select EQM_CODE
+				,EQM_NAME
+				,case when EQM_UCHECK='Y' then '사용'
+					  else '미사용'
+			     end EQM_UCHECK
+				,EQM_MAX_TEMP
+				,EQM_MIN_TEMP
+				,EQM_MANAGER
+				,EQM_DIVISION
+				,INSP_CYCLE
+				,MFG_COMP
+				,MFG_DATE
+				,EQM_IMG
+				, case when EQM_STATE = 'Y' then '사용가능' 
+				       else '사용중'
+				  end  EQM_STATE
+				, (
                 select max(RECENT_INSP_DATE)
                 from eqm_insp i
                 WHERE e.eqm_code = i.eqm_code ) as RECENT_INSP_DATE,
@@ -19,7 +35,20 @@
   	</select>
   	<!-- 사용여부 조회 -->
   	<select id="selectEqmUcheckList" resultType="EqmVO">
-  		select e.* , (
+  		select  EQM_CODE
+				,EQM_NAME
+				,case when EQM_UCHECK='Y' then '사용'
+					  else '미사용'
+			     end EQM_UCHECK
+				,EQM_MAX_TEMP
+				,EQM_MIN_TEMP
+				,EQM_MANAGER
+				,EQM_DIVISION
+				,INSP_CYCLE
+				,MFG_COMP
+				,MFG_DATE
+				,EQM_IMG
+				, EQM_STATE , (
                 select max(RECENT_INSP_DATE)
                 from eqm_insp i
                 WHERE e.eqm_code = i.eqm_code ) as RECENT_INSP_DATE,
@@ -40,7 +69,20 @@
 
 	<!-- 설비이름으로 검색 -->
   	  <select id="searchEqm" resultType="EqmVO">
-  		select e.* , (
+  		select EQM_CODE
+				,EQM_NAME
+				,case when EQM_UCHECK='Y' then '사용'
+					  else '미사용'
+			     end EQM_UCHECK
+				,EQM_MAX_TEMP
+				,EQM_MIN_TEMP
+				,EQM_MANAGER
+				,EQM_DIVISION
+				,INSP_CYCLE
+				,MFG_COMP
+				,MFG_DATE
+				,EQM_IMG
+				, EQM_STATE  , (
                 select max(RECENT_INSP_DATE)
                 from eqm_insp i
                 WHERE e.eqm_code = i.eqm_code ) as RECENT_INSP_DATE,
@@ -59,7 +101,7 @@
   	</select>
   	<!-- 설비조회 단건조회-->
   	<select id="selectEqm" resultType="EqmVO">
-  	select eqm_code,eqm_name,eqm_ucheck,insp_cycle,eqm_min_temp,eqm_max_temp,eqm_manager,mfg_comp,mfg_date,eqm_img,eqm_division
+  	select *
   	from EQM
   	where eqm_code=#{eqmCode} 
   	</select>
@@ -150,11 +192,13 @@
   	
   	<!-- 설비 구분으로 조회 -->
   	<select id="searchEqmDivision" resultType="EqmVO">
-  	select eqm_code,eqm_name,eqm_ucheck,insp_cycle,eqm_min_temp,eqm_max_temp,eqm_manager,mfg_comp,mfg_date,eqm_img,eqm_division
+  	select *
   	from EQM
   	where eqm_division = #{eqmDivision} 
   	</select>
   	
+
+
 
   	
   </mapper>

@@ -6,6 +6,19 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	.tui-grid-cell.red {
+	background-color: rgb(227, 52, 52);
+	color: white;
+	font-weight: bolder;
+}
+
+.tui-grid-cell.green {
+	background-color: rgb(31, 193, 31);
+	color: white;
+	font-weight: bolder;
+}
+</style>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -17,11 +30,11 @@
 			<div class="input-group mb-3">
 					<select class="custom-select col-2" id="eqmDivision" name="eqmDivision">
 			            		<option value="">--</option>
-								<option value="PC01">재단</option>
+								<!-- <option value="PC01">재단</option>
 								<option value="PC02">가공</option>
 								<option value="PC03">샌딩</option>
 								<option value="PC04">도장</option>
-								<option value="PC05">조립</option>
+								<option value="PC05">조립</option> -->
 					</select>
 					<input type="text" class="form-control col-3" placeholder="설비명" id="searchName">
 					<div class="input-group-append">
@@ -66,8 +79,8 @@
 				  	</div>
 					<select class="custom-select text-center col" id="reasonKnd">
 					   <option value="" selected>--</option>
-					   <option value="" >점검</option>
-					   <option value="" >기타</option>
+					   <option value="i" >점검</option>
+					   <option value="n" >기타</option>
 					</select>
 				</div>
 				<div class="input-group mb-4">
@@ -82,7 +95,7 @@
 					<div class="input-group-prepend col-3">
 						<label class="input-group-text col">비가동시작시간</label>	
 					</div>
-					<input type="text" class="form-control col-4" readonly name="start" id="start">
+					<input type="text" class="form-control col-4" readonly name="noperSdate" id="noperSdate">
 				
 					<input type="button" value="시작" id="startBtn">					
 				</div>
@@ -90,14 +103,14 @@
 				<div class="input-group mb-4">
 			     	<div class="input-group-prepend col-3">
 					   <label class="input-group-text col">비가동종료시간</label>	</div>
-					<input type="text" class="form-control col-4" readonly name="end" id="end">				
+					<input type="text" class="form-control col-4" readonly name="noperLdate" id="noperLdate">				
 					<input type="button" value="종료" id="endBtn">
 				</div>
 				
 				
 				
 				<div class="text-center">
-					<button type="button" id="" class="btn btn-primary">등록</button>
+					<button type="button" id="insertBtn" class="btn btn-primary">저장</button>
 					<button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
 					<button type="button" id="" class="btn btn-primary">삭제</button>
 				</div>
@@ -132,7 +145,7 @@
     	        },
     	        {
       	          header: '설비상태',
-      	          name: '',
+      	          name: 'eqmState',
       	          align: 'center'
       	        }
     	   
@@ -140,6 +153,7 @@
     	    });
     	  
     	    getEqmList();
+    	  
     	    
     	    // 검색버튼 클릭시 
     	    $('#searchBtn').on('click',function(){
@@ -154,19 +168,19 @@
     		})
     		//시작시간
     	    $('#startBtn').on('click',function(){
-    	    	if($('#end').val()){
-    	    		$('#end').val('')
+    	    	if($('#noperLdate').val()){
+    	    		$('#noperLdate').val('')
     	    	}
-    	    	let startTime = new Date().toLocaleString();
-            	document.getElementById('start').value=startTime;
+    	    	let startTime = getToday();//new Date().toLocaleString();
+            	document.getElementById('noperSdate').value=startTime;
     	    })
     	    //종료시간
     	      $('#endBtn').on('click',function(){
-    	    	 if(!$('#start').val()){
+    	    	 if(!$('#noperSdate').val()){
     	    		 return;
     	    	 }
-    	    	  let endTime = new Date().toLocaleString();
-    	    		document.getElementById('end').value=endTime;
+    	    	  let endTime = getToday();
+    	    		document.getElementById('noperLdate').value=endTime;
     	    })
     	    
     	    
@@ -208,8 +222,36 @@
     	    		method:'get',
     	        dataType:'json',
     	    		success:function(result){
-    	    			console.log(result);
-    	    			grid.resetData(eval(result));
+    	    			//console.log(result);
+    	    			
+    	    			//
+    	    			for(let item of result){
+    	    				
+    	    				if(item.eqmState =='사용가능'){
+    	    					item._attributes= {
+    	    	            			className:{
+    	    	            				column : {
+    	    	            					eqmState : ['green']
+    	    	            				}
+    	    	            			}
+    	    		            	}
+    	    				}else{
+    	    					item._attributes= {
+    	    	            			className:{
+    	    	            				column : {
+    	    	            					eqmState : ['red']
+    	    	            				}
+    	    	            			}
+    	    		            	}
+    	    				} 
+    	    			}
+    	    			
+    	    			//
+    	    			
+    	    			
+    	    		//	grid.resetData(eval(result));
+    	    	grid.resetData(result);
+    	    			
     	    		},
     	    		error:function(err){
     	    			console.log(err);
@@ -266,6 +308,7 @@
               if (ev.rowKey == undefined) {
                 return;
               }
+            //  console.log(ev)
               let data = grid.getValue(ev.rowKey, "eqmCode");
               getEqm(data);
              
@@ -279,8 +322,14 @@
                       eqmCode: data
                     },
                     success: function (result) {
-  					console.log(result.eqmImg);
+  					console.log(result);
                 
+  					if(result.eqmState != 'Y'){
+  						$("#eqmCode").val("");
+                        $("#eqmName").val("");
+  						return;
+  					}
+  					
                       $("#eqmCode").val(result.eqmCode);
                       $("#eqmName").val(result.eqmName);
 
@@ -291,19 +340,70 @@
                   });
             }
             
-            // 초기화
+            // 초기화버튼
             $("#resetBtn").on("click", function () {
               $("#eqmCode").val("");
               $("#eqmName").val("");
               $("#noperManager").val("");
               $("#reason").val("");
               $("#reasonKnd").val("");
-              $("#start").val("");
-              $("#end").val("");
+              $("#noperSdate").val("");
+              $("#noperLdate").val("");
             });
+
+            //등록버튼
+            $('#insertBtn').on("click", function(){
+            	let vo= {};
+            	
+            	vo.noperManager =$('#noperManager').val();
+            	vo.reasonKnd =$('#reasonKnd').val();
+            	vo.reason =$('#reason').val();
+            	vo.noperSdate =$('#noperSdate').val();
+            	vo.noperLdate =$('#noperLdate').val();
+            	vo.eqmCode = $('#eqmCode').val();
+            	
+            	
+            	$.ajax({
+            		url:'/eqm/eqmNoperForm',
+            		method:'post',
+            		contentType : 'application/json',
+					data: JSON.stringify(vo),
+					success: result =>{
+						console.log(result);
+					},
+					error: err => console.log(err)
+            	})
+            }) 
+             
+		 	 // 부서정보 불러오기
+			$.ajax({
+				url: "/mdm/selectCodeDetail",
+				data: {
+					codeType: '012'
+				},
+				success: result => {
+					$(result).each(function (idx, dept) {
+						let optTag = $('<option/>');
+						optTag.val(dept['codeId']);
+						optTag.text(dept['codeName']);
+						$('#eqmDivision').append(optTag);
+					})
+				},
+				error: err => console.log(err)
+			})
           
      }
    
+     function getToday(){
+    	 const TIME_ZONE = 9 * 60 * 60 * 1000; // 9시간
+    	 const d = new Date();
+
+    	 const date = new Date(d.getTime() + TIME_ZONE).toISOString().split('T')[0];
+    	 const time = d.toTimeString().split(' ')[0];
+
+    	 return (date + ' ' + time);
+     }
+    
 	</script>
 	</div>
 	

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.eqm.service.EqmInspService;
 import com.yedam.smartree.eqm.service.EqmInspVO;
+import com.yedam.smartree.eqm.service.EqmNoperVO;
 import com.yedam.smartree.eqm.service.EqmService;
 import com.yedam.smartree.eqm.service.EqmVO;
 
@@ -63,9 +64,24 @@ public class EqmRestController {
 	public EqmInspVO getEqmInsp(EqmInspVO eqmInspVO){
 		return eqminspservice.selectEqmInsp(eqmInspVO);
 	}
-	// 설비 구분으로 조회
+	// 설비구분으로 조회
 	@GetMapping("/eqmDivision")
 	public List<EqmVO> getEqmDivision(String eqmDivision){
 		return eqmservice.searchEqmDivision(eqmDivision);
 	}
+	// 비가동조회
+	@GetMapping("/eqmNopers")
+	public List<EqmNoperVO> getEqmNopers(){
+		return eqminspservice.selectEqmNoper();
+	}
+	@GetMapping("/eqmNoperName")
+	public List<EqmNoperVO> getEqmNoperName(String eqmName){
+		return eqminspservice.searchEqmNoper(eqmName);
+	}
+	// 비가동조회 모달창 더블 클릭시 단건조회
+	@GetMapping("/selectEqmNoper")
+	public EqmNoperVO getEqmNoper(EqmNoperVO eqmNoperVO) {
+		return eqminspservice.selectEqmNoperCode(eqmNoperVO);
+	}
+	
 }

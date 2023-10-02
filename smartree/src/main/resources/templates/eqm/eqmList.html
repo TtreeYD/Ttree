@@ -12,6 +12,16 @@
 	color: white;
 	font-weight: bolder;
 }
+
+	.tui-grid-cell.redW {
+	color: red;
+	font-weight: bolder;
+}
+
+.tui-grid-cell.greenW {
+	color: green;
+	font-weight: bolder;
+}
 </style>
 </head>
 <body>
@@ -25,10 +35,10 @@
     <input type="radio" id="all" name="eqmUcheck" value="" checked />
     <label for="all">전체</label>
  
- 	<input type="radio" id="y" name="eqmUcheck" value="y" />
+ 	<input type="radio" id="y" name="eqmUcheck" value="Y" />
     <label for="y">사용</label>
     
-    <input type="radio" id="n" name="eqmUcheck" value="n"/>
+    <input type="radio" id="n" name="eqmUcheck" value="N"/>
     <label for="n">미사용</label>
 	</div>
 	
@@ -147,16 +157,28 @@
     		
     			//
     			for(let item of result){
-    				//console.log(detDifference(item.nextInspDate))
-    				
-    				if(detDifference(item.nextInspDate)<5){
+    				console.log(item)
+    				if(item.eqmUcheck == '사용'){
     					item._attributes= {
     	            			className:{
     	            				column : {
-    	            					nextInspDate : ['red']
+    	            					eqmUcheck : ['greenW']
     	            				}
     	            			}
     		            	}
+    				}else{
+    					item._attributes= {
+    	            			className:{
+    	            				column : {
+    	            					eqmUcheck : ['redW']
+    	            				}
+    	            			}
+    		            	}
+    				}
+    				
+    				if((detDifference(item.nextInspDate) >= 0) && (detDifference(item.nextInspDate)<=5)){
+    					item._attributes.className.column.nextInspDate = ['red']
+    	            	
     				} 
     			}
     			
@@ -181,16 +203,28 @@
 				//
 				
 				for(let item of result){
-    				//console.log(item.nextInspDate)
-    				console.log(detDifference(item.nextInspDate))
-    				if( (detDifference(item.nextInspDate) >= 0) && (detDifference(item.nextInspDate)<3)){
+    				console.log(item)
+    				if(item.eqmUcheck == '사용'){
     					item._attributes= {
     	            			className:{
     	            				column : {
-    	            					nextInspDate : ['red']
+    	            					eqmUcheck : ['greenW']
     	            				}
     	            			}
     		            	}
+    				}else{
+    					item._attributes= {
+    	            			className:{
+    	            				column : {
+    	            					eqmUcheck : ['redW']
+    	            				}
+    	            			}
+    		            	}
+    				}
+    				
+    				if((detDifference(item.nextInspDate) >= 0) && (detDifference(item.nextInspDate)<=5)){
+    					item._attributes.className.column.nextInspDate = ['red']
+    	            	
     				} 
     			}
 				
@@ -212,17 +246,28 @@
 				console.log(result);
 				//
 				for(let item of result){
-					//console.log(item.nextInspDate)
-    				//console.log(detDifference(item.nextInspDate))
-    				
-    				if(detDifference(item.nextInspDate)<5 ){
+    				console.log(item)
+    				if(item.eqmUcheck == '사용'){
     					item._attributes= {
     	            			className:{
     	            				column : {
-    	            					nextInspDate : ['red']
+    	            					eqmUcheck : ['greenW']
     	            				}
     	            			}
     		            	}
+    				}else{
+    					item._attributes= {
+    	            			className:{
+    	            				column : {
+    	            					eqmUcheck : ['redW']
+    	            				}
+    	            			}
+    		            	}
+    				}
+    				
+    				if((detDifference(item.nextInspDate) >= 0) && (detDifference(item.nextInspDate)<=5)){
+    					item._attributes.className.column.nextInspDate = ['red']
+    	            	
     				} 
     			}
 				//
@@ -250,26 +295,27 @@
 		}
 		// 현재시간 
 		let now = new Date();
+		//console.log(now)
 		//console.log(date)
 		let year = now.getFullYear();
 		let month = now.getMonth()+1;
 		let day = now.getDate();
-		
+	
 		// 받아온날짜 
 		let d = date.substr(0,10)
+	
 		let date_arr =d.split("-");
 		
-		console.log(date_arr[0],date_arr[1],date_arr[2])
+		//console.log(date_arr[0],date_arr[1],date_arr[2])
 		
 		let stDate = new Date(date_arr[0],date_arr[1],date_arr[2]);
 		let nowDate = new Date(year,month,day);
 		
 		
-		//let btMs = stDate.getTime() - nowDate.getTime();
-		let btMs = nowDate.getTime() - stDate.getTime();
+		let btMs = stDate.getTime() - nowDate.getTime();
 		
-		let btDay = btMs/(1000*60*60*24);
-		console.log(btMs,btDay)
+		let btDay = btMs/(1000*60*60*24); //  1000 초 / 1000*60 분 / 1000*60*60 시 / 1000*60*60*24 일 
+		//console.log(btMs,btDay)
 		return btDay
 	}
 		

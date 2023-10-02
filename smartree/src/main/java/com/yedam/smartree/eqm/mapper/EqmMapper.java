@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.yedam.smartree.eqm.service.EqmInspVO;
 import com.yedam.smartree.eqm.service.EqmVO;
 
 @Mapper
@@ -18,4 +17,5 @@ public interface EqmMapper {
 	public int deleteEqm(EqmVO eqmVO);
 	public int updateEqm(EqmVO eqmVO);
 	public List<EqmVO> searchEqmDivision(String eqmDivision);
+	
 }
