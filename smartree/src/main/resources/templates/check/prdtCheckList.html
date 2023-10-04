@@ -172,6 +172,7 @@
 	    		data : {  prdtChkCode  },
 	       	 	dataType:'json',
 	    		success:function(result){
+	    			console.log(result)
 	    			for(let item of result){
 	    				if(item.prdtChkFit==='적합'){
 	    					item._attributes= {

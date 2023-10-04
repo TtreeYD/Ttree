@@ -70,14 +70,18 @@ public class ProdVO {
 	private String eqmCode;
 	private Date prcsSdate;
 	private Date prcsEdate;
-	private int prodCnt;
+	private int prdtCnt;
 	private int errCnt;
 	private int passCnt;
 	private String manager;
 	private int prdtProdSum;
+
+	private String prcsStdCode;
+
 	
 	// 홀딩
 	String holdingCode;
 	String mtlLotNum;
 	int holdingCnt;
+
 }

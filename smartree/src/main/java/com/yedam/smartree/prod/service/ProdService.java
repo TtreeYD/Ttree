@@ -37,7 +37,12 @@ public interface ProdService {
 	
 	//실적조회
 	List<PrcsResultVO> selectPrcsResult();
+
+	//생산시작버튼클릭(공정실적관리 insert)
+	public int insertDtProgress(RequestVO<ProdVO> vo);
+
 	
 	// 홀딩
 	List<HoldingVO> selectHolding(String prodInstCode);
+
 }
