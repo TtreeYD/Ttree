@@ -22,7 +22,6 @@ public class ProdVO {
 	private Date prodPlanSdate;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd")
-	private Date prodPlanEdate;
 	private int prodPlanCnt;
 	private String prodPlanNote;
 	
@@ -60,9 +59,11 @@ public class ProdVO {
 	private String result;
 	//완제품공정흐름도
 	private String prcsCode;
-	private int prcsNum;
+	private int prcsOrder;
 	private int prdtTotal;
 	private int prdtProdCnt;
+
+	
 	//공정실적관리
 	private String prcsRsCode;
 	private String eqmCode;
@@ -72,4 +73,5 @@ public class ProdVO {
 	private int errCnt;
 	private int passCnt;
 	private String manager;
+	private int prdtProdSum;
 }

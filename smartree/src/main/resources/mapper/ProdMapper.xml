@@ -296,7 +296,7 @@
   	</select>
   	<!-- 키오스크 :생산지시불러오기 -->
   	<select id="selectGetProcess" resultType="ProdVO">
-  		select p.prcs_code , d.dt_prod_inst_code , d.prdt_code , pt.prdt_name , p.prcs_num , p.prdt_total , pi.prod_inst_edate , p.prdt_prod_cnt
+  		select p.prcs_code , d.dt_prod_inst_code , d.prdt_code , pt.prdt_name , p.prcs_order , p.prdt_total , pi.prod_inst_edate , p.prdt_prod_cnt
 		  from dt_prod_inst d join process p
                         on d.dt_prod_inst_code = p.dt_prod_inst_code
                     join prod_inst pi
@@ -308,7 +308,7 @@
 
   	<!-- 키오스크: 공정흐름상세보기 -->
   	<select id="getProcess" resultType="ProdVO">
-  		select p.prcs_code , d.dt_prod_inst_code , d.prdt_code , pt.prdt_name , p.prcs_num , p.prdt_total , pi.prod_inst_edate , p.prdt_prod_cnt
+  		select p.prcs_code , d.dt_prod_inst_code , d.prdt_code , pt.prdt_name , p.prcs_order , p.prdt_total , GET_PRDT_SUM(#{prcsCode}) prdtProdSum
 		  from dt_prod_inst d join process p
                         on d.dt_prod_inst_code = p.dt_prod_inst_code
                     join prod_inst pi
@@ -317,6 +317,19 @@
                         on pt.prdt_code = d.prdt_code
           where p.prcs_code = #{prcsCode}
   	</select>
+  	<!-- aaa -->
+  	<select id="selectPrcsCode" resultType="MdmPrcsVO">
+		select prcs_type, prcs_std_code, eqm_code, eqm_name, eqm_state
+		from prcs_table JOIN bom_detail using(prcs_std_code)
+		                JOIN bom_table using(bom_code)
+		                JOIN prdt_table using(prdt_code)
+		                JOIN eqm ON eqm.eqm_division = prcs_table.prcs_type
+		where bom_use = 'Y'
+		AND   prcs_order = #{prcsOrder}
+		AND   prdt_code = #{prdtCode}
+		AND   eqm_ucheck = 'Y'
+  	</select>
+  	
   	
 
   	<!-- 실적조회 -->

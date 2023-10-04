@@ -9,4 +9,9 @@ public class MdmPrcsVO {
 	private String prcsType;
 	private String prcsNote;
 	private String prcsDetail;
+
+	
+	private String eqmCode;
+	private String eqmName;
+	private String eqmState;
 }

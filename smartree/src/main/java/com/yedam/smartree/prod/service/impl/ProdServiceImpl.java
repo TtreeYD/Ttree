@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yedam.smartree.business.service.BusinessVO;
 import com.yedam.smartree.material.service.MaterialVO;
+import com.yedam.smartree.mdm.service.MdmPrcsVO;
 import com.yedam.smartree.prod.mapper.ProdMapper;
 import com.yedam.smartree.prod.service.MtlNeedVO;
 import com.yedam.smartree.prod.service.PrcsResultVO;
@@ -195,6 +196,11 @@ public class ProdServiceImpl implements ProdService {
 	public List<PrcsResultVO> selectPrcsResult() {
 		return prodMapper.selectPrcsResult();
 
+	}
+
+	@Override
+	public List<MdmPrcsVO> selectPrcsCode(ProdVO vo) {
+		return prodMapper.selectPrcsCode(vo);
 	}
 
 
