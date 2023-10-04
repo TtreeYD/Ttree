@@ -152,7 +152,7 @@ public class ProdRestController {
 	public int insertDtProgress(@RequestBody RequestVO<ProdVO> vo){
 		System.out.println(vo);
 		return service.insertDtProgress(vo);
-
+	}
 	
 	// 홀딩
 	@GetMapping("/selectHolding")
