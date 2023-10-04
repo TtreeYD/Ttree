@@ -22,6 +22,7 @@ public class ProdVO {
 	private Date prodPlanSdate;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd")
+	private Date prodPlanEdate;
 	private int prodPlanCnt;
 	private String prodPlanNote;
 	
@@ -74,5 +75,13 @@ public class ProdVO {
 	private int passCnt;
 	private String manager;
 	private int prdtProdSum;
+
 	private String prcsStdCode;
+
+	
+	// 홀딩
+	String holdingCode;
+	String mtlLotNum;
+	int holdingCnt;
+
 }

@@ -84,7 +84,7 @@ public class MaterialVO {
 													// lot 번호
 	private String dtProdInstCode;					// 생산지시상세코드
 	private int holdingCnt;							// 홀드자재수량
-	
+	private int holdingSum;
 	// 발주관리-안전재고 미달목록
 	private int mtlSs;								// 자재 안전재고
 	private int mtlNow;								// 자재 수량차
@@ -118,4 +118,7 @@ public class MaterialVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private Date endMtlWishDate;
+	
+	// 프로시져용
+	private String result;
 }

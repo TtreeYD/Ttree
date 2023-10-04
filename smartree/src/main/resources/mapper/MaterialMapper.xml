@@ -57,19 +57,21 @@
   	
   	
   	<!-- 발주관리 insert -->
-  	<insert id="insertNeedMtl" parameterType="MaterialVO" statementType="CALLABLE">
-		INSERT INTO mtl_need (mtl_code, bp_code, mtl_name, mtl_cnt, mtl_unit, mtl_manager, mtl_wish_date, mtl_type, need_code)
-		VALUES (
+  	<insert id="insertNeedMtl" parameterType="MaterialVO" statementType="CALLABLE" >
+		{call p_mtl_need(
 		    #{mtlCode},
-		    (SELECT bp_code FROM business_partner WHERE bp_name = #{bpName}),
+		    #{mtlDate},
+		    #{bpCode},
 		    #{mtlName},
 		    #{mtlCnt},
 		    #{mtlUnit},
 		    #{mtlManager},
 		    #{mtlWishDate},
+		    #{mtlWhere},
 		    #{mtlType},
-		    'need'||mtl_seq.nextval
-		)
+		    #{needCode}
+		)}
+
   	</insert>
   	
   	<!-- 발주관리 update -->
@@ -88,22 +90,24 @@
   	
   	<!-- 입고관리 insert -->
 
-	<insert id="insertInMtl" parameterType="MaterialVO">
+	<insert id="insertInMtl" parameterType="MaterialVO" statementType="CALLABLE">
 		<selectKey keyProperty="mtlLotNum" resultType="String" order="BEFORE">
 		 SELECT #{mtlCode} ||'-'|| TO_CHAR(SYSDATE,'RRMMDD') || NVL( LPAD( MAX( SUBSTR( mtl_lot_num,-2)) +1, 2, '0'), '01')
          FROM mtl_container
             where mtl_code = #{mtlCode}
 		</selectKey>
-            INSERT INTO mtl_container(mtl_lot_num, mtl_code, mtl_in_cnt, mtl_in_date, mtl_manager, mtl_lot_cnt, mtl_chk_code )
-            VALUES (
-                #{mtlLotNum},
-                #{mtlCode},
-                #{mtlInCnt},
-                #{mtlInDate},
-                #{mtlManager},
-                #{mtlInCnt},
-                #{mtlChkCode}
-            )
+		{
+		call p_mtl_in(
+           #{mtlLotNum},
+           #{mtlCode},
+           #{mtlInCnt},
+           #{mtlInDate},
+           #{mtlManager},
+           #{mtlInCnt},
+           #{mtlChkCode},
+           #{result, mode=OUT, jdbcType=VARCHAR, javaType=string}
+		)}
+
 	</insert> 	
   	
   	<!-- 입고관리 update -->
@@ -121,7 +125,7 @@
   	
   	<!-- 발주관리 검색조회 -->
   	<select id="getNeedMtl" parameterType="MaterialVO">
-  		SELECT n.mtl_code , n.mtl_date, b.bp_name , get_common(t.mtl_type, '003') AS mtl_type , t.mtl_name , n.mtl_cnt , t.mtl_unit , n.mtl_manager , n.mtl_wish_date ,get_common (mtl_where, '009') mtl_where_nm
+  		SELECT n.mtl_code , n.mtl_date, b.bp_name ,b.bp_code, get_common(t.mtl_type, '003') AS mtl_type , t.mtl_name , n.mtl_cnt , t.mtl_unit , n.mtl_manager , n.mtl_wish_date ,get_common (mtl_where, '009') mtl_where_nm, n.mtl_where, n.need_code
   		FROM mtl_need n
         JOIN mtl_table t
         ON n.mtl_code = t.mtl_code
@@ -153,13 +157,14 @@
   	
   	<!-- 재고조회 로트별 출력기능 -->
   	<select id="getLotMtl" parameterType="MaterialVO">
-  		SELECT c.mtl_lot_num, get_common(t.mtl_type, '003') AS mtl_type, c.mtl_code, t.mtl_name, c.mtl_in_date, c.mtl_in_cnt, NVL(h.holding_cnt,0)holding_cnt, (c.mtl_lot_cnt - (NVL(h.holding_cnt,0)))mtl_use
+  		SELECT c.mtl_lot_num, get_common(t.mtl_type, '003') AS mtl_type, c.mtl_code, t.mtl_name, c.mtl_in_date, c.mtl_in_cnt, NVL(sum(h.holding_cnt),0) holding_sum, c.mtl_lot_cnt
 		FROM mtl_container c
 		JOIN mtl_table t
 		ON c.mtl_code = t.mtl_code
 		LEFT JOIN holding h
 		ON c.mtl_lot_num = h.mtl_lot_num
 		WHERE c.mtl_code = #{mtlCode}
+		GROUP BY c.mtl_lot_num, mtl_type, c.mtl_code, t.mtl_name, c.mtl_in_date, c.mtl_in_cnt, c.mtl_lot_cnt
   	</select>
   	
   	<!-- 발주목록 발주서별 자재내역 출력기능 -->

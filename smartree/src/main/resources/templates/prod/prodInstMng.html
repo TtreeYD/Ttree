@@ -80,12 +80,40 @@
 			<!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
+		
+		<div class="modal fade" tabindex="-1" role="dialog" id="mtlModal">
+			<div class="modal-dialog modal-dialog-centered modal-xl"
+				role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">재고목록</h4>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="mtlLotGrid"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="saveMtlCnt" class="btn btn-default" data-dismiss="modal">저장</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
 
 		<script>
-		let newGrid = [];	// newGrid에 grid 값들을 넣어주고 거기에 새계획 눌렀을 때도 추가하기 위해 만든 변수
+		let mtlCntVO = {} 
+		let mtlCode
+		let mtlRow
+
 		let rowNum;			// 해당 rowNum 값을 담기위해 만든 변수
 		let getProdPlanCode;
-		let grid, grid2, grid3, grid4, grid5, grid6;
+		let grid,  grid3, grid4, grid5, grid6;
 		toastr.options = {
 	  			  positionClass: "toast-top-center",
 	  			  escapeHtml: true,
@@ -175,7 +203,11 @@
 		        },
 		        {
 		          header: '홀드수량',
-		          name: 'holdingCnt'
+		          name: 'holdingCnt',
+		          validation:{
+			          validatorFn: (value, row, columnName) => Number(value) == Number(row['mtlTotalNeed']),
+		        	  	 required: true
+		          }
 		        }
 	      	]
 	    });
@@ -244,6 +276,54 @@
 	            }
    	       ]
  	   });
+	    
+	    // mtlLot그리드
+	    const mtlLotGrid = new tui.Grid({
+			el : document.getElementById('mtlLotGrid'),
+			scrollX : false,
+			scrollY : false,
+			rowHeaders : [ "rowNum" ],
+			pageOptions: {
+	            perPage: 5,
+	            useClient: true,
+	          },
+			columns : [ {
+				header : '자재LOT',
+				name : 'mtlLotNum',
+				sortable: true,
+			    sortingType: 'asc'
+			}, {
+				header : '자재코드',
+				name : 'mtlCode',
+				hidden: true
+			}, {
+				header : '자재이름',
+				name : 'mtlName'
+			}, {
+				header : '자재입고수량',
+				name : 'mtlInCnt'
+			}, {
+				header : '사용가능수량',
+				name : 'mtlUse'
+			}, {
+				header : '홀드수량',
+				name : 'holdingCnt',
+				editor: {
+					type: 'text'
+				}
+			}  ],
+			summary: {
+			  height: 40,
+			  position: 'bottom', // or 'top'
+			  columnContent: {
+				  holdingCnt: {
+			      template: function(valueMap) {
+			        return `TOTAL: ${valueMap.sum}`;
+			      }
+			    }
+			  }
+			}
+		});
 		
 		// 생산계획 버튼 모달
 		$('#prodListBtn').on('click', prodIngList);
@@ -287,21 +367,25 @@
 		function resetList(){
 			var data = grid.getData();
 
-			grid.resetData([]);
-			grid2.resetData([]);
-			grid3.resetData([]);
-			newGrid = [];
+			grid.clear()
+			grid3.clear()
 			$('#prodInstCode').val('');
 			$('#prodInstName').val('');
 			$('#prodInstManager').val('');
 			$('#prodInstDate').val('');
 			$('#prodInstSdate').val('');
 			$('#prodInstEdate').val('');
+			bir.value = today;
 		}
 		
 			// 저장 버튼
 			$('#saveBtn').on('click',function(){
 				grid.blur();
+				console.log(grid3.validate())
+				if(grid3.validate().length){
+					toastr.warning('값을 확인해주세요')
+					return
+				}
 				var data = {};
 				data.list = grid.getData();
 				data.vo = {
@@ -313,6 +397,13 @@
 					prodInstEdate : $('#prodInstEdate').val(),
 					prodPlanCode : data.list[0].prodPlanCode
 				}
+				data.hlist = []
+				for(let mtl in mtlCntVO){
+					for(let obj of mtlCntVO[mtl]){
+						data.hlist.push(obj)
+					}
+				}
+				mtlCntVO = {};
 				console.log(data);
 			if(data.vo.prodInstCode != ''){
 				$.ajax({
@@ -413,14 +504,34 @@
 				data : { prodPlanCode : prodPlanCode },
 				success : function(result){
 					console.log(result);
-					$('#prodInstCode').val(result[0].prodInstCode),
-					$('#prodInstName').val(result[0].prodInstName),
-					$('#prodInstManager').val(result[0].prodInstManager),
-					$('#prodInstDate').val(result[0].prodInstDate),
-					$('#prodInstSdate').val(result[0].prodInstSdate),
-					$('#prodInstEdate').val(result[0].prodInstEdate)
-					grid.resetData(result);
+					$('#prodInstCode').val(result.list[0].prodInstCode),
+					$('#prodInstName').val(result.list[0].prodInstName),
+					$('#prodInstManager').val(result.list[0].prodInstManager),
+					$('#prodInstDate').val(result.list[0].prodInstDate),
+					$('#prodInstSdate').val(result.list[0].prodInstSdate),
+					$('#prodInstEdate').val(result.list[0].prodInstEdate)
+					grid.resetData(result.list);
 				 	$("#prodInstModal").modal('hide');	
+					mtlNeed = result.mtlNeed
+					
+					// 중복제거후 자재표에 넣기
+					mtlZero = result.mtlNeed.filter(function(item1, idx1){
+						return result.mtlNeed.findIndex(function(item2, idx2){
+							return item1.mtlCode == item2.mtlCode
+						}) == idx1;
+					})
+					grid3.resetData(mtlZero)
+					mtlCalc();
+					$.ajax({
+						url: '/selectHolding',
+						data: {
+							prodInstCode : result.list[0].prodInstCode
+						},
+						success: result => {
+							console.log(result)
+						},
+						error: err => console.log(err)
+					})
 				},
 				error : function(err){
 					console.log(err);
@@ -462,10 +573,13 @@
 		})
 		
 		grid.on('afterChange', (ev) => {
-			console.log(grid.getData())
+			mtlCalc();
+		})
+		
+		// 재고소요량 계산
+		function mtlCalc() {
 			grid3.resetData(mtlZero)
 			let mtlNeedList = {}
-			console.log(mtlZero)
 			for(let data of grid.getData()){
 				for(let need of mtlNeed){
 					if(data.prdtCode === need.prdtCode){
@@ -481,14 +595,60 @@
 			for(let data of grid3.getData()){
 				grid3.setValue(data.rowKey,"mtlTotalNeed",mtlNeedList[data.mtlCode])
 			}
-			console.log(mtlNeedList)
+		}
+		
+				
+
+		
+		// getLotMtl
+		grid3.on('click', (ev) => {
+			if(ev.rowKey == undefined || ev.columnName != "holdingCnt"){
+				return;
+			}
+			mtlRow = ev.rowKey
+			mtlCode = grid3.getValue(mtlRow, 'mtlCode')
+			$.ajax({
+				url: '/getLotMtl',
+				type: 'POST',
+				data:{
+					mtlCode: mtlCode
+				},
+				success: result => {
+					$(result).each(function (idx, obj) {
+						obj.mtlUse = obj.mtlLotCnt - obj.holdingSum
+						for(let mtl in mtlCntVO){
+							//if(mtl == mtlCode){
+								for(let obj2 of mtlCntVO[mtl]){
+									if(obj.mtlLotNum == obj2.mtlLotNum) {
+										obj.holdingCnt = obj2.holdingCnt
+									}
+								}
+							//}
+						}
+					})
+					$('#mtlModal').modal('show')
+					mtlLotGrid.resetData(eval(result))
+					setTimeout(() => mtlLotGrid.refreshLayout(), 200);
+				},
+				error: err => console.log(err)
+			})
+		})
+		
+	
+		
+		$('#saveMtlCnt').on('click', () => {
+			mtlLotGrid.blur();
+			let totalCnt = mtlLotGrid.getSummaryValues('holdingCnt').sum
+			mtlCntVO[mtlCode] = mtlLotGrid.getModifiedRows().updatedRows
+			grid3.setValue(mtlRow,'holdingCnt', totalCnt)
+			console.log(mtlCntVO)
 		})
 		
 		// 오늘날짜 input에 넣기
 		today = new Date();
-		console.log("today.toISOString() >>>" + today.toISOString());
+		// console.log("today.toISOString() >>>" + today.toISOString());
 		today = today.toISOString().slice(0, 10);
-		console.log("today >>>> " + today);
+		// console.log("today >>>> " + today);
 		bir = document.getElementById("prodInstDate");
 		bir.value = today;
 

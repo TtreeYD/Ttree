@@ -11,15 +11,15 @@
 </style>
 <body>
 	<div layout:fragment="content">
-	<h2>생산계획관리</h2>
+		<h2>생산계획관리</h2>
 		<label>계획명 : </label> <input type="text" name="prodPlanName"
 			id="prodPlanName"><br> <label>담당자 : </label> <input
 			type="text" name="prodName" id="prodName"><br> <label>생산계획일자
 			: </label> <input type="date" name="prodPlanDate" id="prodPlanDate">
 		<label>생산예상시작일자 : </label> <input type="date" name="prodPlanSdate"
 			id="prodPlanSdate"> <label>생산예상종료일자 : </label> <input
-			type="date" name="prodPlanEdate" id="prodPlanEdate">
-			<input type="hidden" name="prodPlanCode" id="prodPlanCode">
+			type="date" name="prodPlanEdate" id="prodPlanEdate"> <input
+			type="hidden" name="prodPlanCode" id="prodPlanCode">
 		<div class="btn-group" role="group" aria-label="Basic example"
 			style="float: right; margin-bottom: 10px;">
 			<button type="button" class="btn btn-primary" id="insertListBtn">새계획</button>
@@ -30,15 +30,7 @@
 			<button type="button" class="btn btn-primary" id="saveBtn">저장</button>
 			<button type="button" class="btn btn-primary" id="delBtn">삭제</button>
 		</div>
-		<div id="grid" ></div>
-		<div
-			style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
-			<span>
-				<div id="grid2" style="width: 600px;"></div>
-			</span> <span>
-				<div id="grid3" style="width: 600px;"></div>
-			</span>
-		</div>
+		<div id="grid"></div>
 
 		<div class="modal fade" tabindex="-1" role="dialog" id="orderModal">
 			<div class="modal-dialog modal-dialog-centered modal-xl"
@@ -114,7 +106,6 @@
 
 		<script>
 		let dtPPCode = [];	// prodPlanCode 담을 변수
-		let newGrid = [];	// newGrid에 grid 값들을 넣어주고 거기에 새계획 눌렀을 때도 추가하기 위해 만든 변수
 		let rowNum;			// 해당 rowNum 값을 담기위해 만든 변수
 		let grid, grid2, grid3, grid4, grid5, grid6;
         const header = ['prodPlanName','prodPlanDate','prodPlanSdate','prodPlanEdate'];
@@ -301,18 +292,15 @@
 		$('#resetBtn').on('click', resetList)
 		
 		function resetList(){
-			var data = grid.getData();
 
-			grid.resetData([]);
-			grid2.resetData([]);
-			grid3.resetData([]);
-			newGrid = [];
+			grid.clear()
 			$('#prodPlanCode').val('');
 			$('#prodPlanName').val('');
 			$('#prodPlanDate').val('');
 			$('#prodPlanSdate').val('');
 			$('#prodPlanEdate').val('');
 			$('#prodName').val('');
+			bir.value = today;
 		}
 		
 			// 저장 버튼
@@ -330,7 +318,6 @@
 					prodPlanCode : $('#prodPlanCode').val()
 				}
 				console.log(data);
-				console.log(newGrid.length);
 				console.log(data.vo.prodPlanCode);
 				console.log(data.vo.prodPlanCode != '');
 				
@@ -414,7 +401,7 @@
 					data : JSON.stringify(data),
 					success:function(result){
 						toastr.success(result + " 건 삭제완료");
-						resetList();
+						grid.removeRows(grid.getCheckedRowKeys())
 					},
 					error:function(err){
 						console.log(err)
@@ -466,7 +453,6 @@
 	      		},
       		success:function(result){
 				dtPPCode = result;
-				newGrid = result;
 				console.log(result)
 				$('#prodPlanCode').val(result[0].prodPlanCode);
    	         	$('#prodPlanName').val(result[0].prodPlanName);
@@ -483,18 +469,15 @@
       		}
     		})
 		})
+		// 새계획
 		$('#insertListBtn').on('click', function() {
-			newGrid.push({
-				prdtName : '',
-				orderDtCnt : '',
-				prodPlanCnt : '',
-				rodRank : '',
-				prodPlanNote : ''
-			});
-			grid.resetData(newGrid);
+			grid.appendRow()
 		});
 		//제품 클릭모달이벤트
 		grid.on('click',(ev)=>{
+			if(ev.rowKey == undefined){
+				return;
+			}
 			if(ev.columnName != 'prdtCode' && ev.columnName !='prdtName'){
 				return;	
 			}
@@ -522,10 +505,10 @@
 			let data = grid6.getData()[ev.rowKey]
 			
 			data.prodPlanCode = $('#prodPlanCode').val();
-			data.rowKey = rowNum
+			//data.rowKey = rowNum
 			console.log(data)
 			 let check = true; 
-			 newGrid.forEach((order) => {
+			 grid.getData().forEach((order) => {
 						if(order.prdtCode == data.prdtCode) {
 							toastr.warning('이미 같은 제품이 있습니다.')
 							check=false;
@@ -533,10 +516,8 @@
 						}
 				})
 			if(check){
-				newGrid[rowNum] = data;
-				grid.resetData(newGrid);
+				grid.setRow(rowNum,data)
 				$('#prdtModal').modal('hide');
-				console.log(newGrid)
 			}
 
 		});
