@@ -47,10 +47,10 @@ import com.yedam.smartree.eqm.service.EqmVO;
 @Controller
 @RequestMapping("/eqm")
 public class EqmController {
-	
+
 	@Value("${file.upload.path}")
 	private String uploadPath;
-	
+
 	@Autowired
 	EqmService eqmservice;
 
@@ -79,43 +79,43 @@ public class EqmController {
 
 	// 설비 등록 - 등록, 수정
 	@PostMapping("/eqmForm")
-	public String registerEqmProcess(MultipartFile file, EqmVO eqmVO,  RedirectAttributes attributes) {
+	public String registerEqmProcess(MultipartFile file, EqmVO eqmVO, RedirectAttributes attributes) {
 
 		// 파일업로드
-		
+
 		// 파일명 가져오기
 		String originalName = file.getOriginalFilename();
-		String fileName = originalName.substring(originalName.lastIndexOf("//")+1);
-		
-        // 파일명 변경없으면 변화없게 하기위해서(update)
-		if(!fileName.equals("")) {  
-		
-	    //날짜 폴더 생성
-        String folderPath = makeFolder();
-        
-        // 유니크한 이름 때문에
-        String uuid = UUID.randomUUID().toString();        
-        String uploadFileName = folderPath + "/" + uuid + "_" + fileName;
-        eqmVO.setEqmImg(uploadFileName);
+		String fileName = originalName.substring(originalName.lastIndexOf("//") + 1);
 
-        //uploadFile에 파일을 업로드 하는 메서드 transferTo(file)   	
-        String saveName = uploadPath + "/" + uploadFileName;
-        Path savePath = Paths.get(saveName);		
-        try{
-        	file.transferTo(savePath); // 파일의 핵심
-        } catch (IOException e) {
-             e.printStackTrace();	             
-        }
+		// 파일명 변경없으면 변화없게 하기위해서(update)
+		if (!fileName.equals("")) {
 
-    }	
+			// 날짜 폴더 생성
+			String folderPath = makeFolder();
+
+			// 유니크한 이름 때문에
+			String uuid = UUID.randomUUID().toString();
+			String uploadFileName = folderPath + "/" + uuid + "_" + fileName;
+			eqmVO.setEqmImg(uploadFileName);
+
+			// uploadFile에 파일을 업로드 하는 메서드 transferTo(file)
+			String saveName = uploadPath + "/" + uploadFileName;
+			Path savePath = Paths.get(saveName);
+			try {
+				file.transferTo(savePath); // 파일의 핵심
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		}
 		// eqmcode 없으면 등록 / 있으면 수정
 		if (eqmVO.getEqmCode().equals("")) {
 			eqmservice.insertEqm(eqmVO);
 		} else {
 			eqmservice.updateEqm(eqmVO);
 		}
-		
-		// ?eqmCode= 안보이게 / 
+
+		// ?eqmCode= 안보이게 /
 		attributes.addFlashAttribute("eqmCode", eqmVO.getEqmCode());
 		return "redirect:eqmForm";
 	}
@@ -132,28 +132,65 @@ public class EqmController {
 	 * 
 	 * eqmservice.updateEqm(eqmVO); return "redirect:eqmForm"; }
 	 */
+
+	// 비가동 페이지
+	@GetMapping("/eqmNoperForm")
+	public String EqmNoperForm() {
+		// model.addAttribute("eqmInspVO", new EqmInspVO());
+		return "eqm/eqmNoperForm";
+	}
+
+	@PostMapping("/eqmNoperForm")
+	@ResponseBody
+	public String registerEqmNoperFormProcess(@RequestBody EqmNoperVO eqmNoperVO ) {
+		eqminspservice.insertEqmNoper(eqmNoperVO);
+		//
+		
+		 String eqmCode = eqmNoperVO.getEqmCode(); 
+		 String emqState = "S"; 
+		 EqmVO eqmvo= new EqmVO();
+		 eqmvo.setEqmCode(eqmCode); 
+		 eqmvo.setEqmState(emqState);
+		 eqmservice.updateEqm(eqmvo);
+		 
+		//
+		
+		return "redirect:eqmNoperForm";
+
+	}
+
 	// 설비 점검 등록 - 페이지
 	@GetMapping("/eqmInspForm")
 	public String registerEqmInspForm() {
 		// model.addAttribute("eqmInspVO", new EqmInspVO());
 		return "eqm/eqmInspForm";
 	}
+
 	// 설비 점검 등록 - 등록
 	@PostMapping("/eqmInspForm")
-	public String registerEqmInspFormProcess(EqmInspVO eqmInspVO,RedirectAttributes attributes) {
+	public String registerEqmInspFormProcess(EqmInspVO eqmInspVO, RedirectAttributes attributes) {
 		eqminspservice.insertEqmInsp(eqmInspVO);
+		//
+		if(!eqmInspVO.getNoperCode().equals("")) {
+			 String eqmCode = eqmInspVO.getEqmCode(); 
+			 String emqState = "Y"; 
+			 EqmVO eqmvo= new EqmVO();
+			 eqmvo.setEqmCode(eqmCode); 
+			 eqmvo.setEqmState(emqState);
+			 eqmservice.updateEqm(eqmvo);
+		}	
+		//
 		attributes.addFlashAttribute("eqmCode", eqmInspVO.getEqmCode());
 		attributes.addFlashAttribute("inspCode", eqmInspVO.getInspCode());
 		return "redirect:eqmInspForm";
 	}
-	
+
 	/////////////////////////////////////
-	
 
 	private String makeFolder() {
-		String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd"));	// 경로에서 사용하는 /는 인지 못함
+		String str = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd")); // 경로에서 사용하는 /는 인지 못함
 		// LocalDate를 문자열로 포멧
-		String folderPath = str;//.replace("/", File.separator); // <- 그래서 separator 사용
+		String folderPath = str;// .replace("/", File.separator); // <- 그래서 separator 사용
 		File uploadPathFoler = new File(uploadPath, folderPath);
 		// File newFile= new File(dir,"파일명");
 		if (uploadPathFoler.exists() == false) {
@@ -164,27 +201,26 @@ public class EqmController {
 		}
 		return folderPath;
 	}
-	
+
 	// 이미지 보여주기
 	@GetMapping("/display")
 	@ResponseBody
-	public ResponseEntity<byte[]> getFile(String fileName){
+	public ResponseEntity<byte[]> getFile(String fileName) {
 		File file = new File(uploadPath + fileName);
 		ResponseEntity<byte[]> result = null;
-		
+
 		try {
 			HttpHeaders header = new HttpHeaders();
-			
+
 			header.add("Content-Type", Files.probeContentType(file.toPath()));
 			result = new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
-			
-		}catch(IOException e) {
+
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
-	
-	
+
 	// 파일 업로드 처리
 	private String getFolder() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -194,30 +230,9 @@ public class EqmController {
 
 		return str.replace("-", File.separator);
 	}
-	
+
 	private String setImagePath(String uploadFileName) {
 		return uploadFileName.replace(File.separator, "/");
 	}
-	
-	// 비가동 페이지
-	@GetMapping("/eqmNoperForm")
-	public String EqmNoperForm() {
-		// model.addAttribute("eqmInspVO", new EqmInspVO());
-		return "eqm/eqmNoperForm";
-	}
-	@PostMapping("/eqmNoperForm")
-	@ResponseBody
-	public String registerEqmNoperFormProcess(@RequestBody EqmNoperVO eqmNoperVO) {
-		eqminspservice.insertEqmNoper(eqmNoperVO);
-		return "redirect:eqmNoperForm";
-		
-	}
-	
-
-	
 
 }
-
-
-
-

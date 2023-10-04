@@ -157,11 +157,11 @@
     		method:'get',
         dataType:'json',
     		success:function(result){
-    			console.log(result);
+    			//console.log(result);
     			
     			//
     			for(let item of result){
-    				console.log(item)
+    				//console.log(item)
     				if(item.inspJudg == '적합'){
     					item._attributes= {
     	            			className:{
@@ -203,7 +203,7 @@
 			data: {inspJudg:inspJudg},
 			success: result=>{
 				//console.log(eqmUcheck)
-				//console.log(result)
+				console.log(result)
 				//
     			for(let item of result){
     				console.log(item)

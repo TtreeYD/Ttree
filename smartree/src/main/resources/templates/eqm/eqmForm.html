@@ -74,16 +74,15 @@
 					</tr>
 
 					<tr>
-						<th>사용여부</th>
+						<th>사용여부 *</th>
 						<td><label for="y"
 							style="margin-left: 10px; margin-right: 40px"><input
 								type="radio" id="y"  name="eqmUcheck"
-								value="y" checked/> Yes </label> <label for="n"><input type="radio"
-								id="n" th:field="*{eqmUcheck}" name="eqmUcheck" value="n" /> No
+								value="Y" checked/> Yes </label> <label for="n"><input type="radio"
+								id="n" th:field="*{eqmUcheck}" name="eqmUcheck" value="N" /> No
 						</label></td>
 						<th>공정구분</th>
-						<td><select id="eqmDivision" name="eqmDivision"
-							th:field="*{eqmDivision}">
+						<td><select id="eqmDivision" name="eqmDivision">
 								<option value="">--</option>
 								<!-- <option value="PC01">재단</option>
 								<option value="PC02">가공</option>
@@ -95,7 +94,7 @@
 					<tr>
 						<th>온도</th>
 						<td><input type="text" id="eqmMinTemp"
-							 name="eqmMinTemp" placeholder="최저" /> ℃
+							 name="eqmMinTemp" placeholder="최저"  /> ℃
 							~ <input type="text" id="eqmMaxTemp" 
 							name="eqmMaxTemp" placeholder="최고" /> ℃</td>
 
@@ -106,7 +105,7 @@
 					<tr>
 						<th>점검주기</th>
 						<td><input type="text" name="inspCycle" id="inspCycle"
-							th:field="*{inspCycle}" />일</td>
+							value=0 />일</td>
 						<th>이미지</th>
 						<td><input type="file" name="file" id="eqmImg"	 accept="image/*" /></td>
 					</tr>
@@ -180,22 +179,39 @@
 				infoForm.eqmName.focus();
 				return;
 			}
+			// 설비명,관리자,제조업체 글자수 제한
+			if(infoForm.eqmName.value.length > 10 || infoForm.eqmManager.value.length  > 10||infoForm.mfgComp.value.length  > 10){
+				swal("최대 10자까지 입니다", "", "warning");
+				return;
+			}
+			//공정구분 테스트
+			if(infoForm.eqmDivision.value==''){
+				swal("공정구분을 선택하세요", "", "warning");
+				return;
+			}
 		 	// 관리자 테스트
 			if(infoForm.eqmManager.value==''){
 				swal("관리인를 입력하세요", "", "warning");
 				infoForm.eqmManger.focus();
 				return;
 			}
+		 	
 			// 제조업체 테스트
 			if(infoForm.mfgComp.value==''){
 				swal("제조업체를 입력하세요", "", "warning");
-				intoForm.eqmManger.focus();
+				infoForm.mfgComp.focus();
 				return;
 			}
 			// 온도
+			if(infoForm.eqmMinTemp.value ==''){
+				infoForm.eqmMinTemp.value =0
+			}
+			if(infoForm.eqmMaxTemp.value ==''){
+				infoForm.eqmMaxTemp.value =0
+			}
 			if( (infoForm.eqmMinTemp.value > infoForm.eqmMaxTemp.value)) {
 				swal("온도를 확인하세요", "최저온도가 최고온도보다 높습니다", "warning");
-				intoForm.eqmMaxTemp.focus();
+				infoForm.eqmMaxTemp.focus();
 				return;
 			}
 			 
@@ -306,17 +322,19 @@
                     eqmCode: data
                   },
                   success: function (result) {
-					console.log(result.eqmImg);
+					console.log(result);
                     $("#searchEqmModal").modal("hide");
                     $("#eqmCode").val(result.eqmCode);
                     $("#eqmName").val(result.eqmName);
 
-                    if (result.eqmUcheck == "y") {
+                    if (result.eqmUcheck == "Y") {
                       $("#y").prop("checked", true);
                     } else {
                       $("#n").prop("checked", true);
                     }
                     //$('#eqmUcheck').val(result.eqmUcheck);
+                     $("#eqmDivision").val(result.eqmDivision);
+                    // $("#eqmDivision").val(result.eqmDivision).prop("selected",true);
                     $("#eqmMinTemp").val(result.eqmMinTemp);
                     $("#eqmMaxTemp").val(result.eqmMaxTemp);
                     $("#eqmManager").val(result.eqmManager);
@@ -325,7 +343,7 @@
                   //$('#eqmImg').val(result.eqmImg);
                     $("#mfgComp").val(result.mfgComp);
                     $("#mfgDate").val(result.mfgDate);
-                    $("#eqmDivision").val(result.eqmDivision);
+                   
                   },
                   error: function (err) {
                     console.log(err);
