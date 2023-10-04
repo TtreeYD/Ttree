@@ -118,4 +118,7 @@ public class MaterialVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private Date endMtlWishDate;
+	
+	// 프로시져용
+	private String result;
 }
