@@ -64,7 +64,13 @@
           scrollX: false,
           scrollY: false,
           rowHeaders: ["rowNum"],
-          columns: [{
+          columns: [
+       	  {
+                 header: '주문코드',
+                 name: 'orderCode',
+                 hidden: true
+           },
+          {
             header: '주문상세코드',
             name: 'orderDtCode',
           },
@@ -177,7 +183,7 @@
               orderCode: data
             },
             success: function (result) {
-
+			
               grid2.resetData(result);
 
               setTimeout(() => grid2.refreshLayout(), 200);
@@ -189,10 +195,11 @@
             }
           })
         })
-
-        $('#pdfbtn').on('click', function () {
-          let data = grid2.getData();
-          console.log(data)
+		//pdf저장
+        $('#pdfBtn').on('click', function () {
+        	let orderCode = grid2.getValue(0 , "orderCode");
+          	window.open("orderPdf1?orderCode="+orderCode,'pdf');
+        	
         });
         
         $('#searchDataBtn').on('click',function(){

@@ -63,42 +63,66 @@ box-shadow: 1px 1px 7px #d16a6e;
 cursor: pointer;
 box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
 }
-.bigbutton{
-width:200px;
-height:200px;
-border-radius: 25px;
-display: inline-block;
-border: 1px solid black;
-
-
-
-margin-top: -200px; /* 여기를 조절하여 위로 이동시킬 수 있습니다 */
-position: relative; /* 추가된 부분 */
+.bigbutton {
+  width: 600px;
+  height: 300px;
+  border-radius: 25px;
+  display: inline-block;
+  border: 1px solid black;
+  vertical-align: top; /* 버튼을 상단에 정렬합니다 */
+  /* 기존의 margin-top 스타일을 제거합니다 */
 }
- button:active {
+
+
+
+ button:active :not(td){
     box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
     position: relative;
     top:2px;
   }
-  
-.buttons-container {
-    position: absolute;
-    top: 600px; /* 원하는 만큼 위로 이동 */
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    justify-content: space-between;
-    width: 400px; /* 요소들 간격을 조절하기 위한 너비 설정 */
-    margin-left: 250px;
-    
+  .lightgrey .tui-grid-cell-current-row td{
+  			box-shadow: 0px 0px 3px 5px rgba(0, 0, 0, 0.507) inset;
+			
+			font-weight: bold;
+		}
+#eqmGrid tbody td {
+	cursor: pointer;
 }
 
-.buttons-container button , input {
-    width: 200px; /* 버튼의 너비 조절 */
-    height:50px;
-    border-radius: 25px;
-    border: 1px solid black;
+.prcr_dt_progres_content{
+	position:relative;
 }
+.prcr_dt_progres_bottom_item{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+}
+.prcr_dt_progres_bottom_item{
+	/*위아래 공백 조정*/
+	margin-top: 150px;
+}
+#startBtn{
+	/*버튼 좌우 위치 조정*/
+	margin-right: 14%;
+}
+.tui-grid-cell.red {
+	background-color: rgb(227, 52, 52);
+	color: white;
+	font-weight: bolder;
+}
+
+.tui-grid-cell.green {
+	background-color: rgb(31, 193, 31);
+	color: white;
+	font-weight: bolder;
+}
+.tui-grid-cell.yellow {
+	background-color: rgb(252, 255, 54);
+	color: white;
+	font-weight: bolder;
+}
+
 </style>
 </head>
 <body>
@@ -108,20 +132,18 @@ position: relative; /* 추가된 부분 */
             <i class="fa-solid fa-house" onclick="backHome()"></i>
         </div>
  </div>
+ <div class="prcr_dt_progres_content">
 	<div id="instDtGrid"></div>
-	<div id="eqmGrid" style="width: 600px;margin-top: 250px;"></div>
-	<div class="buttons-container">
-		<input type="button" readonly value="불량등록" style="font-size: 20px;"> 
-		<button>-</button>
-		<input type="button" value="0">
-		<button>+</button>
+	<div class="prcr_dt_progres_bottom_item">
+	<div id="eqmGrid" class="lightgrey" style="width: 600px;"></div>
+	
+	<button class="bigbutton" id="startBtn" style="background-color: rgb(94, 155, 248);">작업시작</button>
 	</div>
-	<button class="bigbutton" style="margin-left:500px; background-color: rgb(94, 155, 248);">작업시작</button>
-    <button class="bigbutton" id ="endbtn" style="margin-left:200px; background-color: rgb(201, 68, 101);">작업종료</button>
+ </div>
 <script th:inline="javascript">
 var data = [[${data}]]
 console.log(data)
-
+let clickdata ;
 const instDtGrid = new tui.Grid({
 	el : document.getElementById('instDtGrid'),
 	scrollX : false,
@@ -176,14 +198,14 @@ const eqmGrid = new tui.Grid({
 	el : document.getElementById('eqmGrid'),
 	scrollX : false,
 	scrollY : false,
-	bodyWidth:50,
+	rowHeight:50,
 	 header: {
 	        height: 100,
 	        complexColumns: [
 	          {
 	            header: '설비선택',
 	            name: 'mergeColumn1',
-	            childNames: ['name', 'artist']
+	            childNames: ['eqmName', 'eqmState']
 	          }
 	        ]
 	      },
@@ -231,6 +253,39 @@ $(document).ready(function (){
 						console.log(result2)
 						result[0].prcsStdCode = result2[0].prcsStdCode
 						instDtGrid.resetData(result);
+						  for(let i = 0 ; i<result2.length ; i++){
+							if(result2[i].eqmState == 'Y'){
+								result2[i].eqmState = '사용중';
+								result2[i]._attributes= {
+		    	            			className:{
+		    	            				column : {
+		    	            					eqmName : ['yellow'],
+		    	            					eqmState:['yellow']
+		    	            				}
+		    	            			}
+		    		            	}
+							}else if(result2[i].eqmState == 'N'){
+								result2[i].eqmState = '사용가능';
+								result2[i]._attributes= {
+		    	            			className:{
+		    	            				column : {
+		    	            					eqmName : ['green'],
+		    	            					eqmState:['green']
+		    	            				}
+		    	            			}
+		    		            	}
+							}else{
+								result2[i].eqmState = '사용불가';
+								result2[i]._attributes= {
+		    	            			className:{
+		    	            				column : {
+		    	            					eqmName : ['red'],
+		    	            					eqmState:['red']
+		    	            				}
+		    	            			}
+		    		            	}
+							}
+						}  
 						eqmGrid.resetData(result2);
 					}
 				})
@@ -241,8 +296,33 @@ $(document).ready(function (){
 			}
 		})
 	}
-	$('#endbtn').on('click',function(){
-		console.log(123);
+	eqmGrid.on('click',function(ev){
+		clickdata = eqmGrid.getValue(ev.rowKey , 'eqmCode');
+		
+	})
+	$('#startBtn').on('click',function(){
+		let req={};
+		req.list = instDtGrid.getData(); 
+		req.list[0].eqmCode = clickdata;
+		
+		req.vo = {
+				eqmCode: clickdata
+		}
+	
+		console.log(req)
+		$.ajax({
+			url:'/insertDtProgress',
+			method:'POST',
+			dataType: 'json',
+			contentType : 'application/json',
+			data:JSON.stringify(req),
+			success:function(result){
+				console.log(result)
+			},
+			error:function(err){
+				console.log(err);	
+			}
+		})
 	})
 })
 </script>

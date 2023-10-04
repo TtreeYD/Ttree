@@ -8,6 +8,7 @@ import com.yedam.smartree.prod.service.MtlNeedVO;
 import com.yedam.smartree.prod.service.PrcsResultVO;
 import com.yedam.smartree.prod.service.PrdtProdVO;
 import com.yedam.smartree.prod.service.ProdVO;
+import com.yedam.smartree.prod.service.RequestVO;
 
 public interface ProdMapper {
 	
@@ -72,5 +73,11 @@ public interface ProdMapper {
 	
 	// 실적조회
 	List<PrcsResultVO> selectPrcsResult();
+
 	
+	
+	//생산시작버튼클릭(공정실적관리 insert)
+	public int insertDtProgress(ProdVO prodVO);
+	//설비 상태 변경
+	public int updateEqmState(ProdVO vo);
 }

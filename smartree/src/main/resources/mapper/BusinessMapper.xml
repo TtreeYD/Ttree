@@ -128,6 +128,7 @@
   			,#{prdtCode}
   			,#{orderDtCnt}
   			,#{orderCode}
+  			,#{orderDtPrice}
   		)
   	</insert>
   	

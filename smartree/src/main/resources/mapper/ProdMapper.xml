@@ -349,5 +349,30 @@
   								  JOIN dt_prod_inst USING(dt_prod_inst_code)
   								  JOIN prod_inst USING(prod_inst_code)
   	</select>
-
+	
+	
+	<!-- 공정시작 -->
+	<insert id="insertDtProgress" parameterType="ProdVO">
+		<selectKey keyProperty="prcsRsCode" resultType="String" order="BEFORE">
+        	select 'PRCR' || LPAD(PROCESS_RESULT_SEQ.NEXTVAL, 6, '0') as prcsRsCode from dual
+    	</selectKey>
+		insert into process_result( PRCS_RS_CODE , PRDT_CODE , PRCS_STD_CODE , EQM_CODE , PRCS_CODE , PRDT_CNT , MANAGER)
+		values(
+				#{prcsRsCode}
+			   ,#{prdtCode}
+			   ,#{prcsStdCode}
+			   ,#{eqmCode}
+			   ,#{prcsCode}
+			   ,#{prdtCnt}
+			   ,#{manager}
+				
+				)
+		
+	</insert>
+	<!-- 설비상태변경 -->
+	<update id="updateEqmState" parameterType="ProdVO">
+		update eqm
+		   set  EQM_STATE = 'Y'
+		 where eqm_code = #{eqmCode}
+	</update>
   </mapper>

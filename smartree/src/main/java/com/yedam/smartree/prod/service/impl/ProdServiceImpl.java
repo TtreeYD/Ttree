@@ -202,6 +202,13 @@ public class ProdServiceImpl implements ProdService {
 	public List<MdmPrcsVO> selectPrcsCode(ProdVO vo) {
 		return prodMapper.selectPrcsCode(vo);
 	}
+	//생산시작버튼클릭(공정실적관리 insert)
+	@Override
+	public int insertDtProgress(RequestVO<ProdVO> vo) {
+		prodMapper.insertDtProgress(vo.getList().get(0));
+		prodMapper.updateEqmState(vo.getVo());
+		return 0;
+	}
 
 
 	

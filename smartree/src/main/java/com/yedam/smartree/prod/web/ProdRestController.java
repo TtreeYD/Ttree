@@ -69,7 +69,6 @@ public class ProdRestController {
 	
 	@PostMapping("/updateProdInst") 
 	public int updateProdInst(@RequestBody RequestVO<ProdVO> vo) { 
-		System.out.println("@@@@@@@@@@@@@@" + vo);
 		return service.updateProdInst(vo); 
 	}
 	
@@ -145,5 +144,11 @@ public class ProdRestController {
 	@GetMapping("/selectPrcsResult")
 	public List<PrcsResultVO> selectPrcsResult(){
 		return service.selectPrcsResult();
+	}
+	//생산시작버튼클릭(공정실적관리 insert)
+	@PostMapping("/insertDtProgress")
+	public int insertDtProgress(@RequestBody RequestVO<ProdVO> vo){
+		System.out.println(vo);
+		return service.insertDtProgress(vo);
 	}
 }
