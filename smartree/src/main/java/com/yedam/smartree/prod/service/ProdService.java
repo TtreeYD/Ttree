@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.yedam.smartree.business.service.BusinessVO;
+import com.yedam.smartree.mdm.service.MdmPrcsVO;
 
 public interface ProdService {
 	public List<ProdVO> selectProdList();
@@ -31,6 +32,7 @@ public interface ProdService {
 	//공정흐름상세보기
 	public List<ProdVO> getProcess(ProdVO vo);
 	
+	public List<MdmPrcsVO> selectPrcsCode(ProdVO vo);
 	//public int updateProd(RequestVO<ProdVO> vo);
 	
 	//실적조회

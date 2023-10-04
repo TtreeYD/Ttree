@@ -146,40 +146,29 @@ const instDtGrid = new tui.Grid({
 	        },
 	        {
 	          header: '공정순서',
-	          name: 'prcsNum'
+	          name: 'prcsOrder'
 			},
 	        {
 	          header: '담당자',
 	          name: 'manager',
 	          editor: 'text'
 		    },
-	        {
-	          header: '작업시작일시',
-	          name: 'prcsSdate'
-	        },
 	        
-	        {
-	          header: '작업종료일시',
-	          name: 'prcsEdate'
-	        },
 	        {
 	          header: '지시량',
 	          name: 'prdtTotal'
 	        },
 	        {
-	          header: '생산량',
-	          name: 'prdtProdCnt'
+	          header: '생산예정량',
+	          name: 'prdtCnt',
+	          editor: {
+	        	  type: 'text'
+	          }
 		     },
-		     {
-	          header: '불량량',
-	          name: 'prdtProdErrCnt',
-	          editor: 'text'
-		     },
-		     {
-	          header: '합격량',
-	          name: 'prdtProdPassCnt',
-	          editor: 'text'
-		      }
+	        {
+	          header: '현생산량',
+	          name: 'prdtProdSum'
+		     }
 
 	]})
 	
@@ -200,12 +189,17 @@ const eqmGrid = new tui.Grid({
 	      },
 	      columns: [
 	        {
+	          header: '설비코드',
+	          name: 'eqmCode',
+	          hidden: true
+	        }, 
+	        {
 	          header: '설비명',
-	          name: 'name'
+	          name: 'eqmName'
 	        },
 	        {
 	          header: '가동상태',
-	          name: 'artist'
+	          name: 'eqmState'
 	        }
 	      ]
 	    });
@@ -223,8 +217,24 @@ $(document).ready(function (){
 			},	
 			success:function(result){
 				console.log(result);
-				instDtGrid.resetData(result);
+				let vo = {};
 				
+				vo.prcsOrder = result[0].prcsOrder;
+				vo.prdtCode = result[0].prdtCode;
+				console.log(vo)
+				$.ajax({
+					url: '/selectPrcsCode',
+					method: 'post',
+					contentType : 'application/json',
+					data: JSON.stringify(vo),
+					success: result2 => {
+						console.log(result2)
+						result[0].prcsStdCode = result2[0].prcsStdCode
+						instDtGrid.resetData(result);
+						eqmGrid.resetData(result2);
+					}
+				})
+					
 			},
 			error:function(err){
 				console.log(err);
