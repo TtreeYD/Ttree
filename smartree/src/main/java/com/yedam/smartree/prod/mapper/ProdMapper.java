@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.yedam.smartree.business.service.BusinessVO;
 import com.yedam.smartree.mdm.service.MdmPrcsVO;
+import com.yedam.smartree.prod.service.HoldingVO;
 import com.yedam.smartree.prod.service.MtlNeedVO;
 import com.yedam.smartree.prod.service.PrcsResultVO;
 import com.yedam.smartree.prod.service.PrdtProdVO;
@@ -73,4 +74,8 @@ public interface ProdMapper {
 	// 실적조회
 	List<PrcsResultVO> selectPrcsResult();
 	
+	
+	//자재홀딩
+	int insertHolding(ProdVO vo);
+	List<HoldingVO> selectHolding(String prodInstCode);
 }

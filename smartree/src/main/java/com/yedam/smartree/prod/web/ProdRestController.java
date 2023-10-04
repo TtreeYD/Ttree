@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.business.service.BusinessVO;
 import com.yedam.smartree.mdm.service.MdmPrcsVO;
+import com.yedam.smartree.prod.service.HoldingVO;
 import com.yedam.smartree.prod.service.PrcsResultVO;
 
 import com.yedam.smartree.prod.service.ProdService;
@@ -106,7 +107,7 @@ public class ProdRestController {
 	
 	// 생산지시에 상세조회
 	@GetMapping("/selectGetProdInst")
-	public List<ProdVO> selectGetProdInst(ProdVO vo){
+	public Map<String, Object> selectGetProdInst(ProdVO vo){
 		return service.selectGetProdInstList(vo);
 	}
 	// 생산지시 저장
@@ -145,5 +146,11 @@ public class ProdRestController {
 	@GetMapping("/selectPrcsResult")
 	public List<PrcsResultVO> selectPrcsResult(){
 		return service.selectPrcsResult();
+	}
+	
+	// 홀딩
+	@GetMapping("/selectHolding")
+	public List<HoldingVO> selectHolding(String prodInstCode){
+		return service.selectHolding(prodInstCode);
 	}
 }

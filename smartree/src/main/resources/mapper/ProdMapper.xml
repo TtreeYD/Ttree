@@ -349,5 +349,26 @@
   								  JOIN dt_prod_inst USING(dt_prod_inst_code)
   								  JOIN prod_inst USING(prod_inst_code)
   	</select>
+	
+	<!-- 자재홀딩 -->
+	<insert id="insertHolding" parameterType="ProdVO">
+	<selectKey keyProperty="holdingCode" resultType="String" order="BEFORE">
+		SELECT LPAD(NVL(max(holding_code)+1,1),10,'0') FROM holding
+	</selectKey>
+		INSERT INTO holding(holding_code
+							, prod_inst_code
+							, mtl_lot_num
+							, holding_cnt)
+		VALUES(#{holdingCode}
+				 ,	#{prodInstCode}
+				 , #{mtlLotNum}
+				 ,	#{holdingCnt})
+	</insert>
+	
+	<select id="selectHolding" resultType="HoldingVO">
+		SELECT *
+		FROM holding
+		WHERE prod_inst_code = #{prodInstCode}
+	</select>
 
   </mapper>

@@ -15,7 +15,7 @@ public interface ProdService {
 	public List<ProdVO> selectProdListView(ProdVO vo);
 	public List<PrdtProdVO> selectPrdt(PrdtProdVO vo);
 	public Map<String, Object> selectGetProdList(ProdVO vo);
-	public List<ProdVO> selectGetProdInstList(ProdVO vo);
+	public Map<String, Object> selectGetProdInstList(ProdVO vo);
 	public int insertProdPlan(RequestVO<ProdVO> vo);
 	public int deleteProd(RequestVO<ProdVO> vo);
 	public int insertAndUpdateDtProdPlan(RequestVO<ProdVO> vo);
@@ -37,4 +37,7 @@ public interface ProdService {
 	
 	//실적조회
 	List<PrcsResultVO> selectPrcsResult();
+	
+	// 홀딩
+	List<HoldingVO> selectHolding(String prodInstCode);
 }

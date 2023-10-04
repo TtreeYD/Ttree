@@ -153,13 +153,14 @@
   	
   	<!-- 재고조회 로트별 출력기능 -->
   	<select id="getLotMtl" parameterType="MaterialVO">
-  		SELECT c.mtl_lot_num, get_common(t.mtl_type, '003') AS mtl_type, c.mtl_code, t.mtl_name, c.mtl_in_date, c.mtl_in_cnt, NVL(h.holding_cnt,0)holding_cnt, (c.mtl_lot_cnt - (NVL(h.holding_cnt,0)))mtl_use
+  		SELECT c.mtl_lot_num, get_common(t.mtl_type, '003') AS mtl_type, c.mtl_code, t.mtl_name, c.mtl_in_date, c.mtl_in_cnt, NVL(sum(h.holding_cnt),0) holding_sum, c.mtl_lot_cnt
 		FROM mtl_container c
 		JOIN mtl_table t
 		ON c.mtl_code = t.mtl_code
 		LEFT JOIN holding h
 		ON c.mtl_lot_num = h.mtl_lot_num
 		WHERE c.mtl_code = #{mtlCode}
+		GROUP BY c.mtl_lot_num, mtl_type, c.mtl_code, t.mtl_name, c.mtl_in_date, c.mtl_in_cnt, c.mtl_lot_cnt
   	</select>
   	
   	<!-- 발주목록 발주서별 자재내역 출력기능 -->
