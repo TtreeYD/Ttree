@@ -153,6 +153,7 @@ public class ProdRestController {
 		System.out.println(vo);
 		return service.insertDtProgress(vo);
 	}
+
 	
 	// 홀딩
 	@GetMapping("/selectHolding")
