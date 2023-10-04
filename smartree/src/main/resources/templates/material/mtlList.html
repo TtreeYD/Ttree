@@ -125,7 +125,7 @@ float: right;
 						name : 'mtlInCnt'
 					}, {
 						header : '홀드수량',
-						name : 'holdingCnt'
+						name : 'holdingSum'
 					}, {
 						header : '사용가능수량',
 						name : 'mtlUse'
@@ -160,14 +160,17 @@ float: right;
 		          method: 'POST',
 		          data: { mtlCode : mtlCode },
 		          success: function (result) {
+		        	  console.log(result)
 		            //날짜변환
 		            $(result).each(function (idx, obj) {
+		            	
 		              for (let head of header) {
 
 		                if (head.slice(-4).toLowerCase() == 'date') {
 		                  obj[head] = getDate(obj[head]);
 		                }
 		              }
+		              obj.mtlUse = obj.mtlLotCnt - obj.holdingSum
 		            });
 		            mtlLotGrid.resetData(eval(result));
 		          },

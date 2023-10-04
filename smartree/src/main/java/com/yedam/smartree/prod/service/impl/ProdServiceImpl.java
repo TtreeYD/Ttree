@@ -9,10 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.yedam.smartree.business.service.BusinessVO;
-import com.yedam.smartree.material.service.MaterialVO;
 import com.yedam.smartree.mdm.service.MdmPrcsVO;
 import com.yedam.smartree.prod.mapper.ProdMapper;
-import com.yedam.smartree.prod.service.MtlNeedVO;
+import com.yedam.smartree.prod.service.HoldingVO;
 import com.yedam.smartree.prod.service.PrcsResultVO;
 import com.yedam.smartree.prod.service.PrdtProdVO;
 import com.yedam.smartree.prod.service.ProdService;
@@ -113,12 +112,6 @@ public class ProdServiceImpl implements ProdService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		//prodMapper.selectGetProd(vo)
 		map.put("list", prodMapper.selectGetProd(vo));
-		Map<String, Object> mtlNeed = new HashMap<String, Object>();
-		List<MtlNeedVO> list = prodMapper.getMtlNeed(vo);
-		
-		for(MtlNeedVO mtl : list) {
-			
-		}
 		map.put("mtlNeed", prodMapper.getMtlNeed(vo));
 		return map;
 	}
@@ -133,16 +126,19 @@ public class ProdServiceImpl implements ProdService {
 		for(ProdVO pvo : vo.getList()) {
 			pvo.setProdInstCode(prodInstCode);
 			prodMapper.insertDtProdInst(pvo);
-			String dtInstCode = pvo.getDtProdInstCode();
-			pvo.setDtProdInstCode(dtInstCode);
+		//	String dtInstCode = pvo.getDtProdInstCode();
+		//	pvo.setDtProdInstCode(dtInstCode);
 			cnt++;
 			//완제품공정흐름도 등록
 			System.out.println("11111111111111111"+pvo);
 			prodMapper.insertProcess(pvo);
-			
-			
+		}
+		for(ProdVO hvo : vo.getHlist()) {
+			hvo.setProdInstCode(prodInstCode);
+			prodMapper.insertHolding(hvo);
 			
 		}
+		
 		return cnt;
 	}
 
@@ -152,8 +148,12 @@ public class ProdServiceImpl implements ProdService {
 	}
 
 	@Override
-	public List<ProdVO> selectGetProdInstList(ProdVO vo) {
-		return prodMapper.selectGetProdInst(vo);
+	public Map<String, Object> selectGetProdInstList(ProdVO vo) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		//prodMapper.selectGetProd(vo)
+		map.put("list", prodMapper.selectGetProdInst(vo));
+		map.put("mtlNeed", prodMapper.getMtlNeed(vo));
+		return map;
 	}
 
 	@Override
@@ -201,6 +201,11 @@ public class ProdServiceImpl implements ProdService {
 	@Override
 	public List<MdmPrcsVO> selectPrcsCode(ProdVO vo) {
 		return prodMapper.selectPrcsCode(vo);
+	}
+
+	@Override
+	public List<HoldingVO> selectHolding(String prodInstCode) {
+		return prodMapper.selectHolding(prodInstCode);
 	}
 
 
