@@ -13,7 +13,6 @@ import com.yedam.smartree.business.service.BusinessVO;
 import com.yedam.smartree.mdm.service.MdmPrcsVO;
 import com.yedam.smartree.prod.service.HoldingVO;
 import com.yedam.smartree.prod.service.PrcsResultVO;
-
 import com.yedam.smartree.prod.service.ProdService;
 import com.yedam.smartree.prod.service.ProdVO;
 import com.yedam.smartree.prod.service.RequestVO;
@@ -153,16 +152,31 @@ public class ProdRestController {
 		System.out.println(vo);
 		return service.insertDtProgress(vo);
 	}
-
+	//생산종료List
+	@GetMapping("/getProcessResult")
+	public List<ProdVO> getProcessResult(ProdVO vo){
+		System.out.println(vo);
+		return service.getProcessResult(vo);
+	}
 	
 	// 홀딩
 	@GetMapping("/selectHolding")
 	public List<HoldingVO> selectHolding(String prodInstCode){
 		return service.selectHolding(prodInstCode);
+
+
 	}
 	
 	@PostMapping("/updateInstYn")
 	public int updateInstYn(String prodPlanCode) {
 		return service.updateInstYn(prodPlanCode);
+
 	}
+	//생산종료Process
+	@PostMapping("/endProcessResult")
+	public int endProcessResult(@RequestBody List<ProdVO> vo){
+		System.out.println(vo);
+		return service.endProcessResult(vo);
+	}
+	
 }

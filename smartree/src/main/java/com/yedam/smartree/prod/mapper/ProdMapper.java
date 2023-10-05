@@ -89,8 +89,19 @@ public interface ProdMapper {
 	//자재홀딩
 	int insertHolding(ProdVO vo);
 	List<HoldingVO> selectHolding(String prodInstCode);
+
+	//생산종료List
+	public List<ProdVO> getProcessResult(ProdVO vo);
+
+	//생산종료Process - update Eqm
+	public int updateEqm(ProdVO prodVO);
+	int updateProcessResult(ProdVO vo);
+
+	public int updateInst(ProdVO vo);
+
 	int delHolding(String prodInstCode);
 	
 	int delProcess(ProdVO vo);
+
 
 }

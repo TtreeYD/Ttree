@@ -407,22 +407,27 @@
 				let prdtcode ;
 				//출고취소버튼클릭
 				$('#cancleOutPrdt').on('click',function(){
-					let dtData = OrderDtGrid.getCheckedRows();
-					console.log(dtData)
-					$.ajax({
-						url:'/cancleOutPrdt',
-						method:'POST',
-						dataType: 'json',
-						contentType : 'application/json',
-						data:JSON.stringify(dtData),
-						success:function(result){
-			                toastr.success('취소완료');
-			                loadDTList()
-						},
-						error:function(err){
-							console.log(err);
-						}
-					})
+					if(OrderDtGrid.getCheckedRows().length == 0){
+						toastr.warning('출고취소 품목을 선택해주세요');
+					}else{
+						let dtData = OrderDtGrid.getCheckedRows();
+						console.log(dtData)
+						$.ajax({
+							url:'/cancleOutPrdt',
+							method:'POST',
+							dataType: 'json',
+							contentType : 'application/json',
+							data:JSON.stringify(dtData),
+							success:function(result){
+				                toastr.success('취소완료');
+				                loadDTList()
+							},
+							error:function(err){
+								console.log(err);
+							}
+						})
+					}
+					
 					
 						
 				})

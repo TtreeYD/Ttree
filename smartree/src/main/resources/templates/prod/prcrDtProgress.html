@@ -97,7 +97,7 @@ box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
 }
 .prcr_dt_progres_bottom_item{
 	/*위아래 공백 조정*/
-	margin-top: 150px;
+	margin-top: 50px;
 }
 #startBtn{
 	/*버튼 좌우 위치 조정*/
@@ -193,6 +193,10 @@ const instDtGrid = new tui.Grid({
 	        {
 	          header: '현생산량',
 	          name: 'prdtProdSum'
+		     },
+		     {
+	          header: '불량량',
+	          name: 'prdtProdErrCnt'
 		     }
 
 	]})
@@ -303,6 +307,7 @@ $(document).ready(function (){
 		clickdata = eqmGrid.getValue(ev.rowKey , 'eqmCode');
 		eqmdata = eqmGrid.getValue(ev.rowKey, 'eqmState');
 	})
+	//공정시작
 	$('#startBtn').on('click',function(){
 		cntdata = instDtGrid.getData();
 		console.log(cntdata)
@@ -314,7 +319,9 @@ $(document).ready(function (){
 				  customClass: 'swal-wide'
 				})
 			return;
-		}else if(cntdata[0].prdtProdSum >= cntdata[0].prdtTotal || cntdata[0].prdtCnt > cntdata[0].prdtTotal){
+		}else if( Number(cntdata[0].prdtProdSum) + Number(cntdata[0].prdtCnt)>cntdata[0].prdtTotal  ){
+			console.log('지시량',cntdata[0].prdtProdSum);
+			console.log('썸',cntdata[0].prdtTotal + cntdata[0].prdtCnt)
 			Swal.fire({
 				  icon: 'error',
 				  title: '지시량을 초과했습니다',
@@ -327,7 +334,8 @@ $(document).ready(function (){
 			req.list[0].eqmCode = clickdata;
 			
 			req.vo = {
-					eqmCode: clickdata
+					eqmCode: clickdata,
+					prcsCode: data
 			}
 		
 			console.log(req)
@@ -356,6 +364,9 @@ $(document).ready(function (){
 		
 	})
 })
+	function backHome(){
+		$(location).attr('href', '/prod/prcrKiosk');
+	}
 </script>
 </body>
 </html>
