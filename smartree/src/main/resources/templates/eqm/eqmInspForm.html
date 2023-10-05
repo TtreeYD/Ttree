@@ -63,8 +63,8 @@
 						
 						<th>판정 *</th>
 						<td>
-							<label for="y" style="margin-left:10px; margin-right:40px;"  ><input type="radio" id="y" name="inspJudg" value="y" > 적합 </label>
-							<label for="n"><input type="radio" id="n" name="inspJudg" value="n" > 부적합 </label>
+							<label for="y" style="margin-left:10px; margin-right:40px;"  ><input type="radio" id="y" name="inspJudg" value="Y" > 적합 </label>
+							<label for="n"><input type="radio" id="n" name="inspJudg" value="N" > 부적합 </label>
 						</td>
 					</tr>
 					<tr>
@@ -193,6 +193,14 @@
 				eqmInspForm.inspManager.focus();
 				return;
 			}
+			if(eqmInspForm.inspManager.value.length > 10 ){
+				swal("최대 10자까지 입니다", "", "warning");
+				return;
+			}
+			if(eqmInspForm.inspDt.value.length > 150 ||  eqmInspForm.actionDt.value.length){
+				swal("최대 150자까지 입니다", "", "warning");
+				return;
+			}
 			 
 			//날짜변환
 			$('[name="registerDate"]').val($('#registerDate').val().replace("T", ' '))
@@ -313,10 +321,7 @@
 		   				success: result => {
 		   				 console.log(result);
 		   					grid3.resetData(eval(result)); 
-		   					
-		   				/* 	grid2.resetData(result);
-		   	      			$("#searchEqmModal").modal('show');
-		   	      			setTimeout(() => grid2.refreshLayout(), 200); */
+		   				
 		   				}
 		   				,
 		   				error: err => console.log(err)
@@ -340,7 +345,7 @@
 		   		 getEqmNoper(data);
 		   	
 		   	   })
-		   	    
+		   	    // 비가동 모달창 더블 클릭 후 폼에 값넣기
 		   	   function getEqmNoper(data){
 			   		   $.ajax({
 			   			   url:'/selectEqmNoper',
@@ -363,11 +368,11 @@
 			   		   })
 			   	   }
 	          
-	   	   // 전체설비 조회
+	   	   // 전체설비 조회 - 비가동제외
 	   	      function getEqmList(){
 	   		   $('#searchName').val('');
 	   	      	$.ajax({
-	   	      		url:'/eqms',
+	   	      		url:'/eqmsExceptNoper',
 	   	      		method:'get',
 	   	          dataType:'json',
 	   	      		success:function(result){
@@ -386,7 +391,7 @@
 	   	     function getEqmName2(eqmName){
 	   	    	$('#searchName').val(eqmName);
 		   		$.ajax({
-		   			url:'/eqmName',
+		   			url:'/eqmNameExceptNoper',
    					data: {
    						eqmName : eqmName
    				},
@@ -428,7 +433,7 @@
 		   		// 설비 이름 조회
 		   		function getEqmName(eqmName){
 		   			$.ajax({
-		   				url:'/eqmName',
+		   				url:'/eqmNameExceptNoper',
 		   				data: {
 		   					eqmName : eqmName
 		   				},
@@ -472,7 +477,7 @@
 		      		getEqmInsp(inspCode);
 		      	}
 		   	   
-		   	   
+		   	   // 저장 완료 후에도 input 채워보이게하는 함수
 		   	   function getEqmInsp(data){
 		   		   $.ajax({
 		   			   url:'/selectEqmInsp',
@@ -491,7 +496,7 @@
 			   			$('#nextInspDate').val(result.nextInspDate);
 			   			$('#registerDate').val(result.registerDate);
 			   			
-			   			if(result.inspJudg=='y') {
+			   			if(result.inspJudg=='Y') {
 		                    $("#y").prop("checked", true);
 	                    } else {
 	                      $("#n").prop("checked", true);
@@ -506,7 +511,7 @@
 		   	   }
 		   	   
 		   	   
-	   	   
+		   	// 저장 완료 후에도 input 채워보이게하는 함수
 		   	   function getEqm(data){
 		   		   $.ajax({
 		   			   url:'/selectEqm',

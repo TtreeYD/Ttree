@@ -112,12 +112,12 @@
    			   ,#{eqmCode}   
            )
   	</insert>
-  	
+  	<!-- 비가동 설비 조회 -->
   	<select id ="selectEqmNoper" resultType="EqmNoperVO">
   		select n.*,e.eqm_name
   		from EQM_NOPER n join eqm e 
   						 ON n.eqm_code = e.eqm_code
-  	
+  		where e.eqm_state = 'S'
   	</select>
   	
   	  	<!--비가동 설비점검이름으로 검색 -->
@@ -129,13 +129,14 @@
   			<if test="eqmName != null and !eqmName.equals('')">
   				eqm_name LIKE '%'||#{eqmName}||'%'
   			</if>
+  			and e.eqm_state = 'S'
   		</where>  	
   	 					 
   	ORDER BY n.NOPER_CODE
   	</select>
   	
   	
-  	  	<!-- 설비조회 단건조회-->
+  	  	<!-- 비가동 설비조회 단건조회-->
   	<select id="selectEqmNoperCode" resultType="EqmNoperVO">
   	select  n.* ,e.eqm_name
   	from  eqm_noper n join  EQM e

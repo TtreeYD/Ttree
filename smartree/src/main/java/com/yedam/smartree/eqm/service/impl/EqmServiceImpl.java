@@ -61,6 +61,16 @@ public class EqmServiceImpl implements EqmService {
 		return eqmmapper.searchEqmDivision(eqmDivision);
 	}
 
+	@Override
+	public List<EqmVO> selectEqmListExceptNoper() {
+		return eqmmapper.selectEqmListExceptNoper();
+	}
+
+	@Override
+	public List<EqmVO> searchEqmExceptNoper(String eqmName) {
+		return eqmmapper.searchEqmExceptNoper(eqmName);
+	}
+
 	
 
 

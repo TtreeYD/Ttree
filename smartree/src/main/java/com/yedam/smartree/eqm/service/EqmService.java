@@ -5,8 +5,10 @@ import java.util.List;
 public interface EqmService {
 	//설비
 	public List<EqmVO> selectEqmList();
+	public List<EqmVO> selectEqmListExceptNoper();
 	public List<EqmVO> selectEqmUcheckList(String eqmUcheck);
 	public List<EqmVO> searchEqm(String eqmName);
+	public List<EqmVO> searchEqmExceptNoper(String eqmName);
 	public int insertEqm(EqmVO eqmVO);
 	public EqmVO selectEqm(EqmVO eqmVO);
 	public int deleteEqm(EqmVO eqmVO);

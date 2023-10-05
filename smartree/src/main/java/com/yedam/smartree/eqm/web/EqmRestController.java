@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.eqm.service.EqmInspService;
@@ -25,6 +27,11 @@ public class EqmRestController {
 	public List<EqmVO> getEqms() {
 		return eqmservice.selectEqmList();
 	}
+	// 설비 전체조회 - 비가동제외
+	@GetMapping("/eqmsExceptNoper")
+	public List<EqmVO> getEqmsExceptNoper() {
+		return eqmservice.selectEqmListExceptNoper();
+	}
 	// 설비 사용여부 조회
 	@GetMapping("/eqmUcheck")
 	public List<EqmVO> getEqmUcheck(String eqmUcheck) {
@@ -44,6 +51,11 @@ public class EqmRestController {
 	@GetMapping("/eqmName")
 	public List<EqmVO> getEqmName(String eqmName){
 		return eqmservice.searchEqm(eqmName);
+	}
+	// 설비 이름으로 조회 - 비가동제외
+	@GetMapping("/eqmNameExceptNoper")
+	public List<EqmVO> getEqmNameExceptNoper(String eqmName){
+		return eqmservice.searchEqmExceptNoper(eqmName);
 	}
 	@GetMapping("/eqmInpsName")
 	public List<EqmInspVO> getEqmInspName(String eqmName){
@@ -82,6 +94,11 @@ public class EqmRestController {
 	@GetMapping("/selectEqmNoper")
 	public EqmNoperVO getEqmNoper(EqmNoperVO eqmNoperVO) {
 		return eqminspservice.selectEqmNoperCode(eqmNoperVO);
+	}
+	// eqm 수정 - eqm_state 변경
+	@PostMapping("/updateEqm")
+	public int updateEqm(@RequestBody EqmVO eqmVO) {
+		return eqmservice.updateEqm(eqmVO);
 	}
 	
 }
