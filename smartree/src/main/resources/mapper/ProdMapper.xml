@@ -411,13 +411,7 @@
 		DELETE holding
 		WHERE prod_inst_code = #{prodInstCode}
 	</delete>
-	
-	<update id="updateStartYn" parameterType="String">
-		UPDATE prod_inst
-		SET prcs_start_yn = 'y'
-		WHERE prod_inst_code = #{prodInstCode}
-	</update>
-	
+
 	<update id="updateInstYn" parameterType="String">
 		UPDATE prod_plan
 		SET prod_inst_yn = 'n'
