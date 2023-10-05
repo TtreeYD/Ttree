@@ -15,4 +15,5 @@ public interface EqmInspService {
 	public List<EqmNoperVO> selectEqmNoper();
 	public List<EqmNoperVO> searchEqmNoper(String eqmName);
 	public EqmNoperVO selectEqmNoperCode(EqmNoperVO eqmNoperVO);
+	public int updateEqmNoper(EqmNoperVO eqmNoperVO);
 }

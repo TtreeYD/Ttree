@@ -60,10 +60,10 @@
       el: document.getElementById('grid'),
       scrollX: false,
       scrollY: false,
-      bodyHeight: 200,
+      bodyHeight: 500,
       rowHeaders:["rowNum"],
       pageOptions: {
-          perPage: 5,
+          perPage: 12,
           useClient: true,
         },
       columns: [
@@ -286,6 +286,8 @@
 			let eqmName = $('#searchName').val();
 			getEqmName(eqmName);
 			
+		}else{
+			getEqmList();
 		}
 	}
 	// 날짜차이 구하는 함수	

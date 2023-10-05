@@ -68,6 +68,11 @@ public class EqmInspServiceImpl implements EqmInspService{
 		return eqminspmapper.selectEqmNoperCode(eqmNoperVO);
 	}
 
+	@Override
+	public int updateEqmNoper(EqmNoperVO eqmNoperVO) {
+		return eqminspmapper.updateEqmNoper(eqmNoperVO);
+	}
+
 	
 	
 

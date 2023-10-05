@@ -66,10 +66,10 @@
 				<table id="equipTable">
 					<tr>
 						<th>설비코드</th>
-						<td><input type="text" th:field="*{eqmCode}" name="eqmCode"
+						<td><input class="form-control"  type="text" th:field="*{eqmCode}" name="eqmCode"
 							id="eqmCode" style="background-color: #d3d3d3" readonly /></td>
 						<th>설비명 *</th>
-						<td><input type="text" th:field="*{eqmName}" name="eqmName"
+						<td><input class="form-control"  type="text" th:field="*{eqmName}" name="eqmName"
 							id="eqmName" /></td>
 					</tr>
 
@@ -82,7 +82,7 @@
 								id="n" th:field="*{eqmUcheck}" name="eqmUcheck" value="N" /> No
 						</label></td>
 						<th>공정구분</th>
-						<td><select id="eqmDivision" name="eqmDivision">
+						<td><select   id="eqmDivision" name="eqmDivision">
 								<option value="">--</option>
 								<!-- <option value="PC01">재단</option>
 								<option value="PC02">가공</option>
@@ -107,7 +107,7 @@
 						<td><input type="text" name="inspCycle" id="inspCycle"
 							value=0 />일</td>
 						<th>이미지</th>
-						<td><input type="file" name="file" id="eqmImg"	 accept="image/*" /></td>
+						<td><input class="form-control-file"  type="file" name="file" id="eqmImg"	 accept="image/*" /></td>
 					</tr>
 					<tr>
 						<th>제조업체 *</th>
@@ -130,7 +130,7 @@
 					<button type="button" id="saveBtn" class="btn btn-primary">저장</button>
 					<button type="button" id="resetBtn" class="btn btn-primary">
 						취소</button>
-					<button type="button" id="deleteBtn" class="btn btn-primary">
+					<button type="button" id="deleteBtn" class="btn btn-primary" disabled>
 						삭제</button>
 				</div>
 			</form>
@@ -171,6 +171,31 @@
         	
         $("#selectBtn").on("click", getEqmList);
 		$("#saveBtn").on("click",saveEqm);
+		
+        // 코드확인 
+        let eqmCode= '[[${eqmCode}]]'
+      	if(eqmCode !=''){
+      		swal("저장 완료!", "설비가 저장되었습니다.", "success");
+      		getEqm(eqmCode);
+      	}
+		
+	 	 // 부서정보 불러오기
+		$.ajax({
+			url: "/mdm/selectCodeDetail",
+			data: {
+				codeType: '012'
+			},
+			success: result => {
+				$(result).each(function (idx, dept) {
+					let optTag = $('<option/>');
+					optTag.val(dept['codeId']);
+					optTag.text(dept['codeName']);
+					$('#eqmDivision').append(optTag);
+				})
+			},
+			error: err => console.log(err)
+		})
+		
 		
 		function saveEqm(){
 			//설비명 테스트
@@ -215,8 +240,13 @@
 				return;
 			}
 			 
+			
 			infoForm.submit();
+			
+			// 삭제버튼 비활성화
+            $('#deleteBtn').prop('disabled', true);
 		}
+		
 		
           const grid2 = new tui.Grid({
             el: document.getElementById("grid2"),
@@ -243,6 +273,7 @@
 
           // 전체설비 조회
           function getEqmList() {
+        	  
             $("#searchName").val("");
             $.ajax({
               url: "/eqms",
@@ -264,6 +295,7 @@
           $("#searchBtn").on("click", function () {
             searchEqmName();
           });
+          
           // 검색 - 엔터시
           $("#searchName").on("keypress", function (ev) {
             if (ev.which == 13) {
@@ -272,31 +304,30 @@
             }
           });
 
-          // 설비 이름 조회
-          function getEqmName(eqmName) {
-            $.ajax({
-              url: "/eqmName",
-              data: {
-                eqmName: eqmName,
-              },
-              success: (result) => {
-                console.log(result);
-                grid2.resetData(eval(result));
 
-                /* 	grid2.resetData(result);
-	   	      			$("#searchEqmModal").modal('show');
-	   	      			setTimeout(() => grid2.refreshLayout(), 200); */
-              },
-              error: (err) => console.log(err),
-            });
-          }
           // 설비 이름 조회 : input에 값
           function searchEqmName() {
             if ($("#searchName").val()) {
               let eqmName = $("#searchName").val();
-              getEqmName(eqmName);
+              $.ajax({
+                  url: "/eqmName",
+                  data: {
+                    eqmName: eqmName,
+                  },
+                  success: (result) => {
+                    console.log(result);
+                    grid2.resetData(eval(result));
+
+                    /* 	grid2.resetData(result);
+    	   	      			$("#searchEqmModal").modal('show');
+    	   	      			setTimeout(() => grid2.refreshLayout(), 200); */
+                  },
+                  error: (err) => console.log(err),
+                });
             }
           }
+          
+          
           // 설비조회 모달창 더블클릭
           grid2.on("dblclick", (ev) => {
             if (ev.rowKey == undefined) {
@@ -307,12 +338,8 @@
            
           });
 
-          // 코드확인 
-        let eqmCode= '[[${eqmCode}]]'
-      	if(eqmCode !=''){
-      		swal("저장 완료!", "설비가 저장되었습니다.", "success");
-      		getEqm(eqmCode);
-      	}
+
+          
           // 단건조회 - 화면에 보이게한다
           function getEqm(data){
         	  $.ajax({
@@ -344,6 +371,9 @@
                     $("#mfgComp").val(result.mfgComp);
                     $("#mfgDate").val(result.mfgDate);
                    
+                    // 삭제버튼 활성화
+                    $('#deleteBtn').prop('disabled', false);
+                    
                   },
                   error: function (err) {
                     console.log(err);
@@ -367,12 +397,15 @@
             $("#mfgComp").val("");
             $("#mfgDate").val("");
             $("#eqmDivision").val("");
+            
+            // 삭제버튼 비활성화
+            $('#deleteBtn').prop('disabled', true);
           });
 
+          
           // 삭제버튼
           $("#deleteBtn").click(function () {
-            swal({
-       
+            swal({       
             	
               title: "정말 삭제하시겠습니까?",
               text: "",
@@ -408,7 +441,9 @@
               }
             });
           });
-			// 이미지 보이게한다
+          
+          
+		// 이미지 보이게한다
           $("#eqmImg").on("change", function (event) {
             var file = event.target.files[0];
 
@@ -421,25 +456,11 @@
           });
           
 			
- 	 	 // 부서정보 불러오기
-			$.ajax({
-				url: "/mdm/selectCodeDetail",
-				data: {
-					codeType: '012'
-				},
-				success: result => {
-					$(result).each(function (idx, dept) {
-						let optTag = $('<option/>');
-						optTag.val(dept['codeId']);
-						optTag.text(dept['codeName']);
-						$('#eqmDivision').append(optTag);
-					})
-				},
-				error: err => console.log(err)
-			})
-          
+         
           
         });
+    
+    
       </script>
 	</div>
 </body>

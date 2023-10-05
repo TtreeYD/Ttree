@@ -56,10 +56,10 @@
       el: document.getElementById('grid'),
       scrollX: false,
       scrollY: false,
-      bodyHeight: 200,
+      bodyHeight: 500,
       rowHeaders:["rowNum"],
       pageOptions: {
-          perPage: 5,
+          perPage: 12,
           useClient: true,
         },
       columns: [
@@ -289,6 +289,8 @@
 			let eqmName = $('#searchName').val();
 			getEqmInspName(eqmName);
 			
+		}else{
+			getEqmInspList();
 		}
 	}
     	

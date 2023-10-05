@@ -95,7 +95,7 @@ public class EqmRestController {
 	public EqmNoperVO getEqmNoper(EqmNoperVO eqmNoperVO) {
 		return eqminspservice.selectEqmNoperCode(eqmNoperVO);
 	}
-	// eqm 수정 - eqm_state 변경
+	//// eqm 수정 - eqm_state 변경
 	@PostMapping("/updateEqm")
 	public int updateEqm(@RequestBody EqmVO eqmVO) {
 		return eqmservice.updateEqm(eqmVO);
