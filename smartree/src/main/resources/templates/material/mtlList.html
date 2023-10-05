@@ -41,16 +41,17 @@ float: right;
 			<div id="mtlGrid"></div>
 		</div>
 		<div class="col-7">
-			<h2 style="margin-bottom:62px;">자재LOT목록</h2>
+			<h2 style="margin-bottom:24px;">자재LOT목록</h2>
+				<button type="button" class="btn btn-info btn-icon-text excelDownload">Excel 
+					<i class="bi bi-printer"></i>
+        		</button>
 			<div id=mtlLotGrid></div>
 		</div>
 
 
 		</div>
 
-		<button type="button" class="btn btn-info btn-icon-text excelDownload">Excel 
-		<i class="bi bi-printer"></i>
-           </button>
+
 		
 		<script>
 		
@@ -100,14 +101,15 @@ float: right;
 					rowHeaders : [ "rowNum" ],
 					minBodyHeight: 450,
 					pageOptions: {
-			            perPage: 5,
+			            perPage: 10,
 			            useClient: true,
 			          },
 					columns : [ {
 						header : '자재LOT',
 						name : 'mtlLotNum',
 						sortable: true,
-					    sortingType: 'asc'
+					    sortingType: 'asc',
+					    width : 190
 					}, {
 						header : '분류',
 						name : 'mtlType'
@@ -160,7 +162,6 @@ float: right;
 		          method: 'POST',
 		          data: { mtlCode : mtlCode },
 		          success: function (result) {
-		        	  console.log(result)
 		            //날짜변환
 		            $(result).each(function (idx, obj) {
 		            	
@@ -200,7 +201,6 @@ float: right;
 				let vo = {};
 				vo.mtlType = $('#searchMtlType').val();
 				vo.mtlName = $('#searchMtlName').val();
-				console.log(vo)
 				$.ajax({
 					url: '/mdm/searchMtl',
 					method: 'POST',
@@ -215,13 +215,13 @@ float: right;
 			}
 
 			
-			mtlGrid.on('click', function (ev) {
-				if (ev.rowKey == undefined) {
-					return;
-				}
-				mtlCode = mtlGrid.getValue(ev.rowKey, 'mtlCode')
-				lotFnc(mtlCode)
-			})
+				mtlGrid.on('click', function (ev) {
+					if (ev.rowKey == undefined) {
+						return;
+					}
+					mtlCode = mtlGrid.getValue(ev.rowKey, 'mtlCode')
+					lotFnc(mtlCode)
+				})
 		        
 		        //엑셀 다운로드 버튼으로 만드는 기능
 		        const excelDownload = document.querySelector(".excelDownload");
