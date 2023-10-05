@@ -89,13 +89,6 @@ float: right;
 				});
 				
 				const header = ['mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode', 'mtlName']
-				mtlGrid.on('click', function (ev) {
-					if (ev.rowKey == undefined) {
-						return;
-					}
-					mtlCode = mtlGrid.getValue(ev.rowKey, 'mtlCode')
-					lotFnc(mtlCode)
-				})
 				// lot목록 그리드
 				const mtlLotGrid = new tui.Grid({
 					el : document.getElementById('mtlLotGrid'),
@@ -112,24 +105,28 @@ float: right;
 						header : '자재출고코드',
 						name : 'mtlOutCode',
 						sortable: true,
-					    sortingType: 'asc'
+					    sortingType: 'asc',
+						width : 140
 					}, {
 						header : 'LOT',
-						name : 'mtlLotNum'
+						name : 'mtlLotNum',
+						width : 180
 					}, {
 						header : '자재코드',
-						name : 'mtlCode'
+						name : 'mtlCode',
+						hidden: true
 					}, {
 						header : '자재이름',
-						name : 'mtlName'
+						name : 'mtlName',
+						hidden: true
 					}, {
 						header : '출고수량',
 						name : 'mtlOutCnt'
 					}, {
-						header : '자재출고일자',
+						header : '자재출고일',
 						name : 'prcsEDate'
 					}, {
-						header : '사용공정코드',
+						header : '공정코드',
 						name : 'prcsRsCode'
 					},  ]
 				});
@@ -153,8 +150,8 @@ float: right;
 		            console.log(err);
 		          }
 		        })
-		        // 자재의 모든lot 조회 출력기능
-		        function lotFnc(mtlCode){
+		        // 자재별 출고량 출력기능
+		        function outFnc(mtlCode){
 		        $.ajax({
 		          url: '/mtlEmpty',
 		          method: 'POST',
@@ -163,7 +160,6 @@ float: right;
 		            //날짜변환
 		            $(result).each(function (idx, obj) {
 		              for (let head of header) {
-
 		                if (head.slice(-4).toLowerCase() == 'date') {
 		                  obj[head] = getDate(obj[head]);
 		                }
@@ -195,13 +191,13 @@ float: right;
 				})
 			}
 
-			
+			// 왼쪽 리스트에서 mtlCode값 오른쪽 리스트로 넘겨주기
 			mtlGrid.on('click', function (ev) {
 				if (ev.rowKey == undefined) {
 					return;
 				}
 				mtlCode = mtlGrid.getValue(ev.rowKey, 'mtlCode')
-				lotFnc(mtlCode)
+				outFnc(mtlCode)
 			})
 		        
 		        //엑셀 다운로드 버튼으로 만드는 기능
