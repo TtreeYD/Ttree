@@ -12,19 +12,17 @@
 <body>
 	<div layout:fragment="content">
 	<h2>생산지시관리</h2>
-		<label>지시명 : </label> <input type="text" name="prodInstName"
-			id="prodInstName"><br> <label>담당자 : </label> <input
-			type="text" name="prodInstManager" id="prodInstManager"><br> <label>생산지시일자
-			: </label> <input type="date" name="prodInstDate" id="prodInstDate">
-		<label>생산예상시작일자 : </label> <input type="date" name="prodInstSdate"
-			id="prodInstSdate"> <label>생산예상종료일자 : </label> <input
-			type="date" name="prodInstEdate" id="prodInstEdate">
+		<label>지시명 : </label> <input type="text" name="prodInstName" id="prodInstName">
+		<label style="margin-left: 40px">담당자 : </label> <input type="text" name="prodInstManager" id="prodInstManager"><br> 
+		<label>생산지시일자	: </label> <input type="date" name="prodInstDate" id="prodInstDate">
+		<label>생산예상시작일자 : </label> <input type="date" name="prodInstSdate" id="prodInstSdate"> 
+		<label>생산예상종료일자 : </label> <input type="date" name="prodInstEdate" id="prodInstEdate">
 			<input type="hidden" name="prodInstCode" id="prodInstCode">
 		<div class="btn-group" role="group" aria-label="Basic example"
 			style="float: right; margin-bottom: 10px;">
 			<button type="button" class="btn btn-primary" id="resetBtn">초기화</button>
-			<button type="button" class="btn btn-primary" id="prodListBtn">생산계획</button>
-			<button type="button" class="btn btn-primary" id="prodInstListBtn">생산지시</button>
+			<button type="button" class="btn btn-primary" id="prodListBtn">계획내역</button>
+			<button type="button" class="btn btn-primary" id="prodInstListBtn">지시내역</button>
 			<button type="button" class="btn btn-primary" id="saveBtn">저장</button>
 			<button type="button" class="btn btn-primary" id="delBtn">삭제</button>
 		</div>
@@ -96,7 +94,7 @@
 						<div id="mtlLotGrid"></div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="saveMtlCnt" class="btn btn-default" data-dismiss="modal">저장</button>
+						<button type="button" id="saveMtlCnt" class="btn btn-default">저장</button>
 						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
 					</div>
 				</div>
@@ -110,6 +108,8 @@
 		let mtlCntVO = {} 
 		let mtlCode
 		let mtlRow
+		let holdingChk ={}
+		let prodPlanCode
 
 		let rowNum;			// 해당 rowNum 값을 담기위해 만든 변수
 		let getProdPlanCode;
@@ -184,7 +184,7 @@
 	      	scrollY: false,
 	      	bodyHeight : 400,
 	      	pageOptions: {
-            	perPage: 5,
+            	perPage: 10,
             	useClient: true,
           	},
 	      	columns: [
@@ -205,7 +205,7 @@
 		          header: '홀드수량',
 		          name: 'holdingCnt',
 		          validation:{
-			          validatorFn: (value, row, columnName) => Number(value) == Number(row['mtlTotalNeed']),
+			          validatorFn: (value, row, columnName) => Number(value) === Number(row['mtlTotalNeed']),
 		        	  	 required: true
 		          }
 		        }
@@ -301,7 +301,8 @@
 				name : 'mtlName'
 			}, {
 				header : '자재입고수량',
-				name : 'mtlInCnt'
+				name : 'mtlInCnt',
+				hidden: true
 			}, {
 				header : '사용가능수량',
 				name : 'mtlUse'
@@ -310,7 +311,12 @@
 				name : 'holdingCnt',
 				editor: {
 					type: 'text'
-				}
+				},
+				validation:{
+					dataType: 'number',
+		         validatorFn: (value, row, columnName) => ((value <= row['mtlUse']) && value >= 0),
+	        	  	required: true
+	         }
 			}  ],
 			summary: {
 			  height: 40,
@@ -367,6 +373,7 @@
 		function resetList(){
 			var data = grid.getData();
 
+			holdingChk = {}
 			grid.clear()
 			grid3.clear()
 			$('#prodInstCode').val('');
@@ -376,12 +383,12 @@
 			$('#prodInstSdate').val('');
 			$('#prodInstEdate').val('');
 			bir.value = today;
+			mtlCntVO = {}
 		}
 		
 			// 저장 버튼
 			$('#saveBtn').on('click',function(){
 				grid.blur();
-				console.log(grid3.validate())
 				if(grid3.validate().length){
 					toastr.warning('값을 확인해주세요')
 					return
@@ -398,13 +405,14 @@
 					prodPlanCode : data.list[0].prodPlanCode
 				}
 				data.hlist = []
+				console.log(mtlCntVO)
 				for(let mtl in mtlCntVO){
 					for(let obj of mtlCntVO[mtl]){
+						if(obj.holdingCnt==0) continue;
 						data.hlist.push(obj)
 					}
 				}
 				mtlCntVO = {};
-				console.log(data);
 			if(data.vo.prodInstCode != ''){
 				$.ajax({
 		      		url:'/updateProdInst',
@@ -424,7 +432,6 @@
 		
 			else {
 				data.list = grid.getData();
-				console.log(data);
 				$.ajax({
 		      		url:'/insertProdInst',
 		      		method: 'post',
@@ -465,6 +472,15 @@
 					contentType : 'application/json',
 					data : JSON.stringify(data),
 					success:function(result){
+						console.log(data)
+						console.log(prodPlanCode)
+						$.ajax({
+							url:'/updateInstYn',
+							method: 'post',
+							data : {
+								prodPlanCode : prodPlanCode
+							}
+						})
 						toastr.success("전체삭제완료");
 						resetList();
 					},
@@ -495,15 +511,13 @@
 			if(ev.rowKey == undefined){
 				return;
 			}
-			console.log(grid4.getData())
-			let prodPlanCode = grid4.getValue(ev.rowKey, 'prodPlanCode');
-			console.log(prodPlanCode);
+			prodPlanCode = grid4.getValue(ev.rowKey, 'prodPlanCode');
 			$.ajax({
 				url : '/selectGetProdInst',
 				method : 'get',
 				data : { prodPlanCode : prodPlanCode },
 				success : function(result){
-					console.log(result);
+					resetList()
 					$('#prodInstCode').val(result.list[0].prodInstCode),
 					$('#prodInstName').val(result.list[0].prodInstName),
 					$('#prodInstManager').val(result.list[0].prodInstManager),
@@ -528,7 +542,25 @@
 							prodInstCode : result.list[0].prodInstCode
 						},
 						success: result => {
-							console.log(result)
+							for(let mtl of result){
+								let code = mtl.mtlCode
+								
+								// 홀드수량 불러오기
+								if(!mtlCntVO[code]){
+									mtlCntVO[code] = [mtl]
+								} else{
+									mtlCntVO[code].push(mtl)
+								}
+								let data = grid3.getData()
+								for(let obj of data){
+									if(obj.mtlCode === code){
+										obj.holdingCnt += mtl.holdingCnt
+										holdingChk[mtl.mtlLotNum] = mtl.holdingCnt
+									}
+								}
+								grid3.resetData(data)
+								console.log(mtlCntVO)
+							}
 						},
 						error: err => console.log(err)
 					})
@@ -546,13 +578,14 @@
 			if(ev.rowKey == undefined){
 				return;
 			}
-			let prodPlanCode = grid5.getValue(ev.rowKey, 'prodPlanCode');
+			prodPlanCode = grid5.getValue(ev.rowKey, 'prodPlanCode');
 			 
 			$.ajax({
 				url : '/selectGetProdPlan',
 				method : 'get',
 				data : { prodPlanCode : prodPlanCode },
 				success : function(result){
+					resetList()
 					getProdPlanCode = result.list[0].prodPlanCode;
 					mtlNeed = result.mtlNeed
 					
@@ -611,20 +644,26 @@
 				url: '/getLotMtl',
 				type: 'POST',
 				data:{
-					mtlCode: mtlCode
+					mtlCode: mtlCode,
+					prodInstCode: $('#prodInstCode').val()
 				},
 				success: result => {
 					$(result).each(function (idx, obj) {
 						obj.mtlUse = obj.mtlLotCnt - obj.holdingSum
+						
 						for(let mtl in mtlCntVO){
 							//if(mtl == mtlCode){
 								for(let obj2 of mtlCntVO[mtl]){
 									if(obj.mtlLotNum == obj2.mtlLotNum) {
 										obj.holdingCnt = obj2.holdingCnt
+										if(holdingChk[obj2.mtlLotNum]){
+											obj.mtlUse += holdingChk[obj2.mtlLotNum]
+										}
 									}
 								}
 							//}
 						}
+						
 					})
 					$('#mtlModal').modal('show')
 					mtlLotGrid.resetData(eval(result))
@@ -638,10 +677,19 @@
 		
 		$('#saveMtlCnt').on('click', () => {
 			mtlLotGrid.blur();
+			if(mtlLotGrid.validate().length){
+				toastr.warning('값을 확인해주세요')
+				return
+			}
 			let totalCnt = mtlLotGrid.getSummaryValues('holdingCnt').sum
-			mtlCntVO[mtlCode] = mtlLotGrid.getModifiedRows().updatedRows
+			let needCnt = grid3.getValue(mtlRow,'mtlTotalNeed')
+			if(needCnt != totalCnt) {
+				toastr.warning('요구량과 같지 않습니다')
+				return
+			}
+			mtlCntVO[mtlCode] = mtlLotGrid.getData()
 			grid3.setValue(mtlRow,'holdingCnt', totalCnt)
-			console.log(mtlCntVO)
+			$('#mtlModal').modal('hide')
 		})
 		
 		// 오늘날짜 input에 넣기
