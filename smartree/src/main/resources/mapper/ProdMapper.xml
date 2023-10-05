@@ -77,13 +77,14 @@
 		                        join prdt_table pt
 		                          on dtp.prdt_code = pt.prdt_code
 		<where>
-			<if test="dtProdPlanCode != null and !dtProdPlanCode.equals('')">
-				dtp.dt_prod_plan_code like '%' || #{dtProdPlanCode} || '%'
+			<if test="prodName != null and !prodName.equals('')">
+				p.prod_name like '%' || #{prodName} || '%'
 			</if> 
-			<if test="prdtName != null and !prdtName.equals('')">
-				or pt.prdt_name like '%' || #{prdtName} || '%'
+			<if test="prodPlanName != null and !prodPlanName.equals('')">
+				or p.prod_plan_name like '%' || #{prodPlanName} || '%'
 			</if>
 		</where>
+		order by prod_plan_date desc
   	</select>
   	
   	<select id="selectProd" resultType="ProdVO">
@@ -102,7 +103,9 @@
   		      ,prod_inst_sdate
   		      ,prod_inst_edate
 		  from prod_inst
+		  where prcs_start_yn = 'n'
 		  order by prod_inst_date desc
+		  
   	</select>
   	
   	<select id="selectProdListView" resultType="ProdVO">
@@ -250,6 +253,13 @@
 			#{prodInstCnt}
 		)}
 	</insert>
+	<!-- 공정흐름 업데이트 -->
+	<update id="updateProcess" parameterType="ProdVO">
+		UPDATE	process
+		SET 		prdt_total = #{prodInstCnt}
+		WHERE 	dt_prod_inst_code = #{dtProdInstCode}
+		AND 		prcs_order = 1		
+	</update>
 
 	<update id="updateProdInst" parameterType="ProdVO">
   		update prod_inst
@@ -280,19 +290,20 @@
   	<!-- 생산지시조회 -->
   	<select id="selectGetDtInst" resultType="ProdVO">
   		select p.prod_inst_code , d.dt_prod_inst_code , p.prod_plan_code , p.prod_inst_name , d.prdt_code , pt.prdt_name, d.prod_inst_cnt , d.prod_inst_rank , d.prod_inst_yn , p.prod_inst_edate , p.prod_inst_sdate
+  				 , p.prod_inst_manager
 		  from dt_prod_inst d join prod_inst p 
                 on d.prod_inst_code  = p.prod_inst_code
                 join prdt_table pt
                 on d.prdt_code = pt.prdt_code
          <where>
-			<if test="prodInstCode != null and !prodInstCode.equals('')">
-				p.prod_inst_code like '%' || #{prodInstCode} || '%'
+			<if test="prodInstName != null and !prodInstName.equals('')">
+				p.prod_inst_name like '%' || #{prodInstName} || '%'
 			</if> 
-			<if test="prdtName != null and !prdtName.equals('')">
-				or pt.prdt_name like '%' || #{prdtName} || '%'
+			<if test="prodInstManager != null and !prodInstManager.equals('')">
+				or p.prod_inst_manager like '%' || #{prodInstManager} || '%'
 			</if>
 		</where>
-		order by p.prod_inst_date desc
+		order by p.prod_inst_code desc
   	</select>
   	<!-- 키오스크 :생산지시불러오기 -->
   	<select id="selectGetProcess" resultType="ProdVO">
@@ -342,7 +353,7 @@
 					, manager
 					, prcs_sdate
 					, prcs_edate
-					, prod_cnt
+					, prdt_cnt
 					, err_cnt
 					, pass_cnt
   		FROM process_result JOIN process USING(prcs_code)
@@ -401,10 +412,11 @@
 	</insert>
 	
 	<select id="selectHolding" resultType="HoldingVO">
-		SELECT *
-		FROM holding
+		SELECT h.*, m.mtl_code
+		FROM holding h JOIN mtl_container m ON h.mtl_lot_num = m.mtl_lot_num
 		WHERE prod_inst_code = #{prodInstCode}
 	</select>
+
 	<!-- 공정종료List불러오기 -->
 	<select id="getProcessResult" resultType="ProdVO">
 		select  a.* , p.prdt_name , pr.prcs_name , e.eqm_name , pro.prcs_order , pro.prcs_maxnum
@@ -444,4 +456,23 @@
 			#{prdtCode}
 		)}
 	</insert>
+
+
+	<delete id="delHolding" parameterType="String">
+		DELETE holding
+		WHERE prod_inst_code = #{prodInstCode}
+	</delete>
+
+	<update id="updateInstYn" parameterType="String">
+		UPDATE prod_plan
+		SET prod_inst_yn = 'n'
+		WHERE prod_plan_code = #{prodPlanCode}
+	</update>
+	
+	<delete id="delProcess" parameterType="ProdVO">
+		DELETE process
+		WHERE dt_prod_inst_code = #{dtProdInstCode}
+	</delete>
+	
+
   </mapper>

@@ -89,7 +89,13 @@ float: right;
 				});
 				
 				const header = ['mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode', 'mtlName']
-				
+				mtlGrid.on('click', function (ev) {
+					if (ev.rowKey == undefined) {
+						return;
+					}
+					mtlCode = mtlGrid.getValue(ev.rowKey, 'mtlCode')
+					lotFnc(mtlCode)
+				})
 				// lot목록 그리드
 				const mtlLotGrid = new tui.Grid({
 					el : document.getElementById('mtlLotGrid'),
@@ -103,13 +109,13 @@ float: right;
 			            useClient: true,
 			          },
 					columns : [ {
-						header : '자재LOT',
-						name : 'mtlLotNum',
+						header : '자재출고코드',
+						name : 'mtlOutCode',
 						sortable: true,
 					    sortingType: 'asc'
 					}, {
-						header : '분류',
-						name : 'mtlType'
+						header : 'LOT',
+						name : 'mtlLotNum'
 					}, {
 						header : '자재코드',
 						name : 'mtlCode'
@@ -117,18 +123,15 @@ float: right;
 						header : '자재이름',
 						name : 'mtlName'
 					}, {
-						header : '자재입고일자',
-						name : 'mtlInDate'
+						header : '출고수량',
+						name : 'mtlOutCnt'
 					}, {
-						header : '자재입고수량',
-						name : 'mtlInCnt'
+						header : '자재출고일자',
+						name : 'prcsEDate'
 					}, {
-						header : '홀드수량',
-						name : 'holdingCnt'
-					}, {
-						header : '사용가능수량',
-						name : 'mtlUse'
-					}   ]
+						header : '사용공정코드',
+						name : 'prcsRsCode'
+					},  ]
 				});
 				// 재고목록 ajax
 		        $.ajax({
@@ -153,7 +156,7 @@ float: right;
 		        // 자재의 모든lot 조회 출력기능
 		        function lotFnc(mtlCode){
 		        $.ajax({
-		          url: '/getLotMtl',
+		          url: '/mtlEmpty',
 		          method: 'POST',
 		          data: { mtlCode : mtlCode },
 		          success: function (result) {
@@ -172,23 +175,7 @@ float: right;
 		            console.log(err);
 		          }
 		        });
-				}
-			// 자재분류 불러오기
-			$.ajax({
-				url: "/mdm/selectCodeDetail",
-				data: {
-					codeType: '003'
-				},
-				success: result => {
-					$(result).each(function (idx, dept) {
-						let optTag = $('<option/>');
-						optTag.val(dept['codeId']);
-						optTag.text(dept['codeName']);
-						$('#mtlType, #searchMtlType').append(optTag);
-					})
-				},
-				error: err => console.log(err)
-			})		    
+				}	    
 		    // 자재검색
 			function searchMtl() {
 				let vo = {};

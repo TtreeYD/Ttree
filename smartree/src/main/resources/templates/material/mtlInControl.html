@@ -25,7 +25,7 @@ margin : 10px;
 		<br>
 			<div class="col-14">
 				<div class="btn-group" role="group" aria-label="Basic example" style="float:right;">
-				<button type="button" id="mtlSearch" class="btn btn-primary" data-toggle="modal" data-target="#myModal">조회</button>
+				<button type="button" id="mtlSearch" class="btn btn-primary" data-toggle="modal" data-target="#myModal">상세조회</button>
 				<button type="button" id="mtlSave" class="btn btn-primary">입고</button>
 			</div>
 		<div id="mtlInGrid"></div>
@@ -39,7 +39,7 @@ margin : 10px;
 							<div class="col-6">
 								<div class="d-flex flex-column align-items-center">
 									<div class="mb-3">
-									<span>자재입고일</span>
+									<span>검사완료일</span>
 									<div class="input-group">
 										<input class="form-control mr-2" id="startMtlInDate" type="date" style="width: 150px;">
 										<div class="mt-2">~</div>
@@ -80,11 +80,14 @@ margin : 10px;
 			let searchModalData = [];
 			let mtlDate;
 		// 검사완료 목록 출력/숨기기
+		function toggle(){
 			$('#chkBtn').on('click', function (){
-        	    $('#mtlCheckGrid').toggle("size", 500);
+        	    $('#mtlCheckGrid').toggle("blind", 1000);
        	    });
+		}
 	     
 		document.addEventListener("DOMContentLoaded",() => {
+				toggle();
 				// 모달창
 				const mtlInModalGrid = new tui.Grid({
 					el: document.getElementById('mtlInModalGrid'),
@@ -96,31 +99,28 @@ margin : 10px;
 			            perPage: 5,
 			            useClient: true,
 		            },
-					columns: [ {
-						header : 'LOT번호',
-						name : 'mtlLotNum'
-					},{
+					columns : [ {
 						header : '자재코드',
 						name : 'mtlCode'
 					}, {
 						header : '자재이름',
 						name : 'mtlName'
 					}, {
-						header : '자재입고수량',
-						name : 'mtlInCnt'
+						header : '검사완료수량',
+						name : 'mtlPassCnt'
 					}, {
-						header : '자재입고일자',
-						name : 'mtlInDate'
+						header : '검사완료일',
+						name : 'mtlChkDate'
 					}, {
-						header : '입고담당자',
-						name : 'mtlManager'
+						header : '검수담당자',
+						name : 'mtlChkManager'
 					}, {
 						header : '자재검사코드',
 						name : 'mtlChkCode'
 					}, {
 						header : '검사결과',
 						name : 'mtlStatusNm'
-					}   ]
+					},   ]
 			    });		
 			    $('#mtlSearch').on('click', function(){
                      setTimeout(() => mtlInModalGrid.refreshLayout(), 200);
@@ -159,11 +159,11 @@ margin : 10px;
 						name : 'mtlStatusNm'
 					},   ]
 				});
-			 // 미달목록 더블클릭시 발주목록으로 이동시키기
+			 // 검사완료 더블클릭시 발주목록으로 이동시키기
                 mtlCheckGrid.on('dblclick', () => {
                     let rowKey =
                     	mtlCheckGrid.getFocusedCell().rowKey;
-
+                    	mtlInModalGrid.getFocusedCell().rowKey;
                     if (rowKey != null && rowKey >= 0) {
                         let mtlCode = mtlCheckGrid.getValue(
                             rowKey,
@@ -185,12 +185,11 @@ margin : 10px;
                                 rowKey,
                         "mtlStatusNm"
                         );
-                        
 
                         mtlCheckGrid.removeRow(rowKey);
-
+                        mtlInModalGrid.removeRow(rowKey);
                         mtlCheckGrid.blur();
-
+                        mtlInModalGrid.blur();
                         let now = new Date(); // 현재 날짜 및 시간
                         let year = now.getFullYear();
                         let month = (
@@ -216,6 +215,9 @@ margin : 10px;
                             },
                             { at: 0 }
                         );
+                        if(mtlCheckGrid.getData().length === 0){
+            				$('#chkBtn').click();
+            			}
                     }
                 });
 			    
@@ -260,7 +262,7 @@ margin : 10px;
 				function mtlSave() {
 					mtlInGrid.blur();
 					if(!mtlInGrid.isModified()) {
-						alert('발주할 내역이 없습니다.');
+						toastr.warning('입고할 내역이 없습니다.');
 						return;
 					}
 					$.ajax({
@@ -271,7 +273,7 @@ margin : 10px;
 						},
 						data: JSON.stringify(mtlInGrid.getData()),
 						success: result => {
-							alert("등록완료");
+							toastr.success("입고가 완료되었습니다");
 							mtlInGrid.resetData([]);
 						},
 						error: err => console.log(err)
@@ -348,6 +350,7 @@ margin : 10px;
                 mtlInModalGrid.on('dblclick', () => {
                     let rowKey =
                     	mtlInModalGrid.getFocusedCell().rowKey;
+                    	mtlCheckGrid.getFocusedCell().rowKey;
                     if (rowKey != null && rowKey >= 0) {
                         let mtlCode = mtlInModalGrid.getValue(
                             rowKey,
@@ -359,7 +362,7 @@ margin : 10px;
                         );
                         let mtlPassCnt = mtlInModalGrid.getValue(
                             rowKey,
-                            "mtlInCnt"
+                            "mtlPassCnt"
                         );
                         let mtlChkCode = mtlInModalGrid.getValue(
                             rowKey,
@@ -369,7 +372,10 @@ margin : 10px;
                                 rowKey,
                         	"mtlStatusNm"
                         );
+                        
+                        mtlCheckGrid.removeRow(rowKey);
                         mtlInModalGrid.removeRow(rowKey);
+                        mtlCheckGrid.blur();
                         mtlInModalGrid.blur();
 
                         let now = new Date(); // 현재 날짜 및 시간
@@ -408,6 +414,26 @@ margin : 10px;
 			$('#mtlManager').val('');
 			$('#mtlName').val('');
 		});
+		
+		// 알람창
+	    toastr.options = {
+              "closeButton": false,
+              "debug": false,
+              "newestOnTop": false,
+              "progressBar": true,
+              "positionClass": "toast-top-center",
+              "preventDuplicates": true,
+              "onclick": null,
+              "showDuration": "100",
+              "hideDuration": "1000",
+              "timeOut": "1500",
+              "extendedTimeOut": "1000",
+              "showEasing": "swing",
+              "hideEasing": "linear",
+              "showMethod": "fadeIn",
+              "hideMethod": "fadeOut"
+            }
+		
 	});
 		</script>
 	</div>

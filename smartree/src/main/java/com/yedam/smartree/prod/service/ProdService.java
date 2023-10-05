@@ -20,6 +20,8 @@ public interface ProdService {
 	public int deleteProd(RequestVO<ProdVO> vo);
 	public int insertAndUpdateDtProdPlan(RequestVO<ProdVO> vo);
 	
+	int updateInstYn(String prodPlanCode);
+	
 	public int insertProdInst(RequestVO<ProdVO> vo);
 
 	public int updateProdInst(RequestVO<ProdVO> vo);

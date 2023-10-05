@@ -32,9 +32,9 @@ public class MaterialRestController {
 		return materialService.selectMtlList();
 	}
 	// 출고조회 목록
-	@GetMapping("/mtlEmpty")
-	public List<MaterialVO> getMtlEmpty(){
-		return materialService.selectMtlOutList();
+	@PostMapping("/mtlEmpty")
+	public List<MaterialVO> getMtlEmpty(MaterialVO vo){
+		return materialService.selectMtlOutList(vo);
 	}
 	// 안전재고 미달 목록
 	@GetMapping("/mtlMinus")
@@ -61,8 +61,10 @@ public class MaterialRestController {
 	}
 	// 발주관리 delete
 	@PostMapping("/deleteNeedMtl")
-	public int deleteNeedMtl(MaterialVO vo) {
-		return materialService.deleteNeedMtl(vo);
+	public void deleteNeedMtl(@RequestBody List<MaterialVO> materialList) {
+		for(MaterialVO vo : materialList) {
+			materialService.deleteNeedMtl(vo);
+		}
 	}
 	
 	// 입고관리 insert

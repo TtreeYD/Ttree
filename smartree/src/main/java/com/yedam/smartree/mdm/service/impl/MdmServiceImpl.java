@@ -3,6 +3,7 @@ package com.yedam.smartree.mdm.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.yedam.smartree.mdm.mapper.MdmMapper;
@@ -20,9 +21,9 @@ import com.yedam.smartree.prod.service.RequestVO;
 @Service
 public class MdmServiceImpl implements MdmService {
 
-	/*
-	 * @Autowired PasswordEncoder passwordEncoder;
-	 */
+	
+	  @Autowired PasswordEncoder passwordEncoder;
+	 
 	
 	@Autowired
 	MdmMapper mdmMapper;
@@ -66,11 +67,12 @@ public class MdmServiceImpl implements MdmService {
 		return mdmMapper.selectEmpList(empDept,empName);
 	}
 			
-	/*
-	 * @Override public int addEmp(EmpVO vo) {
-	 * vo.setEmpPw(passwordEncoder.encode(vo.getEmpPw())); return
-	 * mdmMapper.addEmp(vo); }
-	 */
+	
+	@Override public int addEmp(EmpVO vo) {
+	vo.setEmpPw(passwordEncoder.encode(vo.getEmpPw())); 
+		return mdmMapper.addEmp(vo); 
+	}
+	 
 	
 	@Override
 	public int resetPw(EmpVO vo) {
@@ -263,13 +265,6 @@ public class MdmServiceImpl implements MdmService {
 		}
 		return cnt;
 	}
-
-	@Override
-	public int addEmp(EmpVO vo) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
 	
 
 }

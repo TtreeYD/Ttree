@@ -13,7 +13,7 @@
 		<div style="float:right; margin-bottom: 10px">
 			<div class="input-group" >
 				<div class="form-outline">
-					<input type="search" id="form1" class="form-control" placeholder="지시코드 또는 제품명"/> 
+					<input type="search" id="form1" class="form-control" placeholder="지시명 또는 담당자"/> 
 				</div>
 				<button type="button" class="btn btn-primary" id="searchBtn">
 					<i class="fas fa-search"></i>
@@ -33,19 +33,30 @@
 			columns : [
 					{
 			          header: '지시코드',
-			          name: 'prodInstCode'
+			          name: 'prodInstCode',
+			          hidden: true
 			        },
 			        {
 			          header: '지시상세코드',
-			          name: 'dtProdInstCode'
+			          name: 'dtProdInstCode',
+			          hidden: true
 			        },
 			        {
 			          header: '계획코드',
-			          name: 'prodPlanCode'
+			          name: 'prodPlanCode',
+			          hidden: true
 			        },
 			        {
 			          header: '지시명',
 			          name: 'prodInstName'
+			        },
+			        {
+			        	 header: '담당자',
+			        	 name: 'prodInstManager'
+			        },
+			        {
+			          header: '지시우선순위',
+			          name: 'prodInstRank'
 			        },
 			        {
 			          header: '제품코드',
@@ -66,39 +77,33 @@
 			        {
 			          header: '완료예정일자',
 			          name: 'prodInstEdate'
-			        },
-			        {
-			          header: '지시우선순위',
-			          name: 'prodInstRank'
-			        },
-			        {
-			          header: '지시완료여부',
-			          name: 'prodInstYn'
-			        },
+			        }
+			       
 			]
 		}) 
 		$(document).ready(function (){
 			getSelectInstList();
 			
+			$('#form1').on('keypress', function (ev) {
+				if (ev.which == 13) {
+					event.preventDefault();
+					$('#searchBtn').click();
+				}
+			})
+			
 			$('#searchBtn').on('click',function(){
 				let data={};
-				data.prodInstCode = $('#form1').val();
-				data.prdtName = $('#form1').val();
+				data.prodInstName = $('#form1').val();
+				data.prodInstManager = $('#form1').val();
 				getSelectInstList(data);
 			})
+			
 			function getSelectInstList(data){
 				$.ajax({
 					url : '/selectGetDtInst',
 					method : 'get',
 					data: data,
 					success : function(result){
-						 for(let i =0 ; i<result.length ; i++){
-							if(result[i].prodInstYn == 'n'){
-								result[i].prodInstYn = '지시전';
-							}else{
-								result[i].prodInstYn = '지시완료';
-							}
-						 } 
 							grid.resetData(result);
 							console.log(result);
 					},

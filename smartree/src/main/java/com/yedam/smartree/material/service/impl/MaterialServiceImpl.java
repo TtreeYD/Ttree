@@ -25,11 +25,6 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialVO> selectMtlList() {
 		return materialMapper.selectMtlList();
 	}
-	// 출고목록 전체조회
-	@Override
-	public List<MaterialVO> selectMtlOutList() {
-		return materialMapper.selectMtlOutList();
-	}
 	// 발주관리 전체출력
 	@Override
 	public List<MaterialVO> controlNeedList() {
@@ -117,6 +112,11 @@ public class MaterialServiceImpl implements MaterialService {
 	@Override
 	public List<MaterialVO> searchCont(MaterialVO vo) {
 		return materialMapper.searchCont(vo);
+	}
+	
+	@Override
+	public List<MaterialVO> selectMtlOutList(MaterialVO vo) {
+		return materialMapper.selectMtlOutList(vo);
 	}
 
 }
