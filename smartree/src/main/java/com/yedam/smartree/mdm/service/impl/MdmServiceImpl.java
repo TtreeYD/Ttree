@@ -72,7 +72,21 @@ public class MdmServiceImpl implements MdmService {
 	vo.setEmpPw(passwordEncoder.encode(vo.getEmpPw())); 
 		return mdmMapper.addEmp(vo); 
 	}
-	 
+	
+	// 사용자의 현재 암호를 확인하는 메서드
+	/*
+	 * public boolean checkCurrentPassword(String currentPassword, String encodedPassword) { 
+	 * return passwordEncoder.matches(currentPassword, encodedPassword); }
+	 */
+
+	// 새로운 패스워드를 암호화하고 저장하는 메서드
+	/*
+	 * public void updatePassword(String newPassword) {
+	 *   String encodedPassword = passwordEncoder.encode(newPassword); 
+	 * // 사용자 정보 업데이트 코드 추가
+	 *  }
+	 */
+	
 	
 	@Override
 	public int resetPw(EmpVO vo) {

@@ -29,6 +29,7 @@ public interface MdmMapper {
 	int addEmp(EmpVO vo);
 	EmpVO selectEmp(String id);
 	int resetPw(EmpVO vo);
+	int updatePw(EmpVO vo);
 	
 	// 제품관리
 	List<MdmPrdtVO> selectPrdtList();
