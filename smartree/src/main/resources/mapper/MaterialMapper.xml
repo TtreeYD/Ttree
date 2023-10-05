@@ -26,13 +26,10 @@
   	
   	<!-- 출고목록 전체조회 -->
     <select id="selectMtlOutList" resultType="MaterialVO">
-  		SELECT m.mtl_out_code, m.mtl_lot_num, t.mtl_name, m.mtl_code, m.mtl_out_cnt, m.prcs_rs_code, p.prcs_edate
-  		FROM mtl_out m 
-  		JOIN mtl_table t
-  		ON m.mtl_code = t.mtl_code
-  		JOIN process_result p
-  		ON  m.prcs_rs_code = p.prcs_rs_code
-  		WHERE m.mtl_code = #{mtlCode}
+  		SELECT o.mtl_out_code, o.mtl_lot_num, o.mtl_code, o.mtl_out_cnt, o.prcs_rs_code, p.prcs_edate
+  		FROM mtl_out o JOIN process_result p
+        ON o.prcs_rs_code = p.prcs_rs_code
+  		WHERE mtl_code = #{mtlCode}
   	</select>
   	
   	<!-- 발주관리 안전재고 미달목록 출력 -->
