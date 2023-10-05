@@ -72,5 +72,9 @@ public class ProdController {
 		
 		return "prod/prodDtSituation";
 	}
+	@GetMapping("/prodCondition")
+	public String prodCondition() {
+		return "prod/prodCondition";
 
+	}
 }
