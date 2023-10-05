@@ -17,6 +17,7 @@ public interface MdmService {
 	public List<EmpVO> selectEmpList(String empDept, String empName);
 	public int addEmp(EmpVO vo);
 	int resetPw(EmpVO vo);
+	//int updatePw(EmpVO vo);
 	
 	// 제품관리
 	List<MdmPrdtVO> selectPrdtList();

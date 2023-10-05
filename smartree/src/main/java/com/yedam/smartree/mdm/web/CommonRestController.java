@@ -109,6 +109,12 @@ public class CommonRestController {
 	public int resetPw(@RequestBody EmpVO vo) {
 		return mdmService.resetPw(vo);
 	}
+	
+	/*
+	 * // 비밀번호 변경
+	 * 
+	 * @PostMapping("/updatePw") public int updatePw() { return }
+	 */
 
 	// 제품관리
 	

@@ -99,7 +99,7 @@
 					, #{empPhone}
 					)
 	</insert>
-	<!-- 비밀번호 초기화 -->
+	<!-- 비밀번호 초기화  -->
 	<update id="resetPw" parameterType="EmpVO">
 		UPDATE emp_list
 		SET	 emp_pw = #{empPw}
