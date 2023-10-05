@@ -63,6 +63,30 @@ cursor: pointer;
 box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
 }
 
+
+ .header{
+            
+            border: 1px solid black;
+            width: 100%;
+            height: 100px;
+            background-color: #6fb7ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .header-content{
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin: 0 30px;
+        }
+        .header-content-detail > i {
+            font-size: 50px;
+
+        }
+        .header-content-detail > i:active{
+            color: white;
+        }
 </style>
 </head>
 
@@ -70,7 +94,10 @@ box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
 <div class="header">
         <div class="header-content">
             <h1>생산키오스크</h1>
-            <i class="fa-solid fa-house" onclick="backHome()"></i>
+            <div class="header-content-detail">
+	            <i class="fa-solid fa-backward-step fa-sm"style="margin-right: 30px;" onclick="backBefore()"></i>
+	            <i class="fa-solid fa-house" onclick="backHome()"></i>
+            </div>
         </div>
  </div>
  <div style="overflow:scroll;height:100vh">
@@ -177,11 +204,16 @@ $(document).ready(function (){
 	//공정 실적 상세 클릭
 	instGrid.on('click',function(ev){
 		let data = instGrid.getValue(ev.rowKey,  'prcsCode');
-		window.location.href = '/prod/prcrDtProgress?data=' + encodeURIComponent(data);
+		if(data != null){
+			window.location.href = '/prod/prcrDtProgress?data=' + encodeURIComponent(data);		
+		}
 	})
 	
 })
 	function backHome(){
+		$(location).attr('href', '/prod/prcrKiosk');
+	}
+	function backBefore(){
 		$(location).attr('href', '/prod/prcrKiosk');
 	}
 </script>

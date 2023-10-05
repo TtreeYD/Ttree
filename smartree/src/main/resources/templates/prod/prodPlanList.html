@@ -16,7 +16,7 @@
 		<div style="float:right; margin-bottom: 10px">
 			<div class="input-group" >
 				<div class="form-outline">
-					<input type="search" id="form1" class="form-control" placeholder="상세코드 또는 제품명"/> 
+					<input type="search" id="form1" class="form-control" placeholder="계획명 또는 담당자"/> 
 				</div>
 				<button type="button" class="btn btn-primary" id="searchBtn">
 					<i class="fas fa-search"></i>
@@ -46,16 +46,20 @@
 	          name: 'dtProdPlanCode'
 	        },
 	        {
+	          header: '계획명',
+	          name: 'prodName'
+	        },
+	        {
+	          header: '계획담당자',
+	          name: 'prodPlanName'
+	        },
+	        {
 	          header: '제품명',
 	          name: 'prdtName'
 	        },
 	        {
 	          header: '수량',
 	          name: 'prodPlanCnt'
-	        },
-	        {
-	          header: '계획담당자',
-	          name: 'prodPlanName'
 	        },
 	        {
 	          header: '순위',
@@ -73,6 +77,10 @@
 	          header: '생산종료일자',
 	          name: 'prodPlanEdate'
 	        },
+	        {
+	        	 header: '지시여부',
+	        	 name: 'prodInstYn'
+	        }
 	      ]
 	    });
 	    
@@ -82,21 +90,43 @@
 	    	dataType:'json',
 
 			success:function(result){
+				for(let data of result){
+					if(data.prodInstYn=='n'){
+						data.prodInstYn = '지시전'
+					} else{
+						data.prodInstYn = '지시완료'
+					}
+				}
 				grid.resetData(result);
 			},
 			error:function(err){
 				console.log(err);
 			}
 		})
+		
+		$('#form1').on('keypress', function (ev) {
+				if (ev.which == 13) {
+					event.preventDefault();
+					$('#searchBtn').click();
+				}
+			})
+			
 		$('#searchBtn').on('click', function(e){
 			$.ajax({
 				url:'/searchProd',
 				method:'post',
 				data : {
-					dtProdPlanCode : $('#form1').val(),
-					prdtName : $('#form1').val()
+					prodName : $('#form1').val(),
+					prodPlanName : $('#form1').val()
 				},
 				success:function(result){
+					for(let data of result){
+						if(data.prodInstYn=='n'){
+							data.prodInstYn = '지시전'
+						} else{
+							data.prodInstYn = '지시완료'
+						}
+					}
 					searchData = result;
 					grid.resetData(result);
 					setTimeout(() => grid.refreshLayout(), 800);

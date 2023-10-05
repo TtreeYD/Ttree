@@ -97,7 +97,7 @@ box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
 }
 .prcr_dt_progres_bottom_item{
 	/*위아래 공백 조정*/
-	margin-top: 150px;
+	margin-top: 50px;
 }
 #startBtn{
 	/*버튼 좌우 위치 조정*/
@@ -122,7 +122,29 @@ box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
 .swal-wide{
         width:800px !important;
     }
+ .header{
+            
+            border: 1px solid black;
+            width: 100%;
+            height: 100px;
+            background-color: #6fb7ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .header-content{
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin: 0 30px;
+        }
+        .header-content-detail > i {
+            font-size: 50px;
 
+        }
+        .header-content-detail > i:active{
+            color: white;
+        }
 
 </style>
 </head>
@@ -130,7 +152,10 @@ box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
 <div class="header">
         <div class="header-content">
             <h1>생산키오스크</h1>
-            <i class="fa-solid fa-house" onclick="backHome()"></i>
+            <div class="header-content-detail">
+	            <i class="fa-solid fa-backward-step fa-sm"style="margin-right: 30px;" onclick="backBefore()"></i>
+	            <i class="fa-solid fa-house" onclick="backHome()"></i>
+            </div>
         </div>
  </div>
  <div class="prcr_dt_progres_content">
@@ -193,6 +218,10 @@ const instDtGrid = new tui.Grid({
 	        {
 	          header: '현생산량',
 	          name: 'prdtProdSum'
+		     },
+		     {
+	          header: '불량량',
+	          name: 'prdtProdErrCnt'
 		     }
 
 	]})
@@ -303,6 +332,7 @@ $(document).ready(function (){
 		clickdata = eqmGrid.getValue(ev.rowKey , 'eqmCode');
 		eqmdata = eqmGrid.getValue(ev.rowKey, 'eqmState');
 	})
+	//공정시작
 	$('#startBtn').on('click',function(){
 		cntdata = instDtGrid.getData();
 		console.log(cntdata)
@@ -314,7 +344,9 @@ $(document).ready(function (){
 				  customClass: 'swal-wide'
 				})
 			return;
-		}else if(cntdata[0].prdtProdSum >= cntdata[0].prdtTotal || cntdata[0].prdtCnt > cntdata[0].prdtTotal){
+		}else if( Number(cntdata[0].prdtProdSum) + Number(cntdata[0].prdtCnt)>cntdata[0].prdtTotal  ){
+			console.log('지시량',cntdata[0].prdtProdSum);
+			console.log('썸',cntdata[0].prdtTotal + cntdata[0].prdtCnt)
 			Swal.fire({
 				  icon: 'error',
 				  title: '지시량을 초과했습니다',
@@ -327,7 +359,8 @@ $(document).ready(function (){
 			req.list[0].eqmCode = clickdata;
 			
 			req.vo = {
-					eqmCode: clickdata
+					eqmCode: clickdata,
+					prcsCode: data
 			}
 		
 			console.log(req)
@@ -356,6 +389,12 @@ $(document).ready(function (){
 		
 	})
 })
+	function backHome(){
+		$(location).attr('href', '/prod/prcrKiosk');
+	}
+	function backBefore(){
+		$(location).attr('href', '/prod/prodProgress');
+	}
 </script>
 </body>
 </html>

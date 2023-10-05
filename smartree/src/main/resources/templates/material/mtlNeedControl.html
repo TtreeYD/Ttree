@@ -36,9 +36,10 @@ margin : 10px;
 			<button type="button" id="mtlSave" class="btn btn-primary">발주</button>
 		</div>
 		<div id="mtlNeedGrid"></div>
+		
 			<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
 			<div class="modal-dialog modal-xl" role="document">
-				<div class="modal-content" style="height: 700px">
+				<div class="modal-content" style="height: 720px">
 					<div class="container text-center">
 					<br>
 						<h2>발주관리</h2>
@@ -73,17 +74,25 @@ margin : 10px;
 							</div>
 						</div>
 					</div>
-					<div style="display: flex; justify-content: center;">
-						<button type="button" id="searchDataBtn" class="btn btn-primary"
-							style="margin: 4px;">조회</button>
+					<div class="row mt-3">
+					<div class="col-md-3 offset-md-5">
+						<button type="button" id="searchDataBtn" class="btn btn-primary "
+							style="margin: 4px; margin-left:27px;">조회</button>
 						<button type="button" id="resetModalBtn" class="btn btn-primary"
 							style="margin: 4px;">초기화</button>
 					</div>
+					<div class="col-md-1 offset-md-3">
+						<button type="button" id="deleteBtn" class="btn btn-danger"
+							style="margin: 5px; justify-content: right;">삭제</button>
+					</div>
+					</div>
+
+
 					<div class="modal-body">
 						<div id="needModalGrid"></div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose">닫기</button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose" >닫기</button>
 					</div>
 				</div>
 				<!-- /.modal-content -->
@@ -138,9 +147,10 @@ margin : 10px;
 		<script>
 			let mtlInfo = [];
 			let bucket = [];
+			let newBucket = [];
 			// 안전재고 미달목록 출력/숨기기
 			$('#minusBtn').on('click', function (){
-        	    $('#mtlLowGrid').toggle("size", 500);
+        	    $('#mtlLowGrid').toggle("blind", 1000);
        	    });
 		    document.addEventListener("DOMContentLoaded",() => {
 			            
@@ -309,6 +319,9 @@ margin : 10px;
                             { at: 0 }
                         );
                     }
+                    if(mtlLowGrid.getData().length === 0){
+        				$('#minusBtn').click();
+        			}
                 });
                 
 				const mtlNeedGrid = new tui.Grid({
@@ -440,7 +453,6 @@ margin : 10px;
                 }); */
 				
 				//안전재고미달 ajax
-		        
 				$.ajax({
 			          url: '/mtlMinus',
 			          method: 'get',
@@ -467,7 +479,7 @@ margin : 10px;
 			function mtlSave() {
                 mtlNeedGrid.blur();
 				if(!mtlNeedGrid.isModified()) {
-					alert('발주할 내역이 없습니다.');
+					toastr.warning("발주할 내역이 없습니다");
 					return;
 				}
 				$.ajax({
@@ -478,7 +490,7 @@ margin : 10px;
 					},
 					data: JSON.stringify(mtlNeedGrid.getData()),
 					success: result => {
-						alert("등록완료");
+						toastr.success("발주가 완료되었습니다.");
 						mtlNeedGrid.resetData([]);
 					},
 					error: err => console.log(err)
@@ -769,6 +781,48 @@ margin : 10px;
         			$('#mtlManager').val('');
         			$('#mtlName').val('');
         		});
+        		
+        		// 알람창
+        		    toastr.options = {
+			              "closeButton": false,
+			              "debug": false,
+			              "newestOnTop": false,
+			              "progressBar": true,
+			              "positionClass": "toast-top-center",
+			              "preventDuplicates": true,
+			              "onclick": null,
+			              "showDuration": "100",
+			              "hideDuration": "1000",
+			              "timeOut": "1500",
+			              "extendedTimeOut": "1000",
+			              "showEasing": "swing",
+			              "hideEasing": "linear",
+			              "showMethod": "fadeIn",
+			              "hideMethod": "fadeOut"
+			            }
+        			// 모달창 체크항목 삭제처리
+					$('#deleteBtn').on('click',function(){
+						let delrows = needModalGrid.getCheckedRows();
+						newData={};
+						newData.needList = needModalGrid.getCheckedRows();
+						$.ajax({
+							url:'/deleteNeedMtl',
+							method:'POST',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							data: JSON.stringify(needModalGrid.getCheckedRows()),
+							success:function(result){
+									toastr.success('발주내역이 삭제되었습니다');
+									needModalGrid.removeCheckedRows();
+									newBucket = needModalGrid.getData();//
+							},
+							error:function(err){
+								console.log(err);
+							}
+							
+						})
+					})
 			});
 		</script>
 	</div>

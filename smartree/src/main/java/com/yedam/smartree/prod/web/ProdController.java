@@ -66,5 +66,15 @@ public class ProdController {
 		return "prod/prodPrcsResult";
 
 	}
+	@GetMapping("/prcrDtSituation")
+	public String prcrDtSituation(Model model,@RequestParam("data") String data) {
+		model.addAttribute("data" , data);
+		
+		return "prod/prodDtSituation";
+	}
+	@GetMapping("/prodCondition")
+	public String prodCondition() {
+		return "prod/prodCondition";
 
+	}
 }

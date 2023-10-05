@@ -26,12 +26,10 @@
   	
   	<!-- 출고목록 전체조회 -->
     <select id="selectMtlOutList" resultType="MaterialVO">
-  		SELECT m.mtl_out_code, m.mtl_lot_num, t.mtl_name, m.mtl_code, m.mtl_out_cnt, m.prcs_rs_code, p.prcs_edate
-  		FROM mtl_out m 
-  		JOIN mtl_table t
-  		ON m.mtl_code = t.mtl_code
-  		JOIN process_result p
-  		ON  m.prcs_rs_code = p.prcs_rs_code
+  		SELECT o.mtl_out_code, o.mtl_lot_num, o.mtl_code, o.mtl_out_cnt, o.prcs_rs_code, p.prcs_edate
+  		FROM mtl_out o JOIN process_result p
+        ON o.prcs_rs_code = p.prcs_rs_code
+  		WHERE mtl_code = #{mtlCode}
   	</select>
   	
   	<!-- 발주관리 안전재고 미달목록 출력 -->
@@ -85,7 +83,7 @@
   	<!-- 발주관리 delete -->
   	<delete id="deleteNeedMtl" parameterType="MaterialVO">
   		DELETE FROM mtl_need
-  		WHERE mtl_code = #{mtlCode} AND mtl_date = #{mtlDate}
+  		WHERE need_code = #{needCode}
   	</delete>
   	
   	<!-- 입고관리 insert -->
@@ -143,15 +141,12 @@
   	
   	<!-- 입고관리 검색조회 -->
   	<select id="getInMtl" parameterType="MaterialVO">
-  		SELECT c.mtl_lot_num, c.mtl_code, t.mtl_name, c.mtl_in_cnt, c.mtl_in_date, c.mtl_manager, c.mtl_lot_cnt, c.mtl_chk_code, get_common(h.mtl_chk_status, '009') AS mtl_status_nm, h.mtl_chk_date
-        FROM mtl_container c 
-        JOIN mtl_table t
-        ON c.mtl_code = t.mtl_code
-        JOIN mtl_chk h
-        ON c.mtl_chk_code = h.mtl_chk_code
-		WHERE c.mtl_lot_num IS NOT NULL AND t.mtl_name like '%'||#{mtlName}||'%' AND c.mtl_manager like '%'||#{mtlManager}||'%'
+		SELECT mtl_code, mtl_name, mtl_pass_cnt, mtl_chk_date, mtl_chk_manager, mtl_chk_code, get_common(mtl_chk_status, '009') AS mtl_status_nm
+		FROM mtl_chk JOIN mtl_table USING(mtl_code)
+		WHERE mtl_chk_status = 'MT02'
+			AND mtl_name like '%'||#{mtlName}||'%' AND mtl_chk_manager like '%'||#{mtlManager}||'%'
 		  <if test="startMtlInDate != null and endMtlInDate != null">
-    		AND c.mtl_in_date BETWEEN TO_CHAR(#{startMtlInDate},'YY/MM/DD') AND TO_CHAR(#{endMtlInDate},'YY/MM/DD')
+    		AND mtl_chk_date BETWEEN TO_CHAR(#{startMtlInDate},'YY/MM/DD') AND TO_CHAR(#{endMtlInDate},'YY/MM/DD')
   		  </if>
   	</select>
   	
@@ -169,10 +164,10 @@
   	
   	<!-- 발주목록 발주서별 자재내역 출력기능 -->
   	<select id="getPaperMtl" parameterType="MaterialVO">
-		SELECT b.bp_code, b.bp_name, get_common(t.mtl_type, '003') AS mtl_type, n.mtl_code, t.mtl_name, t.mtl_unit, n.mtl_cnt, n.mtl_date , get_common(n.mtl_where, '009')mtl_where, n.need_code
+		SELECT b.bp_code, b.bp_name, get_common(t.mtl_type, '003') AS mtl_type, n.mtl_code, t.mtl_name, t.mtl_unit, n.mtl_cnt, n.mtl_date , get_common(n.mtl_where, '009')mtl_where, n.need_code, n.mtl_wish_date, n.mtl_manager
 		FROM mtl_need n JOIN mtl_table t ON n.mtl_code = t.mtl_code
 		JOIN business_partner b ON b.bp_code = n.bp_code
-		WHERE b.bp_name = #{bpName} AND TO_CHAR(n.mtl_date, 'yy/MM/dd') = #{mtlDate}
+		WHERE b.bp_name = #{bpName} AND TO_CHAR(n.mtl_date, 'yy/MM/dd') = #{mtlDate} AND n.mtl_manager = #{mtlManager}
   	</select>
   	
 	<!-- 발주조회 검색기능 -->

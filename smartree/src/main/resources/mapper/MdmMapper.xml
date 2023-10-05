@@ -107,7 +107,7 @@
 	</update>
 	
 	<!-- 사원id 단건조회 -->
-	<select id="selectEmp">
+	<select id="selectEmp" parameterType="EmpVO">
 		SELECT emp_id,
 			   emp_name,
 			   emp_dept,
@@ -116,6 +116,7 @@
 			   emp_phone,
 			   'ROLE_'||UPPER(emp_dept) emp_auth
 		FROM   emp_list
+		WHERE emp_id = #{empId}
 	</select>
 	
 	

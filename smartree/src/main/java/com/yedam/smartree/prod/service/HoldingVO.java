@@ -8,4 +8,5 @@ public class HoldingVO {
 	String prodInstCode;
 	String mtlLotNum;
 	int holdingCnt;
+	String mtlCode;
 }

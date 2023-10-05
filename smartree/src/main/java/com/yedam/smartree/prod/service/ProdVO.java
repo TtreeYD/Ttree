@@ -63,12 +63,18 @@ public class ProdVO {
 	private int prcsOrder;
 	private int prdtTotal;
 	private int prdtProdCnt;
-
+	private int prcsMaxnum;
+	private int prdtProdErrCnt;
 	
 	//공정실적관리
 	private String prcsRsCode;
 	private String eqmCode;
+	private String eqmName;
+	@DateTimeFormat(pattern = "HH:mm:ss")
+	@JsonFormat(pattern = "HH:mm:ss",timezone = "Asia/Seoul")
 	private Date prcsSdate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "Asia/Seoul")
 	private Date prcsEdate;
 	private int prdtCnt;
 	private int errCnt;
@@ -77,7 +83,7 @@ public class ProdVO {
 	private int prdtProdSum;
 
 	private String prcsStdCode;
-
+	private String prcsName;//공정명
 	
 	// 홀딩
 	String holdingCode;

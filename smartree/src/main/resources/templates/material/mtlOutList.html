@@ -89,7 +89,6 @@ float: right;
 				});
 				
 				const header = ['mtlLotNum', 'mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode', 'mtlName']
-				
 				// lot목록 그리드
 				const mtlLotGrid = new tui.Grid({
 					el : document.getElementById('mtlLotGrid'),
@@ -103,32 +102,33 @@ float: right;
 			            useClient: true,
 			          },
 					columns : [ {
-						header : '자재LOT',
-						name : 'mtlLotNum',
+						header : '자재출고코드',
+						name : 'mtlOutCode',
 						sortable: true,
-					    sortingType: 'asc'
+					    sortingType: 'asc',
+						width : 140
 					}, {
-						header : '분류',
-						name : 'mtlType'
+						header : 'LOT',
+						name : 'mtlLotNum',
+						width : 180
 					}, {
 						header : '자재코드',
-						name : 'mtlCode'
+						name : 'mtlCode',
+						hidden: true
 					}, {
 						header : '자재이름',
-						name : 'mtlName'
+						name : 'mtlName',
+						hidden: true
 					}, {
-						header : '자재입고일자',
-						name : 'mtlInDate'
+						header : '출고수량',
+						name : 'mtlOutCnt'
 					}, {
-						header : '자재입고수량',
-						name : 'mtlInCnt'
+						header : '자재출고일',
+						name : 'prcsEDate'
 					}, {
-						header : '홀드수량',
-						name : 'holdingCnt'
-					}, {
-						header : '사용가능수량',
-						name : 'mtlUse'
-					}   ]
+						header : '공정코드',
+						name : 'prcsRsCode'
+					},  ]
 				});
 				// 재고목록 ajax
 		        $.ajax({
@@ -150,17 +150,16 @@ float: right;
 		            console.log(err);
 		          }
 		        })
-		        // 자재의 모든lot 조회 출력기능
-		        function lotFnc(mtlCode){
+		        // 자재별 출고량 출력기능
+		        function outFnc(mtlCode){
 		        $.ajax({
-		          url: '/getLotMtl',
+		          url: '/mtlEmpty',
 		          method: 'POST',
 		          data: { mtlCode : mtlCode },
 		          success: function (result) {
 		            //날짜변환
 		            $(result).each(function (idx, obj) {
 		              for (let head of header) {
-
 		                if (head.slice(-4).toLowerCase() == 'date') {
 		                  obj[head] = getDate(obj[head]);
 		                }
@@ -172,23 +171,7 @@ float: right;
 		            console.log(err);
 		          }
 		        });
-				}
-			// 자재분류 불러오기
-			$.ajax({
-				url: "/mdm/selectCodeDetail",
-				data: {
-					codeType: '003'
-				},
-				success: result => {
-					$(result).each(function (idx, dept) {
-						let optTag = $('<option/>');
-						optTag.val(dept['codeId']);
-						optTag.text(dept['codeName']);
-						$('#mtlType, #searchMtlType').append(optTag);
-					})
-				},
-				error: err => console.log(err)
-			})		    
+				}	    
 		    // 자재검색
 			function searchMtl() {
 				let vo = {};
@@ -208,13 +191,13 @@ float: right;
 				})
 			}
 
-			
+			// 왼쪽 리스트에서 mtlCode값 오른쪽 리스트로 넘겨주기
 			mtlGrid.on('click', function (ev) {
 				if (ev.rowKey == undefined) {
 					return;
 				}
 				mtlCode = mtlGrid.getValue(ev.rowKey, 'mtlCode')
-				lotFnc(mtlCode)
+				outFnc(mtlCode)
 			})
 		        
 		        //엑셀 다운로드 버튼으로 만드는 기능

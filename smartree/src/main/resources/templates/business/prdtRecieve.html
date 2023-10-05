@@ -209,25 +209,29 @@ const recieveListGrid = new tui.Grid({
 		}
 	});
 	$('#recieveDtBtn').on('click',function(){
-		recieveGrid.blur();
-		let data={}; 
-		data.list= recieveGrid.getData();
-		console.log(data)
-		$.ajax({
-			url:'/recievePrdt',
-			method:'POST',
-			dataType: 'json',
-			contentType : 'application/json',
-			data:JSON.stringify(data),
-			success:function(result){
-                toastr.success('입고완료');
-                recieveGrid.resetData([]);
-                getprdtCheckList();
-			},
-			error:function(err){
-				console.log(err);
-			}
-		})
+		if(recieveGrid.getValue(0,'prdtChkCode') == null){
+			toastr.warning('입고할 품목이 없습니다');
+		}else{
+			recieveGrid.blur();
+			let data={}; 
+			data.list= recieveGrid.getData();
+			$.ajax({
+				url:'/recievePrdt',
+				method:'POST',
+				dataType: 'json',
+				contentType : 'application/json',
+				data:JSON.stringify(data),
+				success:function(result){
+	                toastr.success('입고완료');
+	                recieveGrid.resetData([]);
+	                getprdtCheckList();
+				},
+				error:function(err){
+					console.log(err);
+				}
+			})
+		}
+		
 	})
 	//입고취소버튼클릭
 	$('#recieveDtCancleBtn').on('click',function(){
@@ -248,24 +252,30 @@ const recieveListGrid = new tui.Grid({
 	
 	//입고취소 
 	$('#recieveCancle').on('click',function(){
-		let data = recieveListGrid.getCheckedRows();
-		$.ajax({
-			url:'/cancleRecivePrdt',
-			method:'POST',
-			dataType: 'json',
-			contentType : 'application/json',
-			data:JSON.stringify(data),
-			success:function(result){
-				console.log(result);
-				toastr.success('입고취소완료');
-				$('#recieveListModal').modal('hide');
-				getprdtCheckList();
-				
-			},
-			error:function(err){
-				console.log(err);
-			}
-		})
+		console.log(recieveListGrid.getCheckedRows())
+		if(recieveListGrid.getCheckedRows().length == 0){
+			toastr.warning('입고할 품목을 선택해주세요');
+		}else{
+			let data = recieveListGrid.getCheckedRows();
+			$.ajax({
+				url:'/cancleRecivePrdt',
+				method:'POST',
+				dataType: 'json',
+				contentType : 'application/json',
+				data:JSON.stringify(data),
+				success:function(result){
+					console.log(result);
+					toastr.success('입고취소완료');
+					$('#recieveListModal').modal('hide');
+					getprdtCheckList();
+					
+				},
+				error:function(err){
+					console.log(err);
+				}
+			})
+		}
+		
 	})
 	
 	
