@@ -7,19 +7,161 @@
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
 <link href="../startbootstrap/css/kiosk.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
+<!-- 그리드관련 link -->
+<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.chart/latest/tui-chart.css"> 
+
+
+<!-- 그리드관련 script -->
+<script src="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.js"></script>
+<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+<script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tui-grid@4.21.16/dist/tui-grid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://kit.fontawesome.com/4791395687.js" crossorigin="anonymous"></script>
 <script
-  src="https://code.jquery.com/jquery-3.7.1.js"
+src="https://code.jquery.com/jquery-3.7.1.js"
   integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
   crossorigin="anonymous"></script>
+<style>
+* :not(h1){
+text-align:center;
+font-size: 30px;
+}
+input[type="range"] {
+overflow: hidden;
+height: 30px;
+-webkit-appearance: none;
+margin: 10px 0;
+width: 100%;
+background: transparent;
+
+
+}
+
+input[type="range"]:focus {
+outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+width: 100%;
+height: 100%;
+cursor: pointer;
+border-radius: 5px;
+border: 2px solid #d64242;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+-webkit-appearance: none;
+width: 0px;
+height:0px;
+background: #ff494f;
+box-shadow: 1px 1px 7px #d16a6e;
+cursor: pointer;
+box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
+}
+</style>
 </head>
 <body>
 <div class="header">
-        <div class="header-content">
-            <h1>생산키오스크</h1>
-            <i class="fa-solid fa-house"></i>
-        </div>
+    <div class="header-content">
+        <h1>생산키오스크</h1>
+        <i class="fa-solid fa-house" onclick="backHome()"></i>
     </div>
-<h1>생산현황</h1>
+</div>
+    <div id="instDtStopGrid"></div>
+<script>
+const instDtStopGrid = new tui.Grid({
+	el : document.getElementById('instDtStopGrid'),
+	scrollX : false,
+	scrollY : false,
+	header:{
+		height:100,
+	},
+	rowHeight:150,
+	columns : [
+		{
+	          header: '공정실적코드',
+	          name: 'prcsRsCode',
+	          
+	        },
+	        {
+	          header: '공정흐름도코드',
+	          name: 'prcsCode'
+	        },
+	        {
+	          header: '제품코드',
+	          name: 'prdtCode',
+	          hidden: true
+	        },
+	        {
+	          header: '제품명',
+	          name: 'prdtName'
+	        },
+	        {
+	          header: '공정기준코드',
+	          name: 'prcsStdCode',
+	          hidden: true
+	        },
+	        {
+	          header: '공정명',
+	          name: 'prcsName',
+	        },
+	        {
+	          header: '설비코드',
+	          name: 'eqmCode',
+	          hidden: true
+			},
+	        {
+	          header: '설비명',
+	          name: 'eqmName',
+	          hidden: true	          
+		    },
+	        {
+	          header: '작업시작시간',
+	          name: 'prcsSdate',
+		    },
+		    {
+	          header: '공정순서',
+	          name: 'prcsOrder',
+		    },
+	        {
+	          header: '생산량',
+	          name: 'prdtCnt',
+		    }
+
+	]})
+$(document).ready(function (){
+	getProcessResult();
+	
+	function getProcessResult(){
+		$.ajax({
+			url:'/getProcessResult',
+			method:'GET',
+			success:function(result){
+				console.log(result)
+				result[0].prcsSdate;
+				instDtStopGrid.resetData(result)
+			},
+			error:function(err){
+				console.log(err)
+			}
+		})		
+	}
+	instDtStopGrid.on('click',function(ev){
+		let data = instDtStopGrid.getValue(ev.rowKey,  'prcsRsCode');
+		console.log(data)
+		if(data != null){
+			window.location.href = '/prod/prcrDtSituation?data=' + encodeURIComponent(data);		
+		}
+	})
+})
+	function backHome(){
+		$(location).attr('href', '/prod/prcrKiosk');
+	}
+</script>
 </body>
 </html>

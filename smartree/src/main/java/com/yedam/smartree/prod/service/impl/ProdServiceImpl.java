@@ -207,12 +207,24 @@ public class ProdServiceImpl implements ProdService {
 	public int insertDtProgress(RequestVO<ProdVO> vo) {
 		prodMapper.insertDtProgress(vo.getList().get(0));
 		prodMapper.updateEqmState(vo.getVo());
+		prodMapper.updateInst(vo.getVo());
 		return 0;
 	}
 
 	@Override
 	public List<HoldingVO> selectHolding(String prodInstCode) {
 		return prodMapper.selectHolding(prodInstCode);
+	}
+	//생산종료List
+	@Override
+	public List<ProdVO> getProcessResult(ProdVO vo) {
+		return prodMapper.getProcessResult(vo);
+	}
+	//생산종료Process
+	@Override
+	public int endProcessResult(List<ProdVO> vo) {
+		prodMapper.updateProcessResult(vo.get(0));
+		return prodMapper.updateEqm(vo.get(0));
 	}
 
 

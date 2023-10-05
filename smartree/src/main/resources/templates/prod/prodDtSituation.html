@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymeleaf.org/">
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+<link href="../startbootstrap/css/kiosk.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
+<!-- 그리드관련 link -->
+<link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css" />
+<link rel="stylesheet" href="https://uicdn.toast.com/tui.chart/latest/tui-chart.css"> 
+
+
+<!-- 그리드관련 script -->
+<script src="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.js"></script>
+<script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
+<script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tui-grid@4.21.16/dist/tui-grid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://kit.fontawesome.com/4791395687.js" crossorigin="anonymous"></script>
+<script
+src="https://code.jquery.com/jquery-3.7.1.js"
+  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+  crossorigin="anonymous"></script>
+<style>
+* :not(h1){
+text-align:center;
+font-size: 20px;
+}
+input[type="range"] {
+overflow: hidden;
+height: 30px;
+-webkit-appearance: none;
+margin: 10px 0;
+width: 100%;
+background: transparent;
+
+
+}
+
+input[type="range"]:focus {
+outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+width: 100%;
+height: 100%;
+cursor: pointer;
+border-radius: 5px;
+border: 2px solid #d64242;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+-webkit-appearance: none;
+width: 0px;
+height:0px;
+background: #ff494f;
+box-shadow: 1px 1px 7px #d16a6e;
+cursor: pointer;
+box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
+}
+.bigbutton {
+  width: 600px;
+  height: 300px;
+  border-radius: 25px;
+  display: inline-block;
+  border: 1px solid black;
+  vertical-align: top; /* 버튼을 상단에 정렬합니다 */
+  /* 기존의 margin-top 스타일을 제거합니다 */
+}
+ button:active {
+    box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
+    position: relative;
+    top:2px;
+  }
+  .prcr_dt_progres_bottom_item{
+	/*위아래 공백 조정*/
+	margin-top: 150px;
+}
+#startBtn{
+	/*버튼 좌우 위치 조정*/
+	margin-right: 14%;
+}
+
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.button-container button {
+    font-size: 1.5em;
+    padding: 10px 20px;
+    background-color: blanchedalmond;
+}
+
+#numericElement {
+    font-size: 2em;
+    margin: 0 10px;
+}
+.swal-wide{
+        width:800px !important;
+    }
+#errorMessage {
+        margin-right: 10px;
+    }
+.countBtn{
+margin-left: 200px;
+margin-top:300px;
+}
+</style>
+</head>
+<body>
+<div class="header">
+    <div class="header-content">
+        <h1>생산키오스크</h1>
+        <i class="fa-solid fa-house" onclick="backHome()"></i>
+    </div>
+</div>
+
+ <div class="prcr_dt_progres_content" >
+	<div id="instDtStopGrid" ></div>
+	<div class="button-container">
+		<div class="prcr_dt_progres_bottom_item">	
+			<button class="bigbutton" id="endBtn" style="background-color: rgb(252, 101, 101);">작업종료</button>
+		</div>
+		<div class="countBtn">
+			<div id="errorMessage">불량입력</div>
+	        <button id="decrementButton">-</button>
+	        <span id="numericElement">0</span>
+	        <button id="incrementButton">+</button>
+		</div>
+    </div>
+ </div>
+    
+<script th:inline="javascript">
+var data = [[${data}]]
+const numericElement = $('#numericElement');
+const decrementButton = $('#decrementButton');
+const incrementButton = $('#incrementButton');
+let count = 0;
+let countdata;
+let passdata;
+$('#decrementButton').click(function() {
+	
+    	count--;
+    if(count<0){
+    	Swal.fire({
+			  icon: 'error',
+			  title: '불량량이 0입니다',
+			  customClass: 'swal-wide'
+			})
+			count++;
+			return;
+    }else{
+	    $('#numericElement').text(count);
+	    instDtStopGrid.setValue(0,'passCnt',countdata-count)
+	    instDtStopGrid.setValue(0,'errCnt',count)
+    }
+});
+
+$('#incrementButton').click(function() {
+    count++;
+    if(countdata<count){
+    	Swal.fire({
+			  icon: 'error',
+			  title: '합격량이 0 입니다',
+			  customClass: 'swal-wide'
+			})
+			count--;
+			return;
+    }else{
+	    $('#numericElement').text(count);
+	    instDtStopGrid.setValue(0,'passCnt',countdata-count)
+	    instDtStopGrid.setValue(0,'errCnt',count)
+    }
+    
+});
+
+const instDtStopGrid = new tui.Grid({
+	el : document.getElementById('instDtStopGrid'),
+	scrollX : false,
+	scrollY : false,
+	header:{
+		height:100,
+	},
+	rowHeight:200,
+	columns : [
+		{
+	          header: '공정실적코드',
+	          name: 'prcsRsCode',
+	          
+	        },
+	        {
+	          header: '제품코드',
+	          name: 'prdtCode'
+	        },
+	        {
+	          header: '제품명',
+	          name: 'prdtName'
+	        },
+	        {
+	          header: '공정기준코드',
+	          name: 'prcsStdCode',
+	          hidden: true
+	        },
+	        {
+	          header: '공정명',
+	          name: 'prcsName',
+	        },
+	        {
+	          header: '설비코드',
+	          name: 'eqmCode',
+	          hidden: true
+			},
+	        {
+	          header: '설비명',
+	          name: 'eqmName'
+		    },
+	        
+	        {
+	          header: '공정흐름도코드',
+	          name: 'prcsCode'
+	        },
+
+	        {
+	          header: '공정순서',
+	          name: 'prcsOrder',
+	        },
+	        {
+		          header: '마지막공정순서',
+		          name: 'prcsMaxnum',
+		          hidden: true
+			},
+	        {
+	          header: '작업시작시간',
+	          name: 'prcsSdate',
+	          
+		    },
+	        {
+	          header: '작업종료시간',
+	          name: 'prcsEdate'
+		    },
+	        {
+	          header: '생산량',
+	          name: 'prdtCnt',
+	          editor: {
+	        	  type: 'text'
+	          }
+	          
+		    },
+		    {
+	          header: '불량량',
+	          name: 'errCnt',
+	          editor: {
+	        	  type: 'text'
+	          }
+		    },
+		    {
+	          header: '합격량',
+	          name: 'passCnt',
+	          
+		    }
+
+	]})
+$(document).ready(function (){
+	getProcessResult(data);
+	
+	function getProcessResult(data){
+		$.ajax({
+			url:'/getProcessResult',
+			method:'GET',
+			data:{
+				prcsRsCode:data
+			},
+			success:function(result){
+				instDtStopGrid.resetData(result)
+				countdata = instDtStopGrid.getValue( 0 , 'prdtCnt')	;
+				instDtStopGrid.setValue(0,'passCnt',instDtStopGrid.getValue( 0 , 'prdtCnt'))
+			},
+			error:function(err){
+				console.log(err)
+			}
+		})		
+	}
+	
+	$('#endBtn').on('click',function(){
+		let resultData = instDtStopGrid.getData();
+		resultData[0].prcsEdate = new Date().toTimeString().split(' ')[0];
+		console.log(resultData)
+		$.ajax({
+			url:'/endProcessResult',
+			method:'POST',
+			dataType: 'json',
+			contentType : 'application/json',
+			data:JSON.stringify(resultData),
+			success:function(result){
+				if(result>0){
+					Swal.fire({
+						  position: 'center',
+						  icon: 'success',
+						  title: '작업이 종료되었습니다',
+						  showConfirmButton: false,
+						  timer: 1500
+						})
+						setTimeout(() => backBefore(), 1500);
+						
+				}
+			},
+			error:function(err){
+				console.log(err);
+			}
+		})
+	})
+})
+	function backHome(){
+		$(location).attr('href', '/prod/prcrKiosk');
+	}
+	function backBefore(){
+		$(location).attr('href', '/prod/prodSituation');
+	}
+</script>
+</body>
+</html>

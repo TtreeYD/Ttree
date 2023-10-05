@@ -17,7 +17,7 @@
 		<label>업체명</label> 
 		<input type="text" id="bpName"> 
 
-		<label >접수일자</label> 
+		<label >주문일자</label> 
 		<input type="date" id="orderDate"> 
 
 		<label >납기일자</label>
@@ -225,7 +225,11 @@
         	grid2.export('xlsx');
         })
 
-
+		$('#resetBtn').on('click',function(){
+			$('#bpName').val('');
+			$('#orderDate').val('');
+			$('#prdtOutDate').val('');
+		})
       })
     </script>
   </div>

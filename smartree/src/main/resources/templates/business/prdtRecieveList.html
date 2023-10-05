@@ -91,6 +91,10 @@
 		$('#ExcelBtn').on('click',function(){
 			recieveListGrid.export('xlsx');
         })
+        $('#resetBtn').on('click',function(){
+        	$('#prdtName').val('');
+        	$('#prdtRecieveDate').val('');
+        })
 		
 	})
 	

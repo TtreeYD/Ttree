@@ -41,8 +41,11 @@ public interface ProdService {
 	//생산시작버튼클릭(공정실적관리 insert)
 	public int insertDtProgress(RequestVO<ProdVO> vo);
 
-	
+	//생산종료List
+	public List<ProdVO> getProcessResult(ProdVO vo);
 	// 홀딩
 	List<HoldingVO> selectHolding(String prodInstCode);
+	//생산종료Process
+	public int endProcessResult(List<ProdVO> vo);
 
 }
