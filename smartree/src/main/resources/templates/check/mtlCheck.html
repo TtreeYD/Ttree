@@ -102,8 +102,8 @@
 		</div>
 		<!-- /.modal -->
 
-		<script>
-
+		<script th:inline="javascript">
+		let manager = [[${session.loginMember.empName}]];
        let modalSearchData;
 	   let mtlDate;
         window.onload=function(){
@@ -142,20 +142,21 @@
 			        },
 			        {
 			          header: '검사량',
-			          name: 'mtlChkCnt',
+			          name: 'mtlCnt',
 					  editor: 'text',
-					  align: 'center'					 
+					  align: 'center'
 					},
 			        {
 			           header: '불량량',
 			           name: 'mtlErrorCnt',
 					   editor: 'text',
 					   align: 'center'
+					   
 			        },
 			        {
 			           header: '합격량',
 			           name: 'mtlPassCnt',
-			           align: 'center'
+			           align: 'center',
 					 //  editor: 'text'
 			         }, 
 			         {
@@ -212,34 +213,45 @@
 	 			  newestOnTop: false,
 	  			  timeOut: 1250
 	  			};
-                 
-                 
+			   
+               // 검사량 - 불량 함수
+               function calc() {
+            	   let datas = grid2.getData()
+            	   for(let data of datas){
+            		   if(data.mtlCnt - data.mtlErrorCnt < 0) {
+            			   toastr.warning('불량량이 검사량을 초과합니다');
+            			   data.mtlErrorCnt = 0
+            		   }
+            		   data.mtlPassCnt = data.mtlCnt - data.mtlErrorCnt
+            		   if(!data.mtlChkManager) data.mtlChkManager = manager
+            	   }
+            	  
+            	   grid2.resetData(datas)
+               }
                // 검사량 - 불량량 이벤트  
 				 grid2.on('afterChange', (ev) => {
-		            /* const { rowKey, columnName } = ev;
+					 let rowKey = ev.changes[0].rowKey
+					 let colName = ev.changes[0].columnName
+					 let chk1 = isNaN(grid2.getValue(rowKey, 'mtlCnt'))
+					 let chk2 = isNaN(grid2.getValue(rowKey, 'mtlErrorCnt'))
+					 if(chk1 || chk2){
+						 toastr.warning('숫자를 입력해주세요')
+						 grid2.setValue(rowKey, colName, 0)
+						 return;
+					 }
+					 calc()
+	            	/* let rowKey = ev.changes[0].rowKey
+	            	let colName = ev.changes[0].columnName
+	            	console.log(ev)
 					
-		            if (columnName === 'mtlChkCnt' || columnName === 'mtlErrorCnt' || columnName === 'mtlPassCnt' || columnName === 'mtlChkManager') {
-		                const mtlChkCnt = parseFloat(grid2.getValue(rowKey, 'mtlChkCnt')) || 0;
-		                const mtlErrorCnt = parseFloat(grid2.getValue(rowKey, 'mtlErrorCnt')) || 0;
-		                const mtlPassCnt = Math.max(0, mtlChkCnt - mtlErrorCnt);
-		                
-		                grid2.setValue(rowKey, 'mtlPassCnt', mtlPassCnt);
-		                
-		                if (mtlErrorCnt > mtlChkCnt) {
-		                	toastr.warning('불량량이 검사량을 초과합니다');
-		                }
-		                
-		                grid2.refreshLayout();
-		            } */
-		            	let rowKey = ev.changes[0].rowKey
-		            	const mtlChkCnt = Number(grid2.getValue(rowKey, 'mtlChkCnt')) || 0;
-		                const mtlErrorCnt = Number(grid2.getValue(rowKey, 'mtlErrorCnt')) || 0;
-		                const mtlPassCnt = Math.max(0, mtlChkCnt - mtlErrorCnt);
-		                if (mtlErrorCnt > mtlChkCnt) {
-		                	toastr.warning('불량량이 검사량을 초과합니다');
-		                }
-		                grid2.setValue(rowKey, 'mtlPassCnt', mtlPassCnt);
-		            
+	            	const mtlChkCnt = Number(grid2.getValue(rowKey, 'mtlCnt'));
+	                const mtlErrorCnt = Number(grid2.getValue(rowKey, 'mtlErrorCnt'));
+	                const mtlPassCnt = Math.max(0, mtlChkCnt - mtlErrorCnt);
+	                
+	                if (mtlErrorCnt > mtlChkCnt) {
+	                	toastr.warning('불량량이 검사량을 초과합니다');
+	                }
+	                grid2.setValue(rowKey, 'mtlPassCnt', mtlPassCnt);  */
 		        });
                  
 			  //모달 조회 클릭이벤트
@@ -323,10 +335,12 @@
 
 				// 저장버튼 이벤트
 				$('#addBtn').on('click',function(e){
+					
 					let data = grid2.getData();
 					let datas = grid2.getCheckedRows();
 					if(datas.length ==0 ){
 						alert("체크하세요");
+						return
 					}
 					
 					$.ajax({
@@ -366,7 +380,8 @@
 						method: 'get',	
 						success: function(result) {
 							grid2.resetData(result);
-							setTimeout(() => grid2.refreshLayout(), 500);
+							calc();
+							//setTimeout(() => grid2.refreshLayout(), 500);
 						},
 						error: function(err) {
 							console.log(err);
@@ -380,7 +395,8 @@
 							method: 'get',	
 							success: function(result) {
 								grid2.resetData(result);
-								setTimeout(() => grid2.refreshLayout(), 500);
+								calc();
+							//	setTimeout(() => grid2.refreshLayout(), 500);
 							},
 							error: function(err) {
 								console.log(err);

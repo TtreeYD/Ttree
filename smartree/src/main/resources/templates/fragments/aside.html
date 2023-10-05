@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
    
   <aside th:fragment="aside">
+
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a href="/" class="sidebar-brand d-flex align-items-center justify-content-center" >
+            <a href="/main" class="sidebar-brand d-flex align-items-center justify-content-center" >
                 <div class="sidebar-brand-text mx-3" style="margin-top: 8px;">SMARTREE</div>
             </a>
 
@@ -24,22 +26,24 @@
 
             <!-- Nav Item - Pages Collapse Menu -->
             <li class="nav-item">
+           <div sec:authorize="hasRole('ROLE_ST01')">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
                     aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fa-solid fa-gear"></i>
                     <span>기준정보관리</span>
                 </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">기준정보관리</h6>
-                        <a class="collapse-item" href="/mdm/commonCode">공통코드관리</a>
-                        <a class="collapse-item" href="/mdm/emp">사원관리</a>
-                        <a class="collapse-item" href="/mdm/prdt">제품정보관리</a>
-                        <a class="collapse-item" href="/mdm/mtl">자재정보관리</a>
-                        <a class="collapse-item" href="/mdm/bp">거래처정보관리</a>
-                        <a class="collapse-item" href="/mdm/prcs">공정기준관리</a>
-                        <a class="collapse-item" href="/mdm/bom">BOM관리</a>
-                        <a class="collapse-item" href="/mdm/chkStd">품질검사기준관리</a>
+	                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+	                    <div class="bg-white py-2 collapse-inner rounded">
+	                        <h6 class="collapse-header">기준정보관리</h6>
+	                        <a class="collapse-item" href="/mdm/commonCode">공통코드관리</a>
+	                        <a class="collapse-item" href="/mdm/emp">사원관리</a>
+	                        <a class="collapse-item" href="/mdm/prdt">제품정보관리</a>
+	                        <a class="collapse-item" href="/mdm/mtl">자재정보관리</a>
+	                        <a class="collapse-item" href="/mdm/bp">거래처정보관리</a>
+	                        <a class="collapse-item" href="/mdm/prcs">공정기준관리</a>
+	                        <a class="collapse-item" href="/mdm/bom">BOM관리</a>
+	                        <a class="collapse-item" href="/mdm/chkStd">품질검사기준관리</a>
+                        </div>
                     </div>
                 </div>
             </li>
@@ -53,12 +57,18 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">영업관리</h6>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST02')">
                         <a class="collapse-item" href="/business/orderForm">주문서관리</a>
+                        </div>
                         <a class="collapse-item" href="/business/orderList">주문서조회</a>
                         <a class="collapse-item" href="/business/finPrdt">완제품재고조회</a>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST02')">
                         <a class="collapse-item" href="/business/prdtRecieve">완제품입고관리</a>
+                        </div>
                         <a class="collapse-item" href="/business/prdtRecieveList">완제품입고조회</a>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST02')">
                         <a class="collapse-item" href="/business/prdtOut">완제품출고관리</a>
+                        </div>
                         <a class="collapse-item" href="/business/prdtOutCheck">완제품출고조회</a>
                     </div>
                 </div>
@@ -73,10 +83,16 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">품질관리</h6>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST04')">
                         <a class="collapse-item" href="/check/mtlCheck">자재검사</a>
+                        </div>
                         <a class="collapse-item" href="/check/check">자재검사조회</a>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST04')">
                         <a class="collapse-item" href="/check/prdtStd">품질검사기준관리</a>
+                        </div>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST04')">
                         <a class="collapse-item" href="/check/prdtCheck">제품품질검사</a>
+                        </div>
                         <a class="collapse-item" href="/check/prdtCheckList">제품품질검사조회</a>
                     </div>
                 </div>
@@ -92,11 +108,17 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">생산관리</h6>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST03')">
                         <a class="collapse-item" href="/prod/prodPlanMng">생산계획관리</a>
+                        </div>
                         <a class="collapse-item" href="/prod/prodPlanList">생산계획조회</a>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST03')">
                         <a class="collapse-item" href="/prod/prodInstMng">생산지시관리</a>
+                        </div>
                         <a class="collapse-item" href="/prod/prodInstList">생산지시조회</a>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST03')">
                         <a class="collapse-item" href="/prod/prcrKiosk">공정실적관리</a>
+                        </div>
                         <a class="collapse-item" href="/prod/prodPrcsResult">공정실적조회</a>
                     </div>
                 </div>
@@ -111,10 +133,14 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                               <h6 class="collapse-header">자재관리</h6>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST05')">
                         <a class="collapse-item" href="/material/mtlNeedControl">발주관리</a>
+                        </div>
                         <a class="collapse-item" href="/material/mtlNeedList">발주조회</a>
                         <a class="collapse-item" href="/material/mtlList">재고조회</a>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST05')">
                         <a class="collapse-item" href="/material/mtlInControl">입고관리</a>
+                        </div>
                         <a class="collapse-item" href="/material/mtlOutList">출고조회</a>
                     </div>
                 </div>
@@ -129,10 +155,16 @@
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
         <h6 class="collapse-header">설비관리</h6>
+        				<div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST06')">
                         <a class="collapse-item" href="/eqm/eqmForm">설비관리</a>
+                        </div>
                         <a class="collapse-item" href="/eqm/eqmList">설비조회</a>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST06')">
                         <a class="collapse-item" href="/eqm/eqmNoperForm">비가공등록</a>
+                        </div>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST06')">
                         <a class="collapse-item" href="/eqm/eqmInspForm">설비점검관리</a>
+                        </div>
                         <a class="collapse-item" href="/eqm/eqmInspList">설비점검조회</a>
                     </div>
                 </div>
@@ -148,18 +180,11 @@
                     
                 </div>
             </li>
-<h1></h1>
-
-
-           
-
             
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
-
-           
-
         </ul>
+
   </aside>
 </html>

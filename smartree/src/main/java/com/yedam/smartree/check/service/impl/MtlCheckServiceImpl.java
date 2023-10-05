@@ -23,9 +23,6 @@ public class MtlCheckServiceImpl implements MtlCheckService{
 
 	@Override
 	public int insertChkMtl(MtlCheckVO vo) {
-		if(vo.getResult().equals("error")) {
-			return 0;
-		}
 		return mtlcheckmapper.insertChkMtl(vo);
 	}
 
