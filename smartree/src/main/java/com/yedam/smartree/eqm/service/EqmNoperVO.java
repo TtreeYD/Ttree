@@ -14,5 +14,6 @@ public class EqmNoperVO {
 	private String inspIcheck;
 	private String eqmCode;
 	private String eqmName;
+	private String eqmState;
 	
 }

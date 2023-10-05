@@ -170,11 +170,11 @@
 		
 		
 		<script>
-  $(document).ready(function () {
+	$(document).ready(function () {
 	    	  
-	  $("#saveInspBtn").on("click",saveEqmInsp);
+		$("#saveInspBtn").on("click",saveEqmInsp);
 	  
-	  function saveEqmInsp(){
+		function saveEqmInsp(){
 			//설비명 테스트
 			if(eqmInspForm.eqmCode.value==''){
 				swal("설비명을 입력하세요", "", "warning")	
@@ -197,7 +197,7 @@
 				swal("최대 10자까지 입니다", "", "warning");
 				return;
 			}
-			if(eqmInspForm.inspDt.value.length > 150 ||  eqmInspForm.actionDt.value.length){
+			if(eqmInspForm.inspDt.value.length > 150 ||  eqmInspForm.actionDt.value.length >150){
 				swal("최대 150자까지 입니다", "", "warning");
 				return;
 			}
@@ -208,10 +208,10 @@
 			$('[name="recentInspDate"]').val($('#recentInspDate').val().replace("T", ' '))
 			$('[name="nextInspDate"]').val($('#nextInspDate').val().replace("T", ' '))
 			eqmInspForm.submit();
-	  }
+	}
 	  
-	        // 검색 모달창
-	    	  const grid2 = new tui.Grid({
+	// 검색 모달창
+	const grid2 = new tui.Grid({
 	              el: document.getElementById('grid2'),
 	              scrollX: false,
 	              scrollY: false,
@@ -235,10 +235,10 @@
 	              }
 	              ]
 
-	            });
+	});
 	    	  
-			// 비가동 모달창	    	  
-	    	  const grid3 = new tui.Grid({
+	// 비가동 모달창	    	  
+	const grid3 = new tui.Grid({
 	              el: document.getElementById('grid3'),
 	              scrollX: false,
 	              scrollY: false,
@@ -267,15 +267,15 @@
 	              }
 	              ]
 
-	            });
+	});
 	    	  
 	    
-	    	  $('#selectEqmNoperBtn').on('click',getEqmNoperList);	  
-	          $('#selectEqmBtn').on('click', getEqmList);
-		      
-	          
-	          // 비가동 조회
-	   	      function getEqmNoperList(){
+	$('#selectEqmNoperBtn').on('click',getEqmNoperList);	  
+	$('#selectEqmBtn').on('click', getEqmList);
+	
+	   
+	// 비가동 조회
+	function getEqmNoperList(){
 	   		   $('#searchName').val('');
 	   	      	$.ajax({
 	   	      		url:'/eqmNopers',
@@ -295,10 +295,10 @@
 	   	      			console.log(err);
 	   	      		}
 	   	      	})
-	   	      }
+	}
 	          
-	   	   // 비가동검색버튼 클릭시 
-		   	    $('#searchEqmNoperBtn').on('click',function(){
+	// 비가동검색버튼 클릭시 
+	$('#searchEqmNoperBtn').on('click',function(){
 		   	    	searchEqmNoperName();
 		   	    })
 		 		// 비가동 설비 이름 조회 : input에 값
@@ -309,10 +309,10 @@
 		   				getEqmNoperName(eqmName);
 		   				
 		   			}
-		   		}
+	}
 		   	    
-		   		// 비가동 설비 이름 조회
-		   		function getEqmNoperName(eqmName){
+	// 비가동 설비 이름 조회
+	function getEqmNoperName(eqmName){
 		   			$.ajax({
 		   				url:'/eqmNoperName',
 		   				data: {
@@ -326,17 +326,19 @@
 		   				,
 		   				error: err => console.log(err)
 		   			})
-		   		}
-		  	    // 비가동 검색 - 엔터시
-		   	    $('#searchEqmNoperName').on('keypress', function (ev) {
+	}
+	
+	// 비가동 검색 - 엔터시
+	$('#searchEqmNoperName').on('keypress', function (ev) {
 		   			if (ev.which == 13) {
 		   				ev.preventDefault();
 		   				searchEqmNoperName()
 		   			}
-		   		})
+	})
+	
 		   		
-		   	 //  비가동 설비조회 모달창 더블클릭
-		   	   grid3.on('dblclick',(ev)=>{
+	//  비가동 설비조회 모달창 더블클릭
+	grid3.on('dblclick',(ev)=>{
 		   		   console.log(ev)
 		   			if(ev.rowKey==undefined){
 	        			return;
@@ -344,9 +346,11 @@
 		   		   let data = grid3.getValue(ev.rowKey,'eqmCode');
 		   		 getEqmNoper(data);
 		   	
-		   	   })
-		   	    // 비가동 모달창 더블 클릭 후 폼에 값넣기
-		   	   function getEqmNoper(data){
+	})
+	
+	
+	// 비가동 모달창 더블 클릭 후 폼에 값넣기
+	function getEqmNoper(data){
 			   		   $.ajax({
 			   			   url:'/selectEqmNoper',
 			   			   method:'get',
@@ -366,10 +370,10 @@
 			          		console.log(err)
 			          	}
 			   		   })
-			   	   }
+	}
 	          
-	   	   // 전체설비 조회 - 비가동제외
-	   	      function getEqmList(){
+	// 전체설비 조회 - 비가동제외
+	function getEqmList(){
 	   		   $('#searchName').val('');
 	   	      	$.ajax({
 	   	      		url:'/eqmsExceptNoper',
@@ -386,9 +390,10 @@
 	   	      			console.log(err);
 	   	      		}
 	   	      	})
-	   	      }
-	   	   	 // input창 검색 후 결과가 모달창으로 나오는 함수
-	   	     function getEqmName2(eqmName){
+	}
+	
+	// input창 검색 후 결과가 모달창으로 나오는 함수
+	function getEqmName2(eqmName){
 	   	    	$('#searchName').val(eqmName);
 		   		$.ajax({
 		   			url:'/eqmNameExceptNoper',
@@ -406,7 +411,7 @@
 		   	      			console.log(err);
 		   	      		}
 		   	      	})
-		   	      }
+	}
 	   	   
 	   	   
 	   	  		 // 검색버튼 클릭시 

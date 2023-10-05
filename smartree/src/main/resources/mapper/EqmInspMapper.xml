@@ -117,7 +117,7 @@
   		select n.*,e.eqm_name
   		from EQM_NOPER n join eqm e 
   						 ON n.eqm_code = e.eqm_code
-  		where e.eqm_state = 'S'
+  		where e.eqm_state = 'E' and n.INSP_ICHECK != 'Y'
   	</select>
   	
   	  	<!--비가동 설비점검이름으로 검색 -->
@@ -129,7 +129,8 @@
   			<if test="eqmName != null and !eqmName.equals('')">
   				eqm_name LIKE '%'||#{eqmName}||'%'
   			</if>
-  			and e.eqm_state = 'S'
+  			and e.eqm_state = 'E'
+  			and n.INSP_ICHECK != 'Y'
   		</where>  	
   	 					 
   	ORDER BY n.NOPER_CODE
@@ -138,10 +139,53 @@
   	
   	  	<!-- 비가동 설비조회 단건조회-->
   	<select id="selectEqmNoperCode" resultType="EqmNoperVO">
-  	select  n.* ,e.eqm_name
-  	from  eqm_noper n join  EQM e
-  	           on  n.eqm_code= e.eqm_code
-  	where n.eqm_code=#{eqmCode} 
+		 select          n.NOPER_CODE
+						,n.REASON_KND
+						,n.REASON
+						,n.NOPER_SDATE
+						,n.NOPER_LDATE
+						,n.NOPER_MANAGER
+						,n.INSP_ICHECK
+						,n.EQM_CODE
+						,e.eqm_name
+						,e.eqm_state
+		from  eqm_noper n join  EQM e
+		                 on  n.eqm_code= e.eqm_code
+		  	           
+  	 	 <where>
+  	  		<if test="eqmState != null and !eqmState.equals('')">
+  	 	 		eqm_state = #{eqmState}
+  	 	 	</if>
+  	 	 	and n.eqm_code=#{eqmCode} 
+  	 	 	and n.INSP_ICHECK != 'Y'
+  		  </where>
+
   	</select>
+  	
+  	<!-- 비가동 설비조회 수정 -->
+  	<update id="updateEqmNoper" parameterType="EqmNoperVO" >
+  		update eqm_noper
+  		<set>
+  			<if test = "reasonKnd != null and !reasonKnd.equals('')">
+  				REASON_KND = #{reasonKnd},
+  			</if>
+  			<if test = "reason != null and !reason.equals('')">
+  				REASON = #{reason},
+  			</if>
+  			<if test = "noperSdate != null and !noperSdate.equals('')">
+  				NOPER_SDATE = #{noperSdate},
+  			</if>
+  			<if test = "noperLdate != null and !noperLdate.equals('')">
+  				NOPER_LDATE = #{noperLdate},
+  			</if>
+  			<if test = "noperManager != null and !noperManager.equals('')">
+  				NOPER_MANAGER = #{noperManager},
+  			</if>
+  			<if test = "inspIcheck != null and !inspIcheck.equals('')">
+  				INSP_ICHECK = #{inspIcheck},
+  			</if>
+  		</set>
+  		 where NOPER_CODE = #{noperCode}
+  	</update>
   	
   </mapper>

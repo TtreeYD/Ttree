@@ -20,7 +20,8 @@
 				,MFG_DATE
 				,EQM_IMG
 				, case when EQM_STATE = 'Y' then '사용가능' 
-					when EQM_STATE = 'S' then '설비점검관리에 등록하세요'
+					when EQM_STATE = 'S' then '비가동'
+					when EQM_STATE = 'E' then '설비점검관리에 등록하세요'
 				       else '사용중'
 				  end  EQM_STATE
 				, (
@@ -51,7 +52,8 @@
 				,MFG_DATE
 				,EQM_IMG
 				, case when EQM_STATE = 'Y' then '사용가능' 
-					when EQM_STATE = 'S' then '설비점검관리에 등록하세요'
+					when EQM_STATE = 'S' then '비가동'
+					when EQM_STATE = 'E' then '설비점검관리에 등록하세요'
 				       else '사용중'
 				  end  EQM_STATE
 				, (
@@ -63,7 +65,7 @@
                 from eqm_insp i
                 WHERE e.eqm_code = i.eqm_code ) as NEXT_INSP_DATE
         from eqm e
-        where  EQM_STATE != 'S'
+        where  EQM_STATE != 'E' and EQM_STATE != 'S'
         ORDER BY eqm_code
   	</select>
   	
@@ -117,7 +119,8 @@
 				,MFG_DATE
 				,EQM_IMG
 				, case when EQM_STATE = 'Y' then '사용가능' 
-					   when EQM_STATE = 'S' then '설비점검관리에 등록하세요'
+					   when EQM_STATE = 'S' then '비가동'
+						when EQM_STATE = 'E' then '설비점검관리에 등록하세요'
 				       else '사용중'
 				  end  EQM_STATE
 			  , (
@@ -154,7 +157,8 @@
 				,MFG_DATE
 				,EQM_IMG
 				, case when EQM_STATE = 'Y' then '사용가능' 
-					   when EQM_STATE = 'S' then '설비점검관리에 등록하세요'
+					   when EQM_STATE = 'S' then '비가동'
+					   when EQM_STATE = 'E' then '설비점검관리에 등록하세요'
 				       else '사용중'
 				  end  EQM_STATE
 			  , (
@@ -170,7 +174,7 @@
   			<if test="eqmName != null and !eqmName.equals('')">
   				e.eqm_name LIKE '%'||#{eqmName}||'%'
   			</if>
-  			and EQM_STATE != 'S'
+  			and EQM_STATE != 'E' and EQM_STATE != 'S'
   		</where>  				
   		 
   		ORDER BY eqm_code
@@ -285,7 +289,8 @@
 				,MFG_DATE
 				,EQM_IMG
 				,case when EQM_STATE = 'Y' then '사용가능' 
-					  when EQM_STATE = 'S' then '설비점검관리에 등록하세요'
+					  when EQM_STATE = 'S' then '비가동'
+						when EQM_STATE = 'E' then '설비점검관리에 등록하세요'
 				       else '사용중'
 				  end  EQM_STATE
   	from EQM

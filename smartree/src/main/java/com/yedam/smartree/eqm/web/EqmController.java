@@ -1,8 +1,6 @@
 package com.yedam.smartree.eqm.web;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,9 +10,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -139,13 +134,13 @@ public class EqmController {
 		// model.addAttribute("eqmInspVO", new EqmInspVO());
 		return "eqm/eqmNoperForm";
 	}
-
+	// 비가동 등록
 	@PostMapping("/eqmNoperForm")
 	@ResponseBody
 	public String registerEqmNoperFormProcess(@RequestBody EqmNoperVO eqmNoperVO ) {
 		eqminspservice.insertEqmNoper(eqmNoperVO);
-		//
 		
+		// 비가동 등록 시작		
 		 String eqmCode = eqmNoperVO.getEqmCode(); 
 		 String emqState = "S"; 
 		 EqmVO eqmvo= new EqmVO();
@@ -158,7 +153,24 @@ public class EqmController {
 		return "redirect:eqmNoperForm";
 
 	}
-
+	// 비가동 수정
+	@PostMapping("/updateEqmNoper")
+	@ResponseBody
+	public String updateEqmNoper(@RequestBody EqmNoperVO eqmNoperVO) {
+		eqminspservice.updateEqmNoper(eqmNoperVO);
+		
+		// 비가동 등록 끝
+		 String eqmCode = eqmNoperVO.getEqmCode(); 
+		 String emqState = "E"; 
+		 EqmVO eqmvo= new EqmVO();
+		 eqmvo.setEqmCode(eqmCode); 
+		 eqmvo.setEqmState(emqState);
+		 eqmservice.updateEqm(eqmvo);
+		//
+		return "redirect:eqmNoperForm";
+	}
+	
+	
 	// 설비 점검 등록 - 페이지
 	@GetMapping("/eqmInspForm")
 	public String registerEqmInspForm() {
@@ -172,12 +184,20 @@ public class EqmController {
 		eqminspservice.insertEqmInsp(eqmInspVO);
 		//
 		if(!eqmInspVO.getNoperCode().equals("")) {
+			// 설비상태를 사용가능으로 바꾼다
 			 String eqmCode = eqmInspVO.getEqmCode(); 
 			 String emqState = "Y"; 
 			 EqmVO eqmvo= new EqmVO();
 			 eqmvo.setEqmCode(eqmCode); 
 			 eqmvo.setEqmState(emqState);
 			 eqmservice.updateEqm(eqmvo);
+			 // 비가동 -> 설비점검에 등록
+			 String noperCode =eqmInspVO.getNoperCode();
+			 String inspIcheck = "Y";
+			 EqmNoperVO eqmnopervo = new EqmNoperVO();
+			 eqmnopervo.setNoperCode(noperCode);
+			 eqmnopervo.setInspIcheck(inspIcheck);
+			 eqminspservice.updateEqmNoper(eqmnopervo);
 		}	
 		//
 		attributes.addFlashAttribute("eqmCode", eqmInspVO.getEqmCode());
