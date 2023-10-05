@@ -73,8 +73,8 @@ public class ProdVO {
 	@DateTimeFormat(pattern = "HH:mm:ss")
 	@JsonFormat(pattern = "HH:mm:ss",timezone = "Asia/Seoul")
 	private Date prcsSdate;
-	@DateTimeFormat(pattern = "HH:mm:ss")
-	@JsonFormat(pattern = "HH:mm:ss",timezone = "Asia/Seoul")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm",timezone = "Asia/Seoul")
 	private Date prcsEdate;
 	private int prdtCnt;
 	private int errCnt;

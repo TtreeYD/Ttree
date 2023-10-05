@@ -85,7 +85,29 @@ box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
 	/*버튼 좌우 위치 조정*/
 	margin-right: 14%;
 }
+ .header{
+            
+            border: 1px solid black;
+            width: 100%;
+            height: 100px;
+            background-color: #6fb7ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .header-content{
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin: 0 30px;
+        }
+        .header-content > i {
+            font-size: 50px;
 
+        }
+        .header-content > i:active{
+            color: white;
+        }
 
 .button-container {
     display: flex;
@@ -113,13 +135,39 @@ box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
 margin-left: 200px;
 margin-top:300px;
 }
+ .header{
+            
+            border: 1px solid black;
+            width: 100%;
+            height: 100px;
+            background-color: #6fb7ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .header-content{
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin: 0 30px;
+        }
+        .header-content-detail > i {
+            font-size: 50px;
+
+        }
+        .header-content-detail > i:active{
+            color: white;
+        }
 </style>
 </head>
 <body>
 <div class="header">
     <div class="header-content">
         <h1>생산키오스크</h1>
-        <i class="fa-solid fa-house" onclick="backHome()"></i>
+        <div class="header-content-detail">
+	        <i class="fa-solid fa-backward-step fa-sm"style="margin-right: 30px;" onclick="backBefore()"></i>
+	        <i class="fa-solid fa-house" onclick="backHome()"></i>
+        </div>
     </div>
 </div>
 
@@ -291,7 +339,7 @@ $(document).ready(function (){
 	
 	$('#endBtn').on('click',function(){
 		let resultData = instDtStopGrid.getData();
-		resultData[0].prcsEdate = new Date().toTimeString().split(' ')[0];
+		resultData[0].prcsEdate = getCurrentDate();
 		console.log(resultData)
 		$.ajax({
 			url:'/endProcessResult',
@@ -324,6 +372,26 @@ $(document).ready(function (){
 	function backBefore(){
 		$(location).attr('href', '/prod/prodSituation');
 	}
+   function getCurrentDate()
+    {
+        var date = new Date();
+        var year = date.getFullYear().toString();
+
+        var month = date.getMonth() + 1;
+        month = month < 10 ? '0' + month.toString() : month.toString();
+
+        var day = date.getDate();
+        day = day < 10 ? '0' + day.toString() : day.toString();
+
+        var hour = date.getHours();
+        hour = hour < 10 ? '0' + hour.toString() : hour.toString();
+
+        var minites = date.getMinutes();
+        minites = minites < 10 ? '0' + minites.toString() : minites.toString();
+
+
+        return year +'-'+ month +'-' + day +' ' + hour +':' + minites;
+    }
 </script>
 </body>
 </html>

@@ -63,13 +63,38 @@ box-shadow: 1px 1px 7px #d16a6e;
 cursor: pointer;
 box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
 }
+ .header{            
+    border: 1px solid black;
+    width: 100%;
+    height: 100px;
+    background-color: #6fb7ff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.header-content{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin: 0 30px;
+}
+.header-content-detail > i {
+    font-size: 50px;
+
+}
+.header-content-detail > i:active{
+    color: white;
+}
 </style>
 </head>
 <body>
 <div class="header">
     <div class="header-content">
         <h1>생산키오스크</h1>
-        <i class="fa-solid fa-house" onclick="backHome()"></i>
+        <div class="header-content-detail">
+	            <i class="fa-solid fa-backward-step fa-sm"style="margin-right: 30px;" onclick="backBefore()"></i>
+	            <i class="fa-solid fa-house" onclick="backHome()"></i>
+            </div>
     </div>
 </div>
     <div id="instDtStopGrid"></div>
@@ -108,7 +133,7 @@ const instDtStopGrid = new tui.Grid({
 	        },
 	        {
 	          header: '공정명',
-	          name: 'prcsName',
+	          name: 'prcsName'
 	        },
 	        {
 	          header: '설비코드',
@@ -122,16 +147,20 @@ const instDtStopGrid = new tui.Grid({
 		    },
 	        {
 	          header: '작업시작시간',
-	          name: 'prcsSdate',
+	          name: 'prcsSdate'
 		    },
 		    {
 	          header: '공정순서',
-	          name: 'prcsOrder',
+	          name: 'prcsOrder'
 		    },
 	        {
 	          header: '생산량',
-	          name: 'prdtCnt',
-		    }
+	          name: 'prdtCnt'
+		    },
+		    {
+	          header: '작업자',
+	          name: 'manager'
+			}
 
 	]})
 $(document).ready(function (){
@@ -143,7 +172,6 @@ $(document).ready(function (){
 			method:'GET',
 			success:function(result){
 				console.log(result)
-				result[0].prcsSdate;
 				instDtStopGrid.resetData(result)
 			},
 			error:function(err){
@@ -160,6 +188,10 @@ $(document).ready(function (){
 	})
 })
 	function backHome(){
+		$(location).attr('href', '/prod/prcrKiosk');
+	}
+
+	function backBefore(){
 		$(location).attr('href', '/prod/prcrKiosk');
 	}
 </script>
