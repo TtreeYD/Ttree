@@ -7,9 +7,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
 <link href="../startbootstrap/css/kiosk.css" rel="stylesheet" type="text/css">
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
 <!-- 그리드관련 link -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" type="text/css" href="https://uicdn.toast.com/grid/latest/tui-grid.css" />
 <link rel="stylesheet" href="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.css" />
 <link rel="stylesheet" href="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.css" />
@@ -17,13 +16,11 @@
 
 
 <!-- 그리드관련 script -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.js"></script>
 <script src="https://uicdn.toast.com/tui.date-picker/latest/tui-date-picker.js"></script>
 <script src="https://uicdn.toast.com/tui.time-picker/latest/tui-time-picker.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tui-grid@4.21.16/dist/tui-grid.min.js"></script>
-
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://kit.fontawesome.com/4791395687.js" crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="crossorigin="anonymous"></script>
 <style>
@@ -75,7 +72,7 @@ box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
 
 
 
- button:active :not(td){
+ button:active {
     box-shadow: 1px 1px 0 rgb(0,0,0,0.5);
     position: relative;
     top:2px;
@@ -122,6 +119,10 @@ box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
 	color: white;
 	font-weight: bolder;
 }
+.swal-wide{
+        width:800px !important;
+    }
+
 
 </style>
 </head>
@@ -144,6 +145,8 @@ box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
 var data = [[${data}]]
 console.log(data)
 let clickdata ;
+let eqmdata;
+
 const instDtGrid = new tui.Grid({
 	el : document.getElementById('instDtGrid'),
 	scrollX : false,
@@ -298,31 +301,59 @@ $(document).ready(function (){
 	}
 	eqmGrid.on('click',function(ev){
 		clickdata = eqmGrid.getValue(ev.rowKey , 'eqmCode');
-		
+		eqmdata = eqmGrid.getValue(ev.rowKey, 'eqmState');
 	})
 	$('#startBtn').on('click',function(){
-		let req={};
-		req.list = instDtGrid.getData(); 
-		req.list[0].eqmCode = clickdata;
-		
-		req.vo = {
-				eqmCode: clickdata
-		}
-	
-		console.log(req)
-		$.ajax({
-			url:'/insertDtProgress',
-			method:'POST',
-			dataType: 'json',
-			contentType : 'application/json',
-			data:JSON.stringify(req),
-			success:function(result){
-				console.log(result)
-			},
-			error:function(err){
-				console.log(err);	
+		cntdata = instDtGrid.getData();
+		console.log(cntdata)
+		if(eqmdata =='사용중' || eqmdata == '사용불가'){
+			console.log(123);
+			Swal.fire({
+				  icon: 'error',
+				  title: '설비를 확인하세요',
+				  customClass: 'swal-wide'
+				})
+			return;
+		}else if(cntdata[0].prdtProdSum >= cntdata[0].prdtTotal || cntdata[0].prdtCnt > cntdata[0].prdtTotal){
+			Swal.fire({
+				  icon: 'error',
+				  title: '지시량을 초과했습니다',
+				  customClass: 'swal-wide'
+				})
+				return;
+		}else{
+			let req={};
+			req.list = instDtGrid.getData(); 
+			req.list[0].eqmCode = clickdata;
+			
+			req.vo = {
+					eqmCode: clickdata
 			}
-		})
+		
+			console.log(req)
+			$.ajax({
+				url:'/insertDtProgress',
+				method:'POST',
+				dataType: 'json',
+				contentType : 'application/json',
+				data:JSON.stringify(req),
+				success:function(result){
+					Swal.fire({
+						  position: 'center',
+						  icon: 'success',
+						  title: '작업이 시작되었습니다',
+						  showConfirmButton: false,
+						  timer: 1500
+						})
+						getProcess();
+					console.log(result)
+				},
+				error:function(err){
+					console.log(err);	
+				}
+			})
+		}
+		
 	})
 })
 </script>
