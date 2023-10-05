@@ -159,6 +159,10 @@ public class ProdRestController {
 	@GetMapping("/selectHolding")
 	public List<HoldingVO> selectHolding(String prodInstCode){
 		return service.selectHolding(prodInstCode);
-
+	}
+	
+	@PostMapping("/updateInstYn")
+	public int updateInstYn(String prodPlanCode) {
+		return service.updateInstYn(prodPlanCode);
 	}
 }

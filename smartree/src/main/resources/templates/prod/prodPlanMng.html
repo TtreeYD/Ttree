@@ -12,21 +12,18 @@
 <body>
 	<div layout:fragment="content">
 		<h2>생산계획관리</h2>
-		<label>계획명 : </label> <input type="text" name="prodPlanName"
-			id="prodPlanName"><br> <label>담당자 : </label> <input
-			type="text" name="prodName" id="prodName"><br> <label>생산계획일자
-			: </label> <input type="date" name="prodPlanDate" id="prodPlanDate">
-		<label>생산예상시작일자 : </label> <input type="date" name="prodPlanSdate"
-			id="prodPlanSdate"> <label>생산예상종료일자 : </label> <input
-			type="date" name="prodPlanEdate" id="prodPlanEdate"> <input
-			type="hidden" name="prodPlanCode" id="prodPlanCode">
+		<label>계획명 : </label> <input type="text" name="prodPlanName" id="prodPlanName"> 
+		<label style="margin-left: 40px">담당자 : </label> <input type="text" name="prodName" id="prodName"> <br>
+		<label>생산계획일자 : </label> <input type="date" name="prodPlanDate" id="prodPlanDate">
+		<label>생산예상시작일자 : </label> <input type="date" name="prodPlanSdate" id="prodPlanSdate">
+		<label>생산예상종료일자 : </label> <input type="date" name="prodPlanEdate" id="prodPlanEdate"> 
+		<input type="hidden" name="prodPlanCode" id="prodPlanCode">
 		<div class="btn-group" role="group" aria-label="Basic example"
 			style="float: right; margin-bottom: 10px;">
 			<button type="button" class="btn btn-primary" id="insertListBtn">새계획</button>
 			<button type="button" class="btn btn-primary" id="resetBtn">초기화</button>
-			<button type="button" class="btn btn-primary" id="loadOrders">
-				주문서</button>
-			<button type="button" class="btn btn-primary" id="prodListBtn">검색</button>
+			<button type="button" class="btn btn-primary" id="loadOrders">주문내역</button>
+			<button type="button" class="btn btn-primary" id="prodListBtn">계획내역</button>
 			<button type="button" class="btn btn-primary" id="saveBtn">저장</button>
 			<button type="button" class="btn btn-primary" id="delBtn">삭제</button>
 		</div>

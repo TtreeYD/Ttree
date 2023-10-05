@@ -136,7 +136,6 @@ public class ProdServiceImpl implements ProdService {
 		for(ProdVO hvo : vo.getHlist()) {
 			hvo.setProdInstCode(prodInstCode);
 			prodMapper.insertHolding(hvo);
-			
 		}
 		
 		return cnt;
@@ -159,10 +158,17 @@ public class ProdServiceImpl implements ProdService {
 	@Override
 	public int updateProdInst(RequestVO<ProdVO> vo) {
 		int cnt = 0;
+		String prodInstCode = vo.getVo().getProdInstCode();
 		prodMapper.updateProdInst(vo.getVo());
 		for(ProdVO pvo : vo.getList()) {
 			prodMapper.updateDtProdInst(pvo);
+			prodMapper.updateProcess(pvo);
 			cnt++;
+		}
+		prodMapper.delHolding(prodInstCode);
+		for(ProdVO hvo : vo.getHlist()) {
+			hvo.setProdInstCode(prodInstCode);
+			prodMapper.insertHolding(hvo);
 		}
 		return cnt;
 	}
@@ -171,8 +177,11 @@ public class ProdServiceImpl implements ProdService {
 	public int deleteProdInst(RequestVO<ProdVO> vo) {
 		int cnt = 0;
 		prodMapper.deleteProdInst(vo.getVo());
+		String prodInstCode = vo.getVo().getProdInstCode();
+		prodMapper.delHolding(prodInstCode);
 		for(ProdVO pvo : vo.getList()) {
 			prodMapper.deleteDtProdInst(pvo);
+			prodMapper.delProcess(pvo);
 			cnt++;
 		}
 		return cnt;
@@ -213,6 +222,11 @@ public class ProdServiceImpl implements ProdService {
 	@Override
 	public List<HoldingVO> selectHolding(String prodInstCode) {
 		return prodMapper.selectHolding(prodInstCode);
+	}
+
+	@Override
+	public int updateInstYn(String prodPlanCode) {
+		return prodMapper.updateInstYn(prodPlanCode);
 	}
 
 

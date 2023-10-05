@@ -9,7 +9,6 @@ import com.yedam.smartree.prod.service.MtlNeedVO;
 import com.yedam.smartree.prod.service.PrcsResultVO;
 import com.yedam.smartree.prod.service.PrdtProdVO;
 import com.yedam.smartree.prod.service.ProdVO;
-import com.yedam.smartree.prod.service.RequestVO;
 
 public interface ProdMapper {
 	
@@ -57,12 +56,15 @@ public interface ProdMapper {
 	
 	public int deleteDtProdInst(ProdVO vo);
 	
+	int updateInstYn(String prodPlanCode);
+	
 	//생산지시조회
 	public List<ProdVO> selectGetDtInst(ProdVO vo);
 	//키오스크 :생산지시불러오기
 	public List<ProdVO> selectGetProcess(ProdVO vo);
 
 	public int insertProcess(ProdVO pvo);
+	public int updateProcess(ProdVO pvo);
 
 	public List<MdmPrcsVO> selectPrcsCode(ProdVO vo);
 	
@@ -87,5 +89,8 @@ public interface ProdMapper {
 	//자재홀딩
 	int insertHolding(ProdVO vo);
 	List<HoldingVO> selectHolding(String prodInstCode);
+	int delHolding(String prodInstCode);
+	
+	int delProcess(ProdVO vo);
 
 }
