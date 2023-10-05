@@ -34,8 +34,9 @@
 	
 	
 	
-	<script>
-	//window.onload=function(){
+	<script th:inline="javascript">
+	let manager = [[${session.loginMember.empName}]];
+	window.onload=function(){
 
 	    const grid = new tui.Grid({
 	      el: document.getElementById('grid'),
@@ -159,6 +160,7 @@
 	    		success:function(result){
 	    			console.log(result);
 	    			grid2.resetData(result);
+	    			chkManager();
 	    		},
 	    		error:function(err){
 	    			console.log(err);
@@ -245,9 +247,16 @@
 			});
 	   	})
 	   
-	   
+	   	 function chkManager() {
+           	   let datas = grid2.getData();
+           	   console.log(manager)
+           	   for(let data of datas){
+           		   if(!data.prdtManager) data.prdtManager = manager
+           	   }
+           	   grid2.resetData(datas);
+              }
 
-	//};
+	};
 	</script>
 	</div>
 </body>

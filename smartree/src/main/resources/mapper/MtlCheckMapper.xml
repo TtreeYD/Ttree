@@ -9,7 +9,8 @@
 	  			mtl_code, 
 	  			bp_code, 
 	  			mtl_name, 
-	  			mtl_manager
+	  			mtl_manager,
+	  			mtl_cnt
 		FROM	mtl_need
         <where>
         	mtl_where = 'MT01'
@@ -36,7 +37,7 @@
 	  			n.bp_code, 
 	  			n.mtl_name, 
 	  			c.mtl_chk_cnt, 
-	  			c.mtl_error_cnt , 
+	  			c.mtl_error_cnt, 
 	  			c.mtl_pass_cnt, 
 	  			c.mtl_chk_manager
 		FROM mtl_chk c 
@@ -53,7 +54,7 @@
   		#{mtlDate},
   		#{bpCode},
   		#{mtlCode},
-  		#{mtlChkCnt},
+  		#{mtlCnt},
   		#{mtlErrorCnt},
   		#{mtlPassCnt},
   		#{mtlChkManager},

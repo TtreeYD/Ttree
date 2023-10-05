@@ -28,5 +28,8 @@ public class MtlCheckVO {
 	private String mtlChkStatus;
 	private String mtlWhere;
 	
+	//자재
+	private int mtlCnt;
+	
 	private String result;
 }
