@@ -12,8 +12,7 @@ public interface MaterialMapper {
 	public List<MaterialVO> selectNeedList();
 	// 재고목록 전체조회
 	public List<MaterialVO> selectMtlList();
-	// 출고목록 전체조회
-	public List<MaterialVO> selectMtlOutList();
+
 	// 발주관리 전체출력
 	public List<MaterialVO> controlNeedList();
 	// 안전재고 미달목록 출력
@@ -50,4 +49,6 @@ public interface MaterialMapper {
 	public List<MaterialVO> searchNeed(MaterialVO vo);
 	// 재고조회 조건검색
 	public List<MaterialVO> searchCont(MaterialVO vo);
+	// 출고목록 자재별 출력
+	public List<MaterialVO> selectMtlOutList(MaterialVO vo);
 }
