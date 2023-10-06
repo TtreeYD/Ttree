@@ -129,13 +129,14 @@ margin : 10px;
 					<div class="container text-center">
 					<br>
 						<h2>자재목록</h2>
-						<div class="modal-header row justify-content-evenly">
+							<div class="modal-header row justify-content-evenly">
 						</div>
 					</div>
 					<div class="modal-body">
 						<div id="matGrid"></div>
 					</div>
 					<div class="modal-footer">
+						<button type="button" class="btn btn-primary" id="matPlusBtn">추가</button>
 						<button type="button" class="btn btn-default" data-dismiss="modal" id="matCloseBtn">닫기</button>
 					</div>
 				</div>
@@ -144,6 +145,29 @@ margin : 10px;
 			<!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
+		<!-- 자재모달 수정용 -->
+		<div id="matModal2" class="modal fade" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-xl" role="document" style="width:600px; height:500px;" >
+				<div class="modal-content" style="height: 700px">
+					<div class="container text-center">
+					<br>
+						<h2>자재목록</h2>
+							<div class="modal-header row justify-content-evenly">
+						</div>
+					</div>
+					<div class="modal-body">
+						<div id="matGrid2"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" id="matCloseBtn1">닫기</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+
 		<script>
 			let mtlInfo = [];
 			let bucket = [];
@@ -330,9 +354,10 @@ margin : 10px;
 					scrollX : false,
 					scrollY : false,
 					rowHeaders : [ "rowNum" ],
+					pagination: true,
 					pageOptions: {
-			            perPage: 10,
-			            useClient: true,
+			            perPage: 7,
+			            useClient: true
 			          },
 					columns : [ {
 						header : '분류',
@@ -518,7 +543,7 @@ margin : 10px;
 		          }
 		        }) */
 		    // 행추가 기능    
-		    $(addRow).on('click', (ev)=> {
+/* 		    $(addRow).on('click', (ev)=> {
 		    	mtlNeedGrid.blur()
 		    	        let now = new Date(); // 현재 날짜 및 시간
                         let year = now.getFullYear();
@@ -536,7 +561,7 @@ margin : 10px;
                         	mtlDate: mtlDate
                         }
                     );
-			})
+			}) */
 				// 모달창의 조회버튼을 누를때 조건에 맞게 검색해주기
 				$('#searchDataBtn').on('click',function(ev){
 					$.ajax({
@@ -632,6 +657,31 @@ margin : 10px;
 						useClient: true,
 						perPage: 10,
 					},
+					rowHeaders: [ 'checkbox','rowNum'],
+					columns: [{
+						header: '자재코드',
+						name: 'mtlCode'
+					}, {
+						header: '자재명',
+						name: 'mtlName'					
+					}, {
+						header: '분류',
+						name: 'mtlType'					
+					}, {
+						header: '단위',
+						name: 'mtlUnit'
+					}]
+				});
+				// 자재목록 수정용
+				const matGrid2 = new tui.Grid({
+					el: document.getElementById('matGrid2'),
+					data:[],
+					scrollX: false,
+					pagination: true,
+					pageOptions: {
+						useClient: true,
+						perPage: 10,
+					},
 					rowHeaders: ['rowNum'],
 					columns: [{
 						header: '자재코드',
@@ -653,9 +703,9 @@ margin : 10px;
 						$.ajax({
 							url:'/mdm/selectMtlList',
 							success: function (result){
-								matGrid.resetData(result)
-					            setTimeout(() => matGrid.refreshLayout(), 200);
-					            $("#matModal").modal('show');
+								matGrid2.resetData(result)
+					            setTimeout(() => matGrid2.refreshLayout(), 200);
+					            $("#matModal2").modal('show');
 							},
 					        error: function (err) {
 					            console.log(err)
@@ -663,14 +713,56 @@ margin : 10px;
 							})
 		           		}
 				});
+				// 추가버튼 클릭시 자재선택 모달 팝업
+				$(addRow).on('click', (ev)=>{
+							$.ajax({
+								url:'/mdm/selectMtlList',
+								success: function (result){
+									for(let data of result){
+										data.mtlUse = null
+									}
+									matGrid.resetData(result)
+						            setTimeout(() => matGrid.refreshLayout(), 200);
+						            $("#matModal").modal('show');
+								},
+						        error: function (err) {
+						            console.log(err)
+						        }
+								})
+					});
+				// 자재목록 체크한 품목 발주목록으로 이동시키기
+				 $('#matPlusBtn').on('click', function (ev) {
+					 	mtlNeedGrid.blur();
+		    	        let now = new Date(); // 현재 날짜 및 시간
+                        let year = now.getFullYear();
+                        let month = (
+                            "0" +
+                            (now.getMonth() + 1)
+                        ).substr(-2);
+                        let day = (
+                            "0" + now.getDate()
+                        ).substr(-2);
+                        let mtlDate =
+                            year + "-" + month + "-" + day;
+					 	let datas = matGrid.getCheckedRows();
+					 	let mtlCode = matGrid.getValue(0,"mtlCode");
+					 	datas.forEach((data,index)=>{
+					 		data.mtlDate = mtlDate;
+					 	})
+						mtlNeedGrid.appendRows(datas);
+					 	mtlNeedGrid.getData();
+					 	console.log(mtlNeedGrid.getData());
+					 	$("#matCloseBtn").click();
+		        });
+				
                 // 자재목록 더블클릭시 발주목록으로 이동시키기
-				matGrid.on('dblclick', () => {
-				    let rowKey = matGrid.getFocusedCell().rowKey;
+				matGrid2.on('dblclick', () => {
+				    let rowKey = matGrid2.getFocusedCell().rowKey;
 				    if (rowKey != null && rowKey >= 0) {
-				        let mtlName = matGrid.getValue(rowKey, "mtlName");
-				        let mtlCode = matGrid.getValue(rowKey, "mtlCode");
-				        let mtlUnit = matGrid.getValue(rowKey, "mtlUnit");
-				        let mtlType = matGrid.getValue(rowKey, "mtlType");
+				        let mtlName = matGrid2.getValue(rowKey, "mtlName");
+				        let mtlCode = matGrid2.getValue(rowKey, "mtlCode");
+				        let mtlUnit = matGrid2.getValue(rowKey, "mtlUnit");
+				        let mtlType = matGrid2.getValue(rowKey, "mtlType");
 						// 선택한 행에 값이 들어가게 행 키값 지정해주기
 				        let mtlRowKey = mtlNeedGrid.getFocusedCell().rowKey;
 				        if (mtlRowKey != null && mtlRowKey >= 0) {
@@ -679,18 +771,14 @@ margin : 10px;
 				            mtlNeedGrid.setValue(mtlRowKey, "mtlUnit", mtlUnit);
 				            mtlNeedGrid.setValue(mtlRowKey, "mtlType", mtlType);
 				        }
-				        $("#matCloseBtn").click();
+				        $("#matCloseBtn1").click();
 				    }
-				});
-
- 
-				
+				});	
 				
 				
                 // 모달 리스트 클릭시 아래 리스트로 이동
                 needModalGrid.on('dblclick', () => {
-                    let rowKey =
-                    	needModalGrid.getFocusedCell().rowKey;
+                    let rowKey = needModalGrid.getFocusedCell().rowKey;
 
                     if (rowKey != null && rowKey >= 0) {
                         let mtlCode = needModalGrid.getValue(
@@ -802,7 +890,6 @@ margin : 10px;
 			            }
         			// 모달창 체크항목 삭제처리
 					$('#deleteBtn').on('click',function(){
-						let delrows = needModalGrid.getCheckedRows();
 						newData={};
 						newData.needList = needModalGrid.getCheckedRows();
 						$.ajax({
