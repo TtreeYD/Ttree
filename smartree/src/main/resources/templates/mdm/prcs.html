@@ -30,21 +30,21 @@ input::-webkit-inner-spin-button {
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">공정코드</span>
 				  	</div>
-					<input type="text" class="form-control text-right col" readonly id="prcsStdCode"> 
+					<input type="text" class="form-control text-right col noGray" readonly id="prcsStdCode"> 
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">공정명</span>
 				  	</div>
-					<input type="text" maxlength="12" class="form-control text-right col" placeholder="공정명" id="prcsName">
+					<input type="text" maxlength="12" class="form-control text-right col noGray" placeholder="공정명" id="prcsName">
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">공정구분</span>
 				  	</div>
-					<select class="custom-select text-right col" id="prcsType">
+					<select class="custom-select text-right col noGray" id="prcsType">
 					   <option value="" selected>--</option>
 				  </select>
 				</div>
@@ -52,7 +52,7 @@ input::-webkit-inner-spin-button {
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">비고</span>
 				  	</div>
-					<input type="text" maxlength="10"	class="form-control text-right col" id="prcsNote">
+					<input type="text" maxlength="10"	class="form-control text-right col noGray" id="prcsNote">
 				</div>
 										
 				<div class="input-group mb-4">
@@ -75,7 +75,7 @@ input::-webkit-inner-spin-button {
 					<select class="custom-select col-2" id="searchPrcsType">
 				   	<option value="" selected>--</option>
 				  	</select>
-					<input type="text" class="form-control col-2" placeholder="공정명" id="searchPrcsName">
+					<input type="text" class="form-control col-2 noGray" placeholder="공정명" id="searchPrcsName">
 					<div class="input-group-append">
 				   	<button class="btn btn-outline-secondary" type="button" id="searchPrcs">검색</button>
 					</div>
@@ -168,6 +168,11 @@ input::-webkit-inner-spin-button {
 						}
 					})
 				}
+				$('#prcsStdCode').val('');
+				$('#prcsName').val('');
+				$('#prcsType').val('');
+				$('#prcsNote').val('');
+				$('#prcsDetail').val('');
 			}
 			
 			$('#resetPrcs').on('click', resetPrcs)

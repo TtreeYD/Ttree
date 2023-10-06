@@ -33,14 +33,14 @@ input::-webkit-inner-spin-button {
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">제품코드</span>
 				  	</div>
-					<input type="text" class="form-control text-right col" readonly id="prdtCode"> 
+					<input type="text" class="form-control text-right col noGray" readonly id="prdtCode"> 
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">제품명</span>
 				  	</div>
-					<input type="text" maxlength="12" class="form-control text-right col" placeholder="제품명" id="prdtName">
+					<input type="text" maxlength="12" class="form-control text-right col noGray" placeholder="제품명" id="prdtName">
 				</div>
 				
 				<div class="input-group mb-4">
@@ -94,7 +94,7 @@ input::-webkit-inner-spin-button {
 					<select class="custom-select col-2" id="searchPrdtType">
 				   	<option value="" selected>--</option>
 				  	</select>
-					<input type="text" class="form-control col-2" placeholder="제품명" id="searchPrdtName">
+					<input type="text" class="form-control col-2 noGray" placeholder="제품명" id="searchPrdtName">
 					<div class="input-group-append">
 				   	<button class="btn btn-outline-secondary" type="button" id="searchPrdt">검색</button>
 					</div>
@@ -192,6 +192,14 @@ input::-webkit-inner-spin-button {
 						}
 					})
 				}
+				$('#prdtSizeW').val('');
+				$('#prdtSizeD').val('');
+				$('#prdtSizeH').val('');
+				$('#prdtCode').val('');
+				$('#prdtName').val('');
+				$('#prdtType').val('');
+				$('#prdtSs').val('');
+				$('#prdtUse').val('');
 			}
 			
 			$('#resetPrdt').on('click', resetPrdt)

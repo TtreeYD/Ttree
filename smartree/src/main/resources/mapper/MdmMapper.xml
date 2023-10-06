@@ -325,7 +325,7 @@
 	
 	<!-- 공정 등록 -->
 	<insert id="insertPrcs" parameterType="MdmPrcsVO">
-		<selectKey keyProperty="prcsCode" order="BEFORE" resultType="String">
+		<selectKey keyProperty="prcsStdCode" order="BEFORE" resultType="String">
 			SELECT #{prcsType} || NVL( LPAD( MAX( SUBSTR( prcs_std_code, 5)) +1, 4, '0'), '0001')
 			FROM prcs_table
 			WHERE prcs_type = #{prcsType}

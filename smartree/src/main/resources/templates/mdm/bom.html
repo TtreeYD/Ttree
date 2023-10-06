@@ -29,8 +29,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				<h2>제품정보</h2>
 				<div class="mb-3 clearfix">
 					<div class="input-group float-left">
-						<input type="text" class="form-control" placeholder="제품명"
-							id="searchPrdtName">
+						<input type="text" class="form-control noGray col-4" placeholder="제품명" id="searchPrdtName">
 						<div class="input-group-append">
 							<button class="btn btn-primary col" type="button" id="searchPrdt">검색</button>
 						</div>
@@ -132,9 +131,6 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				header: '공정순서',
 				name: 'prcsOrder',
 				width: 80,
-				editor:{
-					type: 'text'
-				},
 				validation: {
 			        dataType: 'number',
 			        required: true
@@ -166,7 +162,12 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				header: '단위',
 				name: 'mtlUnit',
 				width: 80
-			}]
+			},{
+				header: 'isChild',
+				name: 'isChild',
+				hidden: true
+			}
+			]
 		});	
 		
 		const prdtGrid = new Grid({
@@ -363,6 +364,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				return
 			}
 			bomDtGrid.appendRow()
+			prcsOrderCalc()
 		})
 		
 		// bom더블클릭 이벤트
@@ -429,22 +431,30 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			$('#prcsModal').modal('hide');
 		}
 		
-	/* 	// 자재 => bom
+		// 자재 => bom 더블클릭
 		mtlGrid.on('dblclick', (ev) => {
 			if(ev.rowKey == undefined) return;
 			
-			addBomMtl(ev.rowKey)
+			altBomMtl(ev.rowKey)
 		})
 		
-		function addBomMtl(rowKey){
+		function altBomMtl(rowKey){
 			let mtlCode = mtlGrid.getValue(rowKey, 'mtlCode')
 			let mtlName = mtlGrid.getValue(rowKey, 'mtlName')
 			let mtlUnit = mtlGrid.getValue(rowKey, 'mtlUnit')
+			let rowData = bomDtGrid.getRow(selRow)
+			for(let data of rowData._children){
+				console.log(data)
+				if(data.mtlCode == mtlCode) {
+					toastr.warning('이미 추가되어있는 자재입니다.')
+					return
+				}
+			}
 			bomDtGrid.setValue(selRow, 'mtlCode', mtlCode)
 			bomDtGrid.setValue(selRow, 'mtlName', mtlName)
 			bomDtGrid.setValue(selRow, 'mtlUnit', mtlUnit)
-			$('#mtlModal').modal('hide');
-		} */
+			$('#mtlModal').modal('hide'); 
+		} 
 		
 		// 자재 => bom
 		$('#addBomMtl').on('click', () => {
@@ -469,6 +479,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 					}
 				} 
 				if(chk){
+					datas[data].isChild = 'Y';
 					addBomMtl(datas[data])
 				}
 			}
@@ -491,9 +502,11 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 				return
 			}
 			let delList = bomDtGrid.getCheckedRowKeys()
+			delList.reverse()
 			for(let del of delList){
 				bomDtGrid.removeTreeRow(del)
 			}
+			prcsOrderCalc()
 		})
 		
 		// 새로만들기
@@ -563,6 +576,18 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			selectBomDetail(prdtCode,bomCode)
 			$('#bomModal').modal('hide');
 		})
+		
+		function prcsOrderCalc() {
+			let rowData = bomDtGrid.getData()
+			let cnt = 1;
+			for(let data of rowData){
+				if(data.isChild == 'Y') continue;
+				let rowKey = data.rowKey
+				bomDtGrid.setValue(rowKey,'prcsOrder',cnt)
+				cnt++
+			}
+		}
+		
 		
 		</script>
 	</div>
