@@ -194,8 +194,7 @@
 		       dtp.prod_plan_cnt, 
 		       p.prod_plan_code, 
 		       prdt.prdt_code, 
-		       dpi.prod_inst_cnt,
-		       dpi.prod_inst_yn, 
+		       dpi.prod_inst_cnt, 
 		       dpi.prod_inst_rank,
 		       dtp.prod_plan_cnt - dpi.prod_inst_cnt as prod_inst_incomp_cnt,
 		       pi.prod_inst_name,
@@ -214,7 +213,6 @@
 				         join dt_prod_inst dpi
 				         on pi.prod_inst_code = dpi.prod_inst_code and dpi.prdt_code = dtp.prdt_code
 		where pi.prod_plan_code = #{prodPlanCode}
-		  and dpi.prod_inst_yn = 'n'
   	</select>
   	<!-- 생산지시등록 -->
 	<insert id="insertProdInst" parameterType="ProdVO" statementType="CALLABLE">
@@ -289,7 +287,7 @@
   	</delete>
   	<!-- 생산지시조회 -->
   	<select id="selectGetDtInst" resultType="ProdVO">
-  		select p.prod_inst_code , d.dt_prod_inst_code , p.prod_plan_code , p.prod_inst_name , d.prdt_code , pt.prdt_name, d.prod_inst_cnt , d.prod_inst_rank , d.prod_inst_yn , p.prod_inst_edate , p.prod_inst_sdate
+  		select p.prod_inst_code , d.dt_prod_inst_code , p.prod_plan_code , p.prod_inst_name , d.prdt_code , pt.prdt_name, d.prod_inst_cnt , d.prod_inst_rank , p.prod_inst_edate , p.prod_inst_sdate
   				 , p.prod_inst_manager
 		  from dt_prod_inst d join prod_inst p 
                 on d.prod_inst_code  = p.prod_inst_code
