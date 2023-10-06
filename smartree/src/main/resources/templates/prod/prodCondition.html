@@ -16,10 +16,9 @@
 <h1>생산현황모니터링</h1>
 <div id="chart"></div>
 <script>
-const Chart = toastui.Chart;
-
 	
 
+	const Chart = toastui.Chart;
 	const el = document.getElementById('chart');
 	const data = {
 	  categories: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -47,9 +46,7 @@ const Chart = toastui.Chart;
 		    }
 		  },
 	};
-
 	const chart = Chart.columnChart({el, data, options});
-
 </script>
 </div>
 </body>

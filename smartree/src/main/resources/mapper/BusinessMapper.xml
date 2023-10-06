@@ -181,11 +181,12 @@
   	
   	<!-- 거래처목록 -->
   	<select id="selectBpList" resultType="BpVO">
-  		select bp_code , bp_name , bp_type , bp_main
+  		select bp_code , bp_name , bp_main, get_common(bp_type, '005') bp_type
 		  from business_partner
 		  <where>
+		  		bp_type = 'BP02'
 		  	<if test="bpCode != null">
-		  		bp_code = #{bpCode}
+		  		and bp_code = #{bpCode}
 		  	</if>
 		  </where>
   	</select>
