@@ -178,7 +178,8 @@
 								}
 							]
 						}
-					}
+					},
+					align: 'center'
 				}]
 			});
 
@@ -240,7 +241,7 @@
 			function insertCommonCode() {
 				grid.blur();
 				if(!grid.isModified()) {
-					alert('변경사항이 없습니다.');
+					toastr.warning('변경사항이 없습니다.');
 					return
 				}
 				$.ajax({
@@ -265,7 +266,7 @@
 			function insertCodeDetail() {
 				grid2.blur();
 				if(!grid2.isModified()) {
-					alert('변경사항이 없습니다.');
+					toastr.warning('변경사항이 없습니다.');
 					return
 				}
 				$.ajax({
@@ -298,7 +299,7 @@
 			$(addCodeDetail).on('click', function () {
 				grid2.blur();
 				if (!codeType) {
-					alert('공통코드를 선택해주세요');
+					toastr.warning('공통코드를 선택해주세요');
 					return;
 				}
 				codeDetail.push({
@@ -315,6 +316,10 @@
 
 			function deleteCommonCode() {
 				let delData = grid.getCheckedRows()
+				if(delData.length==0) {
+					toastr.warning('선택된 값이 없습니다.')
+					return
+				}
 				$.ajax({
 					url: '/mdm/deleteCommonCode',
 					type: 'post',
@@ -324,9 +329,9 @@
 					data: JSON.stringify(delData),
 					success: result => {
 						if(result==0){
-							alert('상세코드가 비어있지 않습니다.')
+							toastr.warning('상세코드가 비어있지 않습니다.')
 						} else{
-							alert(result+ '건 삭제완료');	
+							toastr.success(result+ '건 삭제완료');	
 						}
 						selCommonCode();
 					},
@@ -339,6 +344,18 @@
 			
 			function deleteCodeDetail() {
 				let delData = grid2.getCheckedRows()
+				if(delData.length == 0) {
+					toastr.warning('선택된 값이 없습니다.')
+					return
+				}
+				let chkData = 0
+				for(let data of delData){
+					if(data.codeUse=='Y' && data.codeId) chkData++
+				}
+				if(chkData) {
+					toastr.warning('사용중인 코드가 있습니다.')
+					return
+				}
 				$.ajax({
 					url: '/mdm/deleteCodeDetail',
 					type: 'post',
@@ -347,7 +364,7 @@
 					},
 					data: JSON.stringify(delData),
 					success: result => {
-						alert(result+ '건 삭제완료');	
+						toastr.success(result+ '건 삭제완료');	
 						selCodeDetail(codeType)
 					},
 					error: err => console.log(err)
