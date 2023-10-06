@@ -2,7 +2,12 @@ package com.yedam.smartree.mdm.web;
 
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +33,9 @@ import com.yedam.smartree.prod.service.RequestVO;
 @RequestMapping("/mdm")
 @RestController
 public class CommonRestController {
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	MdmService mdmService;
@@ -110,12 +118,33 @@ public class CommonRestController {
 		return mdmService.resetPw(vo);
 	}
 	
-	/*
-	 * // 비밀번호 변경
-	 * 
-	 * @PostMapping("/updatePw") public int updatePw() { return }
-	 */
+	// 비밀번호 변경
+	@PostMapping("/updatePw")
+	public int updatePw(@RequestBody EmpVO vo, HttpSession session) {
+		
+		EmpVO loginUser = (EmpVO) session.getAttribute("loginMember");
+		
+	    String sessionPassword = loginUser.getEmpPw();
+	    String currentPassword = vo.getEmpPw();
+	    
+	    if(!passwordEncoder.matches(currentPassword, sessionPassword)) {
+	    	return 0;
+	    }
 
+	    
+		String newPw = vo.getNewPassword();
+		String encryptedPassword = passwordEncoder.encode(newPw);
+	    vo.setEmpPw(encryptedPassword);
+	    vo.setEmpId(loginUser.getEmpId());
+	    
+	    int result = mdmService.updatePassword(vo);
+	    if (result == 1) {
+	        return 1;
+	    } else {
+	        return 0;
+	    }
+	}
+	
 	// 제품관리
 	
 	// 제품리스트

@@ -120,6 +120,14 @@
 	</select>
 	
 	
+	<!-- 사원pw 변경 -->
+	<update id="updatePassword" parameterType="EmpVO">
+		UPDATE emp_list
+		SET	 emp_pw = #{empPw}
+		WHERE	 emp_id = #{empId}
+	</update>
+	
+	
 	<!-- 제품관리 -->
 	<!-- 제품 리스트 -->
 	<select id="selectPrdtList">

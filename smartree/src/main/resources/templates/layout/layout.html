@@ -164,64 +164,30 @@
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body" style="margin: 0 auto;">
                 	<div class="container text-center">
-						<div class="modal-header row justify-content-evenly">
 								<div class="d-flex flex-column align-items-center" >
+									<div>
 										<span>비밀번호</span> <input class="form-control" 
-											type="text" style="width: 350px;">
+											type="text" id="currentPasswordInput" style="width: 350px; margin-bottom: 20px;">
+									</div>
 									<div>
 										<span>새비밀번호</span> <input class="form-control" 
-											type="text" style="width: 350px;">
+											type="text" id="newPasswordInput" style="width: 350px; margin-bottom: 20px;">
 									</div>
 										<span>새비밀번호 확인</span> <input class="form-control" 
-											type="text" style="width: 350px;">
+											type="text" id="newPasswordInput2" style="width: 350px; margin-bottom: 20px;">
 								</div>
-						</div>
 					</div>
                 </div>
                 <div class="modal-footer">
-					<button type="button" id="addModalBtn" class="btn btn-default">저장</button>
+					<button type="button" id="updateModalBtn" class="btn btn-default">저장</button>
 					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
     </div>
     
-    
-    
-     <div id="#" class="modal fade" tabindex="-1" role="dialog">
-			<div class="modal-dialog modal-xl" role="document">
-				<div class="modal-content" style="height: 700px">
-					<div class="container text-center">
-						<div class="modal-header row justify-content-evenly">
-								<div class="d-flex flex-column align-items-center">
-										<span>비밀번호</span> <input class="form-control" 
-											type="text" style="width: 350px;">
-									<div>
-										<span>새비밀번호</span> <input class="form-control" 
-											type="text" style="width: 350px;">
-									</div>
-								</div>
-								<div class="d-flex flex-column align-items-center">
-									<div class="mb-3">
-										<span>새비밀번호 확인</span> <input class="form-control" 
-											type="text" style="width: 350px;">
-									</div>
-								</div>
-						</div>
-					</div>
-					<div class="modal-footer">
-						<button type="button" id="addModalBtn" class="btn btn-default">저장</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-					</div>
-				</div>
-				/.modal-content
-			</div>
-			/.modal-dialog
-		</div>
-		/.modal 
-	
     <!-- Logout Modal-->
     
     <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
@@ -244,5 +210,53 @@
             </div>
         </div>
     </div>
+    
+    <script th:inline="javascript">
+    let pw = [[${session.loginMember.empPw}]];
+    
+    toastr.options = {
+			  positionClass: "toast-top-center",
+			  escapeHtml: true,
+			  closeButton: true,
+			  newestOnTop: false,
+			  timeOut: 1250
+			};
+    
+    //모달 비밀번호변경 저장버튼 클릭이벤트
+	  $('#updateModalBtn').on('click', function() {
+	    let currentPassword = $('#currentPasswordInput').val();
+	    let newPassword = $('#newPasswordInput').val();
+	    let newPassword2 = $('#newPasswordInput2').val();
+	    
+	    let requestData = {
+	        empPw: currentPassword,
+	        newPassword: newPassword
+	    };
+
+    $.ajax({
+        url: "/mdm/updatePw",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(requestData),
+        success: function(result) {
+        	console.log(result);
+        	if(newPassword != newPassword2) {
+        		toastr.warning("새 비밀번호를 확인해주세요.");
+        		return;
+        	}
+        	if (!result) {
+                toastr.warning("현재 비밀번호가 일치하지 않습니다.");
+                return;
+            }
+        	toastr.success("비밀번호 변경 성공!")
+       		$("#profileModal").modal('hide');
+        },
+        error: function(err) {
+            console.error(err);
+            toastr.warning("비밀번호 변경에 실패했습니다.");
+        }
+    });
+});
+    </script> 
 </body>
 </html>

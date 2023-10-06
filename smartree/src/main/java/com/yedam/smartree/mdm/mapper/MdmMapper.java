@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.http.ResponseEntity;
 
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
@@ -29,7 +30,7 @@ public interface MdmMapper {
 	int addEmp(EmpVO vo);
 	EmpVO selectEmp(String id);
 	int resetPw(EmpVO vo);
-	int updatePw(EmpVO vo);
+	int updatePassword(EmpVO vo);
 	
 	// 제품관리
 	List<MdmPrdtVO> selectPrdtList();
