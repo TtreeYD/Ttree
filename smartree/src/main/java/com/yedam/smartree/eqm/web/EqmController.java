@@ -159,7 +159,24 @@ public class EqmController {
 	public String updateEqmNoper(@RequestBody EqmNoperVO eqmNoperVO) {
 		eqminspservice.updateEqmNoper(eqmNoperVO);
 		
-		// 비가동 등록 끝
+		// 등록사유가 기타('n')일때는 사용가능 
+		if(eqmNoperVO.getReasonKnd().equals("n")) {
+			 String eqmCode = eqmNoperVO.getEqmCode(); 
+			 String emqState = "Y"; 
+			 EqmVO eqmvo= new EqmVO();
+			 eqmvo.setEqmCode(eqmCode); 
+			 eqmvo.setEqmState(emqState);
+			 eqmservice.updateEqm(eqmvo);
+			 
+			String noperCode = eqmNoperVO.getNoperCode();				
+	        String inspIcheck = "Y"; 
+			EqmNoperVO eqmnopervo = new EqmNoperVO();
+		    eqmnopervo.setNoperCode(noperCode);
+			eqmnopervo.setInspIcheck(inspIcheck);
+		    eqminspservice.updateEqmNoper(eqmnopervo);
+				 
+		}else {
+				// 비가동 등록 끝
 		 String eqmCode = eqmNoperVO.getEqmCode(); 
 		 String emqState = "E"; 
 		 EqmVO eqmvo= new EqmVO();
@@ -167,6 +184,10 @@ public class EqmController {
 		 eqmvo.setEqmState(emqState);
 		 eqmservice.updateEqm(eqmvo);
 		//
+		}
+		
+		
+	
 		return "redirect:eqmNoperForm";
 	}
 	
