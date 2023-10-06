@@ -24,11 +24,13 @@
 							<label>제품명</label>
 							<input type="text"  id="prdt"> 
 							<label>Lot번호</label>
-							<input type="text"  id="lotNo"> 
-							<button type="button" id="searchDataBtn" class="btn btn-primary"
-								style="margin: 5px;">조회</button>
-							<button type="button" id="resetBtn" class="btn btn-primary"
-								style="margin: 4px;" >초기화</button>
+							<input type="text"  id="lotNo">
+							<div class="btn-group" role="group" aria-label="Basic example" style="margin-left:10px;"> 
+							<button type="button" id="searchDataBtn" class="btn btn-primary">조회</button>
+							<button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
+							<button type="button" class="btn btn-info btn-icon-text excelDownload" id="ExcelBtn" style="float:right">EXCEL
+            				<i class="bi bi-printer"></i> </button>
+            				</div>
 						</div>
 					</div>
 					<div id="lotPrdtGrid"></div>
