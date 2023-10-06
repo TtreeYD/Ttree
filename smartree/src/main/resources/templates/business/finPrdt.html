@@ -9,27 +9,31 @@
 
 <body>
 	<div layout:fragment="content">
-			<label>제품명</label>
-			<input type="text"  id="prdt"> 
-			<label>Lot번호</label>
-			<input type="text"  id="lotNo"> 
-		
-				<button type="button" id="searchDataBtn" class="btn btn-primary"
-					style="margin: 5px;">조회</button>
-				<button type="button" id="resetBtn" class="btn btn-primary"
-					style="margin: 4px;" >초기화</button>
-
+			
+		<h1>완제품재고조회</h1>
 		<hr>
-		<h2 style="display: inline-block;">제품별 수량</h2>
-		<button type="button" class="btn btn-info btn-icon-text excelDownload" id="ExcelBtn" style="float:right">EXCEL
-	            <i class="bi bi-printer"></i>
-	            </button>
-		
-
-		
-		<div id="prdtGrid" style="margin-bottom:50px;"></div>
-		<h2>Lot별 재고</h2>
-		<div id="lotPrdtGrid" ></div>
+			<div class="row">
+				<div class="col-6">
+					<h2 class="mb-4">제품별 수량</h2>
+					<div id="prdtGrid"></div>
+				</div>
+				<div class="col-6">
+					<div style="display:flex; justify-content: space-between;">
+						<h2 class="mb-4" style="display: inline-block;">Lot별 재고</h2>
+						<div>
+							<label>제품명</label>
+							<input type="text"  id="prdt"> 
+							<label>Lot번호</label>
+							<input type="text"  id="lotNo"> 
+							<button type="button" id="searchDataBtn" class="btn btn-primary"
+								style="margin: 5px;">조회</button>
+							<button type="button" id="resetBtn" class="btn btn-primary"
+								style="margin: 4px;" >초기화</button>
+						</div>
+					</div>
+					<div id="lotPrdtGrid"></div>
+				</div>
+			</div>
 		<script th:inline="javascript">
 		var data = [[${finPrdt}]]
 			var grid;
@@ -41,6 +45,7 @@
 					scrollY: false,
 					data: data ,
 					rowHeaders: ["rowNum"],
+					bodyHeight : 400,
 					columns: [
 						{
 							header: '제품명',
@@ -71,10 +76,11 @@
 					scrollX: false,
 					scrollY: false,
 					pageOptions: {
-			            perPage: 5,
+			            perPage: 10,
 			            useClient: true,
 			          },
 					rowHeaders: ["rowNum"],
+					bodyHeight : 400,
 					columns: [
 						{
 							header: 'Lot번호',

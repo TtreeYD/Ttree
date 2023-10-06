@@ -48,26 +48,28 @@ public class BusinessServiceImpl implements BusinessService{
 		return cnt;
 	}
 	//주문수정
-	@Override
-	public int updateOrder(ReqVO<BusinessVO> businessvo) {
-		int cnt=0;
-		businessmapper.updateOrder(businessvo.getOrderList().get(0));
-		
-		for(int i = 0 ; i<businessvo.getOrderDtList().size();i++) {
-			businessmapper.updateDtOrder(businessvo.getOrderDtList().get(i));
-			cnt++;
-		}
-		return cnt;
-	}
+//	@Override
+//	public int updateOrder(ReqVO<BusinessVO> businessvo) {
+//		int cnt=0;
+//		businessmapper.updateOrder(businessvo.getOrderList().get(0));
+//		
+//		for(int i = 0 ; i<businessvo.getOrderDtList().size();i++) {
+//			businessmapper.updateDtOrder(businessvo.getOrderDtList().get(i));
+//			cnt++;
+//		}
+//		return cnt;
+//	}
 	
 	//주문서추가등록
 		@Override
 		public int plusDtOrder(ReqVO<BusinessVO> businessvo) {
 			int cnt=0;
+			businessmapper.updateOrder(businessvo.getOrderList().get(0));
 			String orderCode = businessvo.getOrderList().get(0).getOrderCode();
+			businessmapper.deleteAllDtOrder(businessvo.getOrderList().get(0));
 			for(int i = 0 ; i<businessvo.getOrderDtList().size();i++) {
 				businessvo.getOrderDtList().get(i).setOrderCode(orderCode);
-				businessmapper.insertNewDtOrder(businessvo.getOrderDtList().get(i));
+				businessmapper.insertDtOrder(businessvo.getOrderDtList().get(i));
 				cnt++;
 			}
 			return cnt;
@@ -83,15 +85,15 @@ public class BusinessServiceImpl implements BusinessService{
 		return	1; 
 	}
 	//주문서상세삭제
-	@Override
-	public int deleteDtOrder(ReqVO<BusinessVO> businessvo) {
-		int cnt =0;
-		for(int i =0;i<businessvo.getOrderDtList().size();i++) {
-			businessmapper.deleteDtOrder(businessvo.getOrderDtList().get(i));
-			cnt++;
-		}
-		return cnt;
-	}
+//	@Override
+//	public int deleteDtOrder(ReqVO<BusinessVO> businessvo) {
+//		int cnt =0;
+//		for(int i =0;i<businessvo.getOrderDtList().size();i++) {
+//			businessmapper.deleteDtOrder(businessvo.getOrderDtList().get(i));
+//			cnt++;
+//		}
+//		return cnt;
+//	}
 	
 	//업체목록
 	@Override
