@@ -124,7 +124,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 			contextMenu: null,
 			treeColumnOptions: {
 		        name: 'mtlName',
-		        useCascadingCheckbox: true,
+		        useCascadingCheckbox: false,
 		        useIcon: false
 		      },
 			columns: [{
@@ -341,6 +341,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
 							let childRows = bomDtGrid.getChildRows(rowKey)
 							for(let cr of childRows){
 								bomDtGrid.disableCell(cr.rowKey,'prcsOrder')
+								bomDtGrid.setValue(cr.rowKey,'isChild','Y')
 							}
 						} else {
 							bomDtGrid.appendRow(data)
