@@ -86,7 +86,9 @@ SELECT
   	<update id="updateProdChk" parameterType="CheckVO">
   	UPDATE prdt_chk
   	SET prdt_chk_sit = 'y'
+  	WHERE prdt_chk_code = #{prdtChkCode}
   	</update>
+  	
   <!-- 완제품검사상세 저장 -->
     <insert id="insertDtProdChk" parameterType="CheckVO">
   	insert into dt_prdt_chk(

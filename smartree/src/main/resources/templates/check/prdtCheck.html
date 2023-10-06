@@ -49,6 +49,11 @@
           rowHeaders : ["rowNum"],
           bodyHeight : 400,
 	      columns: [
+	    	 {
+	    		header:'검사코드',
+	    		name: 'prdtChkCode',
+	    		hidden: true
+	    	 },
     	    {
 	          header: '생산지시코드',
 	          name: 'prodInstCode',
@@ -124,6 +129,7 @@
 	    
 	   let prcsRsCode;
   	   let chkList = {};
+  	 	let selectedRowKey = null; // 클릭한 행의 키를 저장할 변수
   	   
   	 	toastr.options = {
   			  positionClass: "toast-top-center",
@@ -151,6 +157,7 @@
 	    
 	   grid.on('click',(ev)=>{
 	    	const prdtCode = grid.getValue(ev.rowKey,'prdtCode');
+	    	selectedRowKey = ev.rowKey; 
 	    	
 	    	$.ajax({
 	    		url:'/prodDtList',
@@ -206,18 +213,18 @@
 	            }
             	data.prdtChkFit = prdtChkFit
             	data._attributes = attributes
-	            grid2.setRow(change.rowKey, data)
+	            grid2.setRow(change.rowKey, data);
+            	
 	         }
 	      }
 	      }); 
 
 	   	//저장버튼 이벤트
 	   	$('#addBtn').on('click',function(){
-
-	   		chkList.chkData = grid.getData();
-	   		chkList.chkDtData= grid2.getData();
-	   		console.log('123123',chkList);
-	   		let datas = grid2.getData();
+	   	 if (selectedRowKey != null) {
+	         chkList.chkData = [grid.getRow(selectedRowKey)];
+	         chkList.chkDtData = grid2.getData();
+	         console.log('123123', chkList);
 	   		$.ajax({
 				url: '/updateProdChk', 
 				method: 'post',
@@ -227,24 +234,16 @@
 				success: function(result) {
 					if(result > 0){
 						toastr.success('저장완료');
-						/* $.ajax({
-							url : '/updatePrdtFinChk',
-							method : 'get',
-							
-							success: function(result){
-
-							},
-							error: function(err) {
-								console.log(err);
-							}
-							
-						}) */
+						grid2.resetData([]);
 					}
 				},
 				error: function(err) {
 					console.log(err);
 				}
 			});
+	   	 } else {
+	         toastr.warning('저장할 행을 먼저 선택해주세요.');
+	     }
 	   	})
 	   
 	   	 function chkManager() {

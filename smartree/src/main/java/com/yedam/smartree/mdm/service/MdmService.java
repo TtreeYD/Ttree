@@ -2,6 +2,8 @@ package com.yedam.smartree.mdm.service;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+
 import com.yedam.smartree.prod.service.RequestVO;
 
 public interface MdmService {
@@ -17,7 +19,9 @@ public interface MdmService {
 	public List<EmpVO> selectEmpList(String empDept, String empName);
 	public int addEmp(EmpVO vo);
 	int resetPw(EmpVO vo);
-	//int updatePw(EmpVO vo);
+	int updatePassword(EmpVO vo);
+	
+	
 	
 	// 제품관리
 	List<MdmPrdtVO> selectPrdtList();
