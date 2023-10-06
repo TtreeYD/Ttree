@@ -241,6 +241,11 @@ public class ProdServiceImpl implements ProdService {
 		return prodMapper.updateInstYn(prodPlanCode);
 	}
 
+	@Override
+	public List<ProdVO> getChartData() {
+		return prodMapper.getChartData();
+	}
+
 
 	
 	
