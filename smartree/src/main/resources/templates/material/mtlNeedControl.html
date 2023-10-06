@@ -744,12 +744,19 @@ margin : 10px;
                         ).substr(-2);
                         let mtlDate =
                             year + "-" + month + "-" + day;
+                        
 					 	let datas = matGrid.getCheckedRows();
-					 	let mtlCode = matGrid.getValue(0,"mtlCode");
+					 	
+					 	let mtlCode = matGrid.getValue("mtlCode");
 					 	datas.forEach((data,index)=>{
 					 		data.mtlDate = mtlDate;
+					 		delete data.rowKey;
+					 		delete data._attributes;
+							mtlNeedGrid.appendRow(data);
 					 	})
-						mtlNeedGrid.appendRows(datas);
+					 	
+					 	
+					 	
 					 	mtlNeedGrid.getData();
 					 	console.log(mtlNeedGrid.getData());
 					 	$("#matCloseBtn").click();
