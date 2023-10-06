@@ -119,7 +119,7 @@ margin : 10px;
 						name : 'mtlChkCode'
 					}, {
 						header : '검사결과',
-						name : 'mtlStatusNm'
+						name : 'mtlChkStatus'
 					},   ]
 			    });		
 			    $('#mtlSearch').on('click', function(){
@@ -156,7 +156,7 @@ margin : 10px;
 						name : 'mtlChkCode'
 					}, {
 						header : '검사결과',
-						name : 'mtlStatusNm'
+						name : 'mtlChkStatus'
 					},   ]
 				});
 			 // 검사완료 더블클릭시 발주목록으로 이동시키기
@@ -181,9 +181,9 @@ margin : 10px;
                             rowKey,
                             "mtlChkCode"
                         );
-                        let mtlStatusNm = mtlCheckGrid.getValue(
+                        let mtlChkStatus = mtlCheckGrid.getValue(
                                 rowKey,
-                        "mtlStatusNm"
+                        	"mtlChkStatus"
                         );
 
                         mtlCheckGrid.removeRow(rowKey);
@@ -211,7 +211,7 @@ margin : 10px;
                             	mtlChkCode: mtlChkCode,
                             	/* mtlLotNum: 'testLotNum1', */
                             	mtlManager: '미닛맨',
-                            	mtlStatusNm : mtlStatusNm
+                            	mtlChkStatus : mtlChkStatus
                             },
                             { at: 0 }
                         );
@@ -252,11 +252,11 @@ margin : 10px;
 						name : 'mtlChkCode'
 					}, {
 						header : '검사결과',
-						name : 'mtlStatusNm'
+						name : 'mtlChkStatus'
 					}   ]
 				});
 				
-				const header = ['mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode','mtlChkDate','mtlStatusNm', 'mtlName']
+				const header = ['mtlCode', 'mtlInCnt', 'mtlInDate', 'mtlManager', 'mtlLotCnt', 'mtlChkCode','mtlChkDate','mtlChkStatus', 'mtlName']
 				// 입고 ajax
 				$('#mtlSave').on('click', mtlSave)
 				function mtlSave() {
@@ -368,9 +368,9 @@ margin : 10px;
                             rowKey,
                             "mtlChkCode"
                         );
-                        let mtlStatusNm = mtlInModalGrid.getValue(
+                        let mtlChkStatus = mtlInModalGrid.getValue(
                                 rowKey,
-                        	"mtlStatusNm"
+                        	"mtlChkStatus"
                         );
                         
                         mtlCheckGrid.removeRow(rowKey);
@@ -399,7 +399,7 @@ margin : 10px;
                             	mtlChkCode: mtlChkCode,
                             	/* mtlLotNum: 'testLotNum1', */
                             	mtlManager: '미닛맨',
-                            	mtlStatusNm : mtlStatusNm
+                            	mtlChkStatus : mtlChkStatus
                             },
                             { at: 0 }
                         );

@@ -16,40 +16,82 @@
 <h1>생산현황모니터링</h1>
 <div id="chart"></div>
 <script>
-const Chart = toastui.Chart;
-
+	var prodAllData;
+	var prodData1;
+	var prodData2;
+	var prodData3;
+	$(document).ready(function () {
+		
+		$.ajax({
+	        url:'/getChartData',
+	        method:'GET',
+	        success: handleChartData,
+	        error: function(err){
+	            console.log(err);
+	        }
+	    });
+		
+		 function handleChartData(result) {
+			 
+			prodAllData = result;
+	        prodData1 = prodAllData[0].prdtProdCnt;
+	        prodData2 = prodAllData[1].prdtProdCnt;
+	        prodData3 = prodAllData[2].prdtProdCnt;
+	        console.log(prodAllData);
+	        
+	        //제품별재고 ajax
+	        $.ajax({
+	        	url:'/getPrdtChartData',
+	        	method:'GET',
+	        	success:function(result){
+	        		console.log(result)
+	        		let chartData=[];
+	        		for(let i =0;i<result.length;i++){
+	        			
+	        			chartData.push(result[i].prdtName);
+	        		}
+	        		const Chart = toastui.Chart;
+	    			const el = document.getElementById('chart');
+	    			const data = {
+	    			  categories: chartData,
+	    			  series: [
+	    			    {
+	    			      name: '진행중',
+	    			      data: [prodData1, prodData2, prodData3],
+	    			    },
+	    			    {
+	    			      name: '완제품재고',
+	    			      data: [100, 100, 50],
+	    			    },
+	    			  ],
+	    			};
+	    			const options = {
+	    			  chart: { 
+	    				  width: 1000
+	    				  ,height: 400
+	    				  ,title: {
+	    				      text: '제품별생산현황',
+	    				      align: 'center'
+	    				    }
+	    				  ,chart: {
+	    				    animation: true
+	    				    }
+	    				  },
+	    			};
+	    			const chart = Chart.columnChart({el, data, options});
+	        	},
+	        	error:function(err){
+	        		console.log(err);
+	        	}
+	        })
+	        
+		 }
+		
+		
+	})
 	
-
-	const el = document.getElementById('chart');
-	const data = {
-	  categories: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-	  series: [
-	    {
-	      name: 'Budget',
-	      data: [5000, 3000, 5000, 7000, 6000, 4000, 1000],
-	    },
-	    {
-	      name: 'Income',
-	      data: [8000, 4000, 7000, 2000, 6000, 3000, 5000],
-	    },
-	  ],
-	};
-	const options = {
-	  chart: { 
-		  width: 1000
-		  ,height: 400
-		  ,title: {
-		      text: '제품별생산현황',
-		      align: 'center'
-		    }
-		  ,chart: {
-		    animation: true
-		    }
-		  },
-	};
-
-	const chart = Chart.columnChart({el, data, options});
-
+	
+	
 </script>
 </div>
 </body>
