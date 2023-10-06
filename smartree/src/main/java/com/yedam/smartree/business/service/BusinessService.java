@@ -20,10 +20,10 @@ public interface BusinessService {
 	public int deleteOrder(ReqVO<BusinessVO> businessvo);
 	
 	//주문서상세삭제
-	public int deleteDtOrder(ReqVO<BusinessVO> businessvo);
+	//public int deleteDtOrder(ReqVO<BusinessVO> businessvo);
 	
 	//주문서수정
-	public int updateOrder(ReqVO<BusinessVO> businessvo);
+	//public int updateOrder(ReqVO<BusinessVO> businessvo);
 	
 	//업체목록
 	public List<BpVO> selectBpList(BpVO bpVO);

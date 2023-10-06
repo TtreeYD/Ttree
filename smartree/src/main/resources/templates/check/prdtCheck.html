@@ -221,6 +221,8 @@
 
 	   	//저장버튼 이벤트
 	   	$('#addBtn').on('click',function(){
+		   	grid.blur();
+			grid2.blur();
 	   	 if (selectedRowKey != null) {
 	         chkList.chkData = [grid.getRow(selectedRowKey)];
 	         chkList.chkDtData = grid2.getData();
@@ -235,6 +237,7 @@
 					if(result > 0){
 						toastr.success('저장완료');
 						grid2.resetData([]);
+						getprdtCheckList();
 
 					}
 				},
