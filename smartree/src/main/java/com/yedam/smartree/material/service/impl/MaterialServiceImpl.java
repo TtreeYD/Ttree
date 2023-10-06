@@ -113,10 +113,15 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialVO> searchCont(MaterialVO vo) {
 		return materialMapper.searchCont(vo);
 	}
-	
+	// 출고조회 - 오른쪽
 	@Override
 	public List<MaterialVO> selectMtlOutList(MaterialVO vo) {
 		return materialMapper.selectMtlOutList(vo);
+	}
+	// 출고조회 - 왼쪽
+	@Override
+	public List<MaterialVO> MtlOutList() {
+		return materialMapper.MtlOutList();
 	}
 
 }

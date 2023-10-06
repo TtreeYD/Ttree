@@ -17,6 +17,8 @@ public interface MaterialService {
 	public List<MaterialVO> controlInList();
 	// 입고관리 검사완료목록 출력
 	public List<MaterialVO> selectChkMtl();
+	// 출고자재 조회-왼쪽
+	public List<MaterialVO> MtlOutList();
 	// <전체조회들> 끝
 	
 	// 2. <검색 및 단건조회들> 시작

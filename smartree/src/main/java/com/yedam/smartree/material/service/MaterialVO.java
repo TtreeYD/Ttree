@@ -39,6 +39,7 @@ public class MaterialVO {
 	private String mtlInManager; 					// 입고담당자
 	private int mtlLotCnt; 							// 총재고수량
 	private String mtlChkCode; 						// 자재검사코드
+
 	
 	
 	// 출고목록
@@ -49,7 +50,7 @@ public class MaterialVO {
 	private String prcsRsCode; 						// 공정실적코드
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
-	private Date prcsEDate;							// 출고일
+	private Date prcsEdate;							// 출고일
 	
 	
 	// 발주관리
@@ -74,7 +75,7 @@ public class MaterialVO {
 	private Date mtlChkDate;   						// 검사완료일 FK
 	private int mtlPassCnt;	   						// 입고수량 FK
 	private String mtlChkManager;					// 입고 검수 담당자
-	private String mtlStatusNm;						// 입고 검사결과
+	private String mtlChkStatus;					// 자재검사 상태
 													// 검사코드 FK
 													// 입고일
 	

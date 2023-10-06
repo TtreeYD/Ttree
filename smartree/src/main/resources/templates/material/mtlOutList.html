@@ -81,10 +81,10 @@ float: right;
 						name : 'mtlName'
 					}, {
 						header : '최종출고일자',
-						name : 'mtlInDate'
+						name : 'prcsEdate'
 					}, {
 						header : '누적출고수량',
-						name : 'mtlLotCnt'
+						name : 'mtlOutCnt'
 					}, ]
 				});
 				
@@ -124,7 +124,7 @@ float: right;
 						name : 'mtlOutCnt'
 					}, {
 						header : '자재출고일',
-						name : 'prcsEDate'
+						name : 'prcsEdate'
 					}, {
 						header : '공정코드',
 						name : 'prcsRsCode'
@@ -132,7 +132,7 @@ float: right;
 				});
 				// 재고목록 ajax
 		        $.ajax({
-		          url: '/mtlExist',
+		          url: '/mtlOut',
 		          method: 'get',
 		          dataType: 'json',
 		          success: function (result) {
