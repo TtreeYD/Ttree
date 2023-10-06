@@ -103,5 +103,7 @@ public interface ProdMapper {
 	
 	int delProcess(ProdVO vo);
 
+	public List<ProdVO> getChartData();
+
 
 }

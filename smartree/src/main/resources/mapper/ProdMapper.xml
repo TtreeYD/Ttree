@@ -337,6 +337,7 @@
 		AND   prcs_order = #{prcsOrder}
 		AND   prdt_code = #{prdtCode}
 		AND   eqm_ucheck = 'Y'
+		group by prcs_type, prcs_std_code, eqm_code, eqm_name, eqm_state
   	</select>
   	
   	
@@ -472,5 +473,10 @@
 		WHERE dt_prod_inst_code = #{dtProdInstCode}
 	</delete>
 	
-
+	<!-- 차트데이터: 제품별 생산현황 -->
+	<select id="getChartData" resultType="ProdVO">
+	select sum(prdt_prod_cnt) as prdt_prod_cnt , prdt_code
+      from process_result join process  using(prcs_code)
+  group by  prdt_code
+	</select>
   </mapper>

@@ -49,5 +49,7 @@ public interface ProdService {
 	List<HoldingVO> selectHolding(String prodInstCode);
 	//생산종료Process
 	public int endProcessResult(List<ProdVO> vo);
+	//차트데이터
+	public List<ProdVO> getChartData();
 
 }

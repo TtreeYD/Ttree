@@ -227,18 +227,8 @@
 				success: function(result) {
 					if(result > 0){
 						toastr.success('저장완료');
-						/* $.ajax({
-							url : '/updatePrdtFinChk',
-							method : 'get',
-							
-							success: function(result){
-
-							},
-							error: function(err) {
-								console.log(err);
-							}
-							
-						}) */
+						grid2.resetData([]);
+						grid.reloadData();
 					}
 				},
 				error: function(err) {
