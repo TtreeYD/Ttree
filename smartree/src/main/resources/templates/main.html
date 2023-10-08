@@ -3,18 +3,181 @@
       xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/layout}">
-
+      
 <head>
+<meta charset="UTF-8">
 
-    <meta charset="UTF-8">
-    <title>SMARTREE</title>
-    <!-- commit -->
-</head> 
+<link rel="stylesheet" href="https://uicdn.toast.com/chart/latest/toastui-chart.min.css" />
+<script src="https://uicdn.toast.com/chart/latest/toastui-chart.min.js"></script>
+<title>생산현황모니터링</title>
+</head>
+<body>
+<div layout:fragment="content">
+<div style="display:flex; justify-content: space-between;">
+	<div id="prodChart"></div>
+	<div id="prdtChart"></div>
+	<div id="prdtOutChart"></div>
+</div>
+<script>
 
-<body >
-	<div layout:fragment="content">
-    	<h1>초기페이지입니다</h1>
-	</div>
+$(document).ready(function () {
+	var prodAllData;
+	let chartData=[];
+    // 중복 사용되는 AJAX 호출을 함수로 정의
+    function fetchData(url, successCallback) {
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: successCallback,
+            error: function(err){
+                console.log(err);
+            }
+        });
+    }
+
+    // 제품별재고 데이터 가져오기
+    fetchData('/getPrdtChartData', function(result) {
+        
+        let prdtData=[];
+
+        for(let i =0;i<result.length;i++){
+            chartData.push(result[i].prdtName);
+            prdtData.push(result[i].prdtSum)
+        }
+        const Chart = toastui.Chart;
+        const el = document.getElementById('prdtChart');
+        const data = {
+            categories: chartData,
+            series: [
+                {
+                    name: '제품별재고',
+                    data: prdtData,
+                    colorByCategories: true
+                }
+            ],
+        };
+        const options = {
+      		legend: {
+      		    visible: false,
+      		  },
+            chart: {
+                width: 600,
+                height: 400,
+                title: {
+                    text: '제품별재고현황',
+                    align: 'center'
+                },
+                chart: {
+                    animation: true
+                },
+                
+            },
+            
+        };
+        const chart = Chart.columnChart({el, data, options});
+    });
+
+    // 생산 데이터 가져오기
+    fetchData('/getChartData', function(result) {
+        prodAllData = result;
+        prodData = [];
+        for(let i = 0; i<prodAllData.length;i++){
+            prodData.push(prodAllData[i].prdtProdCnt);
+        }
+
+        // 제품별재고 데이터 가져오기
+        fetchData('/getPrdtChartData', function(result) {
+            let chartData=[];
+            let prdtData=[];
+
+            for(let i =0;i<result.length;i++){
+                chartData.push(result[i].prdtName);
+                prdtData.push(result[i].prdtSum)
+            }
+            const Chart = toastui.Chart;
+            const el = document.getElementById('prodChart');
+            const data = {
+                categories: chartData,
+                series: [
+                    {
+                        name: '제품별재고',
+                        data: prodData,
+                        colorByCategories: true,
+                        shift: true
+                    }
+                ],
+            };
+            const options = {
+           		legend: {
+       		    	visible: false,
+       		  	},
+                chart: {
+                    width: 600,
+                    height: 400,
+                    title: {
+                        text: '제품별재고현황(오늘기준)',
+                        align: 'center'
+                    },
+                    chart: {
+                        animation: true
+                    }
+                },
+            };
+            const chart = Chart.columnChart({el, data, options});
+        });
+    });
+    
+    
+ // 제품별출고 데이터 가져오기
+    fetchData('/getPrdtOutChartData', function(result) {
+        console.log(result)
+        let prdtOutData = [];
+        for(let i = 0 ; i<result.length;i++){
+        	prdtOutData.push(result[i].orderDtCnt);
+        }
+        const Chart = toastui.Chart;
+        const el = document.getElementById('prdtOutChart');
+        const data = {
+            categories: chartData,
+            series: [
+                {
+                    name: '제품별출고',
+                    data: prdtOutData,
+                    colorByCategories: true
+                }
+            ],
+        };
+        const options = {
+       		theme: {
+       		    title: {
+       		      fontFamily:'Impact',
+       		      fontSize: 45,
+       		      fontWeight: 100,
+       		      color: '#ff416d'
+       		    }
+       		 },	
+      		legend: {
+     		    visible: false,
+     		 },
+            chart: {
+                width: 600,
+                height: 400,
+                title: {
+                    text: '제품별출고현황',
+                    align: 'center'
+                },
+                chart: {
+                    animation: true
+                }
+            },
+        };
+        const chart = Chart.columnChart({el, data, options});
+    });
+});
+	
+	
+	
+</script>
+</div>
 </body>
-
 </html>

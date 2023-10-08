@@ -219,5 +219,10 @@ public class BusinessServiceImpl implements BusinessService{
 
 		return cnt;
 	}
+	// 제품별출고 데이터 가져오기
+	@Override
+	public List<BusinessVO> getPrdtOutChartData() {
+		return businessmapper.getPrdtOutChartData();
+	}
 
 }

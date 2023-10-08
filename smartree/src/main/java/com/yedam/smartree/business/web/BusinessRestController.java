@@ -165,6 +165,11 @@ public class BusinessRestController {
 		System.out.println(fpv);
 		return businessService.cancleRecivePrdt(fpv);
 	}
+	//키오스크:제품별출고
+	@GetMapping("/getPrdtOutChartData")
+	public List<BusinessVO> getPrdtOutChartData(){
+		return businessService.getPrdtOutChartData();
+	}
 	
 	
 }

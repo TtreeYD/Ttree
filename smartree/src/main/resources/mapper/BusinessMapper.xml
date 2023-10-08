@@ -208,6 +208,7 @@
 		  from fin_prdt f join prdt_table p 
 		        on f.prdt_code = p.prdt_code
 	  group by p.prdt_name, p.prdt_code,  p.prdt_ss
+	  order by p.prdt_code
   	</select>
   	
   	<!-- lot별 완제품조회 -->
@@ -363,6 +364,11 @@
 			set prdt_fin_chk = '입고전'
 		  where prdt_chk_code = #{prdtChkCode}
   	</update>
- 
-  	
+ <!-- 제품별출고 데이터 가져오기 -->
+  	<select id="getPrdtOutChartData" resultType="BusinessVO">
+  		select sum(order_dt_cnt) as order_dt_cnt , prdt_code 
+		  from prdt_out join dt_order using(order_dt_code)
+		 group by prdt_code
+		 order by prdt_code
+  	</select>
   </mapper>
