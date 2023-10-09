@@ -302,6 +302,14 @@
 		
 			// 저장 버튼
 			$('#saveBtn').on('click',function(){
+				if($('#prodPlanName').val()== ''){
+					toastr.warning("계획명을 입력해주세요");
+					return;
+				}
+				if($('#prodName').val()==''){
+					toastr.warning("담당자를 입력해주세요");
+					return;
+				}
 				grid.blur();
 				var data = {};
 				data.list = grid.getData();

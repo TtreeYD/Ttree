@@ -91,6 +91,7 @@ public class ProdRestController {
 	//생산계획 리스트에서 검색조건
 	@PostMapping("/searchProd")
 	public List<ProdVO> searchProdList(ProdVO vo){
+		System.out.println("controller"+vo);
 		return service.searchProdList(vo);
 	}
 	
@@ -146,8 +147,8 @@ public class ProdRestController {
 	
 	// 실적조회
 	@GetMapping("/selectPrcsResult")
-	public List<PrcsResultVO> selectPrcsResult(){
-		return service.selectPrcsResult();
+	public List<PrcsResultVO> selectPrcsResult(PrcsResultVO vo){
+		return service.selectPrcsResult(vo);
 	}
 
 	//생산시작버튼클릭(공정실적관리 insert)

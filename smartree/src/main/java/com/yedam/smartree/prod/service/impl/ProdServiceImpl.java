@@ -202,8 +202,9 @@ public class ProdServiceImpl implements ProdService {
 	public List<ProdVO> getProcess(ProdVO vo) {
 		return prodMapper.getProcess(vo);
 	}
-	public List<PrcsResultVO> selectPrcsResult() {
-		return prodMapper.selectPrcsResult();
+	public List<PrcsResultVO> selectPrcsResult(PrcsResultVO vo) {
+		System.out.println("@@@@@@@@@"+vo);
+		return prodMapper.selectPrcsResult(vo);
 
 	}
 

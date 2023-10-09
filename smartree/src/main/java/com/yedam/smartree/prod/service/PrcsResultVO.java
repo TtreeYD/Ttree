@@ -25,4 +25,6 @@ public class PrcsResultVO {
 	int prdtCnt;
 	int errCnt;
 	int passCnt;
+	//오늘,한달,일주일 조건
+		private String searchDate;
 }

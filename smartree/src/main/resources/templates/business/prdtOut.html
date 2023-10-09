@@ -61,10 +61,21 @@
     </div><!-- /.modal -->
 	
 		<script th:inline="javascript">
+		
+		let manager = [[${session.loginMember.empName}]];
 		var rowCheck;
 		var valueCheck;
 		var check = 0;
 		var allCheck = false;
+		// 오늘날짜 input에 넣기
+		today = new Date();
+		// console.log("today.toISOString() >>>" + today.toISOString());
+		today = today.toISOString().slice(0, 10);
+		// console.log("today >>>> " + today);
+		let bir = document.getElementById("outdate");
+		bir.value = today;
+		outmanager.value= manager;
+		
 		toastr.options = {
 	  			  positionClass: "toast-top-center",
 	  			  escapeHtml: true,
@@ -427,10 +438,9 @@
 							}
 						})
 					}
-					
-					
-						
 				})
+				
+				
 			});
 		</script>
 	</div>
