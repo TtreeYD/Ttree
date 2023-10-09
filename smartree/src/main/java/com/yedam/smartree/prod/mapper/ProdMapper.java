@@ -75,7 +75,7 @@ public interface ProdMapper {
 
 	
 	// 실적조회
-	List<PrcsResultVO> selectPrcsResult();
+	List<PrcsResultVO> selectPrcsResult(PrcsResultVO vo);
 
 	
 	

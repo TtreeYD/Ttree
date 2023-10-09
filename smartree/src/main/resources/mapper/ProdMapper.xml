@@ -83,6 +83,12 @@
 			<if test="prodPlanName != null and !prodPlanName.equals('')">
 				or p.prod_plan_name like '%' || #{prodPlanName} || '%'
 			</if>
+			<if test="prodInstYn == 'MA01'">
+				or p.prod_inst_yn = 'n'
+			</if>
+			<if test="prodInstYn == 'MA02'">
+				or p.prod_inst_yn = 'y'
+			</if>
 		</where>
 		order by prod_plan_date desc
   	</select>
@@ -287,7 +293,7 @@
   	</delete>
   	<!-- 생산지시조회 -->
   	<select id="selectGetDtInst" resultType="ProdVO">
-  		select p.prod_inst_code , d.dt_prod_inst_code , p.prod_plan_code , p.prod_inst_name , d.prdt_code , pt.prdt_name, d.prod_inst_cnt , d.prod_inst_rank , p.prod_inst_edate , p.prod_inst_sdate
+  		select p.prod_inst_code , d.dt_prod_inst_code , p.prod_plan_code , p.prod_inst_name , d.prdt_code , pt.prdt_name, d.prod_inst_cnt , d.prod_inst_rank , p.prod_inst_edate , p.prod_inst_sdate , p.prcs_start_yn
   				 , p.prod_inst_manager
 		  from dt_prod_inst d join prod_inst p 
                 on d.prod_inst_code  = p.prod_inst_code
@@ -299,6 +305,12 @@
 			</if> 
 			<if test="prodInstManager != null and !prodInstManager.equals('')">
 				or p.prod_inst_manager like '%' || #{prodInstManager} || '%'
+			</if>
+			<if test="prcsStartYn == 'MA01'">
+				or p.prcs_start_yn = 'n'
+			</if> 
+			<if test="prcsStartYn == 'MA02'">
+				or p.prcs_start_yn = 'y'
 			</if>
 		</where>
 		order by p.prod_inst_code desc
@@ -359,6 +371,24 @@
   		FROM process_result JOIN process USING(prcs_code)
   								  JOIN dt_prod_inst USING(dt_prod_inst_code)
   								  JOIN prod_inst USING(prod_inst_code)
+  		<where>
+        <if test="searchDate == 'MA01'">
+            <![CDATA[
+                prcs_sdate >= TRUNC(SYSDATE) AND prcs_sdate < TRUNC(SYSDATE) + 1
+            ]]>
+        </if>
+        <if test="searchDate == 'MA02'">
+            <![CDATA[
+                prcs_sdate BETWEEN TRUNC(SYSDATE) - 7 AND TRUNC(SYSDATE)+1
+            ]]>
+        </if>
+        <if test="searchDate == 'MA03'">
+            <![CDATA[
+                prcs_sdate BETWEEN TRUNC(SYSDATE) - 30 AND TRUNC(SYSDATE)+1
+            ]]>
+        </if>
+        
+    	</where>
   	</select>
 	
 	

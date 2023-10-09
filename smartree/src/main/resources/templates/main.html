@@ -16,8 +16,8 @@
 <div style="display:flex; justify-content: space-between;">
 	<div id="prodChart"></div>
 	<div id="prdtChart"></div>
-	<div id="prdtOutChart"></div>
 </div>
+	<div id="prdtOutChart"></div>
 <script>
 
 $(document).ready(function () {
@@ -61,8 +61,8 @@ $(document).ready(function () {
       		    visible: false,
       		  },
             chart: {
-                width: 600,
-                height: 400,
+                width: 800,
+                height: 300,
                 title: {
                     text: '제품별재고현황',
                     align: 'center'
@@ -112,10 +112,10 @@ $(document).ready(function () {
        		    	visible: false,
        		  	},
                 chart: {
-                    width: 600,
-                    height: 400,
+                    width:800,
+                    height: 300,
                     title: {
-                        text: '제품별재고현황(오늘기준)',
+                        text: '제품별생산현황(오늘기준)',
                         align: 'center'
                     },
                     chart: {
@@ -148,19 +148,14 @@ $(document).ready(function () {
             ],
         };
         const options = {
-       		theme: {
-       		    title: {
-       		      fontFamily:'Impact',
-       		      fontSize: 45,
-       		      fontWeight: 100,
-       		      color: '#ff416d'
-       		    }
-       		 },	
+       		series: {
+       		    shift: true
+       		  },
       		legend: {
      		    visible: false,
      		 },
             chart: {
-                width: 600,
+                width: 1630,
                 height: 400,
                 title: {
                     text: '제품별출고현황',
@@ -172,6 +167,7 @@ $(document).ready(function () {
             },
         };
         const chart = Chart.columnChart({el, data, options});
+
     });
 });
 	

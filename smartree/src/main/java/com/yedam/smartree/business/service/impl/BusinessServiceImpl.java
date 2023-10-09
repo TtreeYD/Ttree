@@ -170,7 +170,6 @@ public class BusinessServiceImpl implements BusinessService{
 	//입고처리
 	@Override
 	public int recievePrdt(ReqVO<FinPrdtVO> fpv) {
-		System.out.println("1111111111111"+fpv);
 		int cnt=0;
 		for(int i = 0 ; i<fpv.getList().size();i++) {
 			int grc = fpv.getList().get(i).getPrdtRecieveCnt();
@@ -191,7 +190,6 @@ public class BusinessServiceImpl implements BusinessService{
 	//출고취소처리
 	@Override
 	public int cancleOutPrdt(List<BusinessVO> businessVO) {
-		System.out.println("111111111111111111"+businessVO);
 		int cnt=0;
 		for(int i = 0 ; i<businessVO.size();i++) {
 			System.out.println(businessVO.get(i).getOrderDtCode());
@@ -214,7 +212,6 @@ public class BusinessServiceImpl implements BusinessService{
 			businessmapper.cancleRecivePrdt(fpv.get(i));
 			cnt++;
 			businessmapper.updateChkState(fpv.get(i));
-			System.out.println("111111111111111"+fpv.get(i));
 		}
 
 		return cnt;
