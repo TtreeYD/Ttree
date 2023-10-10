@@ -402,7 +402,10 @@ margin : 10px;
 					}, {
 						header : '수량',
 						name : 'mtlCnt',
-						editor:{type: 'text'}
+						editor:{type: 'text'},
+						validation: {
+						    dataType: 'number'
+						  }
 					}, {
 						header : '단위',
 						name : 'mtlUnit',
@@ -760,7 +763,6 @@ margin : 10px;
 					 	
 					 	
 					 	mtlNeedGrid.getData();
-					 	console.log(mtlNeedGrid.getData());
 					 	$("#matCloseBtn").click();
 		        });
 				
@@ -858,7 +860,7 @@ margin : 10px;
                             	bpName: bpName,
                             	mtlWishDate: mtlWishDate,
                             	mtlUnit: mtlUnit,
-                            	mtlManager: '남태원',
+                            	mtlManager: manager,
                             	mtlWhere : mtlWhere,
                             	bpCode: bpCode,
                             	needCode: needCode

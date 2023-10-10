@@ -207,6 +207,8 @@
 			AND mtl_type = #{mtlType}
 		</if>
 	</select>
+	
+	<!-- 출고조회 검색기능 -->
 	<select id="searchOut" parameterType="MaterialVO">
 		WITH c as (SELECT c.mtl_code, MAX(p.prcs_edate)prcs_edate, SUM(mtl_out_cnt)mtl_out_cnt 
            FROM mtl_out c JOIN process_result p ON c.prcs_rs_code = p.prcs_rs_code 
