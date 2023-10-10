@@ -76,7 +76,8 @@ margin : 10px;
 			<!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal -->
-		<script>
+		<script th:inline="javascript">
+			let manager = [[${session.loginMember.empName}]];
 			let searchModalData = [];
 			let mtlDate;
 		// 검사완료 목록 출력/숨기기
@@ -210,7 +211,7 @@ margin : 10px;
                             	mtlInCnt: mtlPassCnt,
                             	mtlChkCode: mtlChkCode,
                             	/* mtlLotNum: 'testLotNum1', */
-                            	mtlManager: '미닛맨',
+                            	mtlManager: manager,
                             	mtlChkStatus : mtlChkStatus
                             },
                             { at: 0 }
