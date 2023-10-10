@@ -62,7 +62,7 @@
 			data-toggle="modal" data-target="#searchEqmModal">설비조회</button>
 		<div id="form">
 			<form name="infoForm" action="eqmForm" method="post"
-				th:object="${eqmVO}" enctype="multipart/form-data">
+				th:object="${eqmVO}" enctype="multipart/form-data" >
 				<table id="equipTable">
 					<tr>
 						<th>설비코드</th>
@@ -75,11 +75,9 @@
 
 					<tr>
 						<th>사용여부 *</th>
-						<td><label for="y"
-							style="margin-left: 10px; margin-right: 40px"><input
-								type="radio" id="y"  name="eqmUcheck"
-								value="Y" checked/> Yes </label> <label for="n"><input type="radio"
-								id="n" th:field="*{eqmUcheck}" name="eqmUcheck" value="N" /> No
+						<td><label for="y" style="margin-left: 10px; margin-right: 40px">
+						<input type="radio" id="y"  name="eqmUcheck" value="Y" checked/> Yes </label> 
+						<label for="n"><input type="radio" id="n" th:field="*{eqmUcheck}" name="eqmUcheck" value="N" /> No
 						</label></td>
 						<th>공정구분</th>
 						<td><select   id="eqmDivision" name="eqmDivision">
@@ -93,14 +91,11 @@
 					</tr>
 					<tr>
 						<th>온도</th>
-						<td><input type="text" id="eqmMinTemp"
-							 name="eqmMinTemp" placeholder="최저"  /> ℃
-							~ <input type="text" id="eqmMaxTemp" 
-							name="eqmMaxTemp" placeholder="최고" /> ℃</td>
+						<td><input type="text" id="eqmMinTemp" name="eqmMinTemp" placeholder="최저"  /> ℃
+							~ <input type="text" id="eqmMaxTemp" name="eqmMaxTemp" placeholder="최고" /> ℃</td>
 
 						<th>관리인 *</th>
-						<td><input type="text" id="eqmManager"
-							 name="eqmManager" /></td>
+						<td><input type="text" id="eqmManager" name="eqmManager" th:value="${session.loginMember.empName}" /></td>
 					</tr>
 					<tr>
 						<th>점검주기</th>
@@ -166,7 +161,8 @@
 		</div>
 		<!-- 모달창 끝 -->
 
-<script>		
+<script>
+
     $(document).ready(function () {
         	
         $("#selectBtn").on("click", getEqmList);

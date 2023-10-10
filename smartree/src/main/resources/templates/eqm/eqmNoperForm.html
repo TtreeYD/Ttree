@@ -179,7 +179,8 @@
         <div class="col"></div>
         <div class="col"></div>
       </div>
-      <script>
+      <script th:inline="javascript">
+      let manager = [[${session.loginMember.empName}]];
         var grid;
         window.onload = function () {
           const grid = new tui.Grid({
@@ -449,7 +450,9 @@
             if ($("#searchName").val()) {
               let eqmName = $("#searchName").val();
               getEqmName(eqmName);
-            }
+            }else{
+    			getEqmList();
+    		}
           }
           // 설비조회 모달창 더블클릭
           grid.on("dblclick", (ev) => {
@@ -490,6 +493,8 @@
         	  $('#startBtn').prop('disabled',false)
         	  $('#endBtn').prop('disabled',true)
         	  $('#insertBtn').prop('disabled',false)
+        	  
+        	  
             $.ajax({
               url: "/selectEqm",
               method: "get",
@@ -506,6 +511,8 @@
 
                 $("#eqmCode").val(result.eqmCode);
                 $("#eqmName").val(result.eqmName);
+                $('#noperManager').val(manager);
+                
               },
               error: function (err) {
                 console.log(err);

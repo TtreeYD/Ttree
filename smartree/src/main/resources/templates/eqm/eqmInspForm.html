@@ -62,9 +62,11 @@
 						</td>
 					</tr>
 					<tr>
-						<th>최근점검일시</th>
-						<td><input type="datetime-local" id="recentInspDate"  >
-						<input type="hidden"   name="recentInspDate" ></td>
+						<th>담당자 *</th>
+						<td>
+							<input type="text"  name="inspManager" id="inspManager" th:value="${session.loginMember.empName}" >
+						</td>
+						
 						
 						<th>판정 *</th>
 						<td>
@@ -73,10 +75,10 @@
 						</td>
 					</tr>
 					<tr>
-						<th>담당자 *</th>
-						<td>
-							<input type="text"  name="inspManager" id="inspManager" >
-						</td>
+						<th>최근점검일시</th>
+						<td><input type="datetime-local" id="recentInspDate"  >
+						<input type="hidden"   name="recentInspDate" ></td>
+					
 						<th>수리일시</th>
 						<td><input type="datetime-local" id="repairDate"  >
 						<input type="hidden"   name="repairDate" ></td>
@@ -213,6 +215,7 @@
 			$('[name="recentInspDate"]').val($('#recentInspDate').val().replace("T", ' '))
 			$('[name="nextInspDate"]').val($('#nextInspDate').val().replace("T", ' '))
 			eqmInspForm.submit();
+		
 	}
 	  
 	// 검색 모달창
@@ -274,7 +277,12 @@
 	                header: '설비명',
 	                name: 'eqmName',
 	             
-	              }
+	              },
+	              {
+		                header: '담당자',
+		                name: 'noperManager',
+		             
+		              }
 	              ]
 
 	});
@@ -369,13 +377,13 @@
 			   				eqmCode :data		   			
 			   			   },
 			   		   success: function(result){
-			   			
+			   			console.log(result)
 			   	    	 $('#searchEqmNoperModal').modal('hide');
 			   	    	
 			   			$('#eqmCode').val(result.eqmCode);
 			   			$('#eqmName').val(result.eqmName);
 			   			$('#noperCode').val(result.noperCode);
-			   	
+			   			$('#inspManager').val(result.noperManager);
 			   		   },
 			      		error:function(err){	      			
 			          		console.log(err)
@@ -539,8 +547,8 @@
 		   	  let eqmCode= '[[${eqmCode}]]'
 		   	 	if(eqmCode !=''){
 		      		swal("저장 완료!", "설비가 저장되었습니다.", "success");
-		      		getEqm(eqmCode);
-		      		getEqmInsp(inspCode);
+		      	//	getEqm(eqmCode);
+		      	//	getEqmInsp(inspCode);
 		      	}
 		   	   
 		   	   // 저장 완료 후에도 input 채워보이게하는 함수
@@ -615,8 +623,7 @@
 		   			$('#registerDate').val(''); 	
 		   			$('#noperCode').val('');
 				});  
-	   	   
-	   	   
+	
 				// 날짜차이 구하는 함수	
 				function detDifference(date){
 					if(date == null){
