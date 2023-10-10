@@ -3,7 +3,6 @@ package com.yedam.smartree.mdm.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -267,6 +266,16 @@ public class MdmServiceImpl implements MdmService {
 		for(MdmBomVO vo : bomList) {
 			vo.setBomCode(bomCode);
 			cnt += mdmMapper.insertBomDt(vo);
+		}
+		return cnt;
+	}
+
+	@Override
+	public int delEmp(List<EmpVO> list) {
+		int cnt = 0;
+		for(EmpVO emp : list) {
+			if(emp.getEmpId().equals("ST010001")) continue;
+			cnt += mdmMapper.delEmp(emp);
 		}
 		return cnt;
 	}

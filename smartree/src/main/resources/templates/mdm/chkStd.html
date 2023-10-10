@@ -21,8 +21,21 @@ input::-webkit-inner-spin-button {
 </head>
 <body>
 	<div layout:fragment="content">
+		<div class="row mb-4">
+			<h1>품질검사기준관리</h1>
+		</div>
 		<div class="row">
-			<div class="col"></div>
+			<div class="col-7">
+				<h2>품질검사 리스트</h2>
+				<div class="input-group mb-3">
+					<input type="text" class="form-control col-2 noGray" placeholder="품질검사명" id="searchChkName">
+					<div class="input-group-append">
+				   	<button class="btn btn-outline-secondary" type="button" id="searchChk">검색</button>
+					</div>
+				</div> 
+				<div id="chkGrid"></div>
+			</div>	
+			<div class="col"></div>	
 			<div class="col-3">
 				<h2>품질검사 정보</h2>
 				<br>
@@ -35,7 +48,7 @@ input::-webkit-inner-spin-button {
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
-				    	<span class="input-group-text col">검사명</span>
+				    	<span class="input-group-text col">검사명*</span>
 				  	</div>
 					<input type="text" maxlength="12" class="form-control text-right col noGray" placeholder="품질검사명" id="chkName">
 				</div>
@@ -50,7 +63,7 @@ input::-webkit-inner-spin-button {
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
-				    	<span class="input-group-text col">단위</span>
+				    	<span class="input-group-text col">검사단위*</span>
 				  	</div>
 					<input type="text" maxlength="10" class="form-control text-right col noGray" placeholder="" id="chkUnit">
 				</div>
@@ -69,20 +82,6 @@ input::-webkit-inner-spin-button {
 				</div>
 			</div>
 			<div class="col"></div>
-			<div class="col-7">
-				<h2>품질검사 리스트</h2>
-				<div class="input-group mb-3">
-					<select class="custom-select col-2" id="searchChkType">
-				   	<option value="" selected>--</option>
-				  	</select>
-					<input type="text" class="form-control col-2 noGray" placeholder="품질검사명" id="searchChkName">
-					<div class="input-group-append">
-				   	<button class="btn btn-outline-secondary" type="button" id="searchChk">검색</button>
-					</div>
-				</div> 
-				<div id="chkGrid"></div>
-			</div>	
-			<div class="col"></div>	
 		</div>
 		<script>
 			var Grid = tui.Grid;
@@ -109,7 +108,7 @@ input::-webkit-inner-spin-button {
 					header: '검사기준',
 					name: 'chkStd'					
 				}, {
-					header: '사용여부',
+					header: '검사단위',
 					name: 'chkUnit'					
 				}]
 			});
@@ -127,6 +126,10 @@ input::-webkit-inner-spin-button {
 			$('#insertChk').on('click', insertChk)
 			
 			function insertChk() {
+				if(!$('#chkName').val() || !$('#chkUnit').val()){
+					toastr.warning('필수값을 입력해 주새요')
+					return
+				}
 				let vo = {};
 				vo.chkStdCode = $('#chkStdCode').val();
 				vo.chkName = $('#chkName').val();
@@ -142,7 +145,7 @@ input::-webkit-inner-spin-button {
 						contentType : 'application/json',
 						data: JSON.stringify(vo),
 						success: result =>{
-							alert(result);
+							toastr.success(result);
 							selectChkList();
 						}
 					})
@@ -154,7 +157,8 @@ input::-webkit-inner-spin-button {
 						contentType : 'application/json',
 						data: JSON.stringify(vo),
 						success: result =>{
-							alert(result);
+							toastr.success(result);
+							$('input').val('')
 							selectChkList();
 						}
 					})
@@ -164,19 +168,39 @@ input::-webkit-inner-spin-button {
 			// 품질검사삭제
 			$('#deleteChk').on('click', deleteChk)
 			
+			
 			function deleteChk() {
 				let chkStdCode = $('#chkStdCode').val()
-				console.log(chkStdCode)
-				$.ajax({
-					url: '/mdm/deleteChk',
-					method: 'POST',
-					data: {chkStdCode : chkStdCode},
-					success: result => {
-						alert(result);
-						selectChkList();
-						resetChk();
-					},
-					error: err => console.log(err)
+				if(!chkStdCode){
+					toastr.warning('선택된 검사기준이 없습니다.')
+					return
+				}				
+				Swal.fire({
+					title: '삭제하시겠습니까?',
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: '삭제',
+					cancelButtonText: '취소'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$.ajax({
+							url: '/mdm/deleteChk',
+							method: 'POST',
+							data: {chkStdCode : chkStdCode},
+							success: result => {
+								Swal.fire({
+									title: '삭제완료',
+									icon: 'success',
+									confirmButtonText: '확인'
+								})
+								selectChkList();
+								resetChk();
+							},
+							error: err => console.log(err)
+						})
+					}
 				})
 			}
 			

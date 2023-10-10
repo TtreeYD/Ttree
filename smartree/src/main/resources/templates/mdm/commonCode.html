@@ -10,6 +10,9 @@
 <body>
 	<div layout:fragment="content">
 		<div class="container-xxl text-center">
+			<div class="row mb-4">
+				<h1>공통코드관리</h1>
+			</div>
 			<div class="row">
 				<div class="col-4">
 					<div class="btn-group" role="group" aria-label="Basic example"
@@ -109,13 +112,13 @@
 			const grid = new Grid({
 				el: document.getElementById('commonCodeGrid'),
 				scrollX: false,
-				bodyHeight: 600,
+				bodyHeight: 400,
 				contextMenu: null,
 				rowHeaders: ['rowNum', 'checkbox'],
 				pagination: true,
 				pageOptions: {
 					useClient: true,
-					perPage: 15,
+					perPage: 10,
 				},
 				columns: [{
 					header: '공통코드',
@@ -136,13 +139,13 @@
 			const grid2 = new Grid({
 				el: document.getElementById('codeDetailGrid'),
 				scrollX: false,
-				bodyHeight: 600,
+				bodyHeight: 400,
 				contextMenu: null,
 				rowHeaders: ['rowNum', 'checkbox'],
 				pagination: true,
 				pageOptions: {
 					useClient: true,
-					perPage: 15,
+					perPage: 10,
 				},
 				columns: [{
 					header: '상세코드',

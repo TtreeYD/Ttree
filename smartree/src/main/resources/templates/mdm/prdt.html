@@ -17,15 +17,29 @@ input::-webkit-inner-spin-button {
 .input-group-prepend{
 	padding: 0;
 }
-.tui-grid-body-area .tui-grid-cell .tui-grid-cell-content{
- text-align: right;
-}
+
 </style>
 </head>
 <body>
 	<div layout:fragment="content">
+		<div class="row mb-4">
+			<h1>제품정보관리</h1>
+		</div>
 		<div class="row">
-			<div class="col"></div>
+			<div class="col-7">
+				<h2>제품 리스트</h2>
+				<div class="input-group mb-3">
+					<select class="custom-select col-2" id="searchPrdtType">
+				   	<option value="" selected>--</option>
+				  	</select>
+					<input type="text" class="form-control col-2 noGray" placeholder="제품명" id="searchPrdtName">
+					<div class="input-group-append">
+				   	<button class="btn btn-outline-secondary" type="button" id="searchPrdt">검색</button>
+					</div>
+				</div> 
+				<div id="prdtGrid"></div>
+			</div>	
+			<div class="col"></div>	
 			<div class="col-3">
 				<h2>제품 정보</h2>
 				<br>
@@ -38,14 +52,14 @@ input::-webkit-inner-spin-button {
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
-				    	<span class="input-group-text col">제품명</span>
+				    	<span class="input-group-text col">제품명*</span>
 				  	</div>
 					<input type="text" maxlength="12" class="form-control text-right col noGray" placeholder="제품명" id="prdtName">
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
-				    	<span class="input-group-text col">분류</span>
+				    	<span class="input-group-text col">분류*</span>
 				  	</div>
 					<select class="custom-select text-right col" id="prdtType">
 					   <option value="" selected>--</option>
@@ -88,20 +102,6 @@ input::-webkit-inner-spin-button {
 				</div>
 			</div>
 			<div class="col"></div>
-			<div class="col-7">
-				<h2>제품 리스트</h2>
-				<div class="input-group mb-3">
-					<select class="custom-select col-2" id="searchPrdtType">
-				   	<option value="" selected>--</option>
-				  	</select>
-					<input type="text" class="form-control col-2 noGray" placeholder="제품명" id="searchPrdtName">
-					<div class="input-group-append">
-				   	<button class="btn btn-outline-secondary" type="button" id="searchPrdt">검색</button>
-					</div>
-				</div> 
-				<div id="prdtGrid"></div>
-			</div>	
-			<div class="col"></div>	
 		</div>
 		<script>
 			var Grid = tui.Grid;
@@ -129,10 +129,12 @@ input::-webkit-inner-spin-button {
 					name: 'prdtType'					
 				}, {
 					header: '안전재고',
-					name: 'prdtSs'					
+					name: 'prdtSs'	,
+					align: 'right'
 				}, {
 					header: '사용여부',
-					name: 'prdtUse'					
+					name: 'prdtUse',
+					align: 'center'
 				}]
 			});
 			
@@ -167,6 +169,10 @@ input::-webkit-inner-spin-button {
 				vo.prdtSs = $('#prdtSs').val();
 				vo.prdtUse = $('#prdtUse').val();
 				vo.prdtSize = prdtSize
+				if(!vo.prdtName || !vo.prdtType){
+					toastr.warning('필수값을 입력해 주세요')
+					return
+				}
 				if(vo.prdtCode){
 					// 코드있으면 수정
 					$.ajax({
@@ -206,7 +212,7 @@ input::-webkit-inner-spin-button {
 			
 			// 등록창 초기화
 			function resetPrdt() {
-				$('.text-right').val('')
+				$('input').val('')
 			}
 			
 			// 제품삭제
@@ -214,18 +220,40 @@ input::-webkit-inner-spin-button {
 			
 			function deletePrdt() {
 				let prdtCode = $('#prdtCode').val()
-				console.log(prdtCode)
-				$.ajax({
-					url: '/mdm/deletePrdt',
-					method: 'POST',
-					data: {prdtCode : prdtCode},
-					success: result => {
-						alert(result);
-						selectPrdtList();
-					},
-					error: err => console.log(err)
+				if(!prdtCode){
+					toastr.warning('선택된 제품이 없습니다.')
+					return
+				}
+				Swal.fire({
+					title: '삭제하시겠습니까?',
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: '삭제',
+					cancelButtonText: '취소'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$.ajax({
+							url: '/mdm/deletePrdt',
+							method: 'POST',
+							data: {prdtCode : prdtCode},
+							success: result => {
+								Swal.fire({
+									title: '삭제완료',
+									icon: 'success',
+									confirmButtonText: '확인'
+								})
+								selectPrdtList();
+								resetPrdt();
+							},
+							error: err => console.log(err)
+						})
+					}
 				})
 			}
+			
+			$('#searchPrdtType').on('change', searchPrdt)
 			
 			$('#searchPrdt').on('click', searchPrdt)
 			

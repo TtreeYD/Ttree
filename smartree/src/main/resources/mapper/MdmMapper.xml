@@ -79,7 +79,7 @@
 				AND emp_name LIKE '%'||#{empName}||'%'
 			</if>
 		</where>
-		ORDER BY emp_dept, emp_id
+		ORDER BY emp_id
 	</select>
 
 	<!-- 사원 등록 -->
@@ -99,6 +99,12 @@
 					, #{empPhone}
 					)
 	</insert>
+	
+	<!-- 사원삭제 -->
+	<delete id="delEmp" parameterType="EmpVO">
+		DELETE emp_list
+		WHERE emp_id = #{empId}
+	</delete>
 	<!-- 비밀번호 초기화  -->
 	<update id="resetPw" parameterType="EmpVO">
 		UPDATE emp_list
@@ -175,7 +181,8 @@
 		SET prdt_name = #{prdtName},
 			 prdt_type = #{prdtType},
 			 prdt_ss = #{prdtSs},
-			 prdt_size = #{prdtSize}
+			 prdt_size = #{prdtSize},
+			 prdt_use = #{prdtUse}
 		WHERE prdt_code = #{prdtCode}
 	</update>
 	
@@ -390,10 +397,9 @@
 	
 	<!-- 품질검사 등록 -->
 	<insert id="insertChk" parameterType="MdmChkVO">
-		<selectKey keyProperty="chkCode" order="BEFORE" resultType="String">
-			SELECT #{chkDt} || NVL( LPAD( MAX( SUBSTR( chk_std_code, 5)) +1, 4, '0'), '0001')
+		<selectKey keyProperty="chkStdCode" order="BEFORE" resultType="String">
+			SELECT 'PCS' || NVL( LPAD( MAX( SUBSTR( chk_std_code, 4)) +1, 5, '0'), '0001')
 			FROM chk_std
-			WHERE chk_dt = #{chkDt}
 		</selectKey>
 		INSERT INTO chk_std(chk_std_code, chk_name, chk_dt, chk_std, chk_unit)
 		VALUES(#{chkStdCode}, #{chkName}, #{chkDt}, #{chkStd}, #{chkUnit})
