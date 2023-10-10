@@ -38,7 +38,7 @@ public class MaterialRestController {
 	}
 	// 출고조회 목록 왼쪽
 	@GetMapping("/mtlOut")
-	public List<MaterialVO> getMtlOut(){
+	public List<MaterialVO> getMtlOut(MaterialVO vo){
 		return materialService.MtlOutList();
 	}
 	// 안전재고 미달 목록

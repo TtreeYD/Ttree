@@ -5,7 +5,7 @@
 	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>자재발주목록</title>
+<title>자재-발주조회</title>
 <style>
 .excelDownload {
 margin-top: 0px;
@@ -22,7 +22,7 @@ float: right;
 	<div layout:fragment="content">
 		<div class="row">
 		<div class="col-5">
-			<h2>발주서</h2>
+			<h1>발주 조회</h1>
 				<div class="input-group mb-3 ml-3">
 				<label class="mr-2 mt-1" style="">자재발주일</label>
 						<input class="form-control mr-2" id="startMtlNeedDate" type="date" style="width: 138px;">
@@ -37,7 +37,7 @@ float: right;
 			<div id="mtlNeedGrid"></div>
 		</div>
 		<div class="col-7">
-			<h2 style="margin-bottom: 22px;">발주자재</h2>
+			<h1 style="margin-bottom: 22px;">발주서</h1>
 			<button type="button" class="btn btn-info btn-icon-text excelDownload">Excel 
 				<i class="bi bi-printer"></i>
        		</button>
