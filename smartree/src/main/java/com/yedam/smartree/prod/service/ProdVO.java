@@ -85,7 +85,9 @@ public class ProdVO {
 	private String prcsStdCode;
 	private String prcsName;//공정명
 	
-	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private Date dodDate;
 	
 	// 홀딩
 	String holdingCode;

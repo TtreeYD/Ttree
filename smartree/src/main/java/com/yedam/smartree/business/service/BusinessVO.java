@@ -29,6 +29,7 @@ public class BusinessVO {
 	private String prdtCode;
 	private int orderDtCnt;
 	private int orderDtPrice;
+	int prdtTotal;
 	
 
 	private String prodPlanCnt;

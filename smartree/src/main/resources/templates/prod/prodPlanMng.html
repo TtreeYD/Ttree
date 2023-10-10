@@ -11,12 +11,13 @@
 </style>
 <body>
 	<div layout:fragment="content">
-		<h2>생산계획관리</h2>
-		<label>계획명 : </label> <input type="text" name="prodPlanName" id="prodPlanName"> 
-		<label style="margin-left: 40px">담당자 : </label> <input type="text" name="prodName" id="prodName"> <br>
-		<label>생산계획일자 : </label> <input type="date" name="prodPlanDate" id="prodPlanDate">
-		<label>생산예상시작일자 : </label> <input type="date" name="prodPlanSdate" id="prodPlanSdate">
-		<label>생산예상종료일자 : </label> <input type="date" name="prodPlanEdate" id="prodPlanEdate"> 
+		<h1>생산계획관리</h1>
+		<label>담당자 </label> <input type="text" name="prodName" id="prodName" th:value="${session.loginMember.empName}"> 
+		<label class="ml-2">생산계획일자 </label> <input style="margin-left: 28.25px" type="date" name="prodPlanDate" id="prodPlanDate">
+		<label class="ml-2">제품납기일자 </label> <input style="margin-left: 28.25px" type="date" name="dodDate" id="dodDate" readonly><br>
+		<label>계획명 </label> <input type="text" name="prodPlanName" id="prodPlanName"> 
+		<label class="ml-2">생산예상시작일자 </label> <input type="date" name="prodPlanSdate" id="prodPlanSdate">
+		<label class="ml-2">생산예상종료일자 </label> <input type="date" name="prodPlanEdate" id="prodPlanEdate"> 
 		<input type="hidden" name="prodPlanCode" id="prodPlanCode">
 		<div class="btn-group" role="group" aria-label="Basic example"
 			style="float: right; margin-bottom: 10px;">
@@ -131,6 +132,10 @@
 		          name: 'orderDtCnt'
 		        },
 		        {
+		          header: '재고량',
+		          name: 'prdtTotal'
+		        },
+		        {
 		          header: '계획수량',
 		          name: 'prodPlanCnt',
 		          editor : 'text'
@@ -169,7 +174,7 @@
 	            },
 	            {
 	              header: '납기일자',
-	              name: 'orderDate',
+	              name: 'dodDate',
 	
 	            },
 	            {
@@ -203,6 +208,9 @@
 	            {
 	              header: '생산계획일자',
 	              name: 'prodPlanDate',
+	            },
+	            {
+	            	
 	            }
    	       ]
  	   });
@@ -233,6 +241,10 @@
 					header: '분류',
 					name: 'prdtType',
 				},
+				{
+					header: '재고량',
+					name:'prdtTotal'
+				}
 			]
 	    });
 	    
@@ -430,11 +442,12 @@
 	      			orderDtCode : data,
 	      			orderCode : data1
 	      		},
-      		success:function(result){
-      			
-   	            $("#orderModal").modal('hide');
-   	         	grid.resetData(result)
-   	         	console.log(result)
+	      		success:function(result){
+					$('#dodDate').val(result[0].dodDate);
+
+  	            $("#orderModal").modal('hide');
+  	         	grid.resetData(result)
+  	         	console.log(result)
    	         	
       		},
       		error:function(err){
@@ -456,17 +469,17 @@
 	      			prodPlanCode : prodPlanCode,
 	      			orderCode : orderCode
 	      		},
-      		success:function(result){
-				dtPPCode = result;
-				console.log(result)
-				$('#prodPlanCode').val(result[0].prodPlanCode);
-   	         	$('#prodPlanName').val(result[0].prodPlanName);
-				$('#prodPlanDate').val(result[0].prodPlanDate);
-				$('#prodPlanSdate').val(result[0].prodPlanSdate);
-				$('#prodPlanEdate').val(result[0].prodPlanEdate);
-				$('#prodName').val(result[0].prodName);
-   	         	grid.resetData(result);
-   	            $("#prodModal").modal('hide');
+	      		success:function(result){
+					dtPPCode = result;
+					console.log(result)
+					$('#prodPlanCode').val(result[0].prodPlanCode);
+	   	      $('#prodPlanName').val(result[0].prodPlanName);
+					$('#prodPlanDate').val(result[0].prodPlanDate);
+					$('#prodPlanSdate').val(result[0].prodPlanSdate);
+					$('#prodPlanEdate').val(result[0].prodPlanEdate);
+					$('#prodName').val(result[0].prodName);
+	   	      grid.resetData(result);
+	   	      $("#prodModal").modal('hide');
    	            
       		},
       		error:function(err){

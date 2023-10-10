@@ -14,5 +14,5 @@ public class BpVO {
 	private String prdtName;
 	private String prdtType;
 	private String prdtUnit;
-	
+	int prdtTotal;
 }
