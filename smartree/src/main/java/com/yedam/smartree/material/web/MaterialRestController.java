@@ -121,4 +121,9 @@ public class MaterialRestController {
 	public List<MaterialVO> searchCont(MaterialVO vo){
 		return materialService.searchCont(vo);
 	}	
+	// 출고조회 조건검색
+	@PostMapping("/searchOut")
+	public List<MaterialVO> searchOut(MaterialVO vo){
+		return materialService.searchOut(vo);
+	}	
 }

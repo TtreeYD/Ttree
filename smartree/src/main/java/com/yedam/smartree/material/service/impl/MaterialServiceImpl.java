@@ -123,5 +123,9 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialVO> MtlOutList() {
 		return materialMapper.MtlOutList();
 	}
+	@Override
+	public List<MaterialVO> searchOut(MaterialVO vo) {
+		return materialMapper.searchOut(vo);
+	}
 
 }
