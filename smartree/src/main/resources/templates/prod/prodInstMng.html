@@ -11,12 +11,12 @@
 </style>
 <body>
 	<div layout:fragment="content">
-	<h2>생산지시관리</h2>
-		<label>지시명 : </label> <input type="text" name="prodInstName" id="prodInstName">
-		<label style="margin-left: 40px">담당자 : </label> <input type="text" name="prodInstManager" id="prodInstManager"><br> 
-		<label>생산지시일자	: </label> <input type="date" name="prodInstDate" id="prodInstDate">
-		<label>생산예상시작일자 : </label> <input type="date" name="prodInstSdate" id="prodInstSdate"> 
-		<label>생산예상종료일자 : </label> <input type="date" name="prodInstEdate" id="prodInstEdate">
+	<h1>생산지시관리</h1>
+		<label>담당자</label> <input type="text" name="prodInstManager" id="prodInstManager" th:value="${session.loginMember.empName}">
+		<label class="ml-2">생산지시일자</label> <input style="margin-left: 28.25px" type="date" name="prodInstDate" id="prodInstDate"><br> 
+		<label>지시명</label> <input type="text" name="prodInstName" id="prodInstName">
+		<label class="ml-2">생산예상시작일자</label> <input type="date" name="prodInstSdate" id="prodInstSdate"> 
+		<label class="ml-2">생산예상종료일자</label> <input type="date" name="prodInstEdate" id="prodInstEdate">
 			<input type="hidden" name="prodInstCode" id="prodInstCode">
 		<div class="btn-group" role="group" aria-label="Basic example"
 			style="float: right; margin-bottom: 10px;">
@@ -110,6 +110,7 @@
 		let mtlRow
 		let holdingChk ={}
 		let prodPlanCode
+		let manager = `[[${session.loginMember.empName}]]`;
 
 		let rowNum;			// 해당 rowNum 값을 담기위해 만든 변수
 		let getProdPlanCode;
@@ -155,7 +156,7 @@
 		          name: 'prodPlanCnt'
 		        },
 		        {
-		          header: '지시우선순위',
+		          header: '우선순위',
 		          name: 'prodInstRank',
 		          editor : 'text'
 		        },
@@ -166,7 +167,8 @@
 		        },
 		        {
 		          header: '계획-지시수량차',
-		          name: 'prodinstIncompCnt'
+		          name: 'prodinstIncompCnt',
+		          hidden: true
 		        },
 		        
 		        {
@@ -258,11 +260,11 @@
 	            useClient: true,
           	},
 	      	columns: [
-    	  		{
+	    	  		{
 	              header: '계획코드',
 	              name: 'prodPlanCode'
 	            },
-		    	{
+		    		{
 	              header: '계획명',
 	              name: 'prodPlanName'
 	            },
@@ -378,7 +380,7 @@
 			grid3.clear()
 			$('#prodInstCode').val('');
 			$('#prodInstName').val('');
-			$('#prodInstManager').val('');
+			$('#prodInstManager').val(manager);
 			$('#prodInstDate').val('');
 			$('#prodInstSdate').val('');
 			$('#prodInstEdate').val('');
@@ -587,6 +589,8 @@
 				success : function(result){
 					resetList()
 					getProdPlanCode = result.list[0].prodPlanCode;
+					$('#prodInstSdate').val(result.list[0].prodPlanSdate),
+					$('#prodInstEdate').val(result.list[0].prodPlanEdate)
 					mtlNeed = result.mtlNeed
 					
 					// 중복제거후 자재표에 넣기
