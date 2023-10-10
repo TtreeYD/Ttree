@@ -5,7 +5,7 @@
 	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>자재출고목록</title>
+<title>자재-출고조회</title>
 <style>
 .excelDownload {
 margin-top: 0px;
@@ -22,7 +22,7 @@ float: right;
 	<div layout:fragment="content">
 		<div class="row">
 		<div class="col-5">
-			<h2>자재목록</h2>
+			<h1>출고 조회</h1>
 				<div class="input-group mb-3">
 					<div style="font-size:20px;">	
 				    <input type="radio" id="all" name="typeCheck" value="" checked />
@@ -40,7 +40,7 @@ float: right;
 			<div id="mtlGrid"></div>
 		</div>
 		<div class="col-7">
-			<h2 style="margin-bottom: 62px">출고내역</h2>
+			<h1 style="margin-bottom: 62px">상세 내역</h1>
 			<div id=mtlLotGrid></div>
 		</div>
 
@@ -58,7 +58,7 @@ float: right;
 			let codeDetail = [];
 			let codeType;
 			let cdl;
-			mtlCon();
+			mtlLeft();
 			
 			// 자재목록 그리드 sql문에서 자재당 하나씩만 나오게만듬
 				const mtlGrid = new tui.Grid({
@@ -134,7 +134,7 @@ float: right;
 					},  ]
 				});
 				// 재고목록 ajax
-				function mtlCon(){
+				function mtlLeft(){
 		        $.ajax({
 		          url: '/mtlOut',
 		          method: 'get',
@@ -217,7 +217,7 @@ float: right;
 		           		if($('#searchMtlName').val()){
 		           			$('#searchMtlName').val('');
 		           		}
-		           		mtlCon();
+		           		mtlLeft();
 		           	})
 		           	// radio - y 체크
 		           	$('#y').on('click',function(){
@@ -271,7 +271,6 @@ float: right;
 									mtlLotCnt : $('#mtlLotCnt').val()
 								},
 								success:function(result){
-									searchData = result;
 									mtlGrid.resetData(result);
 							 		setTimeout(() => mtlGrid.refreshLayout(), 200);
 								},
