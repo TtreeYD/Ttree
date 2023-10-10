@@ -180,22 +180,7 @@ float: right;
 		          }
 		        });
 				}
-			// 자재분류 불러오기
-			$.ajax({
-				url: "/mdm/selectCodeDetail",
-				data: {
-					codeType: '003'
-				},
-				success: result => {
-					$(result).each(function (idx, dept) {
-						let optTag = $('<option/>');
-						optTag.val(dept['codeId']);
-						optTag.text(dept['codeName']);
-						$('#mtlType, #searchMtlType').append(optTag);
-					})
-				},
-				error: err => console.log(err)
-			})		    
+   
 		    // 자재검색
 			function searchMtl() {
 				let vo = {};
@@ -300,13 +285,6 @@ float: right;
 						})
 					});
 	            
-	       		$('#resetLeftBtn').on('click',function(){
-	       			mtlNeedGrid.resetData([]);
-	    			$('#startMtlNeedDate').val('');
-	    			$('#endMtlNeedDate').val('');
-	    			$('#bpName').val('');
-	    		});
-		
 			});
 
 		</script>

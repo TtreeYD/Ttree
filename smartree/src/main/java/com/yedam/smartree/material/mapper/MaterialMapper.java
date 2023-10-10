@@ -52,4 +52,6 @@ public interface MaterialMapper {
 	public List<MaterialVO> searchCont(MaterialVO vo);
 	// 출고목록 자재별 출력
 	public List<MaterialVO> selectMtlOutList(MaterialVO vo);
+	// 출고조회 조건검색
+	public List<MaterialVO> searchOut(MaterialVO vo);
 }
