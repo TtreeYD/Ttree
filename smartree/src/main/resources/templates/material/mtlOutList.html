@@ -188,7 +188,6 @@ float: right;
 					contentType : 'application/json',
 					data: JSON.stringify(vo),
 					success: result => {
-						console.log(result)
 						mtlGrid.resetData(result)
 					},
 					error: err => console.log(err)

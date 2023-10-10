@@ -123,6 +123,7 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialVO> MtlOutList() {
 		return materialMapper.MtlOutList();
 	}
+	// 출고조회 - 검색기능
 	@Override
 	public List<MaterialVO> searchOut(MaterialVO vo) {
 		return materialMapper.searchOut(vo);
