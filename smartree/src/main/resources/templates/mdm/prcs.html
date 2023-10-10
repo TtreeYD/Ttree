@@ -21,8 +21,24 @@ input::-webkit-inner-spin-button {
 </head>
 <body>
 	<div layout:fragment="content">
+		<div class="row mb-4">
+			<h1>공정기준관리</h1>
+		</div>
 		<div class="row">
-			<div class="col"></div>
+			<div class="col-7">
+				<h2>공정 리스트</h2>
+				<div class="input-group mb-3">
+					<select class="custom-select col-2" id="searchPrcsType">
+				   	<option value="" selected>--</option>
+				  	</select>
+					<input type="text" class="form-control col-2 noGray" placeholder="공정명" id="searchPrcsName">
+					<div class="input-group-append">
+				   	<button class="btn btn-outline-secondary" type="button" id="searchPrcs">검색</button>
+					</div>
+				</div> 
+				<div id="prcsGrid"></div>
+			</div>	
+			<div class="col"></div>	
 			<div class="col-3">
 				<h2>공정 정보</h2>
 				<br>
@@ -35,14 +51,14 @@ input::-webkit-inner-spin-button {
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
-				    	<span class="input-group-text col">공정명</span>
+				    	<span class="input-group-text col">공정명*</span>
 				  	</div>
 					<input type="text" maxlength="12" class="form-control text-right col noGray" placeholder="공정명" id="prcsName">
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
-				    	<span class="input-group-text col">공정구분</span>
+				    	<span class="input-group-text col">공정구분*</span>
 				  	</div>
 					<select class="custom-select text-right col noGray" id="prcsType">
 					   <option value="" selected>--</option>
@@ -69,20 +85,6 @@ input::-webkit-inner-spin-button {
 				</div>
 			</div>
 			<div class="col"></div>
-			<div class="col-7">
-				<h2>공정 리스트</h2>
-				<div class="input-group mb-3">
-					<select class="custom-select col-2" id="searchPrcsType">
-				   	<option value="" selected>--</option>
-				  	</select>
-					<input type="text" class="form-control col-2 noGray" placeholder="공정명" id="searchPrcsName">
-					<div class="input-group-append">
-				   	<button class="btn btn-outline-secondary" type="button" id="searchPrcs">검색</button>
-					</div>
-				</div> 
-				<div id="prcsGrid"></div>
-			</div>	
-			<div class="col"></div>	
 		</div>
 		<script>
 			var Grid = tui.Grid;
@@ -143,6 +145,10 @@ input::-webkit-inner-spin-button {
 				vo.prcsType = $('#prcsType').val();
 				vo.prcsNote = $('#prcsNote').val();
 				vo.prcsDetail = $('#prcsDetail').val();
+				if(!vo.prcsName || !vo.prcsType){
+					toastr.warning('필수값을 입력해 주세요.')
+					return
+				}
 				if(vo.prcsStdCode){
 					// 코드있으면 수정
 					$.ajax({
@@ -151,7 +157,7 @@ input::-webkit-inner-spin-button {
 						contentType : 'application/json',
 						data: JSON.stringify(vo),
 						success: result =>{
-							alert(result);
+							toastr.success(result);
 							selectPrcsList();
 						}
 					})
@@ -163,7 +169,7 @@ input::-webkit-inner-spin-button {
 						contentType : 'application/json',
 						data: JSON.stringify(vo),
 						success: result =>{
-							alert(result);
+							toastr.success(result);
 							selectPrcsList();
 						}
 					})
@@ -179,7 +185,7 @@ input::-webkit-inner-spin-button {
 			
 			// 등록창 초기화
 			function resetPrcs() {
-				$('.text-right').val('')
+				$('input').val('')
 			}
 			
 			// 공정삭제
@@ -187,18 +193,40 @@ input::-webkit-inner-spin-button {
 			
 			function deletePrcs() {
 				let prcsStdCode = $('#prcsStdCode').val()
-				console.log(prcsStdCode)
-				$.ajax({
-					url: '/mdm/deletePrcs',
-					method: 'POST',
-					data: {prcsStdCode : prcsStdCode},
-					success: result => {
-						alert(result);
-						selectPrcsList();
-					},
-					error: err => console.log(err)
+				if(!prcsStdCode){
+					toastr.warning('선택된 자재가 없습니다.')
+					return
+				}
+				Swal.fire({
+					title: '삭제하시겠습니까?',
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: '삭제',
+					cancelButtonText: '취소'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$.ajax({
+							url: '/mdm/deletePrcs',
+							method: 'POST',
+							data: {prcsStdCode : prcsStdCode},
+							success: result => {
+								Swal.fire({
+									title: '삭제완료',
+									icon: 'success',
+									confirmButtonText: '확인'
+								})
+								selectPrcsList();
+								resetPrcs()
+							},
+							error: err => console.log(err)
+						})
+					}
 				})
 			}
+			
+			$('#searchPrcsType').on('change', searchPrcs)
 			
 			$('#searchPrcs').on('click', searchPrcs)
 			

@@ -145,6 +145,12 @@ public class CommonRestController {
 	    }
 	}
 	
+	// 사원삭제
+	@PostMapping("/delEmp")
+	public int delEmp(@RequestBody List<EmpVO> list) {
+		return mdmService.delEmp(list);
+	}
+	
 	// 제품관리
 	
 	// 제품리스트
