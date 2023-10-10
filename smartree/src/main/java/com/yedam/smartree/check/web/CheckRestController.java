@@ -88,11 +88,19 @@ public class CheckRestController {
 	public List<CheckVO> getPrdtStdList(CheckVO vo){
 		return checkservice.selectPrdtStdList(vo);
 	}
+	
+	//제품기준
+	@GetMapping("/prdtStd")
+	public List<CheckVO> getPrdtStd(CheckVO vo){
+		return checkservice.selectPrdtStd(vo);
+	}
+	
 	//제품기준저장
 	@PostMapping("/insertPrdtChkList")
 	public List<Integer> insertPrdtChkList(@RequestBody List<CheckVO> vo) {
 		List<Integer> results = new ArrayList<>();
-
+		String prdtCode = vo.get(0).getPrdtCode();
+		checkservice.delChkStd(prdtCode);
 		for(CheckVO checkvo : vo) {
 			int result = checkservice.insertPrdtChkStd(checkvo);
 			results.add(result);

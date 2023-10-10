@@ -10,6 +10,7 @@ public interface CheckService {
 	public List<BpVO> selectPrdtList(BpVO vo);
 	public List<CheckVO> selectPrdtStdList(CheckVO vo);
 	public int insertPrdtChkStd(CheckVO vo);
+	public List<CheckVO> selectPrdtStd(CheckVO vo);
 	
 	//완제품 검사목록
 	public List<CheckVO> selectProdCheckList(CheckVO vo);
@@ -23,6 +24,7 @@ public interface CheckService {
 	
 	//완제품 합격조회
 	public List<CheckVO> selectPrdtFin(CheckVO vo);
+	int delChkStd(String prdtCode);
 	
 
 

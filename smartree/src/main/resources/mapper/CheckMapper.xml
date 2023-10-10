@@ -18,7 +18,7 @@
   	</select>
   	
   	<!-- 제품검사기준목록 -->
-  	<select id="selectPrdtStdList" resultType="CheckVO">
+  	 <select id="selectPrdtStd" resultType="CheckVO">
   		select chk_std_code,
   		       chk_name,
   		       chk_dt,
@@ -29,8 +29,18 @@
   				chk_std_code = #{chkStdCode}
   			</if>
   		</where>
+  	</select> 
+  	
+  	<!-- 제품별 기준목록 -->
+  	<select id="selectPrdtStdList" resultType="CheckVO">
+  		select l.chk_std_code, l.prdt_chk_num, l.prdt_code, c.chk_std, c.chk_name, c.chk_dt
+		  from prdt_chk_list l
+		  join chk_std c 
+		  on l.chk_std_code = c.chk_std_code
+		  where l.prdt_code = #{prdtCode}
   	</select>
   
+  	<!-- 검사기준저장 -->
   	<insert id="insertPrdtChkStd" parameterType="CheckVO">
   		insert into prdt_chk_list(chk_std_code, prdt_chk_num, prdt_code, chk_std)
   		values (
@@ -169,5 +179,11 @@ SELECT
   WHERE c.prdt_chk_result = '적합'
   		and c.prdt_fin_chk = '입고전'	  
   </select>
+  
+  <!-- 검사기준삭제 -->
+  <delete id="delChkStd" parameterType="String">
+  	delete prdt_chk_list
+  	where prdt_code = #{prdtCode}
+  </delete>
   
   </mapper>

@@ -5,6 +5,11 @@
     <meta charset="UTF-8">
     <title>SMARTREE</title>
 <link href="../startbootstrap/css/login.css" rel="stylesheet" type="text/css">
+<style>
+.error1{
+  margin-bottom: 20px;
+}
+</style>
 </head> 
 
 <body >
@@ -20,6 +25,9 @@
       <!-- SIGN IN -->
       <div class="col align-items-center flex-col sign-in">
       <form method="post" action="/login">
+       <div class="error1" th:if="${param.error}">
+            아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.
+        </div>
         <div class="form-wrapper align-items-center">
           <div class="form sign-in">
             <div class="input-group">

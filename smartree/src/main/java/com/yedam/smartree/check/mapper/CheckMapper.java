@@ -9,6 +9,7 @@ public interface CheckMapper {
 	public List<BpVO> selectPrdtList(BpVO vo);
 	public List<CheckVO> selectPrdtStdList(CheckVO vo);
 	public int insertPrdtChkStd(CheckVO vo);
+	public List<CheckVO> selectPrdtStd(CheckVO vo);
 	
 	//완제품 검사목록
 	public List<CheckVO> selectProdCheckList(CheckVO vo);
@@ -27,6 +28,9 @@ public interface CheckMapper {
 	
 	//적합 업데이트
 	public int updatePrdtChk(CheckVO vo);
+	
+	//삭제
+	int delChkStd(String prdtCode);
 	
 
 }

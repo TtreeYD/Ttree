@@ -81,5 +81,15 @@ public class CheckServiceImpl implements CheckService{
 		return checkmapper.selectPrdtFin(vo);
 	}
 
+	@Override
+	public List<CheckVO> selectPrdtStd(CheckVO vo) {
+		return checkmapper.selectPrdtStd(vo);
+	}
+
+	@Override
+	public int delChkStd(String prdtCode) {
+		return checkmapper.delChkStd(prdtCode);
+	}
+
 	 
 }

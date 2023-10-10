@@ -170,20 +170,20 @@
 								<div class="d-flex flex-column align-items-center" >
 									<div>
 										<span>비밀번호</span> <input class="form-control" 
-											type="text" id="currentPasswordInput" style="width: 350px; margin-bottom: 20px;">
+											type="password" id="currentPasswordInput" maxlength="20" style="width: 350px; margin-bottom: 20px;">
 									</div>
 									<div>
 										<span>새비밀번호</span> <input class="form-control" 
-											type="text" id="newPasswordInput" style="width: 350px; margin-bottom: 20px;">
+											type="password" id="newPasswordInput" maxlength="20" style="width: 350px; margin-bottom: 20px;">
 									</div>
 										<span>새비밀번호 확인</span> <input class="form-control" 
-											type="text" id="newPasswordInput2" style="width: 350px; margin-bottom: 20px;">
+											type="password" id="newPasswordInput2" maxlength="20" style="width: 350px; margin-bottom: 20px;">
 								</div>
 					</div>
                 </div>
                 <div class="modal-footer">
 					<button type="button" id="updateModalBtn" class="btn btn-default">저장</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" id="closeModalBtn" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
@@ -213,6 +213,9 @@
     </div>
     
     <script th:inline="javascript">
+    let currentPassword = $('#currentPasswordInput').val();
+    let newPassword = $('#newPasswordInput').val();
+    let newPassword2 = $('#newPasswordInput2').val();
     let pw = [[${session.loginMember.empPw}]];
     
     toastr.options = {
@@ -223,11 +226,16 @@
 			  timeOut: 1250
 			};
     
+    //모달 닫기 값초기화
+      $('#closeModalBtn').on('click',function(){
+
+      })
+    
     //모달 비밀번호변경 저장버튼 클릭이벤트
 	  $('#updateModalBtn').on('click', function() {
-	    let currentPassword = $('#currentPasswordInput').val();
-	    let newPassword = $('#newPasswordInput').val();
-	    let newPassword2 = $('#newPasswordInput2').val();
+	     currentPassword = $('#currentPasswordInput').val();
+	     newPassword = $('#newPasswordInput').val();
+	     newPassword2 = $('#newPasswordInput2').val();
 	    
 	    let requestData = {
 	        empPw: currentPassword,
