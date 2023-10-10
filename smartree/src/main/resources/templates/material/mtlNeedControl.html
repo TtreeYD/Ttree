@@ -168,7 +168,8 @@ margin : 10px;
 		</div>
 		<!-- /.modal -->
 
-		<script>
+		<script th:inline="javascript">
+			let manager = [[${session.loginMember.empName}]];
 			let mtlInfo = [];
 			let bucket = [];
 			let newBucket = [];
@@ -338,7 +339,7 @@ margin : 10px;
                             	mtlType: mtlType,
                             	mtlCnt: (-1)*mtlNow,
                             	mtlUnit: mtlUnit,
-                            	mtlManager: '남태원'
+                            	mtlManager: manager
                             },
                             { at: 0 }
                         );
@@ -750,6 +751,7 @@ margin : 10px;
 					 	let mtlCode = matGrid.getValue("mtlCode");
 					 	datas.forEach((data,index)=>{
 					 		data.mtlDate = mtlDate;
+					 		data.mtlManager = manager;
 					 		delete data.rowKey;
 					 		delete data._attributes;
 							mtlNeedGrid.appendRow(data);
