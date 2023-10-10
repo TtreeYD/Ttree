@@ -228,7 +228,7 @@
     
     //모달 닫기 값초기화
       $('#closeModalBtn').on('click',function(){
-
+    	  $('#profileModal input[type="password"]').val('');
       })
     
     //모달 비밀번호변경 저장버튼 클릭이벤트
@@ -258,6 +258,7 @@
                 return;
             }
         	toastr.success("비밀번호 변경 성공!")
+        	$('#profileModal input[type="password"]').val('');
        		$("#profileModal").modal('hide');
         },
         error: function(err) {
