@@ -56,7 +56,7 @@ public class ProdVO {
 	private String orderDtCode;
 	private int orderDtCnt;
 	
-	
+	private String prcsStartYn;
 	private String result;
 	//완제품공정흐름도
 	private String prcsCode;
@@ -84,6 +84,8 @@ public class ProdVO {
 
 	private String prcsStdCode;
 	private String prcsName;//공정명
+	
+	
 	
 	// 홀딩
 	String holdingCode;

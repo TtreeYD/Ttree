@@ -61,10 +61,21 @@
     </div><!-- /.modal -->
 	
 		<script th:inline="javascript">
+		
+		let manager = [[${session.loginMember.empName}]];
 		var rowCheck;
 		var valueCheck;
 		var check = 0;
 		var allCheck = false;
+		// 오늘날짜 input에 넣기
+		today = new Date();
+		// console.log("today.toISOString() >>>" + today.toISOString());
+		today = today.toISOString().slice(0, 10);
+		// console.log("today >>>> " + today);
+		let bir = document.getElementById("outdate");
+		bir.value = today;
+		outmanager.value= manager;
+		
 		toastr.options = {
 	  			  positionClass: "toast-top-center",
 	  			  escapeHtml: true,
@@ -266,7 +277,6 @@
 					})
 				})
 				$('#closeBtn').on('click',function(){
-					console.log(123)
 					searchOrderGrid.resetData([]);
 				})
 				
@@ -280,7 +290,7 @@
 					
 				});
 				
-				function loadDTList(){
+				function loadDTList(callback){
 					 $.ajax({
 						url:'/orderDtList',
 						method:'GET',
@@ -296,10 +306,13 @@
 								let count=0;
 							for(let i =0 ; i< result.length ; i++){
 								count+=result[i].prdtLeftCnt;
+								console.log('count',  count)
 								
 							}
 							if(count==0 ){
 								allCheck = true;
+								//전체출고완료 시 그리드 값 비워주기
+								
 								$.ajax({
 									url:'/prdtFinOut',
 									method:'POST',
@@ -307,6 +320,7 @@
 										orderCode : result[0].orderCode
 									},		
 									success:function(result){	
+										 if (callback) callback();
 									},
 									error:function(err){
 										console.log(err);
@@ -361,12 +375,11 @@
 					for(let i = 0 ; i < lotPrdtGrid.getData().length ; i++){
 						lotcnt += Number(lotPrdtGrid.getData()[i].prdtOutCnt)
 					}
-					console.log(lotPrdtGrid.getData());
-					console.log(valueCheck[rowCheck].prdtLeftCnt)
 						if(lotcnt > valueCheck[rowCheck].prdtLeftCnt){
 							toastr.warning('미납수량보다 많습니다');
 							return;
 						}else{
+							
 							lotPrdtGrid.blur()
 							var data={};
 							data.list = lotPrdtGrid.getModifiedRows().updatedRows;
@@ -385,16 +398,14 @@
 								success:function(result){
 									toastr.success('출고되었습니다');
 									$('#prdtModal').modal('hide');
-									loadDTList() //페이지 리로드
-									
-									//전체출고완료 시 그리드 값 비워주기
-									if(allCheck){	
-										
-										toastr.success('해당 주문서에 대한 전체 출고가 완료되었습니다');
-										setTimeout(() => OrderDtGrid.resetData([]).refreshLayout(), 50);
-										
-										OrderGrid.resetData([]);
-									}
+									loadDTList(function(){
+										if(allCheck){	
+											console.log('bbbb')
+											toastr.success('해당 주문서에 대한 전체 출고가 완료되었습니다');
+											OrderDtGrid.resetData([]);
+											OrderGrid.resetData([]);
+										}
+									}); //페이지 리로드
 									
 								},
 								error:function(err){
@@ -427,10 +438,9 @@
 							}
 						})
 					}
-					
-					
-						
 				})
+				
+				
 			});
 		</script>
 	</div>

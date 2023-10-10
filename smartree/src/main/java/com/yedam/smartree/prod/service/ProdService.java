@@ -38,7 +38,7 @@ public interface ProdService {
 	//public int updateProd(RequestVO<ProdVO> vo);
 	
 	//실적조회
-	List<PrcsResultVO> selectPrcsResult();
+	List<PrcsResultVO> selectPrcsResult(PrcsResultVO vo);
 
 	//생산시작버튼클릭(공정실적관리 insert)
 	public int insertDtProgress(RequestVO<ProdVO> vo);
@@ -49,5 +49,7 @@ public interface ProdService {
 	List<HoldingVO> selectHolding(String prodInstCode);
 	//생산종료Process
 	public int endProcessResult(List<ProdVO> vo);
+	//차트데이터
+	public List<ProdVO> getChartData();
 
 }

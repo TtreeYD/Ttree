@@ -27,7 +27,7 @@ public interface BusinessMapper {
 	public void updateOrder(BusinessVO businessVO);
 	
 	//주문상세수정
-	public void updateDtOrder(BusinessVO businessVO);
+	//public void updateDtOrder(BusinessVO businessVO);
 	
 	//주문서삭제
 	public void deleteOrder(BusinessVO businessVO);
@@ -42,7 +42,7 @@ public interface BusinessMapper {
 	//주문상세수정및등록
 	public void insertNewDtOrder(BusinessVO businessVO);
 	//주문서상세삭제
-	public void deleteDtOrder(BusinessVO businessVO);
+	//public void deleteDtOrder(BusinessVO businessVO);
 	
 	//완제품재고조회 , 제품별 수량 조회 
 	public List<FinPrdtVO> selectFinPrdt();
@@ -83,6 +83,8 @@ public interface BusinessMapper {
 	public int cancleRecivePrdt(FinPrdtVO finPrdtVO);
 	//입고취소처리 후 검사테이블 입고상태 변경
 	public int updateChkState(FinPrdtVO finPrdtVO);
+	 // 제품별출고 데이터 가져오기
+	public List<BusinessVO> getPrdtOutChartData();
 	
 	
 	

@@ -60,7 +60,7 @@
   	<select id="selectOrderDtList" resultType="BusinessVO">
  		select a.*, a.order_dt_cnt - prdt_out_cnt as prdt_left_cnt 
  		  from (       
-				         select o.order_code , d.order_dt_code , p.prdt_name , p.prdt_code, d.order_dt_cnt , o.dod_date , o.bp_code 
+				         select o.order_code , d.order_dt_code , p.prdt_name , p.prdt_code, d.order_dt_cnt , o.dod_date , o.bp_code ,d.order_dt_price
 				       				 , o.order_date, nvl((select sum(prdt_out_cnt) 
 							                           from prdt_out p join prdt_out_list pol 
 							                                        on p.prdt_out_code = pol.prdt_out_code 
@@ -143,12 +143,12 @@
   	</update>
   	
   	<!-- 주문상세수정 -->
-  	<update id="updateDtOrder" parameterType="BusinessVO">
+  	<!-- <update id="updateDtOrder" parameterType="BusinessVO">
 	  	update dt_order
 		   set prdt_code = #{prdtCode},
 	    		order_dt_cnt = #{orderDtCnt}
 		 where order_dt_code = #{orderDtCode}
-  	</update>
+  	</update> -->
   	
   	
    	<!-- 주문상세추가등록,수정 -->
@@ -174,18 +174,19 @@
   	</delete>
   	
   	<!-- 주문서상세삭제(한건삭제) -->
-  	<delete id="deleteDtOrder" parameterType="BusinessVO">
+<!--   	<delete id="deleteDtOrder" parameterType="BusinessVO">
   		delete from dt_order
   		where order_dt_code = #{orderDtCode}
-  	</delete>
+  	</delete> -->
   	
   	<!-- 거래처목록 -->
   	<select id="selectBpList" resultType="BpVO">
-  		select bp_code , bp_name , bp_type , bp_main
+  		select bp_code , bp_name , bp_main, get_common(bp_type, '005') bp_type
 		  from business_partner
 		  <where>
+		  		bp_type = 'BP02'
 		  	<if test="bpCode != null">
-		  		bp_code = #{bpCode}
+		  		and bp_code = #{bpCode}
 		  	</if>
 		  </where>
   	</select>
@@ -207,6 +208,7 @@
 		  from fin_prdt f join prdt_table p 
 		        on f.prdt_code = p.prdt_code
 	  group by p.prdt_name, p.prdt_code,  p.prdt_ss
+	  order by p.prdt_code
   	</select>
   	
   	<!-- lot별 완제품조회 -->
@@ -362,6 +364,11 @@
 			set prdt_fin_chk = '입고전'
 		  where prdt_chk_code = #{prdtChkCode}
   	</update>
- 
-  	
+ <!-- 제품별출고 데이터 가져오기 -->
+  	<select id="getPrdtOutChartData" resultType="BusinessVO">
+  		select sum(order_dt_cnt) as order_dt_cnt , prdt_code 
+		  from prdt_out join dt_order using(order_dt_code)
+		 group by prdt_code
+		 order by prdt_code
+  	</select>
   </mapper>

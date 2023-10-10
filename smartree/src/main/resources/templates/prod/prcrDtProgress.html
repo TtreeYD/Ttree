@@ -168,6 +168,7 @@ box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
  </div>
 <script th:inline="javascript">
 var data = [[${data}]]
+let manager = [[${session.loginMember.empName}]];
 console.log(data)
 let clickdata ;
 let eqmdata;
@@ -270,7 +271,6 @@ $(document).ready(function (){
 				prcsCode: data
 			},	
 			success:function(result){
-				console.log(result);
 				let vo = {};
 				
 				vo.prcsOrder = result[0].prcsOrder;
@@ -282,9 +282,11 @@ $(document).ready(function (){
 					contentType : 'application/json',
 					data: JSON.stringify(vo),
 					success: result2 => {
-						console.log(result2)
 						result[0].prcsStdCode = result2[0].prcsStdCode
+						
+						result[0].manager = manager;
 						instDtGrid.resetData(result);
+						
 						  for(let i = 0 ; i<result2.length ; i++){
 							if(result2[i].eqmState == 'Y'){
 								result2[i].eqmState = '사용중';
@@ -345,8 +347,6 @@ $(document).ready(function (){
 				})
 			return;
 		}else if( Number(cntdata[0].prdtProdSum) + Number(cntdata[0].prdtCnt)>cntdata[0].prdtTotal  ){
-			console.log('지시량',cntdata[0].prdtProdSum);
-			console.log('썸',cntdata[0].prdtTotal + cntdata[0].prdtCnt)
 			Swal.fire({
 				  icon: 'error',
 				  title: '지시량을 초과했습니다',

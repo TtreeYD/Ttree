@@ -31,10 +31,15 @@ public class MaterialRestController {
 	public List<MaterialVO> getMtlExist(){
 		return materialService.selectMtlList();
 	}
-	// 출고조회 목록
+	// 출고조회 목록 오른쪽
 	@PostMapping("/mtlEmpty")
 	public List<MaterialVO> getMtlEmpty(MaterialVO vo){
 		return materialService.selectMtlOutList(vo);
+	}
+	// 출고조회 목록 왼쪽
+	@GetMapping("/mtlOut")
+	public List<MaterialVO> getMtlOut(){
+		return materialService.MtlOutList();
 	}
 	// 안전재고 미달 목록
 	@GetMapping("/mtlMinus")
@@ -115,5 +120,10 @@ public class MaterialRestController {
 	@PostMapping("/searchCont")
 	public List<MaterialVO> searchCont(MaterialVO vo){
 		return materialService.searchCont(vo);
+	}	
+	// 출고조회 조건검색
+	@PostMapping("/searchOut")
+	public List<MaterialVO> searchOut(MaterialVO vo){
+		return materialService.searchOut(vo);
 	}	
 }

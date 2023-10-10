@@ -24,13 +24,24 @@
 		  ON c.mtl_code = t.mtl_code
   	</select>
   	
-  	<!-- 출고목록 전체조회 -->
+  	<!-- 출고목록 조회 오른쪽 -->
     <select id="selectMtlOutList" resultType="MaterialVO">
   		SELECT o.mtl_out_code, o.mtl_lot_num, o.mtl_code, o.mtl_out_cnt, o.prcs_rs_code, p.prcs_edate
   		FROM mtl_out o JOIN process_result p
         ON o.prcs_rs_code = p.prcs_rs_code
   		WHERE mtl_code = #{mtlCode}
   	</select>
+  	<!-- 출고목록 조회 왼쪽 -->
+  	 <select id="MtlOutList" resultType="MaterialVO">
+		WITH c as (SELECT c.mtl_code, MAX(p.prcs_edate)prcs_edate, SUM(mtl_out_cnt)mtl_out_cnt 
+		           FROM mtl_out c JOIN process_result p ON c.prcs_rs_code = p.prcs_rs_code 
+		           GROUP BY c.mtl_code)
+		SELECT c.mtl_code, get_common(mtl_type, '003') AS mtl_type, t.mtl_name, prcs_edate, mtl_out_cnt
+		FROM c
+		JOIN mtl_table t 
+		  ON c.mtl_code = t.mtl_code
+  	</select>
+  	
   	
   	<!-- 발주관리 안전재고 미달목록 출력 -->
   	<select id="selectMinusMtl" resultType="MaterialVO">
@@ -47,7 +58,7 @@
   	
   	<!-- 입고관리 검사완료 목록 출력 -->
   	<select id="selectChkMtl" resultType="MaterialVO">
-		SELECT mtl_code, mtl_name, mtl_pass_cnt, mtl_chk_date, mtl_chk_manager, mtl_chk_code, get_common(mtl_chk_status, '009') AS mtl_status_nm
+		SELECT mtl_code, mtl_name, mtl_pass_cnt, mtl_chk_date, mtl_chk_manager, mtl_chk_code, get_common(mtl_chk_status, '009') AS mtl_chk_status
 		FROM mtl_chk JOIN mtl_table USING(mtl_code)
 		WHERE mtl_chk_status = 'MT02'
   	</select>
@@ -141,7 +152,7 @@
   	
   	<!-- 입고관리 검색조회 -->
   	<select id="getInMtl" parameterType="MaterialVO">
-		SELECT mtl_code, mtl_name, mtl_pass_cnt, mtl_chk_date, mtl_chk_manager, mtl_chk_code, get_common(mtl_chk_status, '009') AS mtl_status_nm
+		SELECT mtl_code, mtl_name, mtl_pass_cnt, mtl_chk_date, mtl_chk_manager, mtl_chk_code, get_common(mtl_chk_status, '009') AS mtl_chk_status
 		FROM mtl_chk JOIN mtl_table USING(mtl_code)
 		WHERE mtl_chk_status = 'MT02'
 			AND mtl_name like '%'||#{mtlName}||'%' AND mtl_chk_manager like '%'||#{mtlManager}||'%'
@@ -181,6 +192,7 @@
   		</if>
   		GROUP BY b.bp_name, n.mtl_date, n.mtl_manager
 	</select>
+	
 	<!-- 재고조회 검색기능 -->
   	<select id="searchCont" parameterType="MaterialVO">
 		WITH c as (SELECT c.mtl_code, MAX(mtl_in_date)mtl_in_date,SUM(mtl_lot_cnt)mtl_lot_cnt 
@@ -195,9 +207,19 @@
 			AND mtl_type = #{mtlType}
 		</if>
 	</select>
-	
-	<!-- 재고조회 체크박스 -->
-  		
+	<select id="searchOut" parameterType="MaterialVO">
+		WITH c as (SELECT c.mtl_code, MAX(p.prcs_edate)prcs_edate, SUM(mtl_out_cnt)mtl_out_cnt 
+           FROM mtl_out c JOIN process_result p ON c.prcs_rs_code = p.prcs_rs_code 
+           GROUP BY c.mtl_code)
+		SELECT c.mtl_code, get_common(mtl_type, '003') AS mtl_type, t.mtl_name, prcs_edate, mtl_out_cnt 
+		FROM c
+		JOIN mtl_table t 
+		ON c.mtl_code = t.mtl_code
+		WHERE t.mtl_name LIKE '%'||#{mtlName}||'%'
+		<if test= "mtlType != null and !mtlType.equals('')">
+			AND mtl_type = #{mtlType}
+		</if>
+	</select>
   	
   	<!-- 출고자재를 자재목록에서 빼주는 procedure -->
   	

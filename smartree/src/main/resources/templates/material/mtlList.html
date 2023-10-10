@@ -109,7 +109,7 @@ float: right;
 						name : 'mtlLotNum',
 						sortable: true,
 					    sortingType: 'asc',
-					    width : 190
+					    width : 170
 					}, {
 						header : '분류',
 						name : 'mtlType'
@@ -120,10 +120,10 @@ float: right;
 						header : '자재이름',
 						name : 'mtlName'
 					}, {
-						header : '자재입고일자',
+						header : '입고일자',
 						name : 'mtlInDate'
 					}, {
-						header : '자재입고수량',
+						header : '입고수량',
 						name : 'mtlInCnt'
 					}, {
 						header : '홀드수량',
@@ -180,22 +180,7 @@ float: right;
 		          }
 		        });
 				}
-			// 자재분류 불러오기
-			$.ajax({
-				url: "/mdm/selectCodeDetail",
-				data: {
-					codeType: '003'
-				},
-				success: result => {
-					$(result).each(function (idx, dept) {
-						let optTag = $('<option/>');
-						optTag.val(dept['codeId']);
-						optTag.text(dept['codeName']);
-						$('#mtlType, #searchMtlType').append(optTag);
-					})
-				},
-				error: err => console.log(err)
-			})		    
+   
 		    // 자재검색
 			function searchMtl() {
 				let vo = {};
@@ -300,13 +285,6 @@ float: right;
 						})
 					});
 	            
-	       		$('#resetLeftBtn').on('click',function(){
-	       			mtlNeedGrid.resetData([]);
-	    			$('#startMtlNeedDate').val('');
-	    			$('#endMtlNeedDate').val('');
-	    			$('#bpName').val('');
-	    		});
-		
 			});
 
 		</script>

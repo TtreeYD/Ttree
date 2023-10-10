@@ -21,7 +21,7 @@
 		<input type="date" id="orderDate"> 
 
 		<label >납기일자</label>
-		<input type="date" id="prdtOutDate"> 
+		<input type="date" id="dodDate"> 
 	
 		<button type="button" id="searchDataBtn" class="btn btn-primary"
 			style="margin: 5px;">조회</button>
@@ -105,9 +105,10 @@
           scrollY: false,
           rowHeaders: ["rowNum"],
           pageOptions: {
-            perPage: 5,
+            perPage: 15,
             useClient: true,
           },
+          bodyHeight : 500,
           columns: [{
             header: '주문코드',
             name: 'orderCode',
@@ -228,8 +229,10 @@
 		$('#resetBtn').on('click',function(){
 			$('#bpName').val('');
 			$('#orderDate').val('');
-			$('#prdtOutDate').val('');
+			$('#dodDate').val('');
 		})
+		
+		
       })
     </script>
   </div>

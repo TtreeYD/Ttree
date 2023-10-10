@@ -332,6 +332,8 @@
 				
 				// 저장 이벤트
 				$('#addBtn').on('click',function(){
+					grid.blur();
+					grid2.blur();
 					let datas = grid2.getData();
 					console.log(datas);
 					$.ajax({

@@ -14,42 +14,10 @@
 <body>
 <div layout:fragment="content">
 <h1>생산현황모니터링</h1>
-<div id="chart"></div>
-<script>
-const Chart = toastui.Chart;
 
 	
-
-	const el = document.getElementById('chart');
-	const data = {
-	  categories: ['Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-	  series: [
-	    {
-	      name: 'Budget',
-	      data: [5000, 3000, 5000, 7000, 6000, 4000, 1000],
-	    },
-	    {
-	      name: 'Income',
-	      data: [8000, 4000, 7000, 2000, 6000, 3000, 5000],
-	    },
-	  ],
-	};
-	const options = {
-	  chart: { 
-		  width: 1000
-		  ,height: 400
-		  ,title: {
-		      text: '제품별생산현황',
-		      align: 'center'
-		    }
-		  ,chart: {
-		    animation: true
-		    }
-		  },
-	};
-
-	const chart = Chart.columnChart({el, data, options});
-
+	
+	
 </script>
 </div>
 </body>

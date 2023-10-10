@@ -56,11 +56,11 @@ public class BusinessRestController {
 		return businessService.insertOrder(businessvo);
 	}
 	//주문수정
-	@PostMapping("/updateOrder")
-	public int updateOrder(@RequestBody ReqVO<BusinessVO> businessvo) {
-		System.out.println(businessvo);
-		return businessService.updateOrder(businessvo);
-	}
+//	@PostMapping("/updateOrder")
+//	public int updateOrder(@RequestBody ReqVO<BusinessVO> businessvo) {
+//		System.out.println(businessvo);
+//		return businessService.updateOrder(businessvo);
+//	}
 	
 	//주문수정중 상세주문 추가로 등록하는경우 
 	@PostMapping("/plusDtOrder")
@@ -75,10 +75,10 @@ public class BusinessRestController {
 	}
 	
 	//주문서상세삭제
-	@PostMapping("/deleteDtOrder")
-	public int deleteDtOrder(@RequestBody ReqVO<BusinessVO> businessvo) {
-		return businessService.deleteDtOrder(businessvo);
-	}
+//	@PostMapping("/deleteDtOrder")
+//	public int deleteDtOrder(@RequestBody ReqVO<BusinessVO> businessvo) {
+//		return businessService.deleteDtOrder(businessvo);
+//	}
 	
 	//업체목록 불러오기
 	@GetMapping("/partnerList")
@@ -164,6 +164,11 @@ public class BusinessRestController {
 	public int cancleRecivePrdt(@RequestBody List<FinPrdtVO> fpv) {
 		System.out.println(fpv);
 		return businessService.cancleRecivePrdt(fpv);
+	}
+	//키오스크:제품별출고
+	@GetMapping("/getPrdtOutChartData")
+	public List<BusinessVO> getPrdtOutChartData(){
+		return businessService.getPrdtOutChartData();
 	}
 	
 	

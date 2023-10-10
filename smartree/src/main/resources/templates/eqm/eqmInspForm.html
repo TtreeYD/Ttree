@@ -35,6 +35,11 @@
        #selectEqmNoperBtn, #buttons{
         	margin-right:300px; float:right;
         }
+        .tui-grid-cell.red {
+		background-color: rgb(227, 52, 52);
+		color: white;
+		font-weight: bolder;
+	  }
 </style>
 </head>
 <body>
@@ -184,7 +189,7 @@
 		 	// 판정 테스트
 			if(eqmInspForm.inspJudg.value==''){
 				swal("판정을 입력하세요", "", "warning");
-				eqmInspForm.inspJudg.focus();
+				
 				return;
 			}
 			// 담당자 테스트
@@ -232,7 +237,12 @@
 	                header: '제조업체',
 	                name: 'mfgComp',
 	               
-	              }
+	              },
+	              {
+		                header: '차기점검일시',
+		                name: 'nextInspDate',
+		               
+		              }
 	              ]
 
 	});
@@ -301,14 +311,15 @@
 	$('#searchEqmNoperBtn').on('click',function(){
 		   	    	searchEqmNoperName();
 		   	    })
-		 		// 비가동 설비 이름 조회 : input에 값
-		   		function searchEqmNoperName(){
+	// 비가동 설비 이름 조회 : input에 값
+	function searchEqmNoperName(){
 		   			   			
-		   			if($('#searchEqmNoperName').val()){
-		   				let eqmName = $('#searchEqmNoperName').val();
-		   				getEqmNoperName(eqmName);
-		   				
-		   			}
+		  if($('#searchEqmNoperName').val()){
+		   	  let eqmName = $('#searchEqmNoperName').val();
+		   	  getEqmNoperName(eqmName);	   				
+		   	}else{
+		   		getEqmNoperList();
+		   	}
 	}
 		   	    
 	// 비가동 설비 이름 조회
@@ -381,6 +392,22 @@
 	   	          dataType:'json',
 	   	      		success:function(result){
 	   	      			console.log(result);
+	   	      			
+	   	      			//
+	   	      			for(let item of result){
+	   	      				if((detDifference(item.nextInspDate) >= 0) && (detDifference(item.nextInspDate)<=5)){
+	   	      				item._attributes= {
+	    	            			className:{
+	    	            				column : {
+	    	            					nextInspDate : ['red']
+	    	            				}
+	    	            			}
+	    		            	}
+	   	      				}
+	   	      			}
+	   	      			
+	   	      			//
+	   	      			
 	   	      			grid2.resetData(result);
 	   	      			$("#searchEqmModal").modal('show');
 	   	      			setTimeout(() => grid2.refreshLayout(), 200);
@@ -402,6 +429,22 @@
    				},
    				success: result => {
    			    	console.log(result);
+   			    	
+   					//
+   	      			for(let item of result){
+   	      				if((detDifference(item.nextInspDate) >= 0) && (detDifference(item.nextInspDate)<=5)){
+   	      				item._attributes= {
+    	            			className:{
+    	            				column : {
+    	            					nextInspDate : ['red']
+    	            				}
+    	            			}
+    		            	}
+   	      				}
+   	      			}
+   	      			
+   	      			//
+   			    	
    					grid2.resetData(eval(result)); 
    					$("#searchEqmModal").modal('show');
    	      			setTimeout(() => grid2.refreshLayout(), 200);
@@ -444,6 +487,22 @@
 		   				},
 		   				success: result => {
 		   				 console.log(result);
+		   				 
+		   				//
+		   	      			for(let item of result){
+		   	      				if((detDifference(item.nextInspDate) >= 0) && (detDifference(item.nextInspDate)<=5)){
+		   	      				item._attributes= {
+		    	            			className:{
+		    	            				column : {
+		    	            					nextInspDate : ['red']
+		    	            				}
+		    	            			}
+		    		            	}
+		   	      				}
+		   	      			}
+		   	      			
+		   	      			//
+		   				 
 		   					grid2.resetData(eval(result)); 
 		   					
 		   				/* 	grid2.resetData(result);
@@ -461,6 +520,8 @@
 		   				let eqmName = $('#searchName').val();
 		   				getEqmName(eqmName);
 		   				
+		   			}else{
+		   				getEqmList();
 		   			}
 		   		}
 		   	   // 설비조회 모달창 더블클릭
@@ -556,7 +617,36 @@
 				});  
 	   	   
 	   	   
-	   	   
+				// 날짜차이 구하는 함수	
+				function detDifference(date){
+					if(date == null){
+						return;
+					}
+					// 현재시간 
+					let now = new Date();
+					//console.log(now)
+					//console.log(date)
+					let year = now.getFullYear();
+					let month = now.getMonth()+1;
+					let day = now.getDate();
+				
+					// 받아온날짜 
+					let d = date.substr(0,10)
+				
+					let date_arr =d.split("-");
+					
+					//console.log(date_arr[0],date_arr[1],date_arr[2])
+					
+					let stDate = new Date(date_arr[0],date_arr[1],date_arr[2]);
+					let nowDate = new Date(year,month,day);
+					
+					
+					let btMs = stDate.getTime() - nowDate.getTime();
+					
+					let btDay = btMs/(1000*60*60*24); //  1000 초 / 1000*60 분 / 1000*60*60 시 / 1000*60*60*24 일 
+					//console.log(btMs,btDay)
+					return btDay
+				}
 		   
   });
 		</script>

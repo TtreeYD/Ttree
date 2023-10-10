@@ -12,9 +12,17 @@
 </style>
 <body>
 	<div layout:fragment="content">
-	<h2>생산계획조회</h2>
+	<h2 style="display: inline-block;">생산계획조회</h2>
 		<div style="float:right; margin-bottom: 10px">
 			<div class="input-group" >
+				<div style="font-size:20px; margin-top:4px; margin-right:10px;">	
+				    <input type="radio" id="allInst" name="typeCheck" value="" checked />
+				    <label for="allInst" class="mr-2">전체</label>
+				 	<input type="radio" id="beforeInst" name="typeCheck" value="MA01" />
+				    <label for="beforeInst" class="mr-2">지시전</label>
+				    <input type="radio" id="afterInst" name="typeCheck" value="MA02"/>
+				    <label for="afterInst" class="mr-2">지시완료</label>
+				</div>
 				<div class="form-outline">
 					<input type="search" id="form1" class="form-control" placeholder="계획명 또는 담당자"/> 
 				</div>
@@ -37,9 +45,10 @@
 	      scrollX: false,
 	      scrollY: false,
 	      pageOptions: {
-            perPage: 10,
+            perPage: 13,
             useClient: true,
           },
+          bodyHeight : 550,
 	      columns: [
 	        {
 	          header: '계획상세코드',
@@ -112,13 +121,17 @@
 			})
 			
 		$('#searchBtn').on('click', function(e){
+			let data={};
+			data.prodName= $('#form1').val();
+			data.prodPlanName= $('#form1').val();
+			searchPlan(data);
+			
+		})
+		function searchPlan(data){
 			$.ajax({
 				url:'/searchProd',
 				method:'post',
-				data : {
-					prodName : $('#form1').val(),
-					prodPlanName : $('#form1').val()
-				},
+				data : data,
 				success:function(result){
 					for(let data of result){
 						if(data.prodInstYn=='n'){
@@ -135,7 +148,22 @@
 					console.log(err);
 				}
 			})
-		})
+		}
+		$('#allInst').on('click',function(){
+			searchPlan();
+		});
+		$('#beforeInst').on('click',function(){
+			let data = {
+					prodInstYn : $('#beforeInst').val()
+			};
+			searchPlan(data);
+		});
+		$('#afterInst').on('click',function(){
+			let data = {
+					prodInstYn : $('#afterInst').val()
+			};
+			searchPlan(data);
+		});
 	  }
 	  
     </script>

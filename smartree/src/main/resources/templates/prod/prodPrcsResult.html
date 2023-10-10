@@ -11,6 +11,16 @@
 	<div layout:fragment="content">
 		<div style="float:right; margin-bottom: 10px">
 			<div class="input-group" >
+				<div style="font-size:20px; margin-top:4px; margin-right:10px;">	
+					    <input type="radio" id="allProcess" name="typeCheck" value="" checked />
+					    <label for="allProcess" class="mr-2">전체</label>
+					 	<input type="radio" id="todayProcess" name="typeCheck" value="MA01" />
+					    <label for="todayProcess" class="mr-2">오늘</label>
+					    <input type="radio" id="sevenProcess" name="typeCheck" value="MA02"/>
+					    <label for="sevenProcess" class="mr-2">일주일</label>
+					    <input type="radio" id="monthProcess" name="typeCheck" value="MA03"/>
+					    <label for="monthProcess" class="mr-2">한달</label>
+				</div>
 				<div class="form-outline">
 					<input type="search" id="form1" class="form-control" placeholder="상세코드 또는 제품명"/> 
 				</div>
@@ -26,6 +36,11 @@
 				el: document.getElementById('resultGrid'),
 				scrollX: false,
 				scrollY: false,
+				pageOptions : {
+					perPage : 13,
+					useClient : true
+				},
+				bodyHeight : 550,
 				columns: [
 					{
 					  header: '생산지시코드',
@@ -75,14 +90,42 @@
 					}
 				]
 			});
-			$.ajax({
-				url:'/selectPrcsResult',
-				success: result => {
-					console.log(result)
-					resultGrid.resetData(eval(result))
-				},
-				error: err => console.log(err)
-			})
+			selectPrcsResult();
+			function selectPrcsResult(data){
+				$.ajax({
+					url:'/selectPrcsResult',
+					method:'GET',
+					data:data,
+					success: result => {
+						console.log(result)
+						resultGrid.resetData(eval(result))
+					},
+					error: err => console.log(err)
+				})
+			}
+			
+			
+		$('#allProcess').on('click',function(){
+			selectPrcsResult();
+		});
+		$('#todayProcess').on('click',function(){
+			let data = {
+					searchDate : $('#todayProcess').val()
+			}
+			selectPrcsResult(data);
+		});
+		$('#sevenProcess').on('click',function(){
+			let data = {
+					searchDate : $('#sevenProcess').val()
+			}
+			selectPrcsResult(data);
+		});
+		$('#monthProcess').on('click',function(){
+			let data = {
+					searchDate : $('#monthProcess').val()
+			}
+			selectPrcsResult(data);
+		});
 		</script>
 	</div>
 </body>

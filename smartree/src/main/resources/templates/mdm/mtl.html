@@ -30,14 +30,14 @@ input::-webkit-inner-spin-button {
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">자재코드</span>
 				  	</div>
-					<input type="text" class="form-control text-right col" readonly id="mtlCode"> 
+					<input type="text" class="form-control text-right col noGray" readonly id="mtlCode"> 
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">자재명</span>
 				  	</div>
-					<input type="text" maxlength="12" class="form-control text-right col" placeholder="자재명" id="mtlName">
+					<input type="text" maxlength="12" class="form-control text-right col noGray" placeholder="자재명" id="mtlName">
 				</div>
 				
 				<div class="input-group mb-4">
@@ -54,14 +54,14 @@ input::-webkit-inner-spin-button {
 				    	<span class="input-group-text col">안전재고</span>
 				  	</div>
 					<input type="number" min="0" maxlength="5" oninput="maxLengthChk(this)"
-						class="form-control text-right col" placeholder="0" id="mtlSs">
+						class="form-control text-right col noGray" placeholder="0" id="mtlSs">
 				</div>
 				
 				<div class="input-group mb-4">
 					<div class="input-group-prepend col-3">
 				    	<span class="input-group-text col">단위</span>
 				  	</div>
-					<input type="text" maxlength="10" class="form-control text-right col" placeholder="" id="mtlUnit">
+					<input type="text" maxlength="10" class="form-control text-right col noGray" placeholder="" id="mtlUnit">
 				</div>
 				
 				<div class="input-group mb-4">
@@ -87,7 +87,7 @@ input::-webkit-inner-spin-button {
 					<select class="custom-select col-2" id="searchMtlType">
 				   	<option value="" selected>--</option>
 				  	</select>
-					<input type="text" class="form-control col-2" placeholder="자재명" id="searchMtlName">
+					<input type="text" class="form-control col-2 noGray" placeholder="자재명" id="searchMtlName">
 					<div class="input-group-append">
 				   	<button class="btn btn-outline-secondary" type="button" id="searchMtl">검색</button>
 					</div>

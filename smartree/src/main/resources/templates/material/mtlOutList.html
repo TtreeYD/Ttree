@@ -24,21 +24,23 @@ float: right;
 		<div class="col-5">
 			<h2>자재목록</h2>
 				<div class="input-group mb-3">
-					<input type="text" class="form-control col-3" placeholder="자재명" id="searchMtlName">
+					<div style="font-size:20px;">	
+				    <input type="radio" id="all" name="typeCheck" value="" checked />
+				    <label for="all" class="mr-2">전체</label>
+				 	<input type="radio" id="y" name="typeCheck" value="MA01" />
+				    <label for="y" class="mr-2">원자재</label>
+				    <input type="radio" id="n" name="typeCheck" value="MA02"/>
+				    <label for="n" class="mr-2">부자재</label>
+					</div>
+					<input type="text" class="form-control col-3" placeholder="자재명" id="mtlName" style="margin-left: auto;">
 					<div class="input-group-append">
-				   	<button class="btn btn-outline-secondary" type="button" id="searchMtl" style="padding: 3px; padding-left: 20px; padding-right: 20px;">검색</button>
+				   	<button class="btn btn-outline-secondary" type="button" id="searchCon" style="height:32px; padding: 1px; padding-left: 20px; padding-right: 20px;">검색</button>
 					</div>
 				</div> 
 			<div id="mtlGrid"></div>
 		</div>
 		<div class="col-7">
-			<h2>출고내역</h2>
-				<div class="input-group mb-3">
-					<input type="text" class="form-control col-3" placeholder="자재명" id="searchMtlName">
-					<div class="input-group-append">
-				   	<button class="btn btn-outline-secondary" type="button" id="searchMtl" style="padding: 3px; padding-left: 20px; padding-right: 20px;">검색</button>
-					</div>
-				</div> 
+			<h2 style="margin-bottom: 62px">출고내역</h2>
 			<div id=mtlLotGrid></div>
 		</div>
 
@@ -55,7 +57,8 @@ float: right;
 			let commonCode = [];
 			let codeDetail = [];
 			let codeType;
-			let cdl;	
+			let cdl;
+			mtlCon();
 			
 			// 자재목록 그리드 sql문에서 자재당 하나씩만 나오게만듬
 				const mtlGrid = new tui.Grid({
@@ -81,10 +84,10 @@ float: right;
 						name : 'mtlName'
 					}, {
 						header : '최종출고일자',
-						name : 'mtlInDate'
+						name : 'prcsEdate'
 					}, {
 						header : '누적출고수량',
-						name : 'mtlLotCnt'
+						name : 'mtlOutCnt'
 					}, ]
 				});
 				
@@ -124,15 +127,16 @@ float: right;
 						name : 'mtlOutCnt'
 					}, {
 						header : '자재출고일',
-						name : 'prcsEDate'
+						name : 'prcsEdate'
 					}, {
 						header : '공정코드',
 						name : 'prcsRsCode'
 					},  ]
 				});
 				// 재고목록 ajax
+				function mtlCon(){
 		        $.ajax({
-		          url: '/mtlExist',
+		          url: '/mtlOut',
 		          method: 'get',
 		          dataType: 'json',
 		          success: function (result) {
@@ -150,6 +154,7 @@ float: right;
 		            console.log(err);
 		          }
 		        })
+				}
 		        // 자재별 출고량 출력기능
 		        function outFnc(mtlCode){
 		        $.ajax({
@@ -177,7 +182,6 @@ float: right;
 				let vo = {};
 				vo.mtlType = $('#searchMtlType').val();
 				vo.mtlName = $('#searchMtlName').val();
-				console.log(vo)
 				$.ajax({
 					url: '/mdm/searchMtl',
 					method: 'POST',
@@ -204,10 +208,78 @@ float: right;
 		        const excelDownload = document.querySelector(".excelDownload");
 	               excelDownload.addEventListener("click",
 	                    function (e) {
-	            	   		mtlGrid.export("xlsx");
+	            	   mtlLotGrid.export("xlsx");
 	                    }
 	               );
 	           
+		           	// radio - all 체크
+		           	$('#all').on('click',function(){
+		           		if($('#searchMtlName').val()){
+		           			$('#searchMtlName').val('');
+		           		}
+		           		mtlCon();
+		           	})
+		           	// radio - y 체크
+		           	$('#y').on('click',function(){
+		           		if($('#searchMtlName').val()){
+		           			$('#searchMtlName').val('');
+		           		}
+		           		let mtlType= $('#y').val();
+		           		checkCon(mtlType);
+		           	})
+		           	// radio - n 체크
+		           	$('#n').on('click',function(){
+		           		if($('#searchMtlName').val()){
+		           			$('#searchMtlName').val('');
+		           		}
+		           		let mtlType= $('#n').val();
+		           		checkCon(mtlType);
+		           	})
+		           // 라디오박스 아작스
+		           	function checkCon(mtlType,mtlName){
+				        $.ajax({
+					          url: '/searchOut',
+					          method: 'POST',
+					          data: { mtlType : mtlType,
+					        	  	  mtlName : mtlName },
+					          success: function (result) {
+					            //날짜변환
+					            $(result).each(function (idx, obj) {
+					              for (let head of header) {
+					                if (head.slice(-4).toLowerCase() == 'date') {
+					                  obj[head] = getDate(obj[head]);
+					                }
+					              }
+					            });
+					            mtlGrid.resetData(eval(result));
+					          },
+					          error: function (err) {
+					            console.log(err);
+					          }
+					        })
+		           	}
+		            // 검색
+		               $('#searchCon').on('click',function(ev){
+							$.ajax({
+								url:'/searchOut',
+								method: 'POST',
+								data:{
+									mtlCode: $('#mtlCode').val(),
+									mtlType : $('#mtlType').val(),
+									mtlName : $('#mtlName').val(),
+									mtlInDate : $('#mtlInDate').val(),
+									mtlLotCnt : $('#mtlLotCnt').val()
+								},
+								success:function(result){
+									searchData = result;
+									mtlGrid.resetData(result);
+							 		setTimeout(() => mtlGrid.refreshLayout(), 200);
+								},
+								error:function(err){
+									console.log(err);
+								}
+							})
+						});
 		
 			});
 

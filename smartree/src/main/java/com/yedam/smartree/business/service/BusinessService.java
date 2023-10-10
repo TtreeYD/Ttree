@@ -20,10 +20,10 @@ public interface BusinessService {
 	public int deleteOrder(ReqVO<BusinessVO> businessvo);
 	
 	//주문서상세삭제
-	public int deleteDtOrder(ReqVO<BusinessVO> businessvo);
+	//public int deleteDtOrder(ReqVO<BusinessVO> businessvo);
 	
 	//주문서수정
-	public int updateOrder(ReqVO<BusinessVO> businessvo);
+	//public int updateOrder(ReqVO<BusinessVO> businessvo);
 	
 	//업체목록
 	public List<BpVO> selectBpList(BpVO bpVO);
@@ -60,6 +60,8 @@ public interface BusinessService {
 	public List<FinPrdtVO> prdtRecieveList(FinPrdtVO fpv);
 	//입고취소처리
 	public int cancleRecivePrdt(List<FinPrdtVO> fpv);
+	// 제품별출고 데이터 가져오기
+	public List<BusinessVO> getPrdtOutChartData();
 	
 	
 	

@@ -7,13 +7,16 @@
 </head>
 <body>
 <div layout:fragment="content">
+<h1>완제품입고관리</h1>
+<hr>
 <h2>입고대기품목</h2>
 <div id="chkListGrid" ></div>
-<h1 style="margin-top:50px;">입고품목</h1>
-<div class="btn-group" role="group" aria-label="Basic example" style="float : right;">
-	<button class="btn btn-primary" style="float:right" id="recieveDtBtn">입고</button>
-	<button class="btn btn-primary" style="float:right" id="recieveDtCancleBtn">입고취소</button>
-</div>
+<br>
+<h2 style="display:inline-block;">입고품목</h2>
+	<div class="btn-group" role="group" aria-label="Basic example" style="float : right;">
+		<button class="btn btn-primary" style="float:right" id="recieveDtBtn">입고</button>
+		<button class="btn btn-primary" style="float:right" id="recieveDtCancleBtn">입고취소</button>
+	</div>
 <div id="recieveGrid"></div>
 
 
@@ -44,8 +47,17 @@
 
 
 
-<script>
+<script th:inline="javascript">
+let manager = [[${session.loginMember.empName}]];
 data={};
+
+//오늘날짜 input에 넣기
+today = new Date();
+// console.log("today.toISOString() >>>" + today.toISOString());
+today = today.toISOString().slice(0, 10);
+// console.log("today >>>> " + today);
+
+
 toastr.options = {
 	  			  positionClass: "toast-top-center",
 	  			  escapeHtml: true,
@@ -58,10 +70,12 @@ const chkListGrid = new tui.Grid({
 	scrollX: false,
 	scrollY: false,
 	rowHeaders: ["rowNum"],
+	
 	pageOptions: {
-        perPage: 5,
+        perPage: 3,
         useClient: true,
       },
+    bodyHeight : 100,
 	columns: [
 		{
 			header: '완제품검사코드',
@@ -100,7 +114,11 @@ const recieveGrid = new tui.Grid({
 	scrollX: false,
 	scrollY: false,
 	rowHeaders: ["rowNum"],
-	
+	pageOptions: {
+        perPage: 3,
+        useClient: true,
+      },
+    bodyHeight : 100,
 	columns: [
 		{
 			header: '완제품검사코드',
@@ -207,6 +225,7 @@ const recieveListGrid = new tui.Grid({
 				{at:0}
 			);
 		}
+		chkManager();
 	});
 	$('#recieveDtBtn').on('click',function(){
 		if(recieveGrid.getValue(0,'prdtChkCode') == null){
@@ -296,6 +315,16 @@ const recieveListGrid = new tui.Grid({
 			}
 		})
 	}
+	//담당자 알아서 값넣기
+	function chkManager() {
+    	   let datas = recieveGrid.getData();
+    	   console.log(datas)
+    	   for(let data of datas){
+    		   if(data.prdtRecieveManager == null) data.prdtRecieveManager = manager;
+    		   if(data.prdtRecieveDate == null) data.prdtRecieveDate=today;
+    	   }
+    	   recieveGrid.resetData(datas);
+       }
 </script>
 </div>
 </body>

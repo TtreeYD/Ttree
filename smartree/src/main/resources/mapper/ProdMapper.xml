@@ -83,6 +83,12 @@
 			<if test="prodPlanName != null and !prodPlanName.equals('')">
 				or p.prod_plan_name like '%' || #{prodPlanName} || '%'
 			</if>
+			<if test="prodInstYn == 'MA01'">
+				or p.prod_inst_yn = 'n'
+			</if>
+			<if test="prodInstYn == 'MA02'">
+				or p.prod_inst_yn = 'y'
+			</if>
 		</where>
 		order by prod_plan_date desc
   	</select>
@@ -194,8 +200,7 @@
 		       dtp.prod_plan_cnt, 
 		       p.prod_plan_code, 
 		       prdt.prdt_code, 
-		       dpi.prod_inst_cnt,
-		       dpi.prod_inst_yn, 
+		       dpi.prod_inst_cnt, 
 		       dpi.prod_inst_rank,
 		       dtp.prod_plan_cnt - dpi.prod_inst_cnt as prod_inst_incomp_cnt,
 		       pi.prod_inst_name,
@@ -214,7 +219,6 @@
 				         join dt_prod_inst dpi
 				         on pi.prod_inst_code = dpi.prod_inst_code and dpi.prdt_code = dtp.prdt_code
 		where pi.prod_plan_code = #{prodPlanCode}
-		  and dpi.prod_inst_yn = 'n'
   	</select>
   	<!-- 생산지시등록 -->
 	<insert id="insertProdInst" parameterType="ProdVO" statementType="CALLABLE">
@@ -289,7 +293,7 @@
   	</delete>
   	<!-- 생산지시조회 -->
   	<select id="selectGetDtInst" resultType="ProdVO">
-  		select p.prod_inst_code , d.dt_prod_inst_code , p.prod_plan_code , p.prod_inst_name , d.prdt_code , pt.prdt_name, d.prod_inst_cnt , d.prod_inst_rank , d.prod_inst_yn , p.prod_inst_edate , p.prod_inst_sdate
+  		select p.prod_inst_code , d.dt_prod_inst_code , p.prod_plan_code , p.prod_inst_name , d.prdt_code , pt.prdt_name, d.prod_inst_cnt , d.prod_inst_rank , p.prod_inst_edate , p.prod_inst_sdate , p.prcs_start_yn
   				 , p.prod_inst_manager
 		  from dt_prod_inst d join prod_inst p 
                 on d.prod_inst_code  = p.prod_inst_code
@@ -302,19 +306,26 @@
 			<if test="prodInstManager != null and !prodInstManager.equals('')">
 				or p.prod_inst_manager like '%' || #{prodInstManager} || '%'
 			</if>
+			<if test="prcsStartYn == 'MA01'">
+				or p.prcs_start_yn = 'n'
+			</if> 
+			<if test="prcsStartYn == 'MA02'">
+				or p.prcs_start_yn = 'y'
+			</if>
 		</where>
 		order by p.prod_inst_code desc
   	</select>
   	<!-- 키오스크 :생산지시불러오기 -->
   	<select id="selectGetProcess" resultType="ProdVO">
-  		select p.prcs_code , d.dt_prod_inst_code , d.prdt_code , pt.prdt_name , p.prcs_order , p.prdt_total , pi.prod_inst_edate , p.prdt_prod_cnt
+  		select p.prcs_code , d.dt_prod_inst_code , d.prdt_code , pt.prdt_name , p.prcs_order , p.prdt_total , pi.prod_inst_edate, d.prod_inst_rank , p.prdt_prod_cnt
 		  from dt_prod_inst d join process p
                         on d.dt_prod_inst_code = p.dt_prod_inst_code
                     join prod_inst pi
                         on pi.prod_inst_code = d.prod_inst_code
                     join prdt_table pt
                         on pt.prdt_code = d.prdt_code
-           where p.prdt_total != p.prdt_prod_cnt 
+           where p.prdt_total != p.prdt_prod_cnt
+           order by  d.dt_prod_inst_code ,  d.prdt_code,p.prcs_order 
   	</select>
 
   	<!-- 키오스크: 공정흐름상세보기 -->
@@ -339,6 +350,7 @@
 		AND   prcs_order = #{prcsOrder}
 		AND   prdt_code = #{prdtCode}
 		AND   eqm_ucheck = 'Y'
+		group by prcs_type, prcs_std_code, eqm_code, eqm_name, eqm_state
   	</select>
   	
   	
@@ -359,6 +371,24 @@
   		FROM process_result JOIN process USING(prcs_code)
   								  JOIN dt_prod_inst USING(dt_prod_inst_code)
   								  JOIN prod_inst USING(prod_inst_code)
+  		<where>
+        <if test="searchDate == 'MA01'">
+            <![CDATA[
+                prcs_sdate >= TRUNC(SYSDATE) AND prcs_sdate < TRUNC(SYSDATE) + 1
+            ]]>
+        </if>
+        <if test="searchDate == 'MA02'">
+            <![CDATA[
+                prcs_sdate BETWEEN TRUNC(SYSDATE) - 7 AND TRUNC(SYSDATE)+1
+            ]]>
+        </if>
+        <if test="searchDate == 'MA03'">
+            <![CDATA[
+                prcs_sdate BETWEEN TRUNC(SYSDATE) - 30 AND TRUNC(SYSDATE)+1
+            ]]>
+        </if>
+        
+    	</where>
   	</select>
 	
 	
@@ -474,5 +504,12 @@
 		WHERE dt_prod_inst_code = #{dtProdInstCode}
 	</delete>
 	
-
+	<!-- 차트데이터: 제품별 생산현황 -->
+	<select id="getChartData" resultType="ProdVO">
+	select sum(prdt_prod_cnt) as prdt_prod_cnt , prdt_code
+      from process_result join process  using(prcs_code)
+      WHERE trunc(prcs_sdate) = trunc(SYSDATE)
+	  group by  prdt_code
+	  order by prdt_code
+	</select>
   </mapper>

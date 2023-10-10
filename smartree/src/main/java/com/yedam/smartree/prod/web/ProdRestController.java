@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.yedam.smartree.business.service.BusinessService;
 import com.yedam.smartree.business.service.BusinessVO;
+import com.yedam.smartree.business.service.FinPrdtVO;
 import com.yedam.smartree.mdm.service.MdmPrcsVO;
 import com.yedam.smartree.prod.service.HoldingVO;
 import com.yedam.smartree.prod.service.PrcsResultVO;
@@ -27,6 +29,8 @@ public class ProdRestController {
 	
 	@Autowired
 	ProdService service;
+	@Autowired
+	BusinessService businessService;
 	
 	//생산계획리스트
 	@GetMapping("/prodPlanList")
@@ -87,6 +91,7 @@ public class ProdRestController {
 	//생산계획 리스트에서 검색조건
 	@PostMapping("/searchProd")
 	public List<ProdVO> searchProdList(ProdVO vo){
+		System.out.println("controller"+vo);
 		return service.searchProdList(vo);
 	}
 	
@@ -142,8 +147,8 @@ public class ProdRestController {
 	
 	// 실적조회
 	@GetMapping("/selectPrcsResult")
-	public List<PrcsResultVO> selectPrcsResult(){
-		return service.selectPrcsResult();
+	public List<PrcsResultVO> selectPrcsResult(PrcsResultVO vo){
+		return service.selectPrcsResult(vo);
 	}
 
 	//생산시작버튼클릭(공정실적관리 insert)
@@ -177,6 +182,17 @@ public class ProdRestController {
 	public int endProcessResult(@RequestBody List<ProdVO> vo){
 		System.out.println(vo);
 		return service.endProcessResult(vo);
+	}
+	
+	//차트데이터:생산진행제품별개수
+	@GetMapping("/getChartData")
+	public List<ProdVO> getChartData(){
+		return service.getChartData();
+	}
+	//차트데이터:완제품재고량
+	@GetMapping("/getPrdtChartData")
+	public List<FinPrdtVO> getPrdtChartData(){
+		return businessService.selectFinPrdt();
 	}
 	
 }

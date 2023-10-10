@@ -98,7 +98,6 @@
 			let selectedData; // 주문서에있는해당값 저장
 			let dtOrderRowNum;
 			let newOrderData={};//새주문서 data에 넣어줄 객체생성
-			let updateDtOrder;
 			toastr.options = {
 		  			  positionClass: "toast-top-center",
 		  			  escapeHtml: true,
@@ -308,7 +307,6 @@
 								selectedData = searchModalData[ev.rowKey];//불러온 해당 열 변수에 저장
 								newOrder.push(searchModalData[ev.rowKey]);
 								newDtOrder = result;
-								updateDtOrder=result.length;
 							},
 							error:function(err){
 								console.log(err)
@@ -346,7 +344,7 @@
 						editdata.list = dtOrder.getData();
 						
 						
-					 	if(dtOrder.getData().length > updateDtOrder && editdata.vo[0].orderCode != null){//수정중 상세주문 추가한경우
+					 	if(editdata.vo[0].orderCode != null){//수정중 상세주문 추가한경우
 								console.log('수정등록');
 					 			 newOrderData.orderList = order.getData();
 								 newOrderData.orderDtList = dtOrder.getCheckedRows() ;
@@ -360,7 +358,7 @@
 								contentType : 'application/json',
 								data:JSON.stringify(newOrderData),
 								success:function(result){
-									toastr.success('상세주문이 추가되었습니다');
+									toastr.success('수정되었습니다');
 									dtOrder.uncheckAll();
 								},
 								error:function(err){
@@ -370,7 +368,7 @@
 						 } 
 					 	
 					 	//수정등록
-					 	else if(editdata.vo[0].orderCode != null ){//수정
+					 	/* else if(editdata.vo[0].orderCode != null ){//수정
 							 	newOrderData.orderList = order.getData();
 								newOrderData.orderDtList = dtOrder.getCheckedRows() ;
 
@@ -393,7 +391,7 @@
 								
 							}) 
 							console.log('update');
-						}
+						} */
 						 else {//등록
 							console.log('insert');
 							
@@ -425,33 +423,51 @@
 					});
 					//주문서삭제
 					$('#deleteBtn').on('click',function(){
-						newOrderData={};
-						newOrderData.orderList = order.getData();
-						$.ajax({
-							url:'/deleteOrder',
-							method:'POST',
-							dataType: 'json',
-							contentType : 'application/json',
-							data:JSON.stringify(newOrderData),
-							success:function(result){
-								if(result > 0 ){
-									toastr.success('삭제되었습니다');
-									order.resetData([]);
-									dtOrder.resetData([]);
-								}
-							},
-							error:function(err){
-								console.log(err);
-							}
-							
-						})
+						if(order.getData().length == 0){
+							toastr.warning('삭제할 데이터가 없습니다')
+							return;
+						}
+						Swal.fire({
+							  title: '삭제하시겠습니까?',
+							  showCancelButton: true,
+							  confirmButtonText: '삭제',
+							  cancelButtonText: '취소'
+							}).then((result) => {
+							  /* Read more about isConfirmed, isDenied below */
+							  if (result.isConfirmed) {
+								  newOrderData={};
+									newOrderData.orderList = order.getData();
+									$.ajax({
+										url:'/deleteOrder',
+										method:'POST',
+										dataType: 'json',
+										contentType : 'application/json',
+										data:JSON.stringify(newOrderData),
+										success:function(result){
+											if(result > 0 ){
+												order.resetData([]);
+												dtOrder.resetData([]);
+											}
+										},
+										error:function(err){
+											console.log(err);
+										}
+										
+									})
+							    Swal.fire('삭제되었습니다', '', 'success')
+							    
+							  }
+							})
+
+						
 					});
 					//주문서상세삭제
 					$('#deleteDtBtn').on('click',function(){
 						let delrows = dtOrder.getCheckedRows();
+						dtOrder.removeCheckedRows()
 						newOrderData={};
 						newOrderData.orderDtList = dtOrder.getCheckedRows();
-						$.ajax({
+						/* $.ajax({
 							url:'/deleteDtOrder',
 							method:'POST',
 							dataType: 'json',
@@ -468,7 +484,7 @@
 								console.log(err);
 							}
 							
-						})
+						}) */
 					})
 
 					

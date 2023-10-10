@@ -75,7 +75,7 @@ public interface ProdMapper {
 
 	
 	// 실적조회
-	List<PrcsResultVO> selectPrcsResult();
+	List<PrcsResultVO> selectPrcsResult(PrcsResultVO vo);
 
 	
 	
@@ -102,6 +102,8 @@ public interface ProdMapper {
 	int delHolding(String prodInstCode);
 	
 	int delProcess(ProdVO vo);
+
+	public List<ProdVO> getChartData();
 
 
 }

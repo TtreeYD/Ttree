@@ -146,7 +146,7 @@ const instGrid = new tui.Grid({
 			{
 	          header: '지시상세코드',
 	          name: 'dtProdInstCode',
-	          
+	          hidden: true
 	        },
 	        {
 	          header: '제품코드',
@@ -176,8 +176,13 @@ const instGrid = new tui.Grid({
 	          name: 'prcsOrder'
 	        },
 	        {
+	          header: '우선순위',
+	          name: 'prodInstRank'
+	        },
+	        {
 	          header: '납기일자',
-	          name: 'prodInstEdate'
+	          name: 'prodInstEdate',
+	          hidden:true
 	        }
 
 	]})
