@@ -9,6 +9,7 @@ import com.yedam.smartree.business.mapper.BusinessMapper;
 import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessService;
 import com.yedam.smartree.business.service.BusinessVO;
+import com.yedam.smartree.business.service.ChartDataVO;
 import com.yedam.smartree.business.service.FinPrdtVO;
 import com.yedam.smartree.business.service.ReqVO;
 
@@ -220,6 +221,12 @@ public class BusinessServiceImpl implements BusinessService{
 	@Override
 	public List<BusinessVO> getPrdtOutChartData() {
 		return businessmapper.getPrdtOutChartData();
+	}
+	@Override
+	public ChartDataVO getAllChartData() {
+		return businessmapper.getTodayProdData();
+
+		
 	}
 
 }

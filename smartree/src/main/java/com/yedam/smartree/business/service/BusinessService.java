@@ -63,6 +63,9 @@ public interface BusinessService {
 	// 제품별출고 데이터 가져오기
 	public List<BusinessVO> getPrdtOutChartData();
 	
+	//메인페이지 업무현황 전부가져오기
+	public ChartDataVO getAllChartData();
+	
 	
 	
 	

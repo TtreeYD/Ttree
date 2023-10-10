@@ -506,10 +506,15 @@
 	
 	<!-- 차트데이터: 제품별 생산현황 -->
 	<select id="getChartData" resultType="ProdVO">
-	select sum(prdt_prod_cnt) as prdt_prod_cnt , prdt_code
-      from process_result join process  using(prcs_code)
-      WHERE trunc(prcs_sdate) = trunc(SYSDATE)
-	  group by  prdt_code
-	  order by prdt_code
+	select p.prdt_code, p.prdt_name, nvl(a.prdt_prod_cnt,0) as prdt_prod_cnt
+	  from prdt_table p left outer join (select p.prdt_code, p.prdt_name, sum(pp.prdt_prod_cnt) prdt_prod_cnt
+                                            from prdt_table p join process_result r 
+                                                                on p.prdt_code = r.prdt_code
+                                                                join process pp on r.prcs_code = pp.prcs_code 
+                                            where trunc(prcs_sdate) = trunc(SYSDATE) and prcs_maxnum = prcs_order  
+                                            group by  p.prdt_code, p.prdt_name,pp.prdt_prod_cnt 
+                                            order by  p.prdt_code) a 
+                                   on p.prdt_code = a.prdt_code
+                                   order by p.prdt_code
 	</select>
   </mapper>

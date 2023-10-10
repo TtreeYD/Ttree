@@ -10,7 +10,7 @@
   		  				on o.bp_code = b.bp_code
   		  <where>
 		 	<if test="bpName != null">	 	
-		 		b.bp_name like '%'||#{bpName}||'%'
+		 		upper(b.bp_name) like '%'||upper(#{bpName})||'%'
 		 	</if>
 		 	<if test="orderDate != null ">
 		       	and trunc(o.order_date) = trunc(#{orderDate})
@@ -28,7 +28,7 @@
   		  <where>
   		  		dod_state = '납기전'
 		 	<if test="bpName != null">	 	
-		 		and b.bp_name like '%'||#{bpName}||'%'
+		 		and upper(b.bp_name) like '%'||upper(#{bpName})||'%'
 		 	</if>
 		 	<if test="orderDate != null ">
 		       	and trunc(o.order_date) = trunc(#{orderDate})
@@ -46,7 +46,7 @@
   		  <where>
   		  		dod_state = '출고완료'
 		 	<if test="orderCode != null">	 	
-		 		and o.order_code like '%'||#{orderCode}||'%'
+		 		and upper(o.order_code) like '%'||upper(#{orderCode})||'%'
 		 	</if>
 		 	<if test="orderDate != null ">
 		       	and trunc(o.order_date) = trunc(#{orderDate})
@@ -197,7 +197,7 @@
   		from prdt_table
   		<where>
   			<if test="prdtCode != null">
-  				prdt_code = #{prdtCode}
+  				upper(prdt_code) = upper(#{prdtCode})
   			</if>
   		</where>
   	</select>
@@ -237,10 +237,10 @@
 		    		on f.prdt_code = p.prdt_code
 		<where>
 		 	<if test="prdtName != null">	 	
-		 		p.prdt_name like '%'||#{prdtName}||'%'
+		 		upper(p.prdt_name) like '%'||upper(#{prdtName})||'%'
 		 	</if>
 		 	<if test="prdtLotNo != null ">
-		       	and f.prdt_lot_no like '%'||#{prdtLotNo}||'%'
+		       	and upper(f.prdt_lot_no like) '%'||upper(#{prdtLotNo})||'%'
 		 	</if> 	
 		</where>
   	</select>
@@ -290,7 +290,7 @@
   		from prdt_out
   		<where>
   			<if test="orderDtCode != null">
-  				order_dt_code like '%'||#{orderDtCode}||'%'
+  				upper(order_dt_code) like '%'||upper(#{orderDtCode})||'%'
   			</if>
   			<if test="prdtOutDate != null">
   				and trunc(prdt_out_date) =trunc(#{prdtOutDate})
@@ -336,7 +336,7 @@
                         on f.prdt_code = p.prdt_code 
   		<where>
   			<if test="prdtName != null">
-  				prdt_name like '%'||#{prdtName}||'%'
+  				upper(prdt_name) like '%'||upper(#{prdtName})||'%'
   			</if>
   			<if test="prdtRecieveDate != null">
   				and trunc(prdt_recieve_date) = trunc(#{prdtRecieveDate})
@@ -371,4 +371,27 @@
 		 group by prdt_code
 		 order by prdt_code
   	</select>
+  	<!-- 메인페이지 당일 차트 전부가져오기 -->
+  	<select id="getTodayProdData" resultType="ChartDataVO">
+  	select 
+  		(select count(*) as today_prod_cnt from process_result pr join process p on pr.prcs_code = p.prcs_code
+		 where trunc(prcs_sdate) = TRUNC(SYSDATE)
+		   and p.prcs_maxnum = p.prcs_order) as today_prod_cnt , 
+
+  		(select count(*)as today_inst_cnt 
+  		  from prod_inst
+	     where trunc(prod_inst_sdate) = TRUNC(SYSDATE) 
+         and prcs_start_yn = 'n') as today_inst_cnt , 
+
+
+  		(select count(*) as today_order_cnt  from orders
+		 where trunc(order_date) = TRUNC(SYSDATE) ) as today_order_cnt ,
+ 
+
+  		(select count(*)as today_out_cnt from orders
+	     where trunc(dod_date) = TRUNC(SYSDATE) ) as today_out_cnt
+
+ 	from dual
+  	</select>
+  
   </mapper>

@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessVO;
+import com.yedam.smartree.business.service.ChartDataVO;
 import com.yedam.smartree.business.service.FinPrdtVO;
 import com.yedam.smartree.business.service.ReqVO;
 
@@ -85,6 +86,12 @@ public interface BusinessMapper {
 	public int updateChkState(FinPrdtVO finPrdtVO);
 	 // 제품별출고 데이터 가져오기
 	public List<BusinessVO> getPrdtOutChartData();
+	
+	
+	//메인페이지 당일 차트 전부가져오기
+	public ChartDataVO getTodayProdData();
+
+
 	
 	
 	

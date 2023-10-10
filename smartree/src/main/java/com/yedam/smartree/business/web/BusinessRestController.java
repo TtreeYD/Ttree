@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessService;
 import com.yedam.smartree.business.service.BusinessVO;
+import com.yedam.smartree.business.service.ChartDataVO;
 import com.yedam.smartree.business.service.FinPrdtVO;
 import com.yedam.smartree.business.service.ReqVO;
 /*
@@ -171,5 +172,10 @@ public class BusinessRestController {
 		return businessService.getPrdtOutChartData();
 	}
 	
+	//메인페이지 당일 차트 전부가져오기
+	@GetMapping("/getAllChartData")
+	public ChartDataVO getAllChartData() {
+		return businessService.getAllChartData();
+	}
 	
 }

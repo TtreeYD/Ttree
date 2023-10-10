@@ -201,7 +201,7 @@
 					scrollY: false,
 					rowHeaders: ["rowNum"],
 					pageOptions: {
-			            perPage: 5,
+			            perPage: 4,
 			            useClient: true,
 			          },
 					columns: [
@@ -372,14 +372,20 @@
 				$('#saveBtn').on('click',function(){
 					let lotcnt=0;
 					lotPrdtGrid.blur();
+					let chkPrdt = false;
 					for(let i = 0 ; i < lotPrdtGrid.getData().length ; i++){
 						lotcnt += Number(lotPrdtGrid.getData()[i].prdtOutCnt)
+						if(lotPrdtGrid.getData()[i].prdtOutCnt>lotPrdtGrid.getData()[i].prdtCnt){
+							chkPrdt= true;
+						}
 					}
 						if(lotcnt > valueCheck[rowCheck].prdtLeftCnt){
 							toastr.warning('미납수량보다 많습니다');
 							return;
+						}else if(chkPrdt){
+							toastr.warning('재고량을 초과합니다');
+							return;
 						}else{
-							
 							lotPrdtGrid.blur()
 							var data={};
 							data.list = lotPrdtGrid.getModifiedRows().updatedRows;
