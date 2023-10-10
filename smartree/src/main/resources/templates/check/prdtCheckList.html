@@ -31,10 +31,11 @@
 
 <body>
 	<div layout:fragment="content">
-		<h2>제품품질검사조회</h2>
+		<h1>제품품질검사조회</h1>
 		<div style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
 			<div>
-				<button type="button" id="pdfDownload" class="btn btn-primary" style="float : right;">pdf저장</button>
+				<button type="button" id="pdfDownload" class="btn btn-info btn-icon-text excelDownload" style="float : right;">
+				PDF <i class="bi bi-printer"></i></button>
 				<h3>품질검사목록</h3>
 				<div id="grid" class="lightgrey" style="width: 800px;"></div>
 			</div> <div>
