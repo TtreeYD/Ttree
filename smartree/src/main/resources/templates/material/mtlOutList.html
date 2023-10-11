@@ -111,6 +111,9 @@ float: right;
 					    sortingType: 'asc',
 						width : 140
 					}, {
+						header : '공정코드',
+						name : 'prcsRsCode'
+					}, {
 						header : 'LOT',
 						name : 'mtlLotNum',
 						width : 180
@@ -123,15 +126,12 @@ float: right;
 						name : 'mtlName',
 						hidden: true
 					}, {
-						header : '출고수량',
-						name : 'mtlOutCnt'
-					}, {
 						header : '자재출고일',
 						name : 'prcsEdate'
 					}, {
-						header : '공정코드',
-						name : 'prcsRsCode'
-					},  ]
+						header : '출고수량',
+						name : 'mtlOutCnt'
+					}  ]
 				});
 				// 재고목록 ajax
 				function mtlLeft(){
