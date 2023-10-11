@@ -155,14 +155,6 @@ float: right;
 		          method: 'POST',
 		          data: { bpName : bpName , mtlDate : mtlDate, mtlManager : mtlManager},
 		          success: function (result) {
-		            //날짜변환
-		            $(result).each(function (idx, obj) {
-		              for (let head of header) {
-		                if (head.slice(-4).toLowerCase() == 'date') {
-		                  obj[head] = getDate(obj[head]);
-		                }
-		              }
-		            });
 		            mtlNeedListGrid.resetData(eval(result));
 		          },
 		          error: function (err) {
