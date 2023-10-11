@@ -35,11 +35,21 @@
 		
 	<div class="modal fade" tabindex="-1" role="dialog" id="orderModal">
       <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-        <div class="modal-content" style="height:500px">
+        <div class="modal-content" style="height:550px">
           <div class="modal-header">
             <h2>주문서조회</h2>
           </div>
           <div class="modal-body">
+            <div style="margin-left:10px; margin-bottom:10px;">
+				<label for="bpname" style="text-align:center;">업체명</label>
+				<input type="text" id="bpname" placeholder="업체명을 입력하세요" name="ordercd">
+				<label for="doddate" style="margin-top:10px">납기일자</label>
+				<input type="date" id="doddate"name="doddate">
+				<div class="btn-group" role="group" aria-label="Basic example" style="margin-left:10px;"> 
+					<button type="button" id="searchDataBtn" class="btn btn-primary">조회</button>
+					<button type="button" id="resetModalBtn" class="btn btn-primary">초기화</button>
+				</div>
+			</div>
             <div id="searchGrid"></div>
           </div>
           <div class="modal-footer">
@@ -54,7 +64,7 @@
 	
 	<div class="modal fade" tabindex="-1" role="dialog" id="prdtModal">
       <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-        <div class="modal-content" style="height:500px">
+        <div class="modal-content" style="height:500px;">
           <div class="modal-header">
             <h2>lot별재고조회</h2>
           </div>
@@ -71,7 +81,7 @@
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+    </div><!-- /.modal -->	
 	
 		<script th:inline="javascript">
 		
@@ -259,6 +269,8 @@
 			$(document).ready(function () {
 				//미출고주문서검색클릭이벤트
 				$('#searchOrderModal').on('click',function(){
+					$('#bpname').val('');
+					$('#doddate').val('');
 					$.ajax({
 						url:'/bfOutList',
 						method:'GET',
@@ -275,7 +287,8 @@
 				})
 				//기출고주문서검색클릭이벤트
 				$('#searchFinOrderModal').on('click',function(){
-					
+					$('#bpname').val('');
+					$('#doddate').val('');
 					$.ajax({
 						url:'/searchFinOrder',
 						method:'GET',
@@ -351,8 +364,11 @@
 				}
 				//주문상세클릭이벤트
 				OrderDtGrid.on('click',function(ev){
-					let data = OrderDtGrid.getValue(ev.rowKey,'prdtCode');
+					let data = {};
 					
+					data.prdtCode = OrderDtGrid.getValue(ev.rowKey,'prdtCode');
+					data.orderDtCode = OrderDtGrid.getValue(ev.rowKey,'orderDtCode');
+					console.log('data',data)
 					if(ev.targetType == 'cell'){
 						lotPrdtOutList(data);
 						rowCheck = ev.rowKey
@@ -360,15 +376,13 @@
 				})
 				
 				function lotPrdtOutList(data){
-						
+					console.log(OrderDtGrid.getData());
 						$.ajax({
 							url:'/lotPrdtOutList',
 							method:'GET',
-							data:{
-								prdtCode : data
-							},
+							data:data,
 							success:function(result){
-								
+								console.log('ddd',result)
 							
 								lotPrdtGrid.resetData(result);	
 								setTimeout(() => lotPrdtGrid.refreshLayout(), 300);
@@ -458,8 +472,34 @@
 						})
 					}
 				})
-				
-				
+				//조회 처리이벤트
+				$('#searchDataBtn').on('click',function(ev){
+					$.ajax({
+						url:'/selectOrder',
+						method: 'POST',
+						data:{
+							bpName: $('#bpname').val(),
+							dodDate:$('#doddate').val()
+
+						},
+						success:function(result){
+							searchOrderGrid.resetData(result);
+					 		setTimeout(() => searchModal.refreshLayout(), 200);
+					 		
+							
+						},
+						error:function(err){
+							console.log(err);
+						}
+					})
+						
+					});
+				//모달창초기화 - 검색input창 초기화
+				$('#resetModalBtn').on('click',function(){	
+					searchOrderGrid.resetData([]);
+					$('#bpname').val('');
+					$('#doddate').val('');
+				});
 			});
 		</script>
 	</div>

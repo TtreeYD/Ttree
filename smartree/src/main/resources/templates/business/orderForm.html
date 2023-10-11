@@ -9,6 +9,8 @@
 
 <body>
 	<div layout:fragment="content">
+	<h1>주문서관리</h1>
+	<hr>
 		<h2 style="height:0px">주문정보</h2>
 		<div class="btn-group" role="group" aria-label="Basic example" style="float : right; margin-bottom:8px;">
 			<button class="btn btn-primary" style="float:right" id="searchOrder">검색</button>
@@ -18,7 +20,7 @@
 			<button class="btn btn-primary" style="float:right"id="deleteBtn">삭제</button>
 		</div>
 		<div id="order"></div>
-		<h2 style="height : 0px;margin-top:200px">주문상세정보</h2>
+		<h2 style="height : 0px;margin-top:50px">주문상세정보</h2>
 		<div class="btn-group" role="group" aria-label="Basic example" style="float : right;margin-bottom:8px;">
 			<button class="btn btn-primary" style="float:right" id="insertDtBtn">추가</button>
 			<button class="btn btn-primary" style="float:right" id="deleteDtBtn">삭제</button>
@@ -30,20 +32,17 @@
 			<div class="modal-dialog modal-dialog-centered modal-xl" role="document">
 				<div class="modal-content">
 					<h2 style="margin:30px">주문서검색</h2>
-					<div style="margin: 0 auto;">
+					<div style="margin-left:20px;">
 						<label for="bpname" style="text-align:center;">업체명</label>
-						<input type="text" id="bpname" class="form-control" placeholder="업체명을 입력하세요" name="ordercd"
-							style="width:500px">
-						<label for="plsdate" style="margin-top:10px">접수일자</label>
-						<input type="date" id="plsdate" class="form-control" name="plsdate" style="width:500px">
+						<input type="text" id="bpname" placeholder="업체명을 입력하세요" name="bpname">
+						<label for="plsdate" style="margin-top:10px">주문일자</label>
+						<input type="date" id="plsdate"  name="plsdate">
 						<label for="doddate" style="margin-top:10px">납기일자</label>
-						<input type="date" id="doddate" class="form-control" name="doddate" style="width:500px">
-					</div>
-					<div style="display: flex; justify-content: center; margin-top:10px;">
-						<button type="button" id="searchDataBtn" class="btn btn-primary"
-							style="margin: 5px;">조회</button>
-						<button type="button" id="resetModalBtn" class="btn btn-primary"
-							style="margin: 4px;" >초기화</button>
+						<input type="date" id="doddate" name="doddate">
+						<div class="btn-group" role="group" aria-label="Basic example" style="margin-left:10px;"> 
+							<button type="button" id="searchDataBtn" class="btn btn-primary">조회</button>
+							<button type="button" id="resetModalBtn" class="btn btn-primary">초기화</button>
+						</div>
 					</div>
 					<div class="modal-body">
 						<div id="searchModal"></div>
@@ -145,6 +144,11 @@
 					scrollX: false,
 					scrollY: true,
 					rowHeaders: ['checkbox'],
+					bodyHeight : 200,
+					pageOptions: {
+			            perPage: 5,
+			            useClient: true,
+			          },
 					columns: [
 						{
 							header: '제품명',
@@ -156,7 +160,7 @@
 							
 						},
 						{
-							header: '개당가격',
+							header: '단가',
 							name: 'orderDtPrice',
 							editor: 'text'
 						},
@@ -164,9 +168,19 @@
 							header: '수량',
 							name: 'orderDtCnt',
 							editor: 'text'
-						},
-
-					]
+						}],
+						summary: {
+							  height: 40,
+							  position: 'bottom', // or 'top'
+							  columnContent: {
+								  orderDtPrice: {
+							      template: function(valueMap) {
+							        return `TOTAL: ${valueMap.sum}`+'원';
+							      }
+							    }
+							  }
+							}
+					
 				});
 				//모달그리드
 				const searchModal = new tui.Grid({
@@ -325,7 +339,7 @@
 					//모달창초기화 - 검색input창 초기화
 					$('#resetModalBtn').on('click',function(){	
 						searchModal.resetData([]);
-						$('#ordercd').val('');
+						$('#bpname').val('');
 						$('#plsdate').val('');
 						$('#doddate').val('');
 					});
@@ -463,8 +477,7 @@
 					});
 					//주문서상세삭제
 					$('#deleteDtBtn').on('click',function(){
-						let delrows = dtOrder.getCheckedRows();
-						dtOrder.removeCheckedRows()
+						dtOrder.removeCheckedRows();
 						newOrderData={};
 						newOrderData.orderDtList = dtOrder.getCheckedRows();
 						/* $.ajax({
@@ -500,11 +513,7 @@
 						order.resetData(newOrder);
 					})
 					$('#insertDtBtn').on('click',function(){
-						newDtOrder.push({
-							codeType:'',
-							typeName:''					
-						});
-						dtOrder.resetData(newDtOrder);
+						dtOrder.appendRow();
 					})
 					
 					//업체명 , 업체코드 클릭이벤트
