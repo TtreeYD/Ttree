@@ -34,8 +34,13 @@ public class ProdRestController {
 	
 	//생산계획리스트
 	@GetMapping("/prodPlanList")
-	public List<ProdVO> getProdList(){
+	public List<ProdVO> prodPlanList(){
 		return service.selectProdList();
+	}
+	
+	@GetMapping("/selectDtPlanList")
+	public List<ProdVO> selectDtPlanList(ProdVO vo){
+		return service.selectDtPlanList(vo);
 	}
 	
 	//주문서조회

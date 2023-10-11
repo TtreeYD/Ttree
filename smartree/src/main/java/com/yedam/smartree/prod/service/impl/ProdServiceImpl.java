@@ -27,6 +27,11 @@ public class ProdServiceImpl implements ProdService {
 	public List<ProdVO> selectProdList() {
 		return prodMapper.selectProdList();
 	}
+	
+	@Override
+	public List<ProdVO> selectDtPlanList(ProdVO vo){
+		return prodMapper.selectDtPlanList(vo);
+	}
 
 	@Override
 	public List<BusinessVO> selectOrderAndPrdt() {

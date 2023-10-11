@@ -13,7 +13,9 @@ import com.yedam.smartree.prod.service.ProdVO;
 public interface ProdMapper {
 	
 	public List<ProdVO> selectProdList();
-
+	
+	List<ProdVO> selectDtPlanList(ProdVO vo);
+	
 	public List<BusinessVO> selectAllOrderAndPrdt();
 	
 	public List<ProdVO> selectProd(ProdVO vo);

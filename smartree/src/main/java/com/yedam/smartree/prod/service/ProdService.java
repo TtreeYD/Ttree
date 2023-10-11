@@ -8,6 +8,7 @@ import com.yedam.smartree.mdm.service.MdmPrcsVO;
 
 public interface ProdService {
 	public List<ProdVO> selectProdList();
+	List<ProdVO> selectDtPlanList(ProdVO vo);
 	public List<BusinessVO> selectOrderAndPrdt();
 	public List<ProdVO> selectProd(ProdVO vo);
 	public List<ProdVO> selectProdInstList(ProdVO vo);
