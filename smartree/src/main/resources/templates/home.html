@@ -5,25 +5,11 @@
     <meta charset="UTF-8">
     <title>SMARTREE</title>
 <link href="../startbootstrap/css/login.css" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
 <style>
-.error1 {
-   margin-bottom: 20px;
-    background-color: #e7c9a2;
-    border: 1px solid #f5c6cb;
-    border-radius: 5px; 
-    padding: 10px 15px;
-    color: #721c24;
-    font-weight: bold; 
-    text-align: center; 
-    font-size: 16px; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-.error1::before {
-    content: "\2716"; 
-    font-size: 24px; 
-    color: #721c24; 
-    display: block;
-    margin: 0 auto 10px;
+.swal2-title {
+	font-size : 1.6em;
 }
 </style>
 </head> 
@@ -42,7 +28,6 @@
       <div class="col align-items-center flex-col sign-in">
       <form method="post" action="/login">
        <div class="error1" th:if="${param.error}">
-            아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.
         </div>
         <div class="form-wrapper align-items-center">
           <div class="form sign-in">
@@ -90,13 +75,22 @@
     <!-- END CONTENT SECTION -->
   </div>
   
-  <script>
+  <script th:inline="javascript">
+  let msg = [[${param.error}]]
+  if(msg != null){
+	  Swal.fire({
+			title: '아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.',
+			icon: 'error',
+			confirmButtonText: '확인'
+		})
+  }
 	  let container = document.getElementById('container')
 	
 	  setTimeout(() => {
 	    container.classList.add('sign-in')
 	  }, 200)	
   
+	 
   
   </script>
   

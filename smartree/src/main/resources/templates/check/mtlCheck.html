@@ -340,12 +340,13 @@
 					
 					let data = grid2.getData();
 					let datas = grid2.getCheckedRows();
+					console.log(datas);
 					if(datas.length ==0 ){
-						alert("체크하세요");
+						toastr.warning("체크 후 저장하세요.");
 						return
 					}
 					
-					$.ajax({
+	 				$.ajax({
 					url: '/mtlinsert', 
 					method: 'post',
 					dataType: 'json',
@@ -361,7 +362,7 @@
 					error: function(err) {
 						console.log(err);
 					}
-					});
+					}); 
 				})
 				
 				//검색옵션 값

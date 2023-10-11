@@ -57,8 +57,7 @@
   		#{mtlCnt},
   		#{mtlErrorCnt},
   		#{mtlPassCnt},
-  		#{mtlChkManager},
-  		#{result, mode=OUT, jdbcType=VARCHAR, javaType=string}
+  		#{mtlChkManager}
   	)}
   	</insert>
   
