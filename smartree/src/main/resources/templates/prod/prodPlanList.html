@@ -1,173 +1,258 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
 <head>
-    <meta charset="UTF-8">
-    <title>생산계획조회</title>
-</head> 
+	<meta charset="UTF-8">
+	<title>생산계획조회</title>
+</head>
 <style>
-	
+
 </style>
+
 <body>
 	<div layout:fragment="content">
-	<h1 style="display: inline-block;">생산계획조회</h1>
+		<h1 style="display: inline-block;">생산계획조회</h1>
 		<div style="float:right; margin-bottom: 10px">
-			<div class="input-group" >
-				<div style="font-size:20px; margin-top:4px; margin-right:10px;">	
-				    <input type="radio" id="allInst" name="typeCheck" value="" checked />
-				    <label for="allInst" class="mr-2">전체</label>
-				 	<input type="radio" id="beforeInst" name="typeCheck" value="MA01" />
-				    <label for="beforeInst" class="mr-2">지시전</label>
-				    <input type="radio" id="afterInst" name="typeCheck" value="MA02"/>
-				    <label for="afterInst" class="mr-2">지시완료</label>
+			<div class="input-group">
+				<div style="font-size:20px; margin-top:4px; margin-right:10px;">
+					<input type="radio" id="allInst" name="typeCheck" value="" checked />
+					<label for="allInst" class="mr-2">전체</label>
+					<input type="radio" id="beforeInst" name="typeCheck" value="MA01" />
+					<label for="beforeInst" class="mr-2">지시전</label>
+					<input type="radio" id="afterInst" name="typeCheck" value="MA02" />
+					<label for="afterInst" class="mr-2">지시완료</label>
 				</div>
 				<div class="form-outline">
-					<input type="search" id="form1" class="form-control" placeholder="계획명 또는 담당자"/> 
+					<input type="search" id="form1" class="form-control" placeholder="계획명 또는 담당자" />
 				</div>
-				<button type="button" class="btn btn-primary" id="searchBtn">
-					<i class="fas fa-search"></i>
-				</button>
+					<button type="button" class="btn btn-primary" id="searchBtn">
+						<i class="fas fa-search"></i>
+					</button>
 			</div>
 		</div>
-		<div id="grid" style="height: 400px;"></div>
-    
-    
-      <script>
-        let grid;
-        let searchData;
-        //const header = ['dtProdPlanCode','prdtName','prodPlanCnt','prodPlanName','prodRank','prodPlanDate','prodPlanSdate','prodPlanEdate']
-        window.onload=function(){
-
-	    const grid = new tui.Grid({
-	      el: document.getElementById('grid'),
-	      scrollX: false,
-	      scrollY: false,
-	      pageOptions: {
-            perPage: 13,
-            useClient: true,
-          },
-          bodyHeight : 550,
-	      columns: [
-	        {
-	          header: '계획상세코드',
-	          name: 'dtProdPlanCode'
-	        },
-	        {
-	          header: '계획명',
-	          name: 'prodName'
-	        },
-	        {
-	          header: '계획담당자',
-	          name: 'prodPlanName'
-	        },
-	        {
-	          header: '제품명',
-	          name: 'prdtName'
-	        },
-	        {
-	          header: '수량',
-	          name: 'prodPlanCnt'
-	        },
-	        {
-	          header: '순위',
-	          name: 'prodRank',
-	          hidden: true
-	        },
-	        {
-	          header: '생산계획일자',
-	          name: 'prodPlanDate'
-	        },
-	        {
-	          header: '생산시작일자',
-	          name: 'prodPlanSdate'
-	        },
-	        {
-	          header: '생산종료일자',
-	          name: 'prodPlanEdate'
-	        },
-	        {
-	        	 header: '지시여부',
-	        	 name: 'prodInstYn'
-	        }
-	      ]
-	    });
-	    
-		$.ajax({
-			url:'/prodPlanList',
-			method:'get',
-	    	dataType:'json',
-
-			success:function(result){
-				for(let data of result){
-					if(data.prodInstYn=='n'){
-						data.prodInstYn = '지시전'
-					} else{
-						data.prodInstYn = '지시완료'
-					}
-				}
-				grid.resetData(result);
-			},
-			error:function(err){
-				console.log(err);
-			}
-		})
+		<div id="planGrid"></div>
 		
-		$('#form1').on('keypress', function (ev) {
-				if (ev.which == 13) {
-					event.preventDefault();
-					$('#searchBtn').click();
-				}
-			})
+		<div class="modal fade" tabindex="-1" role="dialog" id="dtModal">
+			<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">생산계획상세</h4>
+						<button type="button" class="close" data-dismiss="modal"	aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="dtGrid"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+		
+
+
+		<script>
+			let searchData;
 			
-		$('#searchBtn').on('click', function(e){
-			let data={};
-			data.prodName= $('#form1').val();
-			data.prodPlanName= $('#form1').val();
-			searchPlan(data);
-			
-		})
-		function searchPlan(data){
-			$.ajax({
-				url:'/searchProd',
-				method:'post',
-				data : data,
-				success:function(result){
-					for(let data of result){
-						if(data.prodInstYn=='n'){
-							data.prodInstYn = '지시전'
-						} else{
-							data.prodInstYn = '지시완료'
+			//const header = ['dtProdPlanCode','prdtName','prodPlanCnt','prodPlanName','prodRank','prodPlanDate','prodPlanSdate','prodPlanEdate']
+			window.onload = function () {
+				const planGrid = new tui.Grid({
+					el: document.getElementById('planGrid'),
+					scrollX: false,
+					scrollY: false,
+					pageOptions: {
+						perPage: 15,
+						useClient: true,
+					},
+					bodyHeight: 600,
+					rowHeaders:['rowNum'],
+					columns: [
+						{
+							header: '생산계획코드',
+							name: 'prodPlanCode',
+							hidden: true
+						},
+						{
+							header: '계획명',
+							name: 'prodName'
+						},
+						{
+							header: '계획담당자',
+							name: 'prodPlanName'
+						},
+
+						{
+							header: '생산계획일자',
+							name: 'prodPlanDate',
+							sortable: true,
+							align: 'center'
+						},
+						{
+							header: '주문코드',
+							name: 'orderCode'
+						},
+						{
+							header: '납기일자',
+							name: 'dodDate',
+							sortable: true,
+							align: 'center'
+						},
+						{
+							header: '생산시작일자',
+							name: 'prodPlanSdate',
+							sortable: true,
+							align: 'center'
+						},
+						{
+							header: '생산종료일자',
+							name: 'prodPlanEdate',
+							sortable: true,
+							align: 'center'
+						},
+						{
+							header: '지시여부',
+							name: 'prodInstYn',
+							align: 'center'
 						}
+					]
+				});
+
+				const dtGrid = new tui.Grid({
+					el: document.getElementById('dtGrid'),
+					scrollX: false,
+					scrollY: false,
+					pageOptions: {
+						perPage: 5,
+						useClient: true,
+					},
+					bodyHeight: 200,
+					columns: [
+						{
+							header: '제품코드',
+							name: 'prdtCode'
+						},
+						{
+							header: '제품명',
+							name: 'prdtName'
+						},
+						{
+							header: '계획량',
+							name: 'prodPlanCnt',
+							align: 'right'
+						},
+						{
+							header: '우선순위',
+							name: 'prodRank',
+							align: 'right'
+						},
+						{
+							header: '비고',
+							name: 'prodPlanNote'
+						}
+					]
+				});
+
+				$.ajax({
+					url: '/prodPlanList',
+					method: 'get',
+					dataType: 'json',
+
+					success: function (result) {
+						for (let data of result) {
+							if (data.prodInstYn == 'n') {
+								data.prodInstYn = '지시전'
+							} else {
+								data.prodInstYn = '지시완료'
+							}
+						}
+						planGrid.resetData(result);
+					},
+					error: function (err) {
+						console.log(err);
 					}
-					searchData = result;
-					grid.resetData(result);
-					setTimeout(() => grid.refreshLayout(), 800);
-				},
-				error:function(err){
-					console.log(err);
+				})
+
+				$('#form1').on('keypress', function (ev) {
+					if (ev.which == 13) {
+						event.preventDefault();
+						$('#searchBtn').click();
+					}
+				})
+
+				$('#searchBtn').on('click', function (e) {
+					let data = {};
+					data.prodName = $('#form1').val();
+					data.prodPlanName = $('#form1').val();
+					searchPlan(data);
+
+				})
+
+				function searchPlan(data) {
+					$.ajax({
+						url: '/searchProd',
+						method: 'post',
+						data: data,
+						success: function (result) {
+							for (let data of result) {
+								if (data.prodInstYn == 'n') {
+									data.prodInstYn = '지시전'
+								} else {
+									data.prodInstYn = '지시완료'
+								}
+							}
+							searchData = result;
+							planGrid.resetData(result);
+							setTimeout(() => planGrid.refreshLayout(), 800);
+						},
+						error: function (err) {
+							console.log(err);
+						}
+					})
 				}
-			})
-		}
-		$('#allInst').on('click',function(){
-			searchPlan();
-		});
-		$('#beforeInst').on('click',function(){
-			let data = {
-					prodInstYn : $('#beforeInst').val()
-			};
-			searchPlan(data);
-		});
-		$('#afterInst').on('click',function(){
-			let data = {
-					prodInstYn : $('#afterInst').val()
-			};
-			searchPlan(data);
-		});
-	  }
-	  
-    </script>
+				$('#allInst').on('click', function () {
+					searchPlan();
+				});
+				$('#beforeInst').on('click', function () {
+					let data = {
+						prodInstYn: $('#beforeInst').val()
+					};
+					searchPlan(data);
+				});
+				$('#afterInst').on('click', function () {
+					let data = {
+						prodInstYn: $('#afterInst').val()
+					};
+					searchPlan(data);
+				});
+				
+				planGrid.on('click', function(ev){
+					if(ev.rowKey == undefined){
+						return
+					}
+					let planCode = planGrid.getValue(ev.rowKey,'prodPlanCode')
+					$.ajax({
+						url: "/selectDtPlanList",
+						data:{
+							prodPlanCode : planCode
+						},
+						success: result => {
+							dtGrid.resetData(eval(result))
+							$('#dtModal').modal('show')
+							setTimeout(() => dtGrid.refreshLayout(), 200)
+						},
+						error: err => console.log(err)
+					})
+				})
+
+			}
+		</script>
 	</div>
 </body>
+
 </html>
