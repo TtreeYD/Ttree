@@ -55,11 +55,12 @@
   <!-- 완제품검사목록 -->
   <select id="selectProdCheckList" resultType="CheckVO">
   	SELECT i.prod_inst_code,
-		   i.prod_inst_date,
+		   r.prcs_edate prod_inst_date,
 		   
 		   r.prcs_rs_code,
 		   
 	       c.prdt_chk_cnt,
+		   get_prdt_name(c.prdt_code) prdt_name,
 		   c.prdt_code,
 		   c.prdt_chk_code
 	FROM prdt_chk c
