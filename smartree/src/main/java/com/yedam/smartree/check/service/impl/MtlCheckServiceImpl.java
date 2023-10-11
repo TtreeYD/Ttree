@@ -51,4 +51,9 @@ public class MtlCheckServiceImpl implements MtlCheckService{
 		return mtlcheckmapper.updateChkMtl(vo);
 	}
 
+	@Override
+	public List<MtlCheckVO> chkAll() {
+		return mtlcheckmapper.chkAll();
+	}
+
 }

@@ -15,6 +15,7 @@ public class MtlCheckVO {
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private Date mtlDate;
 	private String bpCode;
+	private String bpName;
 	private String mtlCode;
 	private String mtlName;
 	private int mtlChkCnt;

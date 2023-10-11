@@ -68,10 +68,15 @@ public class CheckRestController {
 	public List<MtlCheckVO> getMtlDate(String mtlDate){
 		return mtlcheckservice.searchMtlDate(mtlDate);
 	}
-	//검사된자재검색
+	//검사된자재검색(자재검사)
 	@GetMapping("/mtlallchk")
 	public List<MtlCheckVO> getMtlAllChk(){
 		return mtlcheckservice.selectChkAll();
+	}
+	//검사된자재검색(자재조회)
+	@GetMapping("/chkAll")
+	public List<MtlCheckVO> getchkAll(){
+		return mtlcheckservice.chkAll();
 	}
 	//검사된자재수정
 	@PostMapping("/updatemtlchk")

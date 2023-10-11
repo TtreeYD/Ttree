@@ -15,6 +15,7 @@
   				prdt_code = #{prdtCode}
   			</if>
   		</where>
+  		ORDER BY prdt_code
   	</select>
   	
   	<!-- 제품검사기준목록 -->
@@ -29,6 +30,7 @@
   				chk_std_code = #{chkStdCode}
   			</if>
   		</where>
+  		ORDER BY chk_std_code
   	</select> 
   	
   	<!-- 제품별 기준목록 -->

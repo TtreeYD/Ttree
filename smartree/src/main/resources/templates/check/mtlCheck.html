@@ -40,9 +40,9 @@
 		<div class="btn-group btn-right" role="group"
 			aria-label="Basic example"
 			style="float: right; padding-bottom: 10px;">
-			<button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
+			<!-- <button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
 			<button type="button" id="noChkBtn" class="btn btn-primary"
-				data-toggle="modal" data-target="#myModal">상세조회</button>
+				data-toggle="modal" data-target="#myModal">상세조회</button> -->
 			<button type="submit" id="addBtn" class="btn btn-primary">저장</button>
 
 		</div>
@@ -107,7 +107,7 @@
        let modalSearchData;
 	   let mtlDate;
         window.onload=function(){
-        	 
+        	mtlChkNO();
 		    const grid2 = new tui.Grid({
 			      el: document.getElementById('grid2'),
 			      scrollX: false,
@@ -126,8 +126,8 @@
         	          align: 'center'
         	        },
         	        {
-        	          header: '거래처',
-        	          name: 'bpCode',
+        	          header: '거래처명',
+        	          name: 'bpName',
         	          align: 'center'
         	        },
 			        {
@@ -203,12 +203,13 @@
 					]
 			    });								
 
-			    $('#noChkBtn').on('click', function(){
+			/*     $('#noChkBtn').on('click', function(){
                      setTimeout(() => grid3.refreshLayout(), 200);
-                 })
+                 }) */
 				
                  toastr.options = {
 	  			  positionClass: "toast-top-center",
+	  			  preventDuplicates: true,
 	  			  escapeHtml: true,
 	  			  closeButton: true,
 	 			  newestOnTop: false,
@@ -217,7 +218,7 @@
 			   
                // 검사량 - 불량 함수
                function calc() {
-            	   let datas = grid2.getData()
+            	   let datas = grid2.getData();
             	   for(let data of datas){
             		   if(data.mtlCnt - data.mtlErrorCnt < 0) {
             			   toastr.warning('불량량이 검사량을 초과합니다');
@@ -235,12 +236,19 @@
 					 let colName = ev.changes[0].columnName
 					 let chk1 = isNaN(grid2.getValue(rowKey, 'mtlCnt'))
 					 let chk2 = isNaN(grid2.getValue(rowKey, 'mtlErrorCnt'))
+					 let chk3 = grid2.getValue(rowKey, 'mtlCnt')
+					 let chk4 = grid2.getValue(rowKey, 'mtlErrorCnt')
 					 if(chk1 || chk2){
 						 toastr.warning('숫자를 입력해주세요')
 						 grid2.setValue(rowKey, colName, 0)
 						 return;
 					 }
-					 calc()
+					 if(chk3 < 0|| chk4 < 0){
+						 toastr.warning('0이상의 값을 넣어주세요.')
+						 grid2.setValue(rowKey, colName, 0)
+						 return;
+					 }
+					 calc();
 	            	/* let rowKey = ev.changes[0].rowKey
 	            	let colName = ev.changes[0].columnName
 	            	console.log(ev)
@@ -256,7 +264,7 @@
 		        });
                  
 			  //모달 조회 클릭이벤트
-			  $('#searchDataBtn').on('click', function() {
+			 /*  $('#searchDataBtn').on('click', function() {
 				if(!($('#mtlDate').val())){
 				      
 					toastr.warning('날짜를 선택하세요');
@@ -283,7 +291,7 @@
 						console.log(err);
 					}
 					});
-				});
+				}); */
 
 				//페이지 초기화버튼
 				$('#resetBtn').on('click',function(){
@@ -357,7 +365,7 @@
 						console.log(datas);
 						toastr.success('저장완료');
 						unsavedChanges = false;
-						grid2.resetData([]);
+						mtlChkNO();
 					},
 					error: function(err) {
 						console.log(err);
@@ -379,7 +387,7 @@
 				//페이지 조건검색(검사)
 				function mtlChkOK() {
 					$.ajax({
-						url: '/mtlallchk', 
+						url: '/chkAll', 
 						method: 'get',	
 						success: function(result) {
 							grid2.resetData(result);
