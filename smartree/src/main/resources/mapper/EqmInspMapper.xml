@@ -34,6 +34,9 @@
   			<if test="eqmName != null and !eqmName.equals('')">
   				eqm_name LIKE '%'||#{eqmName}||'%'
   			</if>
+  			<if test="startNextInspDate != null and !startNextInspDate.equals('') and endNextInspDate != null and !endNextInspDate.equals('')">
+    		and TO_CHAR(i.NEXT_INSP_DATE) BETWEEN TO_CHAR(#{startNextInspDate},'YY/MM/DD') AND TO_CHAR(#{endNextInspDate},'YY/MM/DD')
+  		  </if>
   		</where>  	
   	 					 
   	ORDER BY eqm_code

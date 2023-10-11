@@ -29,9 +29,11 @@ public class EqmInspServiceImpl implements EqmInspService{
 	}
 
 	@Override
-	public List<EqmInspVO> searchEqmInsp(String eqmName) {
-		return eqminspmapper.searchEqmInsp(eqmName);
+	public List<EqmInspVO> searchEqmInsp(EqmInspVO eqmInspVO) {
+		
+		return eqminspmapper.searchEqmInsp(eqmInspVO);
 	}
+	
 
 	@Override
 	public int insertEqmInsp(EqmInspVO eqmInspVO) {
@@ -72,6 +74,8 @@ public class EqmInspServiceImpl implements EqmInspService{
 	public int updateEqmNoper(EqmNoperVO eqmNoperVO) {
 		return eqminspmapper.updateEqmNoper(eqmNoperVO);
 	}
+
+
 
 	
 	

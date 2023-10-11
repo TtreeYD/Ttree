@@ -32,4 +32,11 @@ public class EqmInspVO {
 	private String noperCode;
 	private String eqmName;
 	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
+	private Date startNextInspDate;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
+	private Date endNextInspDate;
+	
 }

@@ -85,6 +85,12 @@
 	<div style="padding-bottom: 10px;">
 	<label for="searchName">설비명  :  </label>
 	<input type= "text" id="searchName" placeholder="설비명을 입력하시오">
+	
+	<label style="margin-left: 28.25px">차기점검일</label>
+		<input id="startNextInspDate" type="date" style="width: 138px;">
+		~ 
+		<input id="endNextInspDate" type="date" style="width: 138px;">
+	
 	<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
 	</div>
 	
@@ -330,8 +336,12 @@ window.onload=function(){
     function getEqmInspName(eqmName){
     	$.ajax({
 			url:'/eqmInpsName',
+			method: 'POST',
 			data: {
-				eqmName : eqmName
+				eqmName : eqmName,
+				
+				startNextInspDate : $('#startNextInspDate').val(),
+				endNextInspDate : $('#endNextInspDate').val()
 			},
 			success: result => {
 				console.log(result);
@@ -374,7 +384,7 @@ window.onload=function(){
 	function searchEqmInspName(){
 
 		$('#all').prop('checked',true)
-		if($('#searchName').val()){
+		if($('#searchName').val() || $('#startNextInspDate').val()){
 			let eqmName = $('#searchName').val();
 			getEqmInspName(eqmName);
 			
