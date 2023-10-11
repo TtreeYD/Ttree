@@ -27,10 +27,13 @@
         color: black;
         font-weight: bolder;
       }
-      .tui-grid-cell.orange {
-        background-color: rgb(246, 127, 8);
-        color: black;
+      .tui-grid-cell.blue {
+        background-color: rgb(61, 116, 234);
+        color: white;
         font-weight: bolder;
+      }
+      #goBtn {
+      	visibility: hidden;
       }
     </style>
   </head>
@@ -87,7 +90,7 @@
               readonly
               id="eqmCode"
             />
-            <input type= "hidden" id="noperCode">
+            <input type="hidden" id="noperCode" />
           </div>
 
           <div class="input-group mb-4">
@@ -141,13 +144,7 @@
             <div class="input-group-prepend col-3">
               <label class="input-group-text col">비가동시작시간 *</label>
             </div>
-            <input
-              type="text"
-              class="form-control col-4"
-              readonly
-              name="noperSdate"
-              id="noperSdate"
-            />
+            <input type="text" class="form-control col-4" readonly name="noperSdate" id="noperSdate" />
 
             <input type="button" value="시작" id="startBtn" disabled />
           </div>
@@ -156,23 +153,25 @@
             <div class="input-group-prepend col-3">
               <label class="input-group-text col">비가동종료시간 *</label>
             </div>
-            <input
-              type="text"
-              class="form-control col-4"
-              readonly
-              name="noperLdate"
-              id="noperLdate"
+            <input type="text" class="form-control col-4" readonly name="noperLdate" id="noperLdate"
             />
-            <input type="button" value="종료" id="endBtn"  disabled />
+            <input type="button" value="종료" id="endBtn" disabled />
+            
+             
+        
+            
           </div>
-
-          <div class="text-center">
-            <button type="button" id="insertBtn" class="btn btn-primary">
-              저장
-            </button>
-            <button type="button" id="resetBtn" class="btn btn-primary">
-              초기화
-            </button>
+	        <div class="d-flex pl-5">
+		        <div class="mx-auto">
+		            <button type="button" id="insertBtn" class="btn btn-primary" style="margin-left: 180px">
+		              저장
+		            </button>
+		            <button type="button" id="resetBtn" class="btn btn-primary">
+		              초기화
+		            </button>
+		        </div>
+            <button type="button" id="goBtn" class="btn btn-primary" onclick="location.href='/eqm/eqmInspForm';"> 설비점검바로가기 </button> 
+             <!-- <button type="button" id="goBtn" class="btn btn-primary" onclick="window.open('/eqm/eqmInspForm');"> 설비점검바로가기 </button>  -->
           </div>
         </div>
 
@@ -180,561 +179,564 @@
         <div class="col"></div>
       </div>
       <script th:inline="javascript">
-      let manager = [[${session.loginMember.empName}]];
-        var grid;
-        window.onload = function () {
-          const grid = new tui.Grid({
-            el: document.getElementById("noperGrid"),
-            scrollX: false,
-            minBodyHeight: 400,
-            rowHeaders: ["rowNum"],
-            pageOptions: {
-              perPage: 10,
-              useClient: true,
-            },
-            columns: [
-              {
-                header: "설비코드",
-                name: "eqmCode",
-                align: "center",
-              },
-              {
-                header: "설비명",
-                name: "eqmName",
-                align: "center",
-              },
-              {
-                header: "설비상태",
-                name: "eqmState",
-                align: "center",
-              },
-            ],
-          });
+          let manager = [[${session.loginMember.empName}]];
+            var grid;
+            window.onload = function () {
+              const grid = new tui.Grid({
+                el: document.getElementById("noperGrid"),
+                scrollX: false,
+                minBodyHeight: 400,
+                rowHeaders: ["rowNum"],
+                pageOptions: {
+                  perPage: 10,
+                  useClient: true,
+                },
+                columns: [
+                  {
+                    header: "설비코드",
+                    name: "eqmCode",
+                    align: "center",
+                  },
+                  {
+                    header: "설비명",
+                    name: "eqmName",
+                    align: "center",
+                  },
+                  {
+                    header: "설비상태",
+                    name: "eqmState",
+                    align: "center",
+                  },
+                ],
+              });
 
-          getEqmList();
-
-          // 검색버튼 클릭시
-          $("#searchBtn").on("click", function () {
-            searchEqmName();
-          });
-          // 검색 - 엔터시
-          $("#searchName").on("keypress", function (ev) {
-            if (ev.which == 13) {
-              ev.preventDefault();
-              searchEqmName();
-            }
-          });
-          //시작시간
-          $("#startBtn").on("click", function () {
-            if ($("#noperLdate").val()) {
-              $("#noperLdate").val("");
-            }
-            let startTime = getToday(); //new Date().toLocaleString();
-            document.getElementById("noperSdate").value = startTime;
-          });
-          //종료시간
-          $("#endBtn").on("click", function () {
-            if (!$("#noperSdate").val()) {
-              return;
-            }
-            let endTime = getToday();
-            document.getElementById("noperLdate").value = endTime;
-          });
-
-          //공정구분으로 설비조회
-          $("#eqmDivision").on("change", function () {
-            if ($("#searchName").val()) {
-              $("#searchName").val("");
-            }
-
-            data = $("#eqmDivision").val();
-
-            if (data == "") {
               getEqmList();
-            }
-            console.log(data);
 
-            $.ajax({
-              url: "/eqmDivision",
-              data: {
-                eqmDivision: data,
-              },
-              success: (result) => {
-                console.log(result);
+              // 검색버튼 클릭시
+              $("#searchBtn").on("click", function () {
+                searchEqmName();
+              });
+              // 검색 - 엔터시
+              $("#searchName").on("keypress", function (ev) {
+                if (ev.which == 13) {
+                  ev.preventDefault();
+                  searchEqmName();
+                }
+              });
+              //시작시간
+              $("#startBtn").on("click", function () {
+                if ($("#noperLdate").val()) {
+                  $("#noperLdate").val("");
+                }
+                let startTime = getToday(); //new Date().toLocaleString();
+                document.getElementById("noperSdate").value = startTime;
+              });
+              //종료시간
+              $("#endBtn").on("click", function () {
+                if (!$("#noperSdate").val()) {
+                  return;
+                }
+                let endTime = getToday();
+                document.getElementById("noperLdate").value = endTime;
+              });
 
-                //
-                for (let item of result) {
-                  if (item.eqmState == "사용가능") {
-                    item._attributes = {
-                      className: {
-                        column: {
-                          eqmState: ["green"],
-                        },
-                      },
-                    };
-                  } else if (item.eqmState == "사용중") {
-                    item._attributes = {
-                      className: {
-                        column: {
-                          eqmState: ["red"],
-                        },
-                      },
-                    };
-                  } else if(item.eqmState == "비가동"){
-                    item._attributes = {
-                      className: {
-                        column: {
-                          eqmState: ["orange"],
-                        },
-                      },
-                    };
-                  }else {
-                      item._attributes = {
-                              className: {
-                                column: {
-                                  eqmState: ["yellow"],
-                                },
-                              },
-                            };
-                          }
-                  
+              //공정구분으로 설비조회
+              $("#eqmDivision").on("change", function () {
+                if ($("#searchName").val()) {
+                  $("#searchName").val("");
                 }
 
-                //
+                data = $("#eqmDivision").val();
 
-                grid.resetData(result);
+                if (data == "") {
+                  getEqmList();
+                }
+                console.log(data);
 
-                //  grid.resetData(eval(result));
+                $.ajax({
+                  url: "/eqmDivision",
+                  data: {
+                    eqmDivision: data,
+                  },
+                  success: (result) => {
+                    console.log(result);
 
-                /* 	grid2.resetData(result);
-      	   	      			$("#searchEqmModal").modal('show');
-      	   	      			setTimeout(() => grid2.refreshLayout(), 200); */
-              },
-              error: (err) => console.log(err),
-            });
-          });
-
-          // 전체설비 조회
-          function getEqmList() {
-            $.ajax({
-              url: "/eqms",
-              method: "get",
-              dataType: "json",
-              success: function (result) {
-                //console.log(result);
-
-                //
-                for (let item of result) {
-                  if (item.eqmState == "사용가능") {
-                    item._attributes = {
-                      className: {
-                        column: {
-                          eqmState: ["green"],
-                        },
-                      },
-                    };
-                  } else if (item.eqmState == "사용중") {
-                    item._attributes = {
-                      className: {
-                        column: {
-                          eqmState: ["red"],
-                        },
-                      },
-                    };
-                  } else if(item.eqmState == "비가동"){
-                      item._attributes = {
-                              className: {
-                                column: {
-                                  eqmState: ["orange"],
-                                },
-                              },
-                            };
+                    //
+                    for (let item of result) {
+                      if (item.eqmState == "사용가능") {
+                        item._attributes = {
+                          className: {
+                            column: {
+                              eqmState: ["green"],
+                            },
+                          },
+                        };
+                      } else if (item.eqmState == "사용중") {
+                        item._attributes = {
+                          className: {
+                            column: {
+                              eqmState: ["red"],
+                            },
+                          },
+                        };
+                      } else if(item.eqmState == "비가동"){
+                        item._attributes = {
+                          className: {
+                            column: {
+                              eqmState: ["blue"],
+                            },
+                          },
+                        };
                       }else {
-                              item._attributes = {
-                                      className: {
-                                        column: {
-                                          eqmState: ["yellow"],
-                                        },
-                                      },
-                                    };
-                                  }
-                }
+                          item._attributes = {
+                                  className: {
+                                    column: {
+                                      eqmState: ["yellow"],
+                                    },
+                                  },
+                                };
+                              }
 
-                //
+                    }
 
-                //	grid.resetData(eval(result));
-                grid.resetData(result);
-              },
-              error: function (err) {
-                console.log(err);
-              },
-            });
-          }
+                    //
 
-          // 설비 구분으로 조회
-          function searcheqmDivision(eqmDivison) {
-            $.ajax({
-              url: "/eqmDivision",
-              data: {
-                eqmDivison: eqmDivison,
-              },
-              success: (result) => {
-                console.log(result);
-                grid.resetData(eval(result));
+                    grid.resetData(result);
 
-                /* 	grid2.resetData(result);
-  	   	      			$("#searchEqmModal").modal('show');
-  	   	      			setTimeout(() => grid2.refreshLayout(), 200); */
-              },
-              error: (err) => console.log(err),
-            });
-          }
+                    //  grid.resetData(eval(result));
 
-          // 설비 이름 조회
-          function getEqmName(eqmName) {
-            $.ajax({
-              url: "/eqmName",
-              data: {
-                eqmName: eqmName,
-              },
-              success: (result) => {
-                console.log(result);
+                    /* 	grid2.resetData(result);
+          	   	      			$("#searchEqmModal").modal('show');
+          	   	      			setTimeout(() => grid2.refreshLayout(), 200); */
+                  },
+                  error: (err) => console.log(err),
+                });
+              });
 
-                //
-                for (let item of result) {
-                  if (item.eqmState == "사용가능") {
-                    item._attributes = {
-                      className: {
-                        column: {
-                          eqmState: ["green"],
-                        },
-                      },
-                    };
-                  } else if (item.eqmState == "사용중") {
-                    item._attributes = {
-                      className: {
-                        column: {
-                          eqmState: ["red"],
-                        },
-                      },
-                    };
-                  } else if(item.eqmState == "비가동"){
-                      item._attributes = {
-                              className: {
-                                column: {
-                                  eqmState: ["orange"],
-                                },
-                              },
-                            };
+              // 전체설비 조회
+              function getEqmList() {
+                $.ajax({
+                  url: "/eqms",
+                  method: "get",
+                  dataType: "json",
+                  success: function (result) {
+                    //console.log(result);
+
+                    //
+                    for (let item of result) {
+                      if (item.eqmState == "사용가능") {
+                        item._attributes = {
+                          className: {
+                            column: {
+                              eqmState: ["green"],
+                            },
+                          },
+                        };
+                      } else if (item.eqmState == "사용중") {
+                        item._attributes = {
+                          className: {
+                            column: {
+                              eqmState: ["red"],
+                            },
+                          },
+                        };
+                      } else if(item.eqmState == "비가동"){
+                          item._attributes = {
+                                  className: {
+                                    column: {
+                                      eqmState: ["blue"],
+                                    },
+                                  },
+                                };
                           }else {
-                              item._attributes = {
-                                      className: {
-                                        column: {
-                                          eqmState: ["yellow"],
-                                        },
-                                      },
-                                    };
-                                  }
-                }
+                                  item._attributes = {
+                                          className: {
+                                            column: {
+                                              eqmState: ["yellow"],
+                                            },
+                                          },
+                                        };
+                                      }
+                    }
 
-                //
-                grid.resetData(result);
-                //grid.resetData(eval(result));
-              },
-              error: (err) => console.log(err),
-            });
-          }
-          // 설비 이름 조회 : input에 값
-          function searchEqmName() {
-            $("#eqmDivision").val("");
-            if ($("#searchName").val()) {
-              let eqmName = $("#searchName").val();
-              getEqmName(eqmName);
-            }else{
-    			getEqmList();
-    		}
-          }
-          // 설비조회 모달창 더블클릭
-          grid.on("dblclick", (ev) => {
-            if (ev.rowKey == undefined) {
-              return;
-            }
-            console.log(ev)
-           // console.log(ev.rowKey)
-            let data = grid.getValue(ev.rowKey, "eqmCode");
-            let data2 = grid.getValue(ev.rowKey, "eqmState");
-        //   console.log(data);
-           console.log(data2);
-          
-           if(data2 =='비가동'){       	  
-        	   let eqmState ='S';
-        	   getEqmNoperEqm(data, eqmState);
-        	   return
-           }
-           else if(data2 == '설비점검관리에 등록하세요'){
-        	   let eqmState='E';
-        	   getEqmNoperEqm(data, eqmState);
-        	   return
-           }else if(data2 == '사용가능'){
-        	   getEqm(data);
-           }else{
-        	   reset();
-        	   $('#startBtn').prop('disabled',true)
-         	  $('#endBtn').prop('disabled',true)
-         	  $('#insertBtn').prop('disabled',true)
-           }
- 			
-            
-          });
-          // 설비코드로 단건조회 후 화면에 설비코드,설비명 값보이게하는 함수
-          function getEqm(data) {
-        	  
-        	  // 시작버튼 활성화
-        	  $('#startBtn').prop('disabled',false)
-        	  $('#endBtn').prop('disabled',true)
-        	  $('#insertBtn').prop('disabled',false)
-        	  
-        	  
-            $.ajax({
-              url: "/selectEqm",
-              method: "get",
-              data: {
-                eqmCode: data,
-              },
-              success: function (result) {
-                console.log(result);
-				reset();
-                if (result.eqmState != "Y") {
-                 
+                    //
+
+                    //	grid.resetData(eval(result));
+                    grid.resetData(result);
+                  },
+                  error: function (err) {
+                    console.log(err);
+                  },
+                });
+              }
+
+              // 설비 구분으로 조회
+              function searcheqmDivision(eqmDivison) {
+                $.ajax({
+                  url: "/eqmDivision",
+                  data: {
+                    eqmDivison: eqmDivison,
+                  },
+                  success: (result) => {
+                    console.log(result);
+                    grid.resetData(eval(result));
+
+                    /* 	grid2.resetData(result);
+          	      			$("#searchEqmModal").modal('show');
+          	      			setTimeout(() => grid2.refreshLayout(), 200); */
+                  },
+                  error: (err) => console.log(err),
+                });
+              }
+
+              // 설비 이름 조회
+              function getEqmName(eqmName) {
+                $.ajax({
+                  url: "/eqmName",
+                  data: {
+                    eqmName: eqmName,
+                  },
+                  success: (result) => {
+                    console.log(result);
+
+                    //
+                    for (let item of result) {
+                      if (item.eqmState == "사용가능") {
+                        item._attributes = {
+                          className: {
+                            column: {
+                              eqmState: ["green"],
+                            },
+                          },
+                        };
+                      } else if (item.eqmState == "사용중") {
+                        item._attributes = {
+                          className: {
+                            column: {
+                              eqmState: ["red"],
+                            },
+                          },
+                        };
+                      } else if(item.eqmState == "비가동"){
+                          item._attributes = {
+                                  className: {
+                                    column: {
+                                      eqmState: ["blue"],
+                                    },
+                                  },
+                                };
+                              }else {
+                                  item._attributes = {
+                                          className: {
+                                            column: {
+                                              eqmState: ["yellow"],
+                                            },
+                                          },
+                                        };
+                                      }
+                    }
+
+                    //
+                    grid.resetData(result);
+                    //grid.resetData(eval(result));
+                  },
+                  error: (err) => console.log(err),
+                });
+              }
+              // 설비 이름 조회 : input에 값
+              function searchEqmName() {
+                $("#eqmDivision").val("");
+                if ($("#searchName").val()) {
+                  let eqmName = $("#searchName").val();
+                  getEqmName(eqmName);
+                }else{
+        			getEqmList();
+        		}
+              }
+              // 설비조회 모달창 더블클릭
+              grid.on("dblclick", (ev) => {
+                if (ev.rowKey == undefined) {
+                  return;
+                }
+                console.log(ev)
+               // console.log(ev.rowKey)
+                let data = grid.getValue(ev.rowKey, "eqmCode");
+                let data2 = grid.getValue(ev.rowKey, "eqmState");
+            //   console.log(data);
+               console.log(data2);
+
+               if(data2 =='비가동'){
+            	   let eqmState ='S';
+            	   getEqmNoperEqm(data, eqmState);
+            	   return
+               }
+               else if(data2 == '설비점검관리에 등록하세요'){
+            	   let eqmState='E';
+            	   getEqmNoperEqm(data, eqmState);
+            	   return
+               }else if(data2 == '사용가능'){
+            	   getEqm(data);
+               }else{
+            	   reset();
+            	   $('#startBtn').prop('disabled',true)
+             	  $('#endBtn').prop('disabled',true)
+             	  $('#insertBtn').prop('disabled',true)
+             	    $('#goBtn').css('visibility','hidden')
+               }
+
+
+              });
+              // 설비코드로 단건조회 후 화면에 설비코드,설비명 값보이게하는 함수
+              function getEqm(data) {
+
+            	  // 시작버튼 활성화
+            	  $('#startBtn').prop('disabled',false)
+            	  $('#endBtn').prop('disabled',true)
+            	  $('#insertBtn').prop('disabled',false)
+  				  $('#goBtn').css('visibility','hidden')
+
+                $.ajax({
+                  url: "/selectEqm",
+                  method: "get",
+                  data: {
+                    eqmCode: data,
+                  },
+                  success: function (result) {
+                    console.log(result);
+                     reset();
+                    if (result.eqmState != "Y") {
+
+                      return;
+                    }
+
+                    $("#eqmCode").val(result.eqmCode);
+                    $("#eqmName").val(result.eqmName);
+                    $('#noperManager').val(manager);
+
+                  },
+                  error: function (err) {
+                    console.log(err);
+                  },
+                });
+              }
+
+              // 설비코드로 단건조회 후 화면에 설비코드,설비명 값보이게하는 함수
+              function getEqmNoperEqm(data, eqmState) {
+            	 if(eqmState == 'S'){
+            		 	// 끝버튼 활성화
+            	  $('#endBtn').prop('disabled',false)
+            	   $('#startBtn').prop('disabled',true)
+            	   $('#goBtn').css('visibility','hidden')
+            	 }
+            	 if(eqmState == 'E'){
+            		 $('#endBtn').prop('disabled',true)
+            		 $('#startBtn').prop('disabled',true)
+            		 $('#goBtn').css('visibility','visible')
+            	 }
+
+                $.ajax({
+                  url: "/selectEqmNoper",
+                  method: "get",
+                  data: {
+                    eqmCode: data,
+                    eqmState: eqmState
+                  },
+                  success: function (result) {
+                    console.log(result);
+                    reset();
+                    if(eqmState == 'S'){
+                    	 $("#eqmCode").val(result.eqmCode);
+                         $("#eqmName").val(result.eqmName);
+                         $("#noperManager").val(result.noperManager);
+                         $("#reasonKnd").val(result.reasonKnd).prop("selected",true);
+                       /*   if($("#reasonKnd").val(result.reasonKnd) == 'n'){
+                        	 $('#endBtn').prop('disabled',true)
+                         } */
+                         $("#reason").val(result.reason);
+                         $("#noperSdate").val(result.noperSdate);
+                         $("#noperCode").val(result.noperCode);
+                         $('#insertBtn').prop('disabled',false)
+                    }
+
+                    if(eqmState == 'E'){
+                    	 $("#eqmCode").val(result.eqmCode);
+                         $("#eqmName").val(result.eqmName);
+                         $("#noperManager").val(result.noperManager);
+                         $("#reasonKnd").val(result.reasonKnd);
+                         //$("#reasonKnd").val(result.reasonKnd).prop("selected",true);
+                         $("#reason").val(result.reason);
+                         $("#noperSdate").val(result.noperSdate);
+                         $("#noperLdate").val(result.noperLdate);
+                         $("#noperCode").val(result.noperCode);
+                         $('#insertBtn').prop('disabled',true)
+               	 }
+
+
+
+
+                  },
+                  error: function (err) {
+                    console.log(err);
+                  },
+                });
+              }
+
+
+
+              // 초기화버튼
+              $("#resetBtn").on("click", function () {
+                $("#eqmCode").val("");
+                $("#eqmName").val("");
+                $("#noperManager").val("");
+                $("#reason").val("");
+                $("#reasonKnd").val("");
+                $("#noperSdate").val("");
+                $("#noperLdate").val("");
+                $("#noperCode").val("");
+              });
+
+              function reset() {
+                $("#eqmCode").val("");
+                $("#eqmName").val("");
+                $("#noperManager").val("");
+                $("#reason").val("");
+                $("#reasonKnd").val("");
+                $("#noperSdate").val("");
+                $("#noperLdate").val("");
+                $("#noperCode").val("");
+              }
+
+              //등록버튼
+              $("#insertBtn").on("click", function () {
+                let vo = {};
+
+                vo.eqmCode = $("#eqmCode").val();
+                //console.log( vo.eqmCode)
+                if (vo.eqmCode == "") {
+                  swal("설비를 선택하세요", "", "warning");
+                  return;
+                }
+                vo.noperManager = $("#noperManager").val();
+                if (vo.noperManager == "") {
+                  swal("담당자를 입력하세요", "", "warning");
+                  return;
+                }
+                if (vo.noperManager.length > 10) {
+                  swal("최대 10자까지 입니다", "", "warning");
                   return;
                 }
 
-                $("#eqmCode").val(result.eqmCode);
-                $("#eqmName").val(result.eqmName);
-                $('#noperManager').val(manager);
-                
-              },
-              error: function (err) {
-                console.log(err);
-              },
-            });
-          }
-          
-          // 설비코드로 단건조회 후 화면에 설비코드,설비명 값보이게하는 함수
-          function getEqmNoperEqm(data, eqmState) {
-        	 if(eqmState == 'S'){
-        		 	// 끝버튼 활성화
-        	  $('#endBtn').prop('disabled',false) 
-        	   $('#startBtn').prop('disabled',true)
-        	 }
-        	 if(eqmState == 'E'){
-        		 $('#endBtn').prop('disabled',true) 
-        		 $('#startBtn').prop('disabled',true)
-        	 }
-        
-            $.ajax({
-              url: "/selectEqmNoper",
-              method: "get",
-              data: {
-                eqmCode: data,
-                eqmState: eqmState
-              },
-              success: function (result) {
-                console.log(result);
-                reset();
-                if(eqmState == 'S'){
-                	 $("#eqmCode").val(result.eqmCode);
-                     $("#eqmName").val(result.eqmName);
-                     $("#noperManager").val(result.noperManager);
-                     $("#reasonKnd").val(result.reasonKnd).prop("selected",true);
-                   /*   if($("#reasonKnd").val(result.reasonKnd) == 'n'){
-                    	 $('#endBtn').prop('disabled',true) 
-                     } */
-                     $("#reason").val(result.reason);
-                     $("#noperSdate").val(result.noperSdate);
-                     $("#noperCode").val(result.noperCode);
-                     $('#insertBtn').prop('disabled',false)
+                vo.reasonKnd = $("#reasonKnd").val();
+                if (vo.reasonKnd == "") {
+                  swal("사유종류를 선택하세요", "", "warning");
+                  return;
                 }
-                
-                if(eqmState == 'E'){
-                	 $("#eqmCode").val(result.eqmCode);
-                     $("#eqmName").val(result.eqmName);
-                     $("#noperManager").val(result.noperManager);
-                     $("#reasonKnd").val(result.reasonKnd);
-                     //$("#reasonKnd").val(result.reasonKnd).prop("selected",true);
-                     $("#reason").val(result.reason);
-                     $("#noperSdate").val(result.noperSdate);
-                     $("#noperLdate").val(result.noperLdate);
-                     $("#noperCode").val(result.noperCode);
-                     $('#insertBtn').prop('disabled',true) 
-           	 }
-              
-                	
-                     
-            
-              },
-              error: function (err) {
-                console.log(err);
-              },
-            });
-          }
-          
-          
+                vo.reason = $("#reason").val();
+                if (vo.reason.length > 150) {
+                  swal("최대 150자까지 입니다", "", "warning");
+                  return;
+                }
+                vo.noperSdate = $("#noperSdate").val();
+                if (vo.noperSdate == "") {
+                  swal("시작버튼을 누르세요", "", "warning");
+                  return;
+                }
+               vo.inspIcheck='N';
 
-          // 초기화버튼
-          $("#resetBtn").on("click", function () {
-            $("#eqmCode").val("");
-            $("#eqmName").val("");
-            $("#noperManager").val("");
-            $("#reason").val("");
-            $("#reasonKnd").val("");
-            $("#noperSdate").val("");
-            $("#noperLdate").val("");
-            $("#noperCode").val("");
-          });
+                //
+                /*       let eqmvo ={};
+                eqmvo.eqmCode=$("#eqmCode").val();
+                eqmvo.eqmState="S"; */
+                //
 
-          function reset() {
-            $("#eqmCode").val("");
-            $("#eqmName").val("");
-            $("#noperManager").val("");
-            $("#reason").val("");
-            $("#reasonKnd").val("");
-            $("#noperSdate").val("");
-            $("#noperLdate").val("");
-            $("#noperCode").val("");
-          }
+                // 비가동 코드있으면 수정 없으면 등록
+                if($("#noperCode").val()){
+                	 vo.noperLdate = $("#noperLdate").val();
+                	 vo.noperCode= $('#noperCode').val();
+                	 if (vo.noperLdate == "") {
+                         swal("종료버튼을 누르세요", "", "warning");
+                         return;
+                       }
 
-          //등록버튼
-          $("#insertBtn").on("click", function () {
-            let vo = {};
 
-            vo.eqmCode = $("#eqmCode").val();
-            //console.log( vo.eqmCode)
-            if (vo.eqmCode == "") {
-              swal("설비를 선택하세요", "", "warning");
-              return;
-            }
-            vo.noperManager = $("#noperManager").val();
-            if (vo.noperManager == "") {
-              swal("담당자를 입력하세요", "", "warning");
-              return;
-            }
-            if (vo.noperManager.length > 10) {
-              swal("최대 10자까지 입니다", "", "warning");
-              return;
-            }
+                	$.ajax({
+                     url: "/eqm/updateEqmNoper",
+                     method: "post",
+                     contentType: "application/json",
+                     data: JSON.stringify(vo),
+                     success: (result) => {
+                       console.log(result);
+                       swal("저장 완료!", "설비가 저장되었습니다.", "success");
+                       reset();
+                       getEqmList();
+                     },
+                     error: (err) => console.log(err),
+                   });
 
-            vo.reasonKnd = $("#reasonKnd").val();
-            if (vo.reasonKnd == "") {
-              swal("사유종류를 선택하세요", "", "warning");
-              return;
-            }
-            vo.reason = $("#reason").val();
-            if (vo.reason.length > 150) {
-              swal("최대 150자까지 입니다", "", "warning");
-              return;
-            }
-            vo.noperSdate = $("#noperSdate").val();
-            if (vo.noperSdate == "") {
-              swal("시작버튼을 누르세요", "", "warning");
-              return;
-            }
-           vo.inspIcheck='N';
+                }else{
 
-            //
-            /*       let eqmvo ={};
-            eqmvo.eqmCode=$("#eqmCode").val();
-            eqmvo.eqmState="S"; */
-            //
-            
-            // 비가동 코드있으면 수정 없으면 등록
-            if($("#noperCode").val()){
-            	 vo.noperLdate = $("#noperLdate").val();
-            	 vo.noperCode= $('#noperCode').val();
-            	 if (vo.noperLdate == "") {
-                     swal("종료버튼을 누르세요", "", "warning");
-                     return;
-                   }
-            	 
-            	 
-            	$.ajax({
-  	              url: "/eqm/updateEqmNoper",
-  	              method: "post",
-  	              contentType: "application/json",
-  	              data: JSON.stringify(vo),
-  	              success: (result) => {
-  	                console.log(result);
-  	                swal("저장 완료!", "설비가 저장되었습니다.", "success");
-  	                reset();
-  	                getEqmList();
-  	              },
-  	              error: (err) => console.log(err),
-  	            });
-            	
-            }else{
-            	
-	            $.ajax({
-	              url: "/eqm/eqmNoperForm",
-	              method: "post",
-	              contentType: "application/json",
-	              data: JSON.stringify(vo),
-	              success: (result) => {
-	                console.log(result);
-	                swal("저장 완료!", "설비가 저장되었습니다.", "success");
-	                reset();
-	                getEqmList();
-	              },
-	              error: (err) => console.log(err),
-	            });
-            	
-            }
-            
-            
+                 $.ajax({
+                   url: "/eqm/eqmNoperForm",
+                   method: "post",
+                   contentType: "application/json",
+                   data: JSON.stringify(vo),
+                   success: (result) => {
+                     console.log(result);
+                     swal("저장 완료!", "설비가 저장되었습니다.", "success");
+                     reset();
+                     getEqmList();
+                   },
+                   error: (err) => console.log(err),
+                 });
 
-            /*        
-            $.ajax({
-                url: "/updateEqm",
-                method: "post",
-                contentType: "application/json",
-                data: JSON.stringify(eqmvo),
+                }
+
+
+
+                /*
+                $.ajax({
+                    url: "/updateEqm",
+                    method: "post",
+                    contentType: "application/json",
+                    data: JSON.stringify(eqmvo),
+                    success: (result) => {
+                      console.log(result);
+                      getEqmList();
+                    },
+                    error: (err) => console.log(err),
+                  });
+                 */
+              });
+
+              // 부서정보 불러오기
+              $.ajax({
+                url: "/mdm/selectCodeDetail",
+                data: {
+                  codeType: "012",
+                },
                 success: (result) => {
-                  console.log(result);
-                  getEqmList();
+                  $(result).each(function (idx, dept) {
+                    let optTag = $("<option/>");
+                    optTag.val(dept["codeId"]);
+                    optTag.text(dept["codeName"]);
+                    $("#eqmDivision").append(optTag);
+                  });
                 },
                 error: (err) => console.log(err),
               });
-             */
-          });
+            };
 
-          // 부서정보 불러오기
-          $.ajax({
-            url: "/mdm/selectCodeDetail",
-            data: {
-              codeType: "012",
-            },
-            success: (result) => {
-              $(result).each(function (idx, dept) {
-                let optTag = $("<option/>");
-                optTag.val(dept["codeId"]);
-                optTag.text(dept["codeName"]);
-                $("#eqmDivision").append(optTag);
-              });
-            },
-            error: (err) => console.log(err),
-          });
-        };
+            function getToday() {
+              const TIME_ZONE = 9 * 60 * 60 * 1000; // 9시간
+              const d = new Date();
 
-        function getToday() {
-          const TIME_ZONE = 9 * 60 * 60 * 1000; // 9시간
-          const d = new Date();
+              const date = new Date(d.getTime() + TIME_ZONE)
+                .toISOString()
+                .split("T")[0];
+              const time = d.toTimeString().split(" ")[0];
 
-          const date = new Date(d.getTime() + TIME_ZONE)
-            .toISOString()
-            .split("T")[0];
-          const time = d.toTimeString().split(" ")[0];
-
-          return date + " " + time;
-        }
+              return date + " " + time;
+            }
       </script>
     </div>
   </body>

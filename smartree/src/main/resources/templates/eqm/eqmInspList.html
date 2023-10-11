@@ -35,7 +35,7 @@
 	white-space: normal;
 	word-wrap: break-word;
 	width: 150px;
-	min-height: 270px;
+	min-height: 240px;
 	background-color: Yellow;
 	padding: 0;
 	margin-top: 10px;
@@ -421,10 +421,10 @@ grid.on('mouseover',(ev)=>{
 	data2= Math.floor(data/12); // 페이지
 	//console.log(data2);
 	//console.log(data-(data2*12))
-	if(data-(data2*12) < 7){
+	if(data-(data2*12) < 6){
 		$('.tooltip1 .tooltip-content').css('margin-top','10px')
 	}else{
-		$('.tooltip1 .tooltip-content').css('margin-top','-300px')
+		$('.tooltip1 .tooltip-content').css('margin-top','-270px')
 	}
 		
 	

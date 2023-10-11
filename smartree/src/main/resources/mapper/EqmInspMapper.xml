@@ -14,7 +14,7 @@
   	</select>
   	<!-- 판정여부 조회 -->
   	<select id="selectEqmInspInspJudgList" resultType="EqmInspVO">
-  	 SELECT e.eqm_code,e.eqm_name,i.insp_manager, case when insp_judg ='Y' then '적합' else '부적합' end insp_judg,i.repair_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE,i.insp_dt,i.action_dt
+  	 SELECT e.eqm_code,e.eqm_name,i.insp_code,i.insp_manager, case when insp_judg ='Y' then '적합' else '부적합' end insp_judg,i.repair_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE,i.insp_dt,i.action_dt
      FROM eqm e join EQM_INSP i
   		  			ON e.eqm_code = i.eqm_code
   	 	<where>
@@ -27,7 +27,7 @@
   	</select>
   	<!-- 설비점검이름으로 검색 -->
   	 <select id="searchEqmInsp" resultType="EqmInspVO">
-  	 SELECT e.eqm_code,e.eqm_name,i.insp_manager, case when insp_judg ='Y' then '적합' else '부적합' end insp_judg ,i.repair_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE,i.insp_dt,i.action_dt
+  	 SELECT e.eqm_code,e.eqm_name,i.insp_code,i.insp_manager, case when insp_judg ='Y' then '적합' else '부적합' end insp_judg ,i.repair_date,i.RECENT_INSP_DATE,i.NEXT_INSP_DATE,i.insp_dt,i.action_dt
      FROM eqm e join EQM_INSP i
   		  			ON e.eqm_code = i.eqm_code
   		<where>
