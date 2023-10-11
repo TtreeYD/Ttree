@@ -14,6 +14,7 @@ public class EmpVO {
 	private String empPw;
 	private String empPhone;
 	private String newPassword;
+	String empUse;
 	
 	private String empAuth;
 	

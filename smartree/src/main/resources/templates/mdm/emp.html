@@ -18,29 +18,34 @@
 
 <body>
 	<div layout:fragment="content">
-		<div class="row mb-4">
-			<h1>사원관리</h1>
-		</div>
-		<div class="input-group mb-3 float-left col-6">
-			<select class="custom-select col-2" id="deptInfo">
-				<option value="" selected>부서정보</option>
-			</select>
-			<input type="text" class="form-control col-2 noGray" id="searchName" placeholder="이름">
-			<div class="input-group-append">
-				<button type="button" id="searchBtn" class="btn btn-primary"><i class="fas fa-search"></i></button>
+		<h1 class="row mb-4">사원관리</h1>
+		
+		<div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+			<div class="input-group">
+				<select class="custom-select col-4" id="deptInfo">
+					<option value="" selected>부서정보</option>
+				</select>
+				<input type="text" class="form-control col-5 noGray" id="searchName" placeholder="이름">
+				<div class="input-group-append">
+					<button type="button" id="searchBtn" class="btn btn-primary col"><i class="fas fa-search"></i></button>
+				</div>
+			</div>
+			
+			
+			<div class="btn-group ml-auto" role="group">
+				<button id="notUseListBtn" class="btn btn-primary">비활성조회</button>
+			</div>
+			<div class="btn-group ml-3" role="group">
+				<button type="button" id="addBtn" class="btn btn-primary ml-auto" data-toggle="modal"	data-target="#empAddModal">사원등록</button>
+				<button type="button" id="upEmpBtn" class="btn btn-primary">저장</button>
+				<button type="button" id="" class="btn btn-primary">비활성화</button>
 			</div>
 		</div>
-		<div class="btn-group float-right mb-3" role="group" aria-label="Basic example">
-			<button type="button" id="addBtn" class="btn btn-primary" data-toggle="modal"
-				data-target="#empAddModal">사원등록</button>
-			<button type="button" id="delEmpBtn" class="btn btn-primary">삭제</button>
-		</div>
-		<br>
+		
 		<div id="empList"></div>
 
 
-		<div class="modal fade" id="empAddModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-			aria-hidden="true">
+		<div class="modal fade" id="empAddModal" tabindex="-1" role="dialog" aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
@@ -87,12 +92,31 @@
 				</div>
 			</div>
 		</div>
+		
+		<div class="modal fade" id="empNotUse" tabindex="-1" role="dialog" aria-hidden="true">
+			<div class="modal-dialog modal-xl" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">비활성 사원 리스트</h5>
+					</div>
+					<div class="modal-body px-4">
+						<div id="empList2"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" id="delEmpBtn" class="btn btn-primary">삭제</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+					</div>
+				</div>
+			</div>
+		</div>
 		<script>
 			class CustomSliderRenderer {
 				constructor(props) {
-					const el = document.createElement('input');
+					const el = document.createElement('button');
 
 					el.type = 'button';
+					el.className = 'btn btn-primary btn-sm px-4';
+					el.innerText = '초기화'
 					this.el = el;
 					this.render(props);
 					$(el).on('click', () => {
@@ -175,31 +199,44 @@
 				el: document.getElementById('empList'),
 				scrollX: false,
 				rowHeaders: ['rowNum', 'checkbox'],
-				bodyHeight: 400,
+				bodyHeight: 600,
 				pagination: true,
 				pageOptions: {
 					useClient: true,
-					perPage: 10,
+					perPage: 15,
 				},
 				columns: [{
-						header: 'ID',
-						name: 'empId'
+						header: '사원번호',
+						name: 'empId',
+						align: 'center'
 					},
 					{
 						header: '이름',
-						name: 'empName'
+						name: 'empName',
+						editor:{
+							type: 'text'
+						}
 					},
 					{
 						header: '부서',
-						name: 'empDept'
+						name: 'empDept',
+						align: 'center'
 					},
 					{
 						header: '직급',
-						name: 'empClass'
+						name: 'empClass',
+						align: 'center',
+						editor:{
+							type: 'text'
+						}
 					},
 					{
 						header: '연락처',
-						name: 'empPhone'
+						name: 'empPhone',
+						align: 'center',
+						editor:{
+							type: 'text'
+						}
 					},
 					{
 						header: '비밀번호 초기화',
@@ -209,8 +246,55 @@
 						renderer: {
 							type: CustomSliderRenderer
 						}
+					}
+				]
+			});
+			
+			//비활성 사원 그리드
+			const grid2 = new Grid({
+				el: document.getElementById('empList2'),
+				scrollX: false,
+				rowHeaders: ['rowNum', 'checkbox'],
+				bodyHeight: 400,
+				pagination: true,
+				pageOptions: {
+					useClient: true,
+					perPage: 10,
+				},
+				columns: [{
+						header: '사원번호',
+						name: 'empId',
+						align: 'center'
 					},
-				],
+					{
+						header: '이름',
+						name: 'empName',
+						editor:{
+							type: 'text'
+						}
+					},
+					{
+						header: '부서',
+						name: 'empDept',
+						align: 'center'
+					},
+					{
+						header: '직급',
+						name: 'empClass',
+						align: 'center',
+						editor:{
+							type: 'text'
+						}
+					},
+					{
+						header: '연락처',
+						name: 'empPhone',
+						align: 'center',
+						editor:{
+							type: 'text'
+						}
+					}
+				]
 			});
 
 			getEmpList();
@@ -238,9 +322,6 @@
 						empName: empName
 					},
 					success: result => {
-						for (let data of result) {
-							data.reset = ' 초기화 '
-						}
 						console.log(result)
 						grid.resetData(eval(result));
 					},
@@ -340,6 +421,16 @@
 					}
 				})
 			})
+			
+			$('#upEmpBtn').on('click', () => {
+				grid.blur()
+				console.log(grid.getModifiedRows().updatedRows)
+			})
+			
+			$('#notUseListBtn').on('click', () => {
+				$('#empNotUse').modal('show')
+			})
+			
 		</script>
 	</div>
 </body>

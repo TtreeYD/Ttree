@@ -63,17 +63,21 @@
 		AND code_type = #{codeType}
 	</delete>
 	
+	<!-- 사원관리 -->
+	
 	<!-- 사원 리스트 -->
 	<select id="selectEmpList" resultType="EmpVO">
 		SELECT 	emp_id,
 				   emp_name,
 				   get_common(emp_dept, '001') emp_dept,
 				   emp_class,
-				   emp_phone
+				   emp_phone,
+				   emp_use
 		FROM emp_list
+		WHERE emp_use = 'Y'
 		<where>
 			<if test="empDept !=null and !empDept.equals('')">
-				emp_dept = #{empDept}
+				AND emp_dept = #{empDept}
 			</if>
 			<if test="empName !=null and !empName.equals('')">
 				AND emp_name LIKE '%'||#{empName}||'%'
