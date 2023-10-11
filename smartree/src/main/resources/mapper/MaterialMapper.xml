@@ -178,7 +178,7 @@
 		SELECT b.bp_code, b.bp_name, get_common(t.mtl_type, '003') AS mtl_type, n.mtl_code, t.mtl_name, t.mtl_unit, n.mtl_cnt, n.mtl_date , get_common(n.mtl_where, '009')mtl_where, n.need_code, n.mtl_wish_date, n.mtl_manager
 		FROM mtl_need n JOIN mtl_table t ON n.mtl_code = t.mtl_code
 		JOIN business_partner b ON b.bp_code = n.bp_code
-		WHERE b.bp_name = #{bpName} AND TO_CHAR(n.mtl_date, 'yy/MM/dd') = #{mtlDate} AND n.mtl_manager = #{mtlManager}
+		WHERE b.bp_name = #{bpName} AND TO_CHAR(n.mtl_date, 'yy/MM/dd') = TO_CHAR(#{mtlDate}, 'yy/MM/dd') AND n.mtl_manager = #{mtlManager}
   	</select>
   	
 	<!-- 발주조회 검색기능 -->
