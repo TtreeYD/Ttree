@@ -39,4 +39,5 @@ public class FinPrdtVO {
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private Date prdtOutDate;//출고날짜
 	private String prdtOutManager;//출고담당자
+	private int orderDtCnt;
 }

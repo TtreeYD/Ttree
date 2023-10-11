@@ -12,7 +12,7 @@
 
 <body>
   <div layout:fragment="content">
-  <h2>주문서조회</h2>
+  <h1>주문서조회</h1>
 		
 		<label>업체명</label> 
 		<input type="text" id="bpName"> 
@@ -36,6 +36,14 @@
             <h2>주문서상세조회</h2>
           </div>
           <div class="modal-body">
+            <div style="margin-bottom: 10px;">
+            	<label for="orderCodeModal" style="text-align:center;">주문코드</label>
+				<input type="text" id="orderCodeModal"  name="orderCodeModal">
+	            <label for="orderBpName" style="text-align:center;">업체명</label>
+				<input type="text" id="orderBpName"  name="orderBpName" readonly>
+				<label for="orderManagerModal" style="margin-top:10px">담당자</label>
+				<input type="text" id="orderManagerModal"  name="orderManagerModal" readonly>
+            </div>
             <div id="grid2" class="lightgrey"></div>
           </div>
           <div class="modal-footer">
@@ -184,6 +192,10 @@
               orderCode: data
             },
             success: function (result) {
+			console.log('dddd',result)
+			$('#orderBpName').val(result[0].bpName)
+			$('#orderManagerModal').val(result[0].orderManager)
+			$('#orderCodeModal').val(result[0].orderCode)
 			
               grid2.resetData(result);
 

@@ -58,18 +58,18 @@
   	</select>
   	<!-- 주문서상세조회 -->
   	<select id="selectOrderDtList" resultType="BusinessVO">
- 		select a.*, a.order_dt_cnt - prdt_out_cnt as prdt_left_cnt, get_prdt_total(a.prdt_code) prdt_total
+ 		select a.*, a.order_dt_cnt - prdt_out_cnt as prdt_left_cnt, get_prdt_total(a.prdt_code) prdt_total , bp.bp_name
  		  from (       
-				         select o.order_code , d.order_dt_code , p.prdt_name , p.prdt_code, d.order_dt_cnt , o.dod_date , o.bp_code ,d.order_dt_price
+				         select o.order_code ,o.order_manager, d.order_dt_code , p.prdt_name , p.prdt_code, d.order_dt_cnt , o.dod_date , o.bp_code ,d.order_dt_price
 				       				 , o.order_date, nvl((select sum(prdt_out_cnt) 
-							                           from prdt_out p join prdt_out_list pol 
+							                           	    from prdt_out p join prdt_out_list pol 
 							                                        on p.prdt_out_code = pol.prdt_out_code 
-							                          where order_dt_code = d.order_dt_code),0) as prdt_out_cnt 
+							                          	   where order_dt_code = d.order_dt_code),0) as prdt_out_cnt 
         				   from orders o join dt_order d 
 				                    on o.order_code = d.order_code 
 				                    join prdt_table p 
                     				on d.prdt_code = p.prdt_code
-					 	  where o.order_code = #{orderCode}) a
+					 	  where o.order_code = #{orderCode}) a join business_partner bp on a.bp_code = bp.bp_code
   	</select>
   	
   	<!-- 주문서 상세 함께조회 -->
@@ -217,12 +217,13 @@
 		  from fin_prdt f join prdt_table p
 		    		on f.prdt_code = p.prdt_code		    			
 		 where f.prdt_code = #{prdtCode}
+		 and <![CDATA[ f.prdt_cnt > 0 ]]>
 		 order by f.prdt_recieve_date desc
   	</select>
   	<!-- 완제품조회 (출고시 수량 0인것들 안보이게 )  -->
   	<select id="selectFinLotOutPrdt" resultType="FinPrdtVO">
   	<![CDATA[
-  		select f.prdt_lot_no , f.prdt_code , p.prdt_name , f.prdt_cnt , f.prdt_recieve_date 
+  		select f.prdt_lot_no , f.prdt_code , p.prdt_name , f.prdt_cnt , f.prdt_recieve_date ,(select order_dt_cnt from dt_order where order_dt_code = #{orderDtCode}) as order_dt_cnt
 		  from fin_prdt f join prdt_table p
 		    		on f.prdt_code = p.prdt_code		    			
 		 where f.prdt_code = #{prdtCode} and f.prdt_cnt > 0
@@ -236,11 +237,12 @@
   		  from fin_prdt f join prdt_table p
 		    		on f.prdt_code = p.prdt_code
 		<where>
+				<![CDATA[ f.prdt_cnt > 0 ]]>
 		 	<if test="prdtName != null">	 	
-		 		upper(p.prdt_name) like '%'||upper(#{prdtName})||'%'
+		 		and upper(p.prdt_name) like '%'||upper(#{prdtName})||'%'
 		 	</if>
 		 	<if test="prdtLotNo != null ">
-		       	and upper(f.prdt_lot_no like) '%'||upper(#{prdtLotNo})||'%'
+		       	and upper(f.prdt_lot_no) like '%'||upper(#{prdtLotNo})||'%'
 		 	</if> 	
 		</where>
   	</select>
