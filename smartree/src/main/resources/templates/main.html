@@ -10,49 +10,58 @@
 <link rel="stylesheet" href="https://uicdn.toast.com/chart/latest/toastui-chart.min.css" />
 <script src="https://uicdn.toast.com/chart/latest/toastui-chart.min.js"></script>
 <title>생산현황모니터링</title>
+<style>
+a:visited{
+color:gray
+}
+</style>
 </head>
 <body>
 <div layout:fragment="content">
 <div class="row">
    <!-- Earnings (Monthly) Card Example -->
    <div class="col-xl-3 col-md-6 mb-4">
-       <div class="card border-left-primary shadow h-100 py-2">
-           <div class="card-body">
-               <div class="row no-gutters align-items-center">
-                   <div class="col mr-2">
-                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                           당일 생산 건수</div>
-                       <div class="h5 mb-0 font-weight-bold text-gray-800" id="todayProdData"></div>
-                   </div>
-                   <div class="col-auto">
-                       <i class="bi bi-minecart-loaded fa-2x"></i>
-                   </div>
-               </div>
-           </div>
-       </div>
+	   <a href="/prod/prodPrcsResult" style="text-decoration: none; font-style: none;">
+	       <div class="card border-left-primary shadow h-100 py-2">
+	           <div class="card-body">
+	               <div class="row no-gutters align-items-center">
+	                   <div class="col mr-2">
+	                       <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+	                           당일 생산 건수</div>
+	                       <div class="h5 mb-0 font-weight-bold text-gray-800" id="todayProdData"></div>
+	                   </div>
+	                   <div class="col-auto">
+	                       <i class="bi bi-minecart-loaded fa-2x"></i>
+	                   </div>
+	               </div>
+	           </div>
+	       </div>
+       </a>
    </div>
 
    <!-- Earnings (Monthly) Card Example -->
    <div class="col-xl-3 col-md-6 mb-4">
-       <div class="card border-left-success shadow h-100 py-2">
-           <div class="card-body">
-               <div class="row no-gutters align-items-center">
-                   <div class="col mr-2">
-                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                           당일 지시 예정 건수</div>
-                       <div class="h5 mb-0 font-weight-bold text-gray-800" id="todayInstData"></div>
-                   </div>
-                   <div class="col-auto">
-                       <i class="bi bi-person-check-fill fa-2x"></i>
-                   </div>
-               </div>
-           </div>
-       </div>
+	   <a href="/prod/prodInstList" style="text-decoration: none; font-style: none;">
+	       <div class="card border-left-success shadow h-100 py-2">
+	           <div class="card-body">
+	               <div class="row no-gutters align-items-center">
+	                   <div class="col mr-2">
+	                       <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+	                           당일 목표 생산 건수</div>
+	                       <div class="h5 mb-0 font-weight-bold text-gray-800" id="todayInstData"></div>
+	                   </div>
+	                   <div class="col-auto">
+	                       <i class="bi bi-person-check-fill fa-2x"></i>
+	                   </div>
+	               </div>
+	           </div>
+	       </div>
+	    </a>
    </div>
 
    <!-- Earnings (Monthly) Card Example -->
    <div class="col-xl-3 col-md-6 mb-4">
-    	<a href="/business/orderList" style="text-decoration: none; font-style: none">
+    	<a href="/business/orderList" style="text-decoration: none; font-style: none;">
 	       <div class="card border-left-info shadow h-100 py-2">
 	           <div class="card-body">
 	               <div class="row no-gutters align-items-center">
@@ -73,20 +82,22 @@
 
    <!-- Pending Requests Card Example -->
     <div class="col-xl-3 col-md-6 mb-4">
-        <div class="card border-left-warning shadow h-100 py-2">
-            <div class="card-body">
-                <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                            당일 출고 예정 건수</div>
-                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="todayOutData"></div>
-                    </div>
-                    <div class="col-auto">
-                        <i class="bi bi-truck fa-2x"></i>
-                    </div>
-                </div>
-            </div>
-        </div>
+	    <a href="/business/prdtOut" style="text-decoration: none; font-style: none;">
+	        <div class="card border-left-warning shadow h-100 py-2">
+	            <div class="card-body">
+	                <div class="row no-gutters align-items-center">
+	                    <div class="col mr-2">
+	                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+	                            당일 출고 예정 건수</div>
+	                        <div class="h5 mb-0 font-weight-bold text-gray-800" id="todayOutData"></div>
+	                    </div>
+	                    <div class="col-auto">
+	                        <i class="bi bi-truck fa-2x"></i>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	     </a>
     </div>
 </div>
 <div style="display:flex; justify-content: space-between;">
@@ -134,6 +145,14 @@ $(document).ready(function () {
             ],
         };
         const options = {
+   		  theme: {
+   			    title: {
+   			      fontFamily: 'Ariado',
+   			      fontSize: 25,
+   			      fontWeight: 100,
+   			      color: 'gray'
+   			    }
+   			  },
       		legend: {
       		    visible: false,
       		  },
@@ -141,7 +160,7 @@ $(document).ready(function () {
                 width: 800,
                 height: 260,
                 title: {
-                    text: '제품별재고현황',
+                    text: '제품별 재고 현황',
                     align: 'center'
                 },
                 chart: {
@@ -187,6 +206,14 @@ $(document).ready(function () {
                 ],
             };
             const options = {
+           		theme: {
+       			    title: {
+       			      fontFamily: 'Ariado',
+       			      fontSize: 25,
+       			      fontWeight: 100,
+       			      color: 'gray'
+       			    }
+       			  },
            		legend: {
        		    	visible: false,
        		  	},
@@ -227,6 +254,14 @@ $(document).ready(function () {
             ],
         };
         const options = {
+       		theme: {
+   			    title: {
+   			      fontFamily: 'Ariado',
+   			      fontSize: 25,
+   			      fontWeight: 100,
+   			      color: 'gray'
+   			    }
+   			  },
        		series: {
        		    shift: true
        		  },
@@ -237,8 +272,7 @@ $(document).ready(function () {
                 width: 1650,
                 height: 300,
                 title: {
-                	name: '제품별출고',
-                    text: '제품별출고현황',
+                    text: '제품별 출고 현황',
                     align: 'center'
                 },
                 chart: {

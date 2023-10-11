@@ -8,19 +8,32 @@
 
 <body>
 	<div layout:fragment="content">	
-		<div class="btn-group" role="group" aria-label="Basic example" style="float : right;">
-			<button class="btn btn-primary" style="float:right" id="searchOrderModal">미출고주문서검색</button>
-			<button class="btn btn-primary" style="float:right" id="searchFinOrderModal">기출고주문서검색</button>
+		<h1>완제품출고관리</h1>
+		<br>
+		<div class="row">
+			<div class="col-6">
+				<div class="btn-group" role="group" aria-label="Basic example" style="float : right;">
+					<button class="btn btn-primary" style="float:right" id="searchOrderModal">미출고주문서검색</button>
+					<button class="btn btn-primary" style="float:right" id="searchFinOrderModal">기출고주문서검색</button>
+				</div>
+				<h2>주문서</h2>
+				<div id="orderGrid"></div>
+			</div>
+			<div class="col-6">
+					<h2 class="mb-2" style="display: inline-block;">상세주문서</h2>
+					<div class="btn-group" role="group" aria-label="Basic example" style="float : right;">
+						<button class="btn btn-primary" style="float:right" id="cancleOutPrdt">출고취소</button>
+					</div>
+					<div id="orderDtGrid" ></div>
+			</div>
 		</div>
-		<h2>주문서</h2>
-		<div id="orderGrid"></div>
-		<h2 style="margin-top:90px;">상세주문서</h2>
-		<div class="btn-group" role="group" aria-label="Basic example" style="float : right;">
-			<button class="btn btn-primary" style="float:right" id="cancleOutPrdt">출고취소</button>
-		</div>
-		<div id="orderDtGrid" ></div>
 		
-		<div class="modal fade" tabindex="-1" role="dialog" id="orderModal">
+		
+		
+		
+		
+		
+	<div class="modal fade" tabindex="-1" role="dialog" id="orderModal">
       <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
         <div class="modal-content" style="height:500px">
           <div class="modal-header">
@@ -126,7 +139,7 @@
 			scrollX: false,
 			scrollY: false,
 			rowHeaders: ["rowNum"],
-			
+			bodyHeight : 500,
 			columns: [
 				{
 					header: '주문코드',
@@ -160,7 +173,7 @@
 			scrollX: false,
 			scrollY: false,
 			rowHeaders: ["checkbox"],
-			
+			bodyHeight : 500,
 			columns: [
 				{
 					header: '주문상세코드',
