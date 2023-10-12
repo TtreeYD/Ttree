@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>공정실적관리</title>
 <link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
@@ -95,6 +95,7 @@ box-shadow: -100vw 0 0 100vw rgb(231, 17, 17);
         <div class="header-content">
             <h1>생산키오스크</h1>
             <div class="header-content-detail">
+            	<i class="fa-solid fa-repeat" style="margin-right: 30px;" onclick="repeat()"></i>
 	            <i class="fa-solid fa-backward-step fa-sm"style="margin-right: 30px;" onclick="backBefore()"></i>
 	            <i class="fa-solid fa-house" onclick="backHome()"></i>
             </div>
@@ -220,6 +221,9 @@ $(document).ready(function (){
 	}
 	function backBefore(){
 		$(location).attr('href', '/prod/prcrKiosk');
+	}
+	function repeat(){
+		$(location).attr('href', '/prod/prodProgress');
 	}
 </script>
 </body>

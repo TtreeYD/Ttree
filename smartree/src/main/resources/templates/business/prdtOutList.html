@@ -48,28 +48,29 @@
 	    scrollY: false,
 	    rowHeaders: ["rowNum"],
 	    pageOptions: {
-            perPage: 15,
+            perPage: 12,
             useClient: true,
           },
           bodyHeight :500,
 	    columns: [{
 	      header: '출고코드',
 	      name: 'prdtOutCode',
-	      
+	      align: 'center'
 	    },
 	    {
 	      header: '주문상세코드',
 	      name: 'orderDtCode',
-	      
+	      align: 'center'
 	    },
 	    {
 	      header: '출고담당자',
-	      name: 'prdtOutManager'
+	      name: 'prdtOutManager',
+	      align: 'left'
 	    },
 	    {
 	      header: '출고날짜',
 	      name: 'prdtOutDate',
-	      
+	      align: 'center'
 	    }],	
 	  });
 	
@@ -86,25 +87,28 @@
         columns: [{
           header: '출고상세코드',
           name: 'prdtDtOutCode',      
+          align: 'center'
         },
         {
             header: 'lot번호',
             name: 'prdtLotNo',
+            align: 'center'
             
           },
         {
           header: '제품코드',
           name: 'prdtCode',
-          
+          align: 'center'
         },
         {
             header: '제품명',
             name: 'prdtName',
-            
+            align: 'right'
           },
         {
           header: '출고량',
-          name: 'prdtOutCnt'
+          name: 'prdtOutCnt',
+          align: 'right'
         },
         ],
 
