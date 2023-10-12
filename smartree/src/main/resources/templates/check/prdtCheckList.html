@@ -91,12 +91,12 @@
 	        {
 	          header: '제품명',
 	          name: 'prdtName',
-	          align: 'center'
+	          align: 'left'
 	        },
 	        {
 	          header: '검사량',
 	          name: 'prdtChkCnt',
-	          align: 'center'
+	          align: 'right'
 	        },
 	        {
 	          header: '검사결과',
@@ -106,12 +106,13 @@
 	        {
 	          header: '검사날짜',
 	          name: 'prdtChkDate',
-	          align: 'center'
+	          align: 'center',
+	          sortable: true
 	        },
 	        {
 	          header: '담당자',
 	          name: 'prdtManager',
-	          align: 'center'
+	          align: 'left'
 	        },
 	      ],
 	    });
@@ -134,17 +135,17 @@
 		        {
 		          header: '검사명',
 		          name: 'chkName',
-		          align: 'center'
+		          align: 'left'
 		        },
 		        {
 		          header: '검사기준',
 		          name: 'chkStd',
-		          align: 'center'
+		          align: 'right'
 		        },
 		        {
 		          header: '검사값',
 		          name: 'prdtChkVal',
-		          align: 'center'
+		          align: 'right'
 		        },
 		        {
 		          header: '적합여부',
@@ -203,7 +204,7 @@
 	    				}
 	    			}
 	    			grid2.resetData(result);
-
+	    			allProcess.click();
 	    		},
 	    		error:function(err){
 	    			console.log(err);

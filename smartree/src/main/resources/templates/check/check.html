@@ -72,7 +72,7 @@
         {
           header: '자재명',
           name: 'mtlName',
-          align: 'center'
+          align: 'left'
         },
         {
           header: '자재코드',
@@ -82,27 +82,28 @@
         {
           header: '검사량',
           name: 'mtlCnt',
-          align: 'center'
+          align: 'right'
         },
         {
           header: '불량량',
           name: 'mtlErrorCnt',
-          align: 'center'
+          align: 'right'
         },
         {
           header: '합격량',
           name: 'mtlPassCnt',
-          align: 'center'
+          align: 'right'
         },
         {
           header: '검사자',
           name: 'mtlChkManager',
-          align: 'center'
+          align: 'left'
  	    },
  	    {
           header: '검사일',
           name: 'mtlChkDate',
-          align: 'center'
+          align: 'center',
+          sortable: true
  		 }
  	 ],
     });
@@ -112,8 +113,11 @@
    
    
     // 엑셀버튼 다운
+    const options = {
+	  fileName: 'check'
+	};
     $('#ExcelBtn').on('click',function(){
-    	grid.export('xlsx');
+    	grid.export('xlsx',options);
    })
     
     // 검색버튼 클릭시 
