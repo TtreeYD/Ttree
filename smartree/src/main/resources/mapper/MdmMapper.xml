@@ -69,22 +69,35 @@
 	<select id="selectEmpList" resultType="EmpVO">
 		SELECT 	emp_id,
 				   emp_name,
-				   get_common(emp_dept, '001') emp_dept,
+				   emp_dept,
 				   emp_class,
 				   emp_phone,
 				   emp_use
 		FROM emp_list
 		WHERE emp_use = 'Y'
-		<where>
-			<if test="empDept !=null and !empDept.equals('')">
-				AND emp_dept = #{empDept}
-			</if>
-			<if test="empName !=null and !empName.equals('')">
-				AND emp_name LIKE '%'||#{empName}||'%'
-			</if>
-		</where>
+		<if test="empDept !=null and !empDept.equals('')">
+			AND emp_dept = #{empDept}
+		</if>
+		<if test="empName !=null and !empName.equals('')">
+			AND upper(emp_name) LIKE '%'||upper(#{empName})||'%'
+		</if>
 		ORDER BY emp_id
 	</select>
+	
+	<!-- 비활성 사원 리스트 -->
+	<select id="selectUnusedEmp" resultType="EmpVO" parameterType="EmpVO">
+		SELECT emp_id, emp_name, get_common(emp_dept, '001') emp_dept, emp_class, emp_phone
+		FROM emp_list
+		WHERE emp_use = 'N'
+		<if test="empDept !=null and !empDept.equals('')">
+			AND emp_dept = #{empDept}
+		</if>
+		<if test="empName !=null and !empName.equals('')">
+			AND upper(emp_name) LIKE '%'||upper(#{empName})||'%'
+		</if>
+		ORDER BY emp_id
+	</select>
+
 
 	<!-- 사원 등록 -->
 	<insert id="addEmp" parameterType="EmpVO">
@@ -103,12 +116,28 @@
 					, #{empPhone}
 					)
 	</insert>
+	<!-- 사원 비활성 -->
+	<update id="unUseEmp" parameterType="EmpVO">
+		update emp_list
+		set emp_use = 'N'
+		where emp_id = #{empId}
+	</update>
 	
 	<!-- 사원삭제 -->
 	<delete id="delEmp" parameterType="EmpVO">
 		DELETE emp_list
 		WHERE emp_id = #{empId}
 	</delete>
+	
+	<!-- 사원정보수정 -->
+	<update id="upEmp" parameterType="EmpVO">
+		UPDATE emp_list
+		SET emp_name = #{empName},
+			 emp_dept = #{empDept},
+			 emp_class = #{empClass},
+			 emp_phone = #{empPhone}
+		WHERE emp_id = #{empId}
+	</update>
 	<!-- 비밀번호 초기화  -->
 	<update id="resetPw" parameterType="EmpVO">
 		UPDATE emp_list

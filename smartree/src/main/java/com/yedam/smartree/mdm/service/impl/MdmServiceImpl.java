@@ -68,6 +68,11 @@ public class MdmServiceImpl implements MdmService {
 	}
 			
 	
+	@Override
+	public List<EmpVO> selectUnusedEmp(EmpVO vo) {
+		return mdmMapper.selectUnusedEmp(vo);
+	}
+	
 	@Override public int addEmp(EmpVO vo) {
 	vo.setEmpPw(passwordEncoder.encode(vo.getEmpPw())); 
 		return mdmMapper.addEmp(vo); 
@@ -82,6 +87,15 @@ public class MdmServiceImpl implements MdmService {
 	@Override
 	public int updatePassword(EmpVO vo) {
 		return mdmMapper.updatePassword(vo);
+	}
+	
+	@Override
+	public int unUseEmp(List<EmpVO> list) {
+		int cnt=0;
+		for(EmpVO vo : list) {
+			cnt += mdmMapper.unUseEmp(vo);
+		}
+		return cnt;
 	}
 	
 	// 제품관리
@@ -279,6 +293,17 @@ public class MdmServiceImpl implements MdmService {
 		}
 		return cnt;
 	}
+
+	@Override
+	public int upEmp(List<EmpVO> list) {
+		int cnt = 0;
+		for(EmpVO vo : list) {
+			cnt += mdmMapper.upEmp(vo);
+		}
+		return cnt;
+	}
+
+	
 
 
 	

@@ -171,6 +171,7 @@
 		ON c.mtl_lot_num = h.mtl_lot_num
 		WHERE c.mtl_code = #{mtlCode}
 		GROUP BY c.mtl_lot_num, mtl_type, c.mtl_code, t.mtl_name, c.mtl_in_date, c.mtl_in_cnt, c.mtl_lot_cnt
+		ORDER BY mtl_lot_num
   	</select>
   	
   	<!-- 발주목록 발주서별 자재내역 출력기능 -->

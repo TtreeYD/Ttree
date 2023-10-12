@@ -119,7 +119,7 @@
   		     , p.prod_plan_code , p.prod_plan_name, p.prod_name, p.prod_plan_date, p.prod_plan_sdate, p.prod_plan_edate
   		     , pt.prdt_name , pt.prdt_code
 		<if test="orderCode != null and !orderCode.equals('')">
-	  		, nvl(dto.order_dt_cnt, 0) order_dt_cnt, dto.dod_date
+	  		, nvl(dto.order_dt_cnt, 0) order_dt_cnt, o.dod_date
         </if>
 		FROM dt_prod_plan dtp JOIN prod_plan p 
 		ON dtp.prod_plan_code = p.prod_plan_code
@@ -128,6 +128,8 @@
 		<if test="orderCode != null and !orderCode.equals('')">
 	        LEFT OUTER JOIN dt_order dto
 	        ON p.order_code = dto.order_code AND dtp.prdt_code = dto.prdt_code
+	        LEFT OUTER JOIN orders o
+	        on p.order_code = o.order_code
         </if>
 		WHERE p.prod_plan_code = #{prodPlanCode}
   	</select>
@@ -186,9 +188,24 @@
   	<select id="getMtlNeed" resultType="MtlNeedVO">
   		SELECT prdt_code, mtl_code, get_mtl_name(mtl_code) mtl_name, SUM(mtl_cnt) mtl_need
 		FROM bom_detail JOIN bom_table USING(bom_code)
-		                JOIN dt_prod_plan USING(prdt_code)
-		                JOIN prod_plan USING(prod_plan_code)
-		WHERE prod_plan_code = #{prodPlanCode}
+							 <choose>
+							 	<when test="prodInstCode != null and !prodInstCode.equals('')">
+							 	JOIN dt_prod_inst USING(prdt_code)
+							 	JOIN prod_inst USING(prod_inst_code)
+							 	</when>
+							 	<otherwise>
+							 	JOIN dt_prod_plan USING(prdt_code)
+		               	 JOIN prod_plan USING(prod_plan_code)
+							 	</otherwise>
+							 </choose>
+      <choose>	
+		  	<when test="prodInstCode != null and !prodInstCode.equals('')">
+		  		WHERE prod_inst_code = #{prodInstCode}
+		  	</when>
+		  	<otherwise>
+		  		WHERE prod_plan_code = #{prodPlanCode}
+		  	</otherwise>
+      </choose>
 		AND mtl_cnt is not null
 		GROUP BY prdt_code, mtl_code
 		ORDER BY prdt_code
@@ -218,7 +235,7 @@
 				         on pi.prod_plan_code  = p.prod_plan_code
 				         join dt_prod_inst dpi
 				         on pi.prod_inst_code = dpi.prod_inst_code and dpi.prdt_code = dtp.prdt_code
-		where pi.prod_plan_code = #{prodPlanCode}
+		where pi.prod_inst_code = #{prodInstCode}
   	</select>
   	<!-- 생산지시등록 -->
 	<insert id="insertProdInst" parameterType="ProdVO" statementType="CALLABLE">

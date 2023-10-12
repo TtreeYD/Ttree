@@ -33,12 +33,12 @@
 			
 			
 			<div class="btn-group ml-auto" role="group">
-				<button id="notUseListBtn" class="btn btn-primary">비활성조회</button>
+				<button id="unusedListBtn" class="btn btn-primary">비활성조회</button>
 			</div>
 			<div class="btn-group ml-3" role="group">
 				<button type="button" id="addBtn" class="btn btn-primary ml-auto" data-toggle="modal"	data-target="#empAddModal">사원등록</button>
 				<button type="button" id="upEmpBtn" class="btn btn-primary">저장</button>
-				<button type="button" id="" class="btn btn-primary">비활성화</button>
+				<button type="button" id="unUseBtn" class="btn btn-primary">비활성화</button>
 			</div>
 		</div>
 		
@@ -100,16 +100,33 @@
 						<h5 class="modal-title" id="exampleModalLabel">비활성 사원 리스트</h5>
 					</div>
 					<div class="modal-body px-4">
+						<div class="btn-toolbar mb-3" role="toolbar" aria-label="Toolbar with button groups">
+							<div class="input-group">
+								<select class="custom-select col-4" id="deptInfo2">
+									<option value="" selected>부서정보</option>
+								</select>
+								<input type="text" class="form-control col-5 noGray" id="searchName2" placeholder="이름">
+								<div class="input-group-append">
+									<button type="button" id="searchBtn2" class="btn btn-primary col"><i class="fas fa-search"></i></button>
+								</div>
+							</div>
+							
+							
+							<div class="btn-group ml-auto" role="group">
+								<button id="delEmpBtn" class="btn btn-primary">삭제</button>
+							</div>
+						</div>
 						<div id="empList2"></div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="delEmpBtn" class="btn btn-primary">삭제</button>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
 					</div>
 				</div>
 			</div>
 		</div>
 		<script>
+			var deptList = []
+			
 			class CustomSliderRenderer {
 				constructor(props) {
 					const el = document.createElement('button');
@@ -122,7 +139,7 @@
 					$(el).on('click', () => {
 						let eid = grid.getValue(props.rowKey, 'empId')
 						let edept = grid.getValue(props.rowKey, 'empDept')
-						if (edept == '관리자') {
+						if (edept == 'ST01') {
 							toastr.warning('관리자의 비밀번호는 초기화 할 수 없습니다.')
 							return
 						}
@@ -186,8 +203,13 @@
 						let optTag = $('<option/>');
 						optTag.val(dept['codeId']);
 						optTag.text(dept['codeName']);
-						$('#deptInfo, #empDept').append(optTag);
+						let list = {};
+						list.text = dept['codeName'];
+						list.value = dept['codeId'];
+						deptList.push(list)
+						$('#deptInfo, #empDept, #deptInfo2').append(optTag);
 					})
+					getEmpList();
 				},
 				error: err => console.log(err)
 			})
@@ -220,7 +242,14 @@
 					{
 						header: '부서',
 						name: 'empDept',
-						align: 'center'
+						align: 'center',
+						formatter: 'listItemText',
+						editor: {
+							type: 'select',
+							options: {
+								listItems: deptList
+							}
+						},
 					},
 					{
 						header: '직급',
@@ -268,10 +297,7 @@
 					},
 					{
 						header: '이름',
-						name: 'empName',
-						editor:{
-							type: 'text'
-						}
+						name: 'empName'
 					},
 					{
 						header: '부서',
@@ -281,23 +307,17 @@
 					{
 						header: '직급',
 						name: 'empClass',
-						align: 'center',
-						editor:{
-							type: 'text'
-						}
+						align: 'center'
 					},
 					{
 						header: '연락처',
 						name: 'empPhone',
-						align: 'center',
-						editor:{
-							type: 'text'
-						}
+						align: 'center'
 					}
 				]
 			});
 
-			getEmpList();
+			
 
 			$('#deptInfo').on('change', function () {
 				searchEmp();
@@ -315,6 +335,7 @@
 			})
 
 			function getEmpList(empDept, empName) {
+				
 				$.ajax({
 					url: '/mdm/selectEmpList',
 					data: {
@@ -324,6 +345,7 @@
 					success: result => {
 						console.log(result)
 						grid.resetData(eval(result));
+						dac()
 					},
 					error: err => console.log(err)
 				})
@@ -331,14 +353,23 @@
 
 			function searchEmp() {
 				let dept = $('#deptInfo').val();
-				if ($('#searchName').val()) {
-					let empName = $('#searchName').val()
+				let empName = $('#searchName').val()
+				if (empName) {
 					getEmpList(dept, empName);
 				} else {
 					getEmpList(dept);
 				}
 			}
 
+			function dac() {
+				let gridData = grid.getData()
+				for(let data of gridData){
+					if(data.empId=='ST010001'){
+						grid.disableCell(data.rowKey, 'empDept')
+					}
+				}
+			}
+			
 			$('#insertEmp').on('click', insertEmp)
 
 			function insertEmp() {
@@ -381,36 +412,36 @@
 
 				console.log(empInfo)
 			}
-			// 삭제버튼
-			$('#delEmpBtn').on('click', function () {
+			// 비활성버튼
+			$('#unUseBtn').on('click', function () {
 				if (grid.getCheckedRows().length == 0) {
 					toastr.warning('선택된 값이 없습니다.')
 					return
 				}
 				let chkMaster = grid.getCheckedRows()[0].empId
 				if(chkMaster=='ST010001') {
-					toastr.warning('최고관리자는 삭제할 수 없습니다.')
+					toastr.warning('최고관리자는 비활성 할 수 없습니다.')
 					return
 				}
 				Swal.fire({
-					title: '삭제하시겠습니까?',
+					title: '비활성하시겠습니까?',
 					icon: 'warning',
 					showCancelButton: true,
 					confirmButtonColor: '#3085d6',
 					cancelButtonColor: '#d33',
-					confirmButtonText: '삭제',
+					confirmButtonText: '확인',
 					cancelButtonText: '취소'
 				}).then((result) => {
 					if (result.isConfirmed) {
 						let vo = grid.getCheckedRows()
 						$.ajax({
-							url: '/mdm/delEmp',
+							url: '/mdm/unUseEmp',
 							method: 'post',
 							contentType: 'application/json',
 							data: JSON.stringify(vo),
 							success: result => {
 								Swal.fire({
-									title: result + ' 건 삭제완료',
+									title: result + '개 계정이 비활성 되었습니다.',
 									icon: 'success',
 									confirmButtonText: '확인'
 								})
@@ -424,11 +455,109 @@
 			
 			$('#upEmpBtn').on('click', () => {
 				grid.blur()
-				console.log(grid.getModifiedRows().updatedRows)
+				let vo = grid.getModifiedRows().updatedRows
+				if(vo.length==0){
+					toastr.warning('변경된 값이 없습니다.')
+					return
+				}
+				$.ajax({
+					url: '/mdm/upEmp',
+					method: 'post',
+					contentType: 'application/json',
+					data: JSON.stringify(vo),
+					success: result => {
+						if(result>0){
+							toastr.success('저장완료')
+							getEmpList()
+						}
+					}
+				})
 			})
 			
-			$('#notUseListBtn').on('click', () => {
-				$('#empNotUse').modal('show')
+			//$('#')
+			
+			$('#unusedListBtn').on('click', () => {
+				getUnusedEmp()
+			})
+			
+			$('#deptInfo2').on('change', function () {
+				searchEmp2();
+			})
+
+			$('#searchBtn2').on('click', function () {
+				searchEmp2();
+			})
+
+			$('#searchName2').on('keypress', function (ev) {
+				if (ev.which == 13) {
+					event.preventDefault();
+					searchEmp2();
+				}
+			})
+
+			function searchEmp2() {
+				let dept = $('#deptInfo2').val();
+				let empName = $('#searchName2').val()
+				if (empName) {
+					getUnusedEmp(dept, empName);
+				} else {
+					getUnusedEmp(dept);
+				}
+			}
+
+			
+			//비활성 조회
+			function getUnusedEmp(empDept, empName){
+				let vo = {
+						empDept: empDept,
+						empName: empName
+				}
+				$.ajax({
+					url: "/mdm/selectUnusedEmp",
+					data: vo,
+					success: result => {
+						$('#empNotUse').modal('show')
+						grid2.resetData(eval(result))
+						setTimeout(() => grid2.refreshLayout(), 200);
+					},
+					error: err => console.log(err)
+				})
+			}
+			
+			//비활성 삭제
+			$('#delEmpBtn').on('click', function () {
+				if (grid2.getCheckedRows().length == 0) {
+					toastr.warning('선택된 값이 없습니다.')
+					return
+				}
+				Swal.fire({
+					title: '삭제하시겠습니까?',
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: '확인',
+					cancelButtonText: '취소'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						let vo = grid2.getCheckedRows()
+						$.ajax({
+							url: '/mdm/delEmp',
+							method: 'post',
+							contentType: 'application/json',
+							data: JSON.stringify(vo),
+							success: result => {
+								Swal.fire({
+									title: result + '개 계정이 삭제되었습니다.',
+									icon: 'success',
+									confirmButtonText: '확인'
+								})
+								getUnusedEmp()
+							}
+						})
+						
+					}
+				})
 			})
 			
 		</script>
