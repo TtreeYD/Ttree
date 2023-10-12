@@ -148,7 +148,7 @@ SELECT
 	   <where>
         <if test="searchDate == 'MA01'">
             <![CDATA[
-                TO_CHAR(prdt_chk_date,'YY/MM/DD') >= TRUNC(SYSDATE) AND prdt_chk_date < TRUNC(SYSDATE) + 1
+                TO_CHAR(prdt_chk_date,'YY/MM/DD') >= TRUNC(SYSDATE) AND TO_CHAR(prdt_chk_date,'YY/MM/DD') < TRUNC(SYSDATE) + 1
             ]]>
         </if>
         <if test="searchDate == 'MA02'">
