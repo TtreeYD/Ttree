@@ -17,7 +17,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -67,8 +66,8 @@ public class EqmController {
 
 	// 설비 등록 - 페이지
 	@GetMapping("/eqmForm")
-	public String registerEqmForm(Model model) {
-		model.addAttribute("eqmVO", new EqmVO());
+	public String registerEqmForm() {
+		//model.addAttribute("eqmVO", new EqmVO());
 		return "eqm/eqmForm";
 	}
 

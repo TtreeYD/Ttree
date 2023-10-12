@@ -23,7 +23,7 @@
   			</if>
   		</where>  		
   	 					 
-  	ORDER BY eqm_code
+  	ORDER BY insp_code desc
   	</select>
   	<!-- 설비점검이름으로 검색 -->
   	 <select id="searchEqmInsp" resultType="EqmInspVO">
@@ -39,7 +39,7 @@
   		  </if>
   		</where>  	
   	 					 
-  	ORDER BY eqm_code
+  	ORDER BY insp_code desc
   	</select>
   	
   	<!-- 설비점검 단건조회  -->
@@ -121,6 +121,8 @@
   		from EQM_NOPER n join eqm e 
   						 ON n.eqm_code = e.eqm_code
   		where e.eqm_state = 'E' and n.INSP_ICHECK != 'Y'
+  		
+  		ORDER BY n.NOPER_CODE
   	</select>
   	
   	  	<!--비가동 설비점검이름으로 검색 -->

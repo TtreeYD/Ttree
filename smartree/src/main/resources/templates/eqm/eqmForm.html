@@ -27,13 +27,19 @@
 }
 
 #equipTable input[type="text"] {
-	width: 50;
+	
 	padding: 8px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	box-sizing: border-box;
 }
-
+#equipTable input[type="number"] {
+	width: 80px;
+	padding: 4px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	box-sizing: border-box;
+}
 #selectBtn, #buttons {
 	margin-right: 300px;
 	float: right;
@@ -53,6 +59,11 @@
 	bottom: 100px;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
 </style>
 </head>
 <body>
@@ -62,23 +73,23 @@
 			data-toggle="modal" data-target="#searchEqmModal">설비조회</button>
 		<div id="form">
 			<form name="infoForm" action="eqmForm" method="post"
-				th:object="${eqmVO}" enctype="multipart/form-data" >
+				 enctype="multipart/form-data" >
 				<table id="equipTable">
 					<tr>
 						<th>설비코드</th>
-						<td><input class="form-control"  type="text" th:field="*{eqmCode}" name="eqmCode"
+						<td><input class="form-control"  type="text"  name="eqmCode"
 							id="eqmCode" style="background-color: #d3d3d3" readonly /></td>
 						<th>설비명 *</th>
-						<td><input class="form-control"  type="text" th:field="*{eqmName}" name="eqmName"
+						<td><input class="form-control"  type="text"  name="eqmName"
 							id="eqmName" /></td>
 					</tr>
 
 					<tr>
 						<th>사용여부 *</th>
-						<td><label for="y" style="margin-left: 10px; margin-right: 40px">
-						<input type="radio" id="y"  name="eqmUcheck" value="Y" checked/> Yes </label> 
-						<label for="n"><input type="radio" id="n" th:field="*{eqmUcheck}" name="eqmUcheck" value="N" /> No
-						</label></td>
+						<td>
+						<label for="y" style="margin-left: 10px; margin-right: 40px"><input type="radio" id="y"  name="eqmUcheck" value="Y" checked/> Yes </label> 
+						<label for="n"><input type="radio" id="n" name="eqmUcheck" value="N" /> No</label>
+						</td>
 						<th>공정구분</th>
 						<td><select   id="eqmDivision" name="eqmDivision">
 								<option value="">--</option>
@@ -91,18 +102,17 @@
 					</tr>
 					<tr>
 						<th>온도</th>
-						<td><input type="text" id="eqmMinTemp" name="eqmMinTemp" placeholder="최저"  /> ℃
-							~ <input type="text" id="eqmMaxTemp" name="eqmMaxTemp" placeholder="최고" /> ℃</td>
+						<td><input type="number" class="text-right" maxlength="5" oninput="maxLengthChk(this)" id="eqmMinTemp" name="eqmMinTemp" placeholder="최저"  /> ℃
+							~ <input type="number" class="text-right" maxlength="5" oninput="maxLengthChk(this)" id="eqmMaxTemp" name="eqmMaxTemp" placeholder="최고" /> ℃</td>
 
 						<th>관리인 *</th>
 						<td><input type="text" id="eqmManager" name="eqmManager" th:value="${session.loginMember.empName}" /></td>
 					</tr>
 					<tr>
 						<th>점검주기</th>
-						<td><input type="text" name="inspCycle" id="inspCycle"
-							value=0 />일</td>
+						<td><input type="number" class="text-right" maxlength="5" oninput="maxLengthChk(this)" name="inspCycle" id="inspCycle" value=0 />일</td>
 						<th>이미지</th>
-						<td><input class="form-control-file"  type="file" name="file" id="eqmImg"	 accept="image/*" /></td>
+						<td><input class="form-control-file"  type="file" name="file" id="eqmImg" accept="image/*" /></td>
 					</tr>
 					<tr>
 						<th>제조업체 *</th>
@@ -112,8 +122,7 @@
 
 					<tr>
 						<th>제조일자</th>
-						<td><input type="date" id="mfgDate" name="mfgDate"
-							th:field="*{mfgDate}" /></td>
+						<td><input type="date" id="mfgDate" name="mfgDate"/></td>
 					</tr>
 				</table>
 
@@ -162,7 +171,7 @@
 		<!-- 모달창 끝 -->
 
 <script>
-
+    let manager = `[[${session.loginMember.empName}]]`;
     $(document).ready(function () {
         	
         $("#selectBtn").on("click", getEqmList);
@@ -205,6 +214,11 @@
 				swal("최대 10자까지 입니다", "", "warning");
 				return;
 			}
+			//사용여부 테스트
+			if(infoForm.eqmUcheck.value==''){
+				swal("사용여부를 선택하세요", "", "warning");
+				return;
+			}
 			//공정구분 테스트
 			if(infoForm.eqmDivision.value==''){
 				swal("공정구분을 선택하세요", "", "warning");
@@ -223,6 +237,8 @@
 				infoForm.mfgComp.focus();
 				return;
 			}
+			
+			
 			// 온도
 			if(infoForm.eqmMinTemp.value ==''){
 				infoForm.eqmMinTemp.value =0
@@ -230,12 +246,15 @@
 			if(infoForm.eqmMaxTemp.value ==''){
 				infoForm.eqmMaxTemp.value =0
 			}
-			if( (infoForm.eqmMinTemp.value > infoForm.eqmMaxTemp.value)) {
+			if((Number(infoForm.eqmMinTemp.value) > Number(infoForm.eqmMaxTemp.value)) ) {
 				swal("온도를 확인하세요", "최저온도가 최고온도보다 높습니다", "warning");
 				infoForm.eqmMaxTemp.focus();
 				return;
 			}
-			 
+				
+			if(infoForm.inspCycle.value ==''){
+				infoForm.inspCycle.value =0
+			}
 			
 			infoForm.submit();
 			
@@ -320,6 +339,8 @@
                   },
                   error: (err) => console.log(err),
                 });
+            }else{
+            	getEqmList();
             }
           }
           
@@ -386,7 +407,7 @@
             $("#y,#n").prop("checked", false);
             $("#eqmMinTemp").val("");
             $("#eqmMaxTemp").val("");
-            $("#eqmManager").val("");
+            $("#eqmManager").val(manager);
             $("#inspCycle").val("");
             $("#eqmImg").val("");
             $("#preview").attr("src", '');
@@ -397,6 +418,25 @@
             // 삭제버튼 비활성화
             $('#deleteBtn').prop('disabled', true);
           });
+          
+          function reset(){
+        	  $("#eqmCode").val("");
+              $("#eqmName").val("");
+              $("#y,#n").prop("checked", false);
+              $("#eqmMinTemp").val("");
+              $("#eqmMaxTemp").val("");
+              $("#eqmManager").val(manager);
+              $("#inspCycle").val("");
+              $("#eqmImg").val("");
+              $("#preview").attr("src", '');
+              $("#mfgComp").val("");
+              $("#mfgDate").val("");
+              $("#eqmDivision").val("");
+              
+              // 삭제버튼 비활성화
+              $('#deleteBtn').prop('disabled', true);
+          }
+          
 
           
           // 삭제버튼
@@ -425,7 +465,8 @@
                   success: function (data) {
                     console.log(data);
                     //삭제 후 <input> 태그 칸 값 비우기
-                    $("input").val("");
+                  //  $("input").val("");
+                    reset();
                     swal("삭제 완료!", "설비가 삭제되었습니다.", "success");
                   },
                   error: function (reject) {
@@ -452,10 +493,18 @@
           });
           
 			
+      
          
           
         });
     
+    
+	// input 글자수제한 
+	function maxLengthChk(object){
+	    if (object.value.length > object.maxLength){
+	      object.value = object.value.slice(0, object.maxLength);
+	    }    
+	  }
     
       </script>
 	</div>
