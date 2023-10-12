@@ -122,4 +122,5 @@ public class MaterialVO {
 	
 	// 프로시져용
 	private String result;
+
 }
