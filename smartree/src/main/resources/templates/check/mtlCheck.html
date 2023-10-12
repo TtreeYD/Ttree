@@ -228,7 +228,7 @@
             		   if(!data.mtlChkManager) data.mtlChkManager = manager
             	   }
             	  
-            	   grid2.resetData(datas)
+            	   grid2.setRows(datas)
                }
                // 검사량 - 불량량 이벤트  
 				 grid2.on('afterChange', (ev) => {
@@ -260,7 +260,7 @@
 	                if (mtlErrorCnt > mtlChkCnt) {
 	                	toastr.warning('불량량이 검사량을 초과합니다');
 	                }
-	                grid2.setValue(rowKey, 'mtlPassCnt', mtlPassCnt);  */
+	                grid2.setValue(rowKey, 'mtlPassCnt', mtlPassCnt); */
 		        });
                  
 			  //모달 조회 클릭이벤트

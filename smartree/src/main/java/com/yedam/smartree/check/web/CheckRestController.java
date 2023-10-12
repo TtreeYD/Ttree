@@ -63,11 +63,17 @@ public class CheckRestController {
 	public List<MtlCheckVO> getMtlName(String mtlName){
 		return mtlcheckservice.searchMtl(mtlName);
 	}
+	//자재검사자검색
+	@GetMapping("/mtlManager")
+	public List<MtlCheckVO> getMtlManager(String mtlManager){
+		return mtlcheckservice.searchMtlManager(mtlManager);
+	}
 	//자재날짜검색
 	@GetMapping("/mtlDate")
 	public List<MtlCheckVO> getMtlDate(String mtlDate){
 		return mtlcheckservice.searchMtlDate(mtlDate);
 	}
+	
 	//검사된자재검색(자재검사)
 	@GetMapping("/mtlallchk")
 	public List<MtlCheckVO> getMtlAllChk(){

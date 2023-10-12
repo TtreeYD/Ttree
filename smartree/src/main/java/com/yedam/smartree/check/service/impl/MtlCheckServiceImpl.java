@@ -37,10 +37,15 @@ public class MtlCheckServiceImpl implements MtlCheckService{
 	}
 
 	@Override
+	public List<MtlCheckVO> searchMtlManager(String mtlManager) {
+		return mtlcheckmapper.searchMtlManager(mtlManager);
+	}
+	
+	@Override
 	public List<MtlCheckVO> searchMtlDate(String mtlDate) {
 		return mtlcheckmapper.searchMtlDate(mtlDate);
 	}
-
+	
 	@Override
 	public List<MtlCheckVO> selectChkAll() {
 		return mtlcheckmapper.selectChkAll();
@@ -55,5 +60,7 @@ public class MtlCheckServiceImpl implements MtlCheckService{
 	public List<MtlCheckVO> chkAll() {
 		return mtlcheckmapper.chkAll();
 	}
+
+
 
 }

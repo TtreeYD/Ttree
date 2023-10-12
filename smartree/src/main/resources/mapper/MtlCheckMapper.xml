@@ -54,8 +54,15 @@
   
 <!-- 검사코드 검색 -->
   <select id="searchMtl" resultType="MtlCheckVO">
-  	 SELECT *
-	 FROM mtl_chk c 
+  	 SELECT get_mtl_name(mtl_code) mtlName,
+  	 		mtl_chk_code,
+  	 		mtl_code,
+  	 		mtl_cnt,
+  	 		mtl_error_cnt,
+  	 		mtl_pass_cnt,
+  	 		mtl_chk_manager,
+  	 		mtl_chk_date
+	 FROM mtl_chk  
   		<where>
   			<if test="mtlChkCode != null and !mtlChkCode.equals('')">
   				mtl_chk_code LIKE '%'||#{mtlChkCode}||'%'
@@ -64,13 +71,39 @@
 		ORDER BY mtl_chk_code ASC	 
   	</select>
   	
- <!-- 검사일자검색 -->
+ <!-- 검사자검색 -->
+  	<select id="searchMtlManager" resultType="MtlCheckVO">
+  	 SELECT get_mtl_name(mtl_code) mtlName,
+  	 		mtl_chk_code,
+  	 		mtl_code,
+  	 		mtl_cnt,
+  	 		mtl_error_cnt,
+  	 		mtl_pass_cnt,
+  	 		mtl_chk_manager,
+  	 		mtl_chk_date
+	 FROM mtl_chk 
+  		<where>
+  			<if test="mtlChkManager != null and !mtlChkManager.equals('')">
+  				mtl_chk_manager LIKE '%'||#{mtlChkManager}||'%'
+  			</if>
+  		</where>  	
+		ORDER BY mtl_chk_code 	 
+  	</select>
+  	
+  	<!-- 검사날짜검색 -->
   	<select id="searchMtlDate" resultType="MtlCheckVO">
-  	 SELECT *
-	 FROM mtl_chk c 
+  	 SELECT get_mtl_name(mtl_code) mtlName,
+  	 		mtl_chk_code,
+  	 		mtl_code,
+  	 		mtl_cnt,
+  	 		mtl_error_cnt,
+  	 		mtl_pass_cnt,
+  	 		mtl_chk_manager,
+  	 		mtl_chk_date
+	 FROM mtl_chk  
   		<where>
   			<if test="mtlChkDate != null and !mtlChkDate.equals('')">
-  				mtl_chk_date LIKE '%'||#{mtlChkDate}||'%'
+  				to_char(mtl_chk_date,'yyyy-MM-dd') LIKE '%'||#{mtlChkDate}||'%'
   			</if>
   		</where>  	
 		ORDER BY mtl_chk_code 	 
