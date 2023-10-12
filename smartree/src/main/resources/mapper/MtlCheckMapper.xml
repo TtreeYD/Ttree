@@ -3,30 +3,21 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
   <mapper namespace="com.yedam.smartree.check.mapper.MtlCheckMapper">
-  <!-- 모달자재 조회 -->
+  <!-- 미검사자재 조회 -->
   	<select id="selectMtl" resultType="MtlCheckVO">
-  		SELECT	mtl_date, 
-	  			mtl_code, 
-	  			bp_code, 
-	  			mtl_name, 
-	  			mtl_manager,
-	  			mtl_cnt
-		FROM	mtl_need
-        <where>
-        	mtl_where = 'MT01'
-          <if test="mtlDate != null">
-            AND mtl_date >= #{mtlDate} AND mtl_date <![CDATA[<]]> #{mtlDate}+1
-          </if>
-          <if test="bpCode != null and !bpCode.equals('')">
-            AND bp_code = #{bpCode}
-          </if>
-          <if test="mtlCode != null and !mtlCode.equals('')">
-            AND mtl_code = #{mtlCode}
-          </if>
-          <if test="mtlManager != null and !mtlManager.equals('')">
-            AND mtl_manager LIKE '%' || #{mtlManager} ||'%'
-          </if>
-      </where> 	
+  		SELECT	n.mtl_date, 
+	  			n.mtl_code, 
+	  			n.bp_code, 
+	  			n.mtl_name, 
+	  			n.mtl_manager,
+	  			n.mtl_cnt,
+	  			
+	  			p.bp_name
+	  			
+		FROM	mtl_need n
+		JOIN    business_partner p
+		  ON    n.bp_code = p.bp_code
+        WHERE   mtl_where = 'MT01'
   	</select>
   	
   	<select id="getMtl" resultType="MtlCheckVO">
@@ -89,6 +80,26 @@
 	<select id="selectChkAll" resultType="MtlCheckVO">
 		SELECT *
 		FROM mtl_chk c JOIN mtl_table t using(mtl_code)
+		ORDER BY mtl_chk_code
+  	</select>
+  	
+  	<select id="chkAll">
+		SELECT b.bp_name,
+           n.mtl_date,
+           n.mtl_name,
+           n.mtl_code,
+           c.mtl_cnt,
+           c.mtl_error_cnt,
+           c.mtl_pass_cnt,
+           c.mtl_chk_manager
+		FROM mtl_chk c 
+		JOIN mtl_need n 
+		  ON c.mtl_code = n.mtl_code
+        AND c.mtl_date = n.mtl_date
+        AND c.bp_code = n.bp_code
+        JOIN business_partner b 
+          ON n.bp_code = b.bp_code
+   		WHERE mtl_chk_status = 'MT02'
 		ORDER BY mtl_chk_code
   	</select>
   	

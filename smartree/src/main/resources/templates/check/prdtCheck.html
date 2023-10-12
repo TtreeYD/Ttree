@@ -21,12 +21,12 @@
 <h1>제품품질검사</h1>
 	<div style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
 		<div>
-			<h3>품질검사목록</h3>
+			<h3>제품검사목록</h3>
 			<div id="grid" style="width: 800px;"></div>
 		</div> 
 		<div>
 		<button type="button" id="addBtn" class="btn btn-primary" style="float : right;">저장</button>
-			<h3>품질검사상세</h3>
+			<h3>제품검사기준</h3>
 			<div id="grid2" style="width: 800px;"></div>
 		</div>
 	</div>
@@ -43,7 +43,7 @@
 	      scrollX: false,
 	      scrollY: false,
 	      pageOptions: {
-            perPage: 5,
+            perPage: 10,
             useClient: true,
           },
           rowHeaders : ["rowNum"],
@@ -65,7 +65,7 @@
 	          align: 'center'
 	        },
 	        {
-	          header: '생산지시일자',
+	          header: '생산완료일자',
 	          name: 'prodInstDate',
 	          align: 'center'
 	        },
@@ -76,10 +76,16 @@
 	          editor : 'text',
 	        },
 	        {
-	          header: '제품코드',
-	          name: 'prdtCode',
+	          header: '제품명',
+	          name: 'prdtName',
 	          align: 'center',
 	          },
+	          {
+		          header: '제품코드',
+		          name: 'prdtCode',
+		          align: 'center',
+		          hidden: true
+		          },
 		
 	      ]
 	    });

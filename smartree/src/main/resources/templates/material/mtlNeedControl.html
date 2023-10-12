@@ -674,6 +674,14 @@ margin : 10px;
 					}, {
 						header: '단위',
 						name: 'mtlUnit'
+					}, {
+						header: '주문상태',
+						name: 'mtlWhere',
+						hidden : true
+					}, {
+						header: '발주코드',
+						name: 'needCode',
+						hidden : true
 					}]
 				});
 				// 자재목록 수정용
@@ -699,6 +707,14 @@ margin : 10px;
 					}, {
 						header: '단위',
 						name: 'mtlUnit'
+					}, {
+						header: '주문상태',
+						name: 'mtlWhere',
+						hidden : true
+					}, {
+						header: '발주코드',
+						name: 'needCode',
+						hidden : true
 					}]
 				});
 				// 그리드 클릭시 모달 팝업
@@ -752,9 +768,13 @@ margin : 10px;
 					 	let datas = matGrid.getCheckedRows();
 					 	
 					 	let mtlCode = matGrid.getValue("mtlCode");
+					 	let mtlWhere = matGrid.getValue("mtlWhere");
+					 	let needCode = matGrid.getValue("needCode");
 					 	datas.forEach((data,index)=>{
 					 		data.mtlDate = mtlDate;
 					 		data.mtlManager = manager;
+					 		data.mtlWhere = mtlWhere;
+					 		data.needCode = needCode;
 					 		delete data.rowKey;
 					 		delete data._attributes;
 							mtlNeedGrid.appendRow(data);

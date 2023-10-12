@@ -17,4 +17,5 @@ public interface MtlCheckMapper {
 	public List<MtlCheckVO> searchMtlDate(String mtlDate);
 	public List<MtlCheckVO> selectChkAll();
 	public int updateChkMtl(MtlCheckVO vo);
+	public List<MtlCheckVO> chkAll();
 }

@@ -23,18 +23,20 @@
 <!-- 입고목록- 입고취소 -->
 <div class="modal fade" tabindex="-1" role="dialog" id="recieveListModal">
       <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-        <div class="modal-content" style="height:500px">
+        <div class="modal-content">
           <div class="modal-header">
             <h2>입고목록</h2>
           </div>
           <div class="modal-body">
+          <div style="margin-bottom: 10px;">
 	        <label for="prdtOutCode">제품명</label> 
 			<input type="text"  id="prdtName"> 
 			<label>입고날짜</label>
-			<input type="date" id="prdtRecieveDate">
+			<input type="date" id="prdtRecieveDate" >
 			<button type="button" id="searchDataBtn" class="btn btn-primary" style="margin-left:20px;">조회</button>
 			<button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
             <button type="button" id="recieveCancle" class="btn btn-primary" style="float:right;" >입고취소</button>
+		  </div>
             <div id="searchGrid"></div>
             
           </div>

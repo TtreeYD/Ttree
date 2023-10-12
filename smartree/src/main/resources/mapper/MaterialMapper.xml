@@ -88,7 +88,7 @@
   		UPDATE mtl_need
   		SET mtl_cnt = #{mtlCnt},
   			mtl_wish_date = #{mtlWishDate}
-  		WHERE mtl_code = #{mtlCode} AND mtl_date = #{mtlDate}
+  		WHERE mtl_code = #{mtlCode} AND TO_CHAR(mtl_date,'YY/MM/DD') = TO_CHAR(#{mtlDate},'YY/MM/DD')
   	</update>
   	
   	<!-- 발주관리 delete -->
@@ -142,10 +142,10 @@
         ON n.bp_code = b.bp_code
         WHERE t.mtl_name like '%'||#{mtlName}||'%' AND n.mtl_manager like '%'||#{mtlManager}||'%'
           <if test="startMtlNeedDate != null and endMtlNeedDate != null">
-    		AND n.mtl_date BETWEEN TO_CHAR(#{startMtlNeedDate},'YY/MM/DD') AND TO_CHAR(#{endMtlNeedDate},'YY/MM/DD')
+    		AND TO_CHAR(n.mtl_date,'YY/MM/DD') BETWEEN TO_CHAR(#{startMtlNeedDate},'YY/MM/DD') AND TO_CHAR(#{endMtlNeedDate},'YY/MM/DD')
   		  </if>
   		  <if test="startMtlWishDate != null and endMtlWishDate != null">
-    		AND n.mtl_wish_date BETWEEN TO_CHAR(#{startMtlWishDate},'YY/MM/DD') AND TO_CHAR(#{endMtlWishDate},'YY/MM/DD')
+    		AND TO_CHAR(n.mtl_wish_date,'YY/MM/DD') BETWEEN TO_CHAR(#{startMtlWishDate},'YY/MM/DD') AND TO_CHAR(#{endMtlWishDate},'YY/MM/DD')
   		  </if>
   	</select>
   	
@@ -157,7 +157,7 @@
 		WHERE mtl_chk_status = 'MT02'
 			AND mtl_name like '%'||#{mtlName}||'%' AND mtl_chk_manager like '%'||#{mtlManager}||'%'
 		  <if test="startMtlInDate != null and endMtlInDate != null">
-    		AND mtl_chk_date BETWEEN TO_CHAR(#{startMtlInDate},'YY/MM/DD') AND TO_CHAR(#{endMtlInDate},'YY/MM/DD')
+    		AND TO_CHAR(mtl_chk_date,'YY/MM/DD') BETWEEN TO_CHAR(#{startMtlInDate},'YY/MM/DD') AND TO_CHAR(#{endMtlInDate},'YY/MM/DD')
   		  </if>
   	</select>
   	
@@ -188,7 +188,7 @@
 		JOIN business_partner b ON n.bp_code = b.bp_code
 		WHERE b.bp_name LIKE '%'||#{bpName}||'%'
 		<if test="startMtlNeedDate != null and endMtlNeedDate != null">
-    		AND n.mtl_date BETWEEN TO_CHAR(#{startMtlNeedDate},'YY/MM/DD') AND TO_CHAR(#{endMtlNeedDate},'YY/MM/DD')
+    		AND TO_CHAR(n.mtl_date,'YY/MM/DD') BETWEEN TO_CHAR(#{startMtlNeedDate},'YY/MM/DD') AND TO_CHAR(#{endMtlNeedDate},'YY/MM/DD')
   		</if>
   		GROUP BY b.bp_name, n.mtl_date, n.mtl_manager
 	</select>
