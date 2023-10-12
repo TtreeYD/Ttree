@@ -85,7 +85,14 @@
 	<div style="padding-bottom: 10px;">
 	<label for="searchName">설비명  :  </label>
 	<input type= "text" id="searchName" placeholder="설비명을 입력하시오">
-	<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
+	
+	<label style="margin-left: 28.25px">차기점검일 : </label>
+		<input id="startNextInspDate" type="date" style="width: 138px;">
+		~ 
+		<input id="endNextInspDate" type="date" style="width: 138px;">
+	
+	<button  style="margin-left: 10px" type="button" id="searchBtn" class="btn btn-primary">검색</button>
+	<button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
 	</div>
 	
 	<div id="grid"></div>
@@ -213,6 +220,13 @@ window.onload=function(){
 			searchEqmInspName()
 		}
 	})
+	
+	//초기화 버튼
+	$('#resetBtn').on('click',function(){
+		$('#searchName').val('');
+		$('#startNextInspDate').val('');
+		$('#endNextInspDate').val('');
+	})
     
     
 
@@ -221,12 +235,24 @@ window.onload=function(){
 		if($('#searchName').val()){
 			$('#searchName').val('');
 		}
+		if($('#startNextInspDate').val()){
+			$('#startNextInspDate').val('');
+		}
+		if($('#endNextInspDate').val()){
+			$('#endNextInspDate').val('');
+		}
 		getEqmInspList();
 	})
 	// radio - y 체크
 	$('#y').on('click',function(){
 		if($('#searchName').val()){
 			$('#searchName').val('');
+		}
+		if($('#startNextInspDate').val()){
+			$('#startNextInspDate').val('');
+		}
+		if($('#endNextInspDate').val()){
+			$('#endNextInspDate').val('');
 		}
 		let judg= $('#y').val();
 		getEqmInspJudgList(judg);
@@ -235,6 +261,12 @@ window.onload=function(){
 	$('#n').on('click',function(){
 		if($('#searchName').val()){
 			$('#searchName').val('');
+		}
+		if($('#startNextInspDate').val()){
+			$('#startNextInspDate').val('');
+		}
+		if($('#endNextInspDate').val()){
+			$('#endNextInspDate').val('');
 		}
 		let judg= $('#n').val();
 		getEqmInspJudgList(judg);
@@ -330,8 +362,12 @@ window.onload=function(){
     function getEqmInspName(eqmName){
     	$.ajax({
 			url:'/eqmInpsName',
+			method: 'POST',
 			data: {
-				eqmName : eqmName
+				eqmName : eqmName,
+				
+				startNextInspDate : $('#startNextInspDate').val(),
+				endNextInspDate : $('#endNextInspDate').val()
 			},
 			success: result => {
 				console.log(result);
@@ -374,7 +410,7 @@ window.onload=function(){
 	function searchEqmInspName(){
 
 		$('#all').prop('checked',true)
-		if($('#searchName').val()){
+		if($('#searchName').val() || $('#startNextInspDate').val()){
 			let eqmName = $('#searchName').val();
 			getEqmInspName(eqmName);
 			

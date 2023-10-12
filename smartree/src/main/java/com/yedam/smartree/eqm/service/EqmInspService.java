@@ -6,7 +6,7 @@ public interface EqmInspService {
 	// 설비점검
 	public List<EqmInspVO> selectEqmInspList();
 	public List<EqmInspVO> selectEqmInspInspJudgList(String inspJudg);
-	public List<EqmInspVO> searchEqmInsp(String eqmName);
+	public List<EqmInspVO> searchEqmInsp(EqmInspVO eqmInspVO);
 	public int insertEqmInsp(EqmInspVO eqmInspVO);
 	public EqmInspVO selectEqmInsp(EqmInspVO eqmInspVO);
 	

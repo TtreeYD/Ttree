@@ -453,6 +453,8 @@
         			getEqmList();
         		}
               }
+              
+              
               // 설비조회 모달창 더블클릭
               grid.on("dblclick", (ev) => {
                 if (ev.rowKey == undefined) {
@@ -651,6 +653,7 @@
 
                 // 비가동 코드있으면 수정 없으면 등록
                 if($("#noperCode").val()){
+                	
                 	 vo.noperLdate = $("#noperLdate").val();
                 	 vo.noperCode= $('#noperCode').val();
                 	 if (vo.noperLdate == "") {
@@ -675,19 +678,19 @@
 
                 }else{
 
-                 $.ajax({
-                   url: "/eqm/eqmNoperForm",
-                   method: "post",
-                   contentType: "application/json",
-                   data: JSON.stringify(vo),
-                   success: (result) => {
-                     console.log(result);
-                     swal("저장 완료!", "설비가 저장되었습니다.", "success");
-                     reset();
-                     getEqmList();
-                   },
-                   error: (err) => console.log(err),
-                 });
+                	 $.ajax({
+               		    url: "/eqm/eqmNoperForm",
+                	    method: "post",
+              		    contentType: "application/json",
+                		data: JSON.stringify(vo),
+                   		success: (result) => {
+                   	    console.log(result);
+                     	swal("저장 완료!", "설비가 저장되었습니다.", "success");
+                     	reset();
+                     	getEqmList();
+                 	  },
+                 	 	 error: (err) => console.log(err),
+               		  });
 
                 }
 

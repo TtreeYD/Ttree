@@ -46,8 +46,8 @@
 	
 	<label for="searchName">설비명  :  </label>
 	<input type= "text" id="searchName" placeholder="설비명을 입력하시오">
-	<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
-	
+	<button style="margin-left: 10px" type="button" id="searchBtn" class="btn btn-primary">검색</button>
+	<button type="button" id="resetBtn" class="btn btn-primary">초기화</button> 
 	</div>
 	
 	<div id="grid"></div>
@@ -122,6 +122,10 @@
 			ev.preventDefault();
 			searchEqmName()
 		}
+	})
+		//초기화 버튼
+	$('#resetBtn').on('click',function(){
+		$('#searchName').val('');
 	})
 	// radio - all 체크
 	$('#all').on('click',function(){
