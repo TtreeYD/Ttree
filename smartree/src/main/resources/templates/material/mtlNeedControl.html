@@ -30,7 +30,7 @@ margin : 10px;
 	<div layout:fragment="content">
 	<h1>발주 관리</h1>
 		<button type="button" id="minusBtn" class="btn btn-info" style="background-color: orange; border-color:orange;">안전재고 미달목록</button>
-		<div id="mtlLowGrid"></div>
+		<div id="mtlLowGrid" class="lightgrey"></div>
 		<br>
 		<div class="col-14">
 		<h1 style="margin-bottom: -30px;">발주 자재 목록</h1>
@@ -39,7 +39,7 @@ margin : 10px;
 			<button type="button" id="mtlSearch" class="btn btn-primary" data-toggle="modal" data-target="#myModal">조회</button>
 			<button type="button" id="mtlSave" class="btn btn-primary">발주</button>
 		</div>
-		<div id="mtlNeedGrid"></div>
+		<div id="mtlNeedGrid" class="lightgrey"></div>
 		
 			<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
 			<div class="modal-dialog modal-xl" role="document">
@@ -92,7 +92,7 @@ margin : 10px;
 					</div>
 
 					<div class="modal-body">
-						<div id="needModalGrid"></div>
+						<div id="needModalGrid" class="lightgrey"></div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose" >닫기</button>
