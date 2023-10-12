@@ -32,17 +32,17 @@
   		WHERE mtl_code = #{mtlCode}
         <if test="radioDate == 'MA01'">
             <![CDATA[
-                AND TO_CHAR(p.prcs_edate,'YY/MM/DD') >= TO_CHAR(SYSDATE,'YY/MM/DD') AND TO_CHAR(p.prcs_edate,'YY/MM/DD') < TRUNC(SYSDATE) + 1
+                AND TO_CHAR(p.prcs_edate,'YY/MM/DD') >= TO_CHAR(SYSDATE,'YY/MM/DD') AND TO_CHAR(p.prcs_edate,'YY/MM/DD') < TO_CHAR(TRUNC(SYSDATE) + 1,'YY/MM/DD')
             ]]>
         </if>
         <if test="radioDate == 'MA02'">
             <![CDATA[
-                AND TO_CHAR(p.prcs_edate,'YY/MM/DD') BETWEEN TRUNC(SYSDATE) - 7 AND TRUNC(SYSDATE) + 1
+                AND TO_CHAR(p.prcs_edate,'YY/MM/DD') BETWEEN TO_CHAR(TRUNC(SYSDATE) - 7,'YY/MM/DD') AND TO_CHAR(TRUNC(SYSDATE) + 1,'YY/MM/DD')
             ]]>
         </if>
         <if test="radioDate == 'MA03'">
             <![CDATA[
-                AND TO_CHAR(p.prcs_edate,'YY/MM/DD') BETWEEN TRUNC(SYSDATE) - 30 AND TRUNC(SYSDATE) + 1
+                AND TO_CHAR(p.prcs_edate,'YY/MM/DD') BETWEEN TO_CHAR(TRUNC(SYSDATE) - 30,'YY/MM/DD') AND TO_CHAR(TRUNC(SYSDATE) + 1,'YY/MM/DD')
             ]]>
         </if>
   	</select>
