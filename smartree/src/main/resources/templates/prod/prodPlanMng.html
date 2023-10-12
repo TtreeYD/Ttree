@@ -208,9 +208,6 @@
 	            {
 	              header: '생산계획일자',
 	              name: 'prodPlanDate',
-	            },
-	            {
-	            	
 	            }
    	       ]
  	   });
@@ -308,7 +305,6 @@
 			$('#prodPlanDate').val('');
 			$('#prodPlanSdate').val('');
 			$('#prodPlanEdate').val('');
-			$('#prodName').val('');
 			bir.value = today;
 		}
 		
@@ -472,8 +468,9 @@
 	      		success:function(result){
 					dtPPCode = result;
 					console.log(result)
+					$('#dodDate').val(result[0].dodDate);
 					$('#prodPlanCode').val(result[0].prodPlanCode);
-	   	      $('#prodPlanName').val(result[0].prodPlanName);
+	   	      		$('#prodPlanName').val(result[0].prodPlanName);
 					$('#prodPlanDate').val(result[0].prodPlanDate);
 					$('#prodPlanSdate').val(result[0].prodPlanSdate);
 					$('#prodPlanEdate').val(result[0].prodPlanEdate);
