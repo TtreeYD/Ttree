@@ -168,14 +168,19 @@
 							header: '수량',
 							name: 'orderDtCnt',
 							editor: 'text'
-						}],
+						},
+						{
+							header: '합계',
+							name: 'orderAllCnt'
+						}
+						],
 						summary: {
 							  height: 40,
 							  position: 'bottom', // or 'top'
 							  columnContent: {
-								  orderDtPrice: {
+								  orderAllCnt: {
 							      template: function(valueMap) {
-							        return `TOTAL: ${valueMap.sum}`+'원';
+							        return `TOTAL: ${(valueMap.sum).toLocaleString('ko-KR')}`+'원';
 							      }
 							    }
 							  }
@@ -318,6 +323,7 @@
 								$('#myModal').modal('hide');
 								order.resetData(eval([searchModalData[ev.rowKey]]));
 								dtOrder.resetData(result);
+								calc()
 								selectedData = searchModalData[ev.rowKey];//불러온 해당 열 변수에 저장
 								newOrder.push(searchModalData[ev.rowKey]);
 								newDtOrder = result;
@@ -344,9 +350,9 @@
 						$('#doddate').val('');
 					});
 					//저장버튼클릭
-					order.blur();
-					dtOrder.blur();
 					$('#saveBtn').on('click',function(){
+						order.blur();
+						dtOrder.blur();
 						
 						if(dtOrder.getCheckedRows().length == 0 ){
 							toastr.warning('주문상세정보를 선택해주세요');
@@ -608,8 +614,8 @@
 									
 								})
 								if(check){
-									newDtOrder[dtOrderRowNum] = result[0]
-									dtOrder.resetData(newDtOrder);
+									
+									dtOrder.setRow(dtOrderRowNum, result[0]);
 									$('#prModal').modal('hide');
 								}
 								
@@ -622,14 +628,28 @@
 					});
 					//주문상세 change 될때마다 newDtOrder에 저장해서 값 안사라지게하는이벤트
 					 dtOrder.on('afterChange', ev=>{
+			            calc();
 			            let change = ev.changes
-			            newDtOrder[change[0].rowKey][change[0].columnName]=change[0].value
+			            //newDtOrder[change[0].rowKey][change[0].columnName]=change[0].value
+			            
+			            let onePrice = dtOrder.getData();
 			         })
 			          order.on('afterChange', ev=>{
 			            let change = ev.changes
 			            newOrder[change[0].rowKey][change[0].columnName]=change[0].value
 			         }) 
 					
+			       function calc() {
+            	   let datas = dtOrder.getData();
+            	   console.log(datas)
+            	   for(let data of datas){
+            		   
+            		   data.orderAllCnt = (data.orderDtPrice * data.orderDtCnt)  
+            	   }
+            	  
+            	   dtOrder.setRows(datas)
+               	   }
+			         
 				})
 				
 			
