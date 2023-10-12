@@ -35,7 +35,7 @@
 			<div style="padding-bottom: 10px;">
 			<select id="searchOption" class="pl">
 					<option value="mtlChkCode">검사코드</option>
-					<option value="mtlChkDate">검사일자</option>
+					<option value="mtlChkManager">검사자</option>
 			</select> <input type="text" id="searchName" placeholder="검색어를 입력하시오">
 				<label>검사 날짜 : </label><input type="date" id="searchdate">
 				<button type="button" id="searchBtn" class="btn btn-primary">검색</button>
@@ -43,16 +43,13 @@
 				<button type="button" id="ExcelBtn" class="btn btn-info btn-icon-text excelDownload">Excel
 				<i class="bi bi-printer"></i>
 				</button>
-
 			</div>
 			<div style="margin-top: 30px;" id="grid"></div>
 
 			<script>
         let grid;
         window.onload=function(){
-   	
-        	
-        	
+ 	
     const grid = new tui.Grid({
       el: document.getElementById('grid'),
       scrollX: false,
@@ -134,6 +131,7 @@
       $('#resetBtn').on('click', function () {
           $('#searchOption').val('mtlChkCode'); 
           $('#searchName').val(''); 
+          $('#searchdate').val('');
           getMtlCheckList(); 
       });
 
@@ -168,6 +166,20 @@
 		})
 	}
 	
+	//  검사자 조회
+		function getmtlManager(mtlManager){
+			$.ajax({
+				url:'/mtlManager',
+				data: {
+					mtlManager : mtlManager
+				},
+				success: result => {
+					console.log(result);
+					grid.resetData(result);
+				},
+				error: err => console.log(err)
+			})
+		}	
 	//  날짜 조회
 		function getMtlDate(mtlDate){
 			$.ajax({
@@ -182,18 +194,24 @@
 				error: err => console.log(err)
 			})
 		}	
- 
-	function searchMtlName(){
-	   const searchOption = $('#searchOption').val();
-	          if ($('#searchName').val()) {
-	              let mtlValue = $('#searchName').val();
-              if (searchOption === 'mtlChkCode') {
-                  getMtlName(mtlValue);
-              } else if (searchOption === 'mtlChkDate') {
-                  getMtlDate(mtlValue);
-			}
-		}
-	} 
+	
+		function searchMtlName(){
+		   const searchOption = $('#searchOption').val();
+		   const searchDate = $('#searchdate').val();
+		   console.log(searchDate)
+		          if ($('#searchName').val()) {
+		              let mtlValue = $('#searchName').val();
+	              if (searchOption === 'mtlChkCode') {
+	                  getMtlName(mtlValue);
+	              } else if (searchOption === 'mtlChkManager') {
+	            	  getmtlManager(mtlValue);
+				  } 
+	              
+			} else if(searchDate){
+          	  console.log('sasd')
+			  getMtlDate(searchDate);
+          }
+		} 
   }
 
         
