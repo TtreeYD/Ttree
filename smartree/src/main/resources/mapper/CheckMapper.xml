@@ -146,19 +146,19 @@ SELECT
 	JOIN prdt_table t 
 	  ON d.prdt_code = t.prdt_code
 	   <where>
-        <if test="searchDate == 'MA01'">
+  		 <if test="searchDate == 'MA01'">
             <![CDATA[
-                TO_CHAR(prdt_chk_date,'YY/MM/DD') >= TRUNC(SYSDATE) AND TO_CHAR(prdt_chk_date,'YY/MM/DD') < TRUNC(SYSDATE) + 1
+                prdt_chk_date >= TRUNC(SYSDATE) AND prdt_chk_date < TRUNC(SYSDATE) + 1
             ]]>
         </if>
         <if test="searchDate == 'MA02'">
             <![CDATA[
-                TO_CHAR(prdt_chk_date,'YY/MM/DD') BETWEEN TRUNC(SYSDATE) - 7 AND TRUNC(SYSDATE)+1
+                prdt_chk_date BETWEEN TRUNC(SYSDATE) - 7 AND TRUNC(SYSDATE)+1
             ]]>
         </if>
         <if test="searchDate == 'MA03'">
             <![CDATA[
-                TO_CHAR(prdt_chk_date,'YY/MM/DD') BETWEEN TRUNC(SYSDATE) - 30 AND TRUNC(SYSDATE)+1
+                prdt_chk_date BETWEEN TRUNC(SYSDATE) - 30 AND TRUNC(SYSDATE)+1
             ]]>
         </if>
         
