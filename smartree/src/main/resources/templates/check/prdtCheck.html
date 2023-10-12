@@ -19,6 +19,7 @@
 <body>
 <div layout:fragment="content">
 <h1>제품품질검사</h1>
+<br>
 	<div style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
 		<div>
 			<h3>제품검사목록</h3>
@@ -140,6 +141,7 @@
   	   
   	 	toastr.options = {
   			  positionClass: "toast-top-center",
+  			  preventDuplicates: true,
   			  escapeHtml: true,
   			  closeButton: true,
  			  newestOnTop: false,

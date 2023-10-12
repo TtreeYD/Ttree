@@ -117,9 +117,9 @@
   	<select id="selectProdListView" resultType="ProdVO">
   		SELECT dtp.dt_prod_plan_code, dtp.prod_plan_cnt, dtp.prod_rank, dtp.prod_plan_note
   		     , p.prod_plan_code , p.prod_plan_name, p.prod_name, p.prod_plan_date, p.prod_plan_sdate, p.prod_plan_edate
-  		     , pt.prdt_name , pt.prdt_code
+  		     , pt.prdt_name , pt.prdt_code, get_prdt_total(dtp.prdt_code) as prdt_total
 		<if test="orderCode != null and !orderCode.equals('')">
-	  		, nvl(dto.order_dt_cnt, 0) order_dt_cnt, dto.dod_date
+	  		, nvl(dto.order_dt_cnt, 0) order_dt_cnt, o.dod_date
         </if>
 		FROM dt_prod_plan dtp JOIN prod_plan p 
 		ON dtp.prod_plan_code = p.prod_plan_code
@@ -128,6 +128,8 @@
 		<if test="orderCode != null and !orderCode.equals('')">
 	        LEFT OUTER JOIN dt_order dto
 	        ON p.order_code = dto.order_code AND dtp.prdt_code = dto.prdt_code
+	        LEFT OUTER JOIN orders o
+                                ON o.order_code = dto.order_code
         </if>
 		WHERE p.prod_plan_code = #{prodPlanCode}
   	</select>
