@@ -246,7 +246,7 @@ WHERE
 							<pen lineWidth="0.5"/>
 						</box>
 						<textElement textAlignment="Center" verticalAlignment="Middle">
-							<font fontName="SansSerif" size="14"/>
+							<font fontName="godicjasper" size="14"/>
 						</textElement>
 						<text><![CDATA[(인)]]></text>
 					</staticText>
@@ -256,7 +256,7 @@ WHERE
 					<textElement textAlignment="Center" verticalAlignment="Middle">
 						<font fontName="godicjasper" size="14"/>
 					</textElement>
-					<textFieldExpression><![CDATA[new SimpleDateFormat("yyyy년MM월dd일").format(new java.util.Date())]]></textFieldExpression>
+					<textFieldExpression><![CDATA[new SimpleDateFormat("yyyy년 MM월 dd일").format(new java.util.Date())]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement x="151" y="102" width="324" height="60" uuid="af628699-ab65-4a32-9e7c-6658c7000274"/>
@@ -368,7 +368,9 @@ WHERE
 				</textField>
 				<textField>
 					<reportElement x="62" y="3" width="100" height="30" uuid="576360f4-1ac0-4ba8-b25d-d15ead0ce542"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="godicjasper"/>
+					</textElement>
 					<textFieldExpression><![CDATA[$F{CHK_NAME}]]></textFieldExpression>
 				</textField>
 				<textField>
