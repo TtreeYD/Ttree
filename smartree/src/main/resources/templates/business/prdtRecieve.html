@@ -82,32 +82,33 @@ const chkListGrid = new tui.Grid({
 		{
 			header: '완제품검사코드',
 			name: 'prdtChkCode',
+			align: 'center'
 
 		},
 		{
 			header: '제품코드',
 			name: 'prdtCode',
-
+			align: 'center'
 		},
 		{
 			header: '제품명',
 			name: 'prdtName',
-
+			align: 'left'
 		},
 		{
 			header: '검사량',
 			name: 'prdtChkCnt',
-
+			align: 'right'
 		},
 		{
 			header: '검사날짜',
 			name: 'prdtChkDate',
-
+			align: 'center'
 		},
 		{
 			header: '검사담당자',
 			name: 'prdtManager',
-
+			align: 'left'
 		}],
 })
 
@@ -125,34 +126,35 @@ const recieveGrid = new tui.Grid({
 		{
 			header: '완제품검사코드',
 			name: 'prdtChkCode',
-
+			align: 'center'
 		},
 		{
 			header: '제품코드',
 			name: 'prdtCode',
-
+			align: 'center'
 		},
 		{
 			header: '제품명',
 			name: 'prdtName',
-
+			align: 'left'
 		},
 		{
 			header: '입고량',
 			name: 'prdtRecieveCnt',
-			editor: 'text'
-
+			editor: 'text',
+			align: 'right'
 		},
 		{
 			header: '입고날짜',
 			name: 'prdtRecieveDate',
-			editor: 'datePicker'
-
+			editor: 'datePicker',
+			align: 'center'
 		},
 		{
 			header: '입고담당자',
 			name: 'prdtRecieveManager',
-			editor: 'text'
+			editor: 'text',
+			align: 'right'
 		}],
 })
 
@@ -168,29 +170,33 @@ const recieveListGrid = new tui.Grid({
     columns: [{
       header: '완제품Lot번호',
       name: 'prdtLotNo',
+      align: 'center'
       
     },
     {
       header: '제품코드',
       name: 'prdtCode',
-      
+      align: 'center'
     },
     {
       header: '제품명',
-      name: 'prdtName'
+      name: 'prdtName',
+      align: 'left'
     },
     {
       header: '입고량',
       name: 'prdtRecieveCnt',
-      
+      align: 'right'
     },
     {
       header: '입고일자',
-      name: 'prdtRecieveDate'
+      name: 'prdtRecieveDate',
+      align: 'center'
 	},
 	{
       header: '입고담당자',
-      name: 'prdtRecieveManager'
+      name: 'prdtRecieveManager',
+      align: 'left'
 	}],	
   });
 

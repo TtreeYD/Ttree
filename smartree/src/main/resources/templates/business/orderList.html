@@ -81,18 +81,23 @@
           {
             header: '주문상세코드',
             name: 'orderDtCode',
+            align: 'center'
+            
           },
           {
             header: '제품명',
             name: 'prdtName',
+            align: 'left'
           },
           {
        	  	 header: '업체코드',
              name: 'bpCode',
+             align: 'center'
           },
           {
             header: '주문량',
-            name: 'orderDtCnt'
+            name: 'orderDtCnt',
+            align: 'right'
           },
           {
             header: '납기일자',
@@ -102,7 +107,8 @@
               options: {
                 format: 'yyyy-MM-dd'
               }
-            }
+            },
+            align: 'center'
           }
           ],
 
@@ -120,39 +126,36 @@
           columns: [{
             header: '주문코드',
             name: 'orderCode',
+            align: 'center'
           },
           {
             header: '업체코드',
             name: 'bpCode',
+            align: 'center'
           },
           {
             header: '업체명',
             name: 'bpName',
+            align: 'left'
           },
           {
             header: '주문일자',
             name: 'orderDate',
-            filter: {
-              type: 'date', showApplyBtn: true, showClearBtn: true,
-              options: {
-                format: 'yyyy-MM-dd'
-              }
-            }
+            sortingType: 'asc',
+            sortable: true,
+            align: 'center'
           },
           {
             header: '납기일자',
             name: 'dodDate',
-            filter: {
-              type: 'date', showApplyBtn: true, showClearBtn: true,
-              options: {
-                format: 'yyyy-MM-dd'
-              }
-            }
-
+            align: 'center',
+            sortingType: 'asc',
+            sortable: true
           },
           {
             header: '납기현황',
-            name: 'dodState'
+            name: 'dodState',
+           	align: 'center'
           },
           {
             header: '담당자',

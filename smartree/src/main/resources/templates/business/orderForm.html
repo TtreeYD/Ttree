@@ -115,27 +115,46 @@
 						{
 							header: '업체코드',
 							name: 'bpCode',
+							align: 'center'
 						},
 						{
 							header: '업체명',
 							name: 'bpName',
+							align: 'left'
 						},
 						{
 							header: '주문일자',
 							name: 'orderDate',
-							editor: 'datePicker'
+							editor: 'datePicker',
+							align: 'center'
 				        },
 						
 						{
 							header: '납기일자',
 							name: 'dodDate',
-							editor: 'datePicker'
+							editor: 'datePicker',
+							align: 'center'
 						},
 						{
 							header: '담당자',
 							name: 'orderManager',
-							editor: 'text'
+							editor: 'text',
+							align: 'center'
 						},
+						{
+							header: '생산계획유무',
+							name: 'prodPlanYn',
+							formatter: 'listItemText',
+					          editor: {
+					            type: 'select',
+					            options: {
+					              listItems: [
+					                { text: '생산', value: 'n' },
+					                { text: '비생산', value: 'y' },
+					              ]
+					            }
+					          }
+						}
 					]
 				})
 				//상세보기그리드
@@ -153,25 +172,29 @@
 						{
 							header: '제품명',
 							name: 'prdtName',
+							align: 'left'
 						},
 						{
 							header: '제품코드',
 							name: 'prdtCode',
-							
+							align: 'center'
 						},
 						{
 							header: '단가',
 							name: 'orderDtPrice',
-							editor: 'text'
+							editor: 'text',
+							align: 'right'
 						},
 						{
 							header: '수량',
 							name: 'orderDtCnt',
-							editor: 'text'
+							editor: 'text',
+							align: 'right'
 						},
 						{
 							header: '합계',
-							name: 'orderAllCnt'
+							name: 'orderAllCnt',
+							align: 'right'
 						}
 						],
 						summary: {
@@ -200,26 +223,32 @@
 						{
 							header: '주문코드',
 							name: 'orderCode',
+							align: 'center'
 						},
 						{
 							header: '업체코드',
 							name: 'bpCode',
+							align: 'center'
 						},
 						{
 							header: '업체명',
 							name: 'bpName',
+							align: 'left'
 						},
 						{
 							header: '주문일자',
 							name: 'orderDate',
+							align: 'center'
 						},
 						{
 							header: '납기일자',
 							name: 'dodDate',
+							align: 'center'
 						},
 						{
 							header: '담당자',
 							name: 'orderManager',
+							align: 'left'
 						},
 					]
 				})
@@ -232,18 +261,22 @@
 						{
 							header: '업체코드',
 							name: 'bpCode',
+							align: 'center'
 						},
 						{
 							header: '업체명',
 							name: 'bpName',
+							align: 'left'
 						},
 						{
 							header: '분류',
 							name: 'bpType',
+							align: 'center'
 						},
 						{
 							header: '주거래',
 							name: 'bpMain',
+							align: 'left'
 						}
 						
 					]
@@ -258,14 +291,17 @@
 						{
 							header: '제품코드',
 							name: 'prdtCode',
+							align: 'center'
 						},
 						{
 							header: '제품명',
 							name: 'prdtName',
+							align: 'center'
 						},
 						{
 							header: '분류',
 							name: 'prdtType',
+							align: 'center'
 						},
 						
 						
@@ -413,12 +449,22 @@
 							console.log('update');
 						} */
 						 else {//등록
-							console.log('insert');
-							
 							
 							newOrderData.orderList = order.getData();
 							newOrderData.orderDtList = dtOrder.getCheckedRows();
-							
+							 console.log(newOrderData.orderDtList);
+							if(newOrderData.orderList[0].orderDate == null || newOrderData.orderList[0].dodDate== null || newOrderData.orderList[0].orderManager == null || newOrderData.orderList[0].prodPlanYn==null ){
+								toastr.warning('빈값을 확인해주세요');
+								return;
+							} 
+							 for(let i =0 ; i<newOrderData.orderDtList.length; i++){
+								 console.log('aa')
+								if(newOrderData.orderDtList[i].prdtCode == null||newOrderData.orderDtList[i].orderDtPrice == null || newOrderData.orderDtList[i].orderDtCnt == null ){
+									console.log(123)
+									toastr.warning('빈값을 확인해주세요');
+									return;
+								}
+							} 
 								$.ajax({
 									url:'/insertOrder',
 									method:'POST',
@@ -605,14 +651,23 @@
 							},
 							success:function(result){
 								let check = true; 
-								newDtOrder.forEach((order) => {
+								/* newDtOrder.forEach((order) => {
 									if(order.prdtCode == data) {
 										toastr.warning('이미 같은 제품이 있습니다.')
 										check=false;
 										return;
 									}
 									
-								})
+								}) */
+								console.log('newDtOrder',newDtOrder)
+								console.log(dtOrder.getData());
+								for(let i = 0 ; i<dtOrder.getData().length;i++){
+									if(dtOrder.getData()[i].prdtCode == data){
+										toastr.warning('이미 같은 제품이 있습니다.')
+										check=false;
+										return;
+									}
+								}
 								if(check){
 									
 									dtOrder.setRow(dtOrderRowNum, result[0]);
