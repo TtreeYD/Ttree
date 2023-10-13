@@ -28,32 +28,51 @@
 					</button>
 			</div>
 		</div>
-		<div id="instGrid" style="height: 400px;"></div>
+		<div id="instGrid"></div>
+		
+		<div class="modal fade" tabindex="-1" role="dialog" id="dtModal">
+			<div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title">생산계획상세</h4>
+						<button type="button" class="close" data-dismiss="modal"	aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="dtGrid"></div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+		
 	<script>
 		const instGrid = new tui.Grid({
 			el : document.getElementById('instGrid'),
 			scrollX : false,
 			scrollY : false,
+			rowHeaders:['rowNum'],
 			pageOptions : {
-				perPage : 13,
+				perPage : 15,
 				useClient : true
 			},
-			bodyHeight : 550,
-			columns : [
-					{
-			          header: '지시코드',
+			bodyHeight : 600,
+			columns : 
+				[
+					  {
+			          header: '계획코드',
 			          name: 'prodInstCode',
 			          hidden: true
 			        },
 			        {
-			          header: '지시상세코드',
-			          name: 'dtProdInstCode',
-			          hidden: true
-			        },
-			        {
-			          header: '계획코드',
-			          name: 'prodPlanCode',
-			          hidden: true
+			          header: '계획명',
+			          name: 'prodPlanName'
 			        },
 			        {
 			          header: '지시명',
@@ -64,24 +83,11 @@
 			        	 name: 'prodInstManager'
 			        },
 			        {
-			          header: '지시우선순위',
-			          name: 'prodInstRank',
-			          hidden: true
-			        },
-			        {
-			          header: '제품코드',
-			          name: 'prdtCode'
-			        },
-			        {
-			          header: '제품명',
-			          name: 'prdtName'
-			        },
-			        {
-			          header: '지시량',
-			          name: 'prodInstCnt'
-			        },
-			        {
 			          header: '지시일자',
+			          name: 'prodInstSdate'
+			        },
+			        {
+			          header: '완료예정일자',
 			          name: 'prodInstSdate'
 			        },
 			        {
@@ -95,6 +101,38 @@
 			       
 			]
 		}) 
+		
+		const dtGrid = new tui.Grid({
+			el: document.getElementById('dtGrid'),
+			scrollX: false,
+			scrollY: false,
+			pageOptions: {
+				perPage: 5,
+				useClient: true,
+			},
+			bodyHeight: 200,
+			columns: [
+				{
+					header: '제품코드',
+					name: 'prdtCode'
+				},
+				{
+					header: '제품명',
+					name: 'prdtName'
+				},
+				{
+					header: '계획량',
+					name: 'prodInstCnt',
+					align: 'right'
+				},
+				{
+					header: '우선순위',
+					name: 'prodInstRank',
+					align: 'right'
+				}
+			]
+		});
+		
 		$(document).ready(function (){
 			getSelectInstList();
 			
@@ -148,6 +186,29 @@
 				};
 				getSelectInstList(data);
 			});
+			
+			instGrid.on('click', function(ev) {
+				if(ev.rowKey == undefined){
+					return
+				}
+				let prodInstCode = instGrid.getValue(ev.rowKey,'prodInstCode')
+				$.ajax({
+					url: "/selectDtInstList",
+					data:{
+						prodInstCode : prodInstCode
+					},
+					success: result => {
+						dtGrid.resetData(result)
+						$('#dtModal').modal('show')
+						setTimeout(() => dtGrid.refreshLayout(), 200)
+					},
+					error: err => console.log(err)
+				})
+				
+				
+			})
+			
+			
 		})
 	</script>
 	</div>

@@ -133,6 +133,12 @@ public class ProdRestController {
 	public List<ProdVO> selectGetDtInst(ProdVO vo){
 		return service.selectGetDtInst(vo);
 	}
+	// 지시상세조회
+	@GetMapping("/selectDtInstList")
+	public List<ProdVO> selectDtInstList(ProdVO vo){
+		return service.selectDtInstList(vo);
+	}
+	
 	//키오스크 :생산지시불러오기
 	@GetMapping("/selectGetProcess")
 	public List<ProdVO> selectGetProcess(ProdVO vo){
