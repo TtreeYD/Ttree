@@ -19,5 +19,6 @@ public interface EqmMapper {
 	public int deleteEqm(EqmVO eqmVO);
 	public int updateEqm(EqmVO eqmVO);
 	public List<EqmVO> searchEqmDivision(String eqmDivision);
+	public List<EqmVO> searchEqmAllCondition(EqmVO eqmVO);
 	
 }

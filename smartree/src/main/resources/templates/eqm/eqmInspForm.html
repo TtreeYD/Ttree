@@ -76,7 +76,7 @@
 					</tr>
 					<tr>
 						<th>최근점검일시</th>
-						<td><input type="datetime-local" id="recentInspDate"  >
+						<td><input type="datetime-local" id="recentInspDate">
 						<input type="hidden"   name="recentInspDate" ></td>
 					
 						<th>수리일시</th>
@@ -96,7 +96,8 @@
 						<input type="hidden"  name="nextInspDate" ></td>
 						<th>등록일시</th>
 						<td><input type="datetime-local" id="registerDate" >
-						<input type="hidden"  name="registerDate" ></td>
+						<input type="hidden"  name="registerDate" >
+						 <button type="button" id="timeBtn">현재시간</button></td>
 					</tr>
 				</table>
 				
@@ -176,12 +177,23 @@
 		
 		
 		
-		<script>
+<script>
     let manager = `[[${session.loginMember.empName}]]`;
+    
+    var now_utc = Date.now() // 지금 날짜를 밀리초로
+ 	// getTimezoneOffset()은 현재 시간과의 차이를 분 단위로 반환
+	var timeOff = new Date().getTimezoneOffset()*60000; // 분단위를 밀리초로 변환
+ 	// new Date(today-timeOff).toISOString()은 '2022-05-11T18:09:38.134Z'를 반환
+	var today = new Date(now_utc-timeOff).toISOString().substring(0, 16);
+	document.getElementById("registerDate").setAttribute("min", today);
+    
+    
 	$(document).ready(function () {
 	    	  
 		$("#saveInspBtn").on("click",saveEqmInsp);
-	  
+	  	$("#timeBtn").on("click",function(){
+	  		 $('#registerDate').val(new Date(new Date().getTime() +  9 * 60 * 60 * 1000).toISOString().slice(0, 16));
+	  	})
 		function saveEqmInsp(){
 			//설비명 테스트
 			if(eqmInspForm.eqmCode.value==''){

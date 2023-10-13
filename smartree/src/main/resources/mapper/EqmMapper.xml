@@ -19,7 +19,7 @@
 				,MFG_COMP
 				,MFG_DATE
 				,EQM_IMG
-				, case when EQM_STATE = 'Y' then '사용가능' 
+				, case when EQM_STATE = 'Y' then '사용대기' 
 					when EQM_STATE = 'S' then '비가동'
 					when EQM_STATE = 'E' then '설비점검관리에 등록하세요'
 				       else '사용중'
@@ -36,6 +36,53 @@
         ORDER BY eqm_code
   	</select>
   	
+  	
+  	  <!-- 설비 조회 - 모든 조건 -->
+  	<select id="searchEqmAllCondition" resultType="EqmVO">
+  		select EQM_CODE
+				,EQM_NAME
+				,case when EQM_UCHECK='Y' then '사용'
+					  else '미사용'
+			     end EQM_UCHECK
+				,EQM_MAX_TEMP
+				,EQM_MIN_TEMP
+				,EQM_MANAGER
+				,EQM_DIVISION
+				,INSP_CYCLE
+				,MFG_COMP
+				,MFG_DATE
+				,EQM_IMG
+				, case when EQM_STATE = 'Y' then '사용대기' 
+					when EQM_STATE = 'S' then '비가동'
+					when EQM_STATE = 'E' then '설비점검관리에 등록하세요'
+				       else '사용중'
+				  end  EQM_STATE
+				, (
+                select max(RECENT_INSP_DATE)
+                from eqm_insp i
+                WHERE e.eqm_code = i.eqm_code ) as RECENT_INSP_DATE,
+                 (
+                select max(NEXT_INSP_DATE)
+                from eqm_insp i
+                WHERE e.eqm_code = i.eqm_code ) as NEXT_INSP_DATE
+        from eqm e
+        <where>
+  			<if test="eqmUcheck != null and !eqmUcheck.equals('')">
+  				e.eqm_ucheck = #{eqmUcheck}	
+  			</if>
+  			<if test="eqmName != null and !eqmName.equals('')">
+  			 	and e.eqm_name LIKE '%'||#{eqmName}||'%'
+  			</if>
+  			<if test="eqmDivision != null and !eqmDivision.equals('')">
+  				and e.EQM_DIVISION LIKE '%'||#{eqmDivision}||'%'
+  			</if>
+  		</where> 
+        
+        ORDER BY eqm_code
+  	</select>
+  	
+  	
+  	
   	  <!-- 설비 전체조회 비가동 제외 -->
   	<select id="selectEqmListExceptNoper" resultType="EqmVO">
   		select EQM_CODE
@@ -51,7 +98,7 @@
 				,MFG_COMP
 				,MFG_DATE
 				,EQM_IMG
-				, case when EQM_STATE = 'Y' then '사용가능' 
+				, case when EQM_STATE = 'Y' then '사용대기' 
 					when EQM_STATE = 'S' then '비가동'
 					when EQM_STATE = 'E' then '설비점검관리에 등록하세요'
 				       else '사용중'
@@ -97,6 +144,7 @@
   			<if test="eqmUcheck != null and !eqmUcheck.equals('')">
   				e.eqm_ucheck = #{eqmUcheck}	
   			</if>
+  			
   		</where>  				
   		 
   		ORDER BY eqm_code
@@ -118,7 +166,7 @@
 				,MFG_COMP
 				,MFG_DATE
 				,EQM_IMG
-				, case when EQM_STATE = 'Y' then '사용가능' 
+				, case when EQM_STATE = 'Y' then '사용대기' 
 					   when EQM_STATE = 'S' then '비가동'
 						when EQM_STATE = 'E' then '설비점검관리에 등록하세요'
 				       else '사용중'
@@ -141,6 +189,30 @@
   		ORDER BY eqm_code
   	</select>
   	
+  	  	<!-- 설비 구분으로 조회 -->
+  	<select id="searchEqmDivision" resultType="EqmVO">
+  	select EQM_CODE
+				,EQM_NAME
+				,EQM_UCHECK
+				,EQM_MAX_TEMP
+				,EQM_MIN_TEMP
+				,EQM_MANAGER
+				,EQM_DIVISION
+				,INSP_CYCLE
+				,MFG_COMP
+				,MFG_DATE
+				,EQM_IMG
+				,case when EQM_STATE = 'Y' then '사용대기' 
+					  when EQM_STATE = 'S' then '비가동'
+						when EQM_STATE = 'E' then '설비점검관리에 등록하세요'
+				       else '사용중'
+				  end  EQM_STATE
+  	from EQM
+  	where eqm_division = #{eqmDivision} 
+  	</select>
+  	
+  	
+  	
   	<!-- 설비이름으로 검색 - 비가동제외 -->
   	  <select id="searchEqmExceptNoper" resultType="EqmVO">
   		select EQM_CODE
@@ -156,7 +228,7 @@
 				,MFG_COMP
 				,MFG_DATE
 				,EQM_IMG
-				, case when EQM_STATE = 'Y' then '사용가능' 
+				, case when EQM_STATE = 'Y' then '사용대기' 
 					   when EQM_STATE = 'S' then '비가동'
 					   when EQM_STATE = 'E' then '설비점검관리에 등록하세요'
 				       else '사용중'
@@ -275,28 +347,7 @@
   		where eqm_code=#{eqmCode}
   	</update>
   	
-  	<!-- 설비 구분으로 조회 -->
-  	<select id="searchEqmDivision" resultType="EqmVO">
-  	select EQM_CODE
-				,EQM_NAME
-				,EQM_UCHECK
-				,EQM_MAX_TEMP
-				,EQM_MIN_TEMP
-				,EQM_MANAGER
-				,EQM_DIVISION
-				,INSP_CYCLE
-				,MFG_COMP
-				,MFG_DATE
-				,EQM_IMG
-				,case when EQM_STATE = 'Y' then '사용가능' 
-					  when EQM_STATE = 'S' then '비가동'
-						when EQM_STATE = 'E' then '설비점검관리에 등록하세요'
-				       else '사용중'
-				  end  EQM_STATE
-  	from EQM
-  	where eqm_division = #{eqmDivision} 
-  	</select>
-  	
+
 
 
 
