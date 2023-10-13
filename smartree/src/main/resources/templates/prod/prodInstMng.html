@@ -12,9 +12,9 @@
 <body>
 	<div layout:fragment="content">
 	<h1>생산지시관리</h1>
-		<label>담당자</label> <input type="text" name="prodInstManager" id="prodInstManager" th:value="${session.loginMember.empName}">
+		<label>담당자</label> <input type="text" name="prodInstManager" id="prodInstManager" th:value="${session.loginMember.empName}" style="width: 250px" maxlength="10">
 		<label class="ml-2">생산지시일자</label> <input style="margin-left: 28.25px" type="date" name="prodInstDate" id="prodInstDate"><br> 
-		<label>지시명</label> <input type="text" name="prodInstName" id="prodInstName">
+		<label>지시명</label> <input type="text" name="prodInstName" id="prodInstName" style="width: 250px" maxlength="20">
 		<label class="ml-2">생산예상시작일자</label> <input type="date" name="prodInstSdate" id="prodInstSdate"> 
 		<label class="ml-2">생산예상종료일자</label> <input type="date" name="prodInstEdate" id="prodInstEdate">
 			<input type="hidden" name="prodInstCode" id="prodInstCode">
@@ -225,6 +225,7 @@
 	            perPage: 5,
 	            useClient: true,
           	},
+          	bodyHeight : 200,
 	      	columns: [
     	  		{
 	              header: '지시코드',
@@ -262,6 +263,7 @@
 	            perPage: 5,
 	            useClient: true,
           	},
+          	bodyHeight : 200,
 	      	columns: [
 	    	  		{
 	              header: '계획코드',
@@ -331,7 +333,7 @@
 			  columnContent: {
 				  holdingCnt: {
 			      template: function(valueMap) {
-			        return `요구량 : ${mtlTotalNeed} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 합계 : ${valueMap.sum}`
+			        return `요구량 : ${mtlTotalNeed} &emsp;&emsp;&emsp; 합계 : ${valueMap.sum}`
 			      }
 			    }
 			  }
@@ -349,7 +351,7 @@
 				success:function(result){
 					grid5.resetData(result);
 					$("#prodModal").modal('show');
-					setTimeout(() => grid5.refreshLayout(), 200);
+					setTimeout(() => grid5.refreshLayout(),200);
 				},
 				error:function(err){
 					console.log(err);
@@ -700,6 +702,9 @@
 		})
 		
 		grid.on('afterChange', (ev) => {
+			if(ev.changes[0].columnName=='prodInstRank'){
+				return
+			}
 			mtlCalc();
 		})
 		

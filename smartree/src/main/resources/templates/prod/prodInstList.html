@@ -13,19 +13,19 @@
 		<div style="float:right; margin-bottom: 10px">
 			<div class="input-group" >
 				<div style="font-size:20px; margin-top:4px; margin-right:10px;">	
-					    <input type="radio" id="allInst" name="typeCheck" value="" checked />
-					    <label for="allInst" class="mr-2">전체</label>
-					 	<input type="radio" id="beforeInst" name="typeCheck" value="MA01" />
-					    <label for="beforeInst" class="mr-2">생산전</label>
-					    <input type="radio" id="afterInst" name="typeCheck" value="MA02"/>
-					    <label for="afterInst" class="mr-2">완료</label>
-					</div>
-					<div class="form-outline">
-						<input type="search" id="form1" class="form-control" placeholder="지시명 또는 담당자"/> 
-					</div>
-					<button type="button" class="btn btn-primary" id="searchBtn">
-						<i class="fas fa-search"></i>
-					</button>
+				    <input type="radio" id="allInst" name="typeCheck" value="" checked />
+				    <label for="allInst" class="mr-2">전체</label>
+				 	<input type="radio" id="beforeInst" name="typeCheck" value="MA01" />
+				    <label for="beforeInst" class="mr-2">생산전</label>
+				    <input type="radio" id="afterInst" name="typeCheck" value="MA02"/>
+				    <label for="afterInst" class="mr-2">완료</label>
+				</div>
+				<div class="form-outline">
+					<input type="search" id="form1" class="form-control" placeholder="지시명 또는 담당자"/> 
+				</div>
+				<button type="button" class="btn btn-primary mb-2" id="searchBtn">
+					<i class="fas fa-search"></i>
+				</button>
 			</div>
 		</div>
 		<div id="instGrid"></div>
@@ -80,23 +80,32 @@
 			        },
 			        {
 			        	 header: '담당자',
-			        	 name: 'prodInstManager'
+			        	 name: 'prodInstManager',
+			        	 width: 180
 			        },
 			        {
 			          header: '지시일자',
-			          name: 'prodInstSdate'
+			          name: 'prodInstSdate',
+			          align: 'center',
+			        	 width: 160
+			        },
+			        {
+			          header: '시작예정일자',
+			          name: 'prodInstSdate',
+			          align: 'center',
+			        	 width: 160
 			        },
 			        {
 			          header: '완료예정일자',
-			          name: 'prodInstSdate'
+			          name: 'prodInstEdate',
+			          align: 'center',
+			        	 width: 160
 			        },
 			        {
-			          header: '완료예정일자',
-			          name: 'prodInstEdate'
-			        },
-			        {
-			          header: '생산시작여부',
-			          name: 'prcsStartYn'
+			          header: '생산여부',
+			          name: 'prcsStartYn',
+			          align: 'center',
+			        	 width: 120
 			        }
 			       
 			]
@@ -114,7 +123,8 @@
 			columns: [
 				{
 					header: '제품코드',
-					name: 'prdtCode'
+					name: 'prdtCode',
+			      align: 'center'
 				},
 				{
 					header: '제품명',
@@ -164,7 +174,6 @@
 							}
 						}
 							instGrid.resetData(result);
-							console.log(result);
 					},
 					error : function(err){
 						console.log(err);
@@ -191,13 +200,14 @@
 				if(ev.rowKey == undefined){
 					return
 				}
-				let prodInstCode = instGrid.getValue(ev.rowKey,'prodInstCode')
+				let instCode = instGrid.getValue(ev.rowKey,'prodInstCode')
 				$.ajax({
 					url: "/selectDtInstList",
 					data:{
-						prodInstCode : prodInstCode
+						prodInstCode : instCode
 					},
 					success: result => {
+						console.log(result)
 						dtGrid.resetData(result)
 						$('#dtModal').modal('show')
 						setTimeout(() => dtGrid.refreshLayout(), 200)
