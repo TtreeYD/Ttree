@@ -76,6 +76,7 @@
 		SELECT mtl_code, mtl_name, mtl_pass_cnt, mtl_chk_date, mtl_chk_manager, mtl_chk_code, get_common(mtl_chk_status, '009') AS mtl_chk_status
 		FROM mtl_chk JOIN mtl_table USING(mtl_code)
 		WHERE mtl_chk_status = 'MT02'
+		ORDER BY mtl_chk_date
   	</select>
   	
   	
@@ -174,6 +175,7 @@
 		  <if test="startMtlInDate != null and endMtlInDate != null">
     		AND TO_CHAR(mtl_chk_date,'YY/MM/DD') BETWEEN TO_CHAR(#{startMtlInDate},'YY/MM/DD') AND TO_CHAR(#{endMtlInDate},'YY/MM/DD')
   		  </if>
+  		ORDER BY mtl_chk_date
   	</select>
   	
   	<!-- 재고조회 로트별 출력기능 -->
