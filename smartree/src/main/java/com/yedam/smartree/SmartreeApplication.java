@@ -15,12 +15,16 @@ public class SmartreeApplication {
 	}
 	
 	@GetMapping("/")
-	public String index() {
+	public String home() {
 		return "home";
 	}
 	
 	@GetMapping("/main")
 	public String main() {
 		return "main";
+	}
+	@GetMapping("/index")
+	public String index() {
+		return "index";
 	}
 }
