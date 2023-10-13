@@ -197,7 +197,12 @@ public class ProdRestController {
 	//차트데이터:완제품재고량
 	@GetMapping("/getPrdtChartData")
 	public List<FinPrdtVO> getPrdtChartData(){
-		return businessService.selectFinPrdt();
+		return businessService.getPrdtChartData();
+	}
+	//차트데이터: 제품이름
+	@GetMapping("/getPrdtNameChartData")
+	public List<BusinessVO> getPrdtNameChartData(){
+		return businessService.getPrdtNameChartData();
 	}
 	
 }

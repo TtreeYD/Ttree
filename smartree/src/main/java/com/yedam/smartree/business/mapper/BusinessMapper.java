@@ -7,7 +7,9 @@ import com.yedam.smartree.business.service.BpVO;
 import com.yedam.smartree.business.service.BusinessVO;
 import com.yedam.smartree.business.service.ChartDataVO;
 import com.yedam.smartree.business.service.FinPrdtVO;
+import com.yedam.smartree.business.service.MonitoringVO;
 import com.yedam.smartree.business.service.ReqVO;
+import com.yedam.smartree.check.service.CheckVO;
 
 
 public interface BusinessMapper {
@@ -90,6 +92,18 @@ public interface BusinessMapper {
 	
 	//메인페이지 당일 차트 전부가져오기
 	public ChartDataVO getTodayProdData();
+//메인제품별주문
+	public List<BusinessVO> getOrderChartData();
+//메인제품이름
+	public List<BusinessVO> getPrdtNameChartData();
+//검사끝난리스트
+	public List<CheckVO> prdtFinAfterChkList();
+//메인:제품별재고
+	public List<FinPrdtVO> getPrdtChartData();
+//모니터링
+	public List<MonitoringVO> monitoring();
+//습도현황모니터링
+	public List<MonitoringVO> monitoringHumidity();
 
 
 	

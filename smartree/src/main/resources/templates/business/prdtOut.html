@@ -375,6 +375,7 @@
 					let data = {};
 					data.prdtCode = OrderDtGrid.getValue(ev.rowKey,'prdtCode');
 					data.orderDtCode = OrderDtGrid.getValue(ev.rowKey,'orderDtCode');
+					console.log('data:',data)
 					if(ev.targetType == 'cell'){
 						lotPrdtOutList(data);
 						rowCheck = ev.rowKey
