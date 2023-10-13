@@ -91,11 +91,13 @@
 						</button>
 					</div>
 					<div class="modal-body">
+						
 						<div id="mtlLotGrid"></div>
 					</div>
 					<div class="modal-footer">
-						<button type="button" id="saveMtlCnt" class="btn btn-default">저장</button>
-						<button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+						<button id="autoClac" class="btn btn-primary">자동계산</button>
+						<button type="button" id="saveMtlCnt" class="btn btn-primary">저장</button>
+						<button type="button" class="btn btn-primary" data-dismiss="modal">닫기</button>
 					</div>
 				</div>
 				<!-- /.modal-content -->
@@ -111,9 +113,9 @@
 		let holdingChk ={}
 		let prodPlanCode
 		let manager = `[[${session.loginMember.empName}]]`;
+		let mtlTotalNeed
 
 		let rowNum;			// 해당 rowNum 값을 담기위해 만든 변수
-		let getProdPlanCode;
 		let grid,  grid3, grid4, grid5, grid6;
 		toastr.options = {
 	  			  positionClass: "toast-top-center",
@@ -149,7 +151,8 @@
 		        },
 		        {
 		          header: '계획명',
-		          name: 'prodPlanName'
+		          name: 'prodPlanName',
+		          hidden: true
 		        },
 		        {
 		          header: '계획량',
@@ -307,10 +310,12 @@
 				hidden: true
 			}, {
 				header : '사용가능수량',
-				name : 'mtlUse'
+				name : 'mtlUse',
+				align : 'right'
 			}, {
 				header : '홀드수량',
 				name : 'holdingCnt',
+				align : 'right',
 				editor: {
 					type: 'text'
 				},
@@ -326,7 +331,7 @@
 			  columnContent: {
 				  holdingCnt: {
 			      template: function(valueMap) {
-			        return `TOTAL: ${valueMap.sum}`;
+			        return `요구량 : ${mtlTotalNeed} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 합계 : ${valueMap.sum}`
 			      }
 			    }
 			  }
@@ -390,9 +395,17 @@
 		
 			// 저장 버튼
 			$('#saveBtn').on('click',function(){
+				if(!prodPlanCode) {
+					toastr.warning('불러온 값이 없습니다.')
+					return
+				}
 				grid.blur();
 				if(grid3.validate().length){
-					toastr.warning('값을 확인해주세요')
+					toastr.warning('홀드자재량을 확인해주세요')
+					return
+				}
+				if(!$('#prodInstName').val()){
+					toastr.warning('제목을 입력해주세요')
 					return
 				}
 				var data = {};
@@ -404,7 +417,7 @@
 					prodInstDate : $('#prodInstDate').val(),
 					prodInstSdate : $('#prodInstSdate').val(),
 					prodInstEdate : $('#prodInstEdate').val(),
-					prodPlanCode : data.list[0].prodPlanCode
+					prodPlanCode : prodPlanCode
 				}
 				data.hlist = []
 				console.log(mtlCntVO)
@@ -415,48 +428,122 @@
 					}
 				}
 				mtlCntVO = {};
-			if(data.vo.prodInstCode != ''){
-				$.ajax({
-		      		url:'/updateProdInst',
-		      		method: 'post',
-					dataType: 'json',
-					contentType : 'application/json',
-					data : JSON.stringify(data),
-		      		success:function(result){
-		      			toastr.success("수정완료");
-		      			resetList();
-		      		},
-		      		error:function(err){
-		      			console.log(err)
-		      		}
-	    		})
-			}
-		
-			else {
-				data.list = grid.getData();
-				$.ajax({
-		      		url:'/insertProdInst',
-		      		method: 'post',
-					dataType: 'json',
-					contentType : 'application/json',
-					data : JSON.stringify(data),
-					
-		      		success:function(result){
-		      			toastr.success("저장완료");
-		      			resetList();
-		      		},
-		      		error:function(err){
-		      			console.log(err)
-		      		}
-	    		})
-			}
-		})
+				
+				if(data.vo.prodInstCode != ''){
+					if(data.list.length==0) {
+						data.list = grid.getModifiedRows().deletedRows;
+						
+						$.ajax({
+							url:'/deleteProdInst',
+							method: 'post',
+							dataType: 'json',
+							contentType : 'application/json',
+							data : JSON.stringify(data),
+							success:function(result){
+								console.log(data)
+								console.log(prodPlanCode)
+								$.ajax({
+									url:'/updateInstYn',
+									method: 'post',
+									data : {
+										prodPlanCode : prodPlanCode
+									},
+									success : result => {
+									toastr.success("전체삭제완료");
+										
+									}
+								})
+								resetList();
+							},
+							error:function(err){
+								console.log(err)
+							}
+						})
+						
+					} else {
+						
+						$.ajax({
+				      	url:'/updateProdInst',
+				      	method: 'post',
+							dataType: 'json',
+							contentType : 'application/json',
+							data : JSON.stringify(data),
+				      		success:function(result){
+				      			data.list = grid.getModifiedRows().deletedRows;
+				      			data.vo.prodInstCode = null;
+									$.ajax({
+										url:'/deleteProdInst',
+										method: 'post',
+										dataType: 'json',
+										contentType : 'application/json',
+										data : JSON.stringify(data),
+										success:function(result){
+											toastr.success("수정완료");
+											resetList();
+										},
+										error:function(err){
+											console.log(err)
+										}
+									})
+				      		},
+				      		error:function(err){
+				      			console.log(err)
+				      		}
+			    		})
+			    		
+			    		
+					}
+				} else {
+					data.list = grid.getData();
+					if(data.list.length==0) {
+						toastr.warning('값이 없습니다.')
+						return
+					}
+					$.ajax({
+			      	url:'/insertProdInst',
+			      	method: 'post',
+						dataType: 'json',
+						contentType : 'application/json',
+						data : JSON.stringify(data),
+						
+			      		success:function(result){
+			      			toastr.success("저장완료");
+			      			resetList();
+			      		},
+			      		error:function(err){
+			      			console.log(err)
+			      		}
+		    		})
+				}
+			})
 		// 삭제버튼
-		$('#delBtn').on('click', delBtnFunc);
+		$('#delBtn').on('click', () => {
+			let selData = grid.getCheckedRows();
+			console.log(selData)
+			console.log(mtlNeed)
+			for(let data of selData){
+				mtlNeed = mtlNeed.filter(function(obj, idx){
+					console.log(data.prdtCode, obj.prdtCode)
+					return data.prdtCode != obj.prdtCode
+				})
+			}
+			console.log(mtlNeed)
+			mtlZero = mtlNeed.filter(function(item1, idx1){
+				return mtlNeed.findIndex(function(item2, idx2){
+					return item1.mtlCode == item2.mtlCode
+				}) == idx1;
+			})
 			
-		function delBtnFunc(){
+			grid3.resetData(mtlZero)
+			
+			grid.removeCheckedRows()
+			console.log(mtlNeed)
+			
+		});
+			
+		/* function delBtnFunc(){
 			var data = {};
-			data.list = grid.getCheckedRows();
+			data.list = grid.getModifiedRows().deletedRows;
 			data.vo = {
 				prodInstCode : $('#prodInstCode').val(),
 				prodInstName : $('#prodInstName').val(),
@@ -507,17 +594,19 @@
 					}
 				})
 			}
-		}
+		} */
+		
 		// 생산지시 모달창 더블클릭
 		grid4.on('dblclick',(ev)=>{
 			if(ev.rowKey == undefined){
 				return;
 			}
+			let prodInstCode = grid4.getValue(ev.rowKey, 'prodInstCode');
 			prodPlanCode = grid4.getValue(ev.rowKey, 'prodPlanCode');
 			$.ajax({
 				url : '/selectGetProdInst',
 				method : 'get',
-				data : { prodPlanCode : prodPlanCode },
+				data : { prodInstCode : prodInstCode },
 				success : function(result){
 					resetList()
 					$('#prodInstCode').val(result.list[0].prodInstCode),
@@ -529,6 +618,7 @@
 					grid.resetData(result.list);
 				 	$("#prodInstModal").modal('hide');	
 					mtlNeed = result.mtlNeed
+					console.log(mtlNeed)
 					
 					// 중복제거후 자재표에 넣기
 					mtlZero = result.mtlNeed.filter(function(item1, idx1){
@@ -544,6 +634,7 @@
 							prodInstCode : result.list[0].prodInstCode
 						},
 						success: result => {
+							let data = grid3.getData()
 							for(let mtl of result){
 								let code = mtl.mtlCode
 								
@@ -553,16 +644,15 @@
 								} else{
 									mtlCntVO[code].push(mtl)
 								}
-								let data = grid3.getData()
 								for(let obj of data){
 									if(obj.mtlCode === code){
 										obj.holdingCnt += mtl.holdingCnt
 										holdingChk[mtl.mtlLotNum] = mtl.holdingCnt
 									}
 								}
-								grid3.resetData(data)
-								console.log(mtlCntVO)
 							}
+							grid3.resetData(data)
+							console.log(mtlCntVO)
 						},
 						error: err => console.log(err)
 					})
@@ -588,11 +678,11 @@
 				data : { prodPlanCode : prodPlanCode },
 				success : function(result){
 					resetList()
-					getProdPlanCode = result.list[0].prodPlanCode;
 					$('#prodInstSdate').val(result.list[0].prodPlanSdate),
-					$('#prodInstEdate').val(result.list[0].prodPlanEdate)
+					$('#prodInstEdate').val(result.list[0].prodPlanEdate),
+					$('#prodInstName').val(result.list[0].prodPlanName)
 					mtlNeed = result.mtlNeed
-					
+					console.log(mtlNeed)
 					// 중복제거후 자재표에 넣기
 					mtlZero = result.mtlNeed.filter(function(item1, idx1){
 						return result.mtlNeed.findIndex(function(item2, idx2){
@@ -639,11 +729,17 @@
 		
 		// getLotMtl
 		grid3.on('click', (ev) => {
+			grid.blur()
 			if(ev.rowKey == undefined || ev.columnName != "holdingCnt"){
 				return;
 			}
 			mtlRow = ev.rowKey
 			mtlCode = grid3.getValue(mtlRow, 'mtlCode')
+			mtlTotalNeed = grid3.getValue(mtlRow, 'mtlTotalNeed')
+			if(!mtlTotalNeed){
+				toastr.warning('지시량을 입력해 주세요')
+				return
+			}
 			$.ajax({
 				url: '/getLotMtl',
 				type: 'POST',
@@ -694,6 +790,24 @@
 			mtlCntVO[mtlCode] = mtlLotGrid.getData()
 			grid3.setValue(mtlRow,'holdingCnt', totalCnt)
 			$('#mtlModal').modal('hide')
+		})
+		
+		// 자동계산
+		
+		$('#autoClac').on('click', function() {
+			let arr = mtlLotGrid.getData()
+			let mtlNeed = mtlTotalNeed
+			for(let obj of arr){
+				if(mtlNeed >= obj.mtlUse){
+					mtlLotGrid.setValue(obj.rowKey,'holdingCnt', obj.mtlUse)
+					mtlNeed -= obj.mtlUse
+				} else if(mtlNeed==0){
+					return
+				} else {
+					mtlLotGrid.setValue(obj.rowKey,'holdingCnt', mtlNeed)
+					mtlNeed = 0
+				}
+			}
 		})
 		
 		// 오늘날짜 input에 넣기

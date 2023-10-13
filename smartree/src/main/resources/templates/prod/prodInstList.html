@@ -28,10 +28,10 @@
 					</button>
 			</div>
 		</div>
-		<div id="grid" style="height: 400px;"></div>
+		<div id="instGrid" style="height: 400px;"></div>
 	<script>
-		const grid = new tui.Grid({
-			el : document.getElementById('grid'),
+		const instGrid = new tui.Grid({
+			el : document.getElementById('instGrid'),
 			scrollX : false,
 			scrollY : false,
 			pageOptions : {
@@ -125,7 +125,7 @@
 								result[i].prcsStartYn = '생산전';
 							}
 						}
-							grid.resetData(result);
+							instGrid.resetData(result);
 							console.log(result);
 					},
 					error : function(err){

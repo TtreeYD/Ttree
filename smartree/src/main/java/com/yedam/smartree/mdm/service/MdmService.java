@@ -15,11 +15,13 @@ public interface MdmService {
 	
 	// 사원관리
 	public List<EmpVO> selectEmpList(String empDept, String empName);
+	List<EmpVO> selectUnusedEmp(EmpVO vo);
 	public int addEmp(EmpVO vo);
 	int resetPw(EmpVO vo);
 	int updatePassword(EmpVO vo);
 	int delEmp(List<EmpVO> list);
-	
+	int unUseEmp(List<EmpVO> list);
+	int upEmp(List<EmpVO> list);
 	
 	
 	// 제품관리

@@ -26,11 +26,14 @@ public interface MdmMapper {
 	
 	// 사원관리
 	List<EmpVO> selectEmpList(@Param("empDept")String empDept, @Param("empName")String empName);
+	List<EmpVO> selectUnusedEmp(EmpVO vo);
 	int addEmp(EmpVO vo);
 	EmpVO selectEmp(String id);
 	int resetPw(EmpVO vo);
 	int updatePassword(EmpVO vo);
 	int delEmp(EmpVO vo);
+	int unUseEmp(EmpVO vo);
+	int upEmp(EmpVO vo);
 	
 	// 제품관리
 	List<MdmPrdtVO> selectPrdtList();

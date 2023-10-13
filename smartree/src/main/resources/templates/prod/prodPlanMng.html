@@ -105,6 +105,7 @@
 		<script>
 		let dtPPCode = [];	// prodPlanCode 담을 변수
 		let rowNum;			// 해당 rowNum 값을 담기위해 만든 변수
+		let manager = `[[${session.loginMember.empName}]]`;
 		let grid, grid2, grid3, grid4, grid5, grid6;
         const header = ['prodPlanName','prodPlanDate','prodPlanSdate','prodPlanEdate'];
         toastr.options = {
@@ -305,6 +306,8 @@
 			$('#prodPlanDate').val('');
 			$('#prodPlanSdate').val('');
 			$('#prodPlanEdate').val('');
+			$('#prodName').val(manager);
+
 			bir.value = today;
 		}
 		

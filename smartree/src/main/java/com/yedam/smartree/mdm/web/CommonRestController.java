@@ -5,8 +5,6 @@ import java.util.List;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -101,6 +99,12 @@ public class CommonRestController {
 		return mdmService.selectEmpList(empDept, empName);
 	}
 	
+	// 비활성 사원 조회
+	@GetMapping("/selectUnusedEmp")
+	public List<EmpVO> selectUnusedEmp(EmpVO vo){
+		return mdmService.selectUnusedEmp(vo);
+	}
+	
 	//	사원 등록
 	@PostMapping("/insertEmp")
 	public String addEmp(@RequestBody EmpVO empInfo) {
@@ -149,6 +153,18 @@ public class CommonRestController {
 	@PostMapping("/delEmp")
 	public int delEmp(@RequestBody List<EmpVO> list) {
 		return mdmService.delEmp(list);
+	}
+	
+	// 비활성화
+	@PostMapping("/unUseEmp")
+	public int unUseEmp(@RequestBody List<EmpVO> list) {
+		return mdmService.unUseEmp(list);
+	}
+	
+	// 사원정보수정
+	@PostMapping("/upEmp")
+	public int upEmp(@RequestBody List<EmpVO> list) {
+		return mdmService.upEmp(list);
 	}
 	
 	// 제품관리
