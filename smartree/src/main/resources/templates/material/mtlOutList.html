@@ -218,7 +218,7 @@ float: right;
 			    let month = today.getMonth() + 1;  // 월
 			    let date = today.getDate();  // 날짜
      		    const options = {
-				     fileName: '자재출고 상세내역' + (year + '-' + month + '-' + date)
+				     fileName: (year + '-' + month + '-' + date) + '자재출고 상세내역'
 				   };
 		        const excelDownload = document.querySelector(".excelDownload");
 	               excelDownload.addEventListener("click",

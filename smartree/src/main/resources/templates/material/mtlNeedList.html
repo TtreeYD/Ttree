@@ -180,7 +180,7 @@ float: right;
 			    let month = today.getMonth() + 1;  // 월
 			    let date = today.getDate();  // 날짜
      		    const options = {
-				     fileName: '자재 발주서' + (year + '-' + month + '-' + date)
+				     fileName: (year + '-' + month + '-' + date) + ' 자재 발주서'
 				   };
 		        const excelDownload = document.querySelector(".excelDownload");
 	               excelDownload.addEventListener("click",
