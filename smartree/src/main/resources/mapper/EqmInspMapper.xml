@@ -23,7 +23,7 @@
   			</if>
   		</where>  		
   	 					 
-  	ORDER BY eqm_code
+  	ORDER BY insp_code desc
   	</select>
   	<!-- 설비점검이름으로 검색 -->
   	 <select id="searchEqmInsp" resultType="EqmInspVO">
@@ -34,9 +34,12 @@
   			<if test="eqmName != null and !eqmName.equals('')">
   				eqm_name LIKE '%'||#{eqmName}||'%'
   			</if>
+  			<if test="startNextInspDate != null and !startNextInspDate.equals('') and endNextInspDate != null and !endNextInspDate.equals('')">
+    		and TO_CHAR(i.NEXT_INSP_DATE) BETWEEN TO_CHAR(#{startNextInspDate},'YY/MM/DD') AND TO_CHAR(#{endNextInspDate},'YY/MM/DD')
+  		  </if>
   		</where>  	
   	 					 
-  	ORDER BY eqm_code
+  	ORDER BY insp_code desc
   	</select>
   	
   	<!-- 설비점검 단건조회  -->
@@ -118,6 +121,8 @@
   		from EQM_NOPER n join eqm e 
   						 ON n.eqm_code = e.eqm_code
   		where e.eqm_state = 'E' and n.INSP_ICHECK != 'Y'
+  		
+  		ORDER BY n.NOPER_CODE
   	</select>
   	
   	  	<!--비가동 설비점검이름으로 검색 -->

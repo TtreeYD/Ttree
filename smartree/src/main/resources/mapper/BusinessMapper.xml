@@ -19,6 +19,7 @@
 		       	and trunc(o.dod_date) = trunc(#{dodDate}) 
 		       </if>	
 		</where>
+		order by o.order_date desc
   	</select>
   	<!-- 출고 전 주문서조회 -->
   		<select id="selectOrderBfOutList" resultType="BusinessVO">
@@ -33,10 +34,11 @@
 		 	<if test="orderDate != null ">
 		       	and trunc(o.order_date) = trunc(#{orderDate})
 		 	</if>
-		       <if test="dodDate!= null ">
-		       	and trunc(o.dod_date) = trunc(#{dodDate}) 
-		       </if>	
+	       <if test="dodDate!= null ">
+	       	and trunc(o.dod_date) = trunc(#{dodDate}) 
+	       </if>	
 		</where>
+			order by o.dod_date 
   		</select>
   	<!-- 기출고 주문서조회 -->
   	<select id="searchFinOrder" resultType="BusinessVO">
@@ -45,6 +47,7 @@
   		  				on o.bp_code = b.bp_code  	
   		  <where>
   		  		dod_state = '출고완료'
+  		  		and <![CDATA[o.dod_date BETWEEN TRUNC(SYSDATE) - 60 AND TRUNC(SYSDATE)+60]]>
 		 	<if test="orderCode != null">	 	
 		 		and upper(o.order_code) like '%'||upper(#{orderCode})||'%'
 		 	</if>
@@ -53,8 +56,10 @@
 		 	</if>
 		       <if test="dodDate!= null ">
 		       	and trunc(o.dod_date) = trunc(#{dodDate}) 
-		       </if>	
+		       </if>
+		       	
 		</where>
+		order by o.dod_date desc
   	</select>
   	<!-- 주문서상세조회 -->
   	<select id="selectOrderDtList" resultType="BusinessVO">
@@ -110,13 +115,14 @@
   	<selectKey keyProperty="orderCode" resultType="String" order="BEFORE">
   		select 'ORD' || LPAD(order_code_seq.NEXTVAL, 7, '0') as orderCode from dual
   	</selectKey>
-  		insert into orders (order_code , bp_code , order_date , order_manager , dod_date )
+  		insert into orders (order_code , bp_code , order_date , order_manager , dod_date , prod_plan_yn )
   		values(
   			#{orderCode}
   			,#{bpCode}
   			,#{orderDate}
   			,#{orderManager}
   			,#{dodDate}
+  			,#{prodPlanYn}
   		)
   	</insert>
   	

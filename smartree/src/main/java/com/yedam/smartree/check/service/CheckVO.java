@@ -23,7 +23,8 @@ public class CheckVO {
 	private String prdtChkVal;
 	private String prdtChkFit;
 	private String prdtChkSit;
-	
+	private String prdtfinChk;
+	private String searchDate;
 	private String prdtName;
 	
 	//제품검사기준목록

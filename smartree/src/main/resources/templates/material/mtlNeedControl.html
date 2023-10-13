@@ -20,6 +20,9 @@ background-color: cadetblue;
 margin : 10px;
 }
 
+#mtlLowGrid tbody td {
+	cursor: pointer;
+}
 
 </style>
 </head>
@@ -27,15 +30,16 @@ margin : 10px;
 	<div layout:fragment="content">
 	<h1>발주 관리</h1>
 		<button type="button" id="minusBtn" class="btn btn-info" style="background-color: orange; border-color:orange;">안전재고 미달목록</button>
-		<div id="mtlLowGrid"></div>
+		<div id="mtlLowGrid" class="lightgrey"></div>
 		<br>
 		<div class="col-14">
+		<h1 style="margin-bottom: -30px;">발주 자재 목록</h1>
 		<div class="btn-group" role="group" aria-label="Basic example" style="float:right;">
 			<button type="button" id="addRow" class="btn btn-primary">추가</button>
 			<button type="button" id="mtlSearch" class="btn btn-primary" data-toggle="modal" data-target="#myModal">조회</button>
 			<button type="button" id="mtlSave" class="btn btn-primary">발주</button>
 		</div>
-		<div id="mtlNeedGrid"></div>
+		<div id="mtlNeedGrid" class="lightgrey"></div>
 		
 			<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
 			<div class="modal-dialog modal-xl" role="document">
@@ -87,9 +91,8 @@ margin : 10px;
 					</div>
 					</div>
 
-
 					<div class="modal-body">
-						<div id="needModalGrid"></div>
+						<div id="needModalGrid" class="lightgrey"></div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose" >닫기</button>
@@ -178,7 +181,7 @@ margin : 10px;
         	    $('#mtlLowGrid').toggle("blind", 1000);
        	    });
 		    document.addEventListener("DOMContentLoaded",() => {
-			            
+
 				// 모달창
 				const needModalGrid = new tui.Grid({
 					el: document.getElementById('needModalGrid'),
@@ -440,7 +443,6 @@ margin : 10px;
 				});
 				
 				const header = ['mtlCode', 'mtlDate', 'bpName', 'mtlName', 'mtlCnt', 'mtlUnit', 'mtlManager','mtlWishDate','mtlWhereNm','mtlLotCnt','mtlSs','mtlNow','mtlType','bpCode', 'mtlWhere', 'needCode']
-				
 /*        			// 발주목록에서 취소시키기
                 mtlNeedGrid.on('dblclick', () => {
                     let rowKey =
@@ -920,27 +922,48 @@ margin : 10px;
 			              "hideMethod": "fadeOut"
 			            }
         			// 모달창 체크항목 삭제처리
-					$('#deleteBtn').on('click',function(){
+					// 자재삭제
+					$('#deleteBtn').on('click', deleteMtl)
+					function deleteMtl() {
+						let mtlCode = $('#mtlCode').val()
 						newData={};
 						newData.needList = needModalGrid.getCheckedRows();
-						$.ajax({
-							url:'/deleteNeedMtl',
-							method:'POST',
-							headers: {
-								'Content-Type': 'application/json'
-							},
-							data: JSON.stringify(needModalGrid.getCheckedRows()),
-							success:function(result){
-									toastr.success('발주내역이 삭제되었습니다');
-									needModalGrid.removeCheckedRows();
-									newBucket = needModalGrid.getData();//
-							},
-							error:function(err){
-								console.log(err);
+						console.log(needModalGrid.getCheckedRows());
+						if(needModalGrid.getCheckedRows().length == 0){
+							toastr.warning('선택된 자재가 없습니다.')
+							return
+						}
+						Swal.fire({
+							title: '삭제하시겠습니까?',
+							icon: 'warning',
+							showCancelButton: true,
+							confirmButtonColor: '#3085d6',
+							cancelButtonColor: '#d33',
+							confirmButtonText: '삭제',
+							cancelButtonText: '취소'
+						}).then((result) => {
+							if (result.isConfirmed) {
+								$.ajax({
+									url:'/deleteNeedMtl',
+									method:'POST',
+									headers: {
+										'Content-Type': 'application/json'
+									},
+									data: JSON.stringify(needModalGrid.getCheckedRows()),
+									success: result => {
+										Swal.fire({
+											title: '삭제완료',
+											icon: 'success',
+											confirmButtonText: '확인'
+										})
+											needModalGrid.removeCheckedRows();
+											newBucket = needModalGrid.getData();//
+									},
+									error: err => console.log(err)
+								})
 							}
-							
 						})
-					})
+					}
 			});
 		</script>
 	</div>

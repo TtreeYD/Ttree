@@ -21,14 +21,15 @@ margin : 10px;
 	<div layout:fragment="content">
 		<h1>입고 관리</h1>
 		<button type="button" id="chkBtn" class="btn btn-info">검사완료 자재목록</button>
-		<div id="mtlCheckGrid"></div>
+		<div id="mtlCheckGrid" class="lightgrey"></div>
 		<br>
 			<div class="col-14">
+			<h1 style="margin-bottom: -30px;">입고 자재 목록</h1>
 				<div class="btn-group" role="group" aria-label="Basic example" style="float:right;">
 				<button type="button" id="mtlSearch" class="btn btn-primary" data-toggle="modal" data-target="#myModal">상세조회</button>
 				<button type="button" id="mtlSave" class="btn btn-primary">입고</button>
 			</div>
-		<div id="mtlInGrid"></div>
+		<div id="mtlInGrid" class="lightgrey"></div>
 		<div id="myModal" class="modal fade" tabindex="-1" role="dialog">
 			<div class="modal-dialog modal-xl" role="document">
 				<div class="modal-content" style="height: 700px">
@@ -65,7 +66,7 @@ margin : 10px;
 							style="margin: 4px;">초기화</button>
 					</div>
 					<div class="modal-body">
-						<div id="mtlInModalGrid"></div>
+						<div id="mtlInModalGrid" class="lightgrey"></div>
 					</div>
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal" id="modalClose">닫기</button>

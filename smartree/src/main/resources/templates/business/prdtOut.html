@@ -73,7 +73,11 @@
 		  <input type="text" id="outmanager"  placeholder="담당자를 입력하세요" name="ordercd">
 		  <label for="ordercd" >출고날짜</label>
 		  <input type="date" id="outdate" name="ordercd">
-            <div id="lotPrdtGrid"></div>
+          <div id="lotPrdtGrid"></div>
+          <div style="float:right;">
+	          <label for="leftCnt" >남은수량</label>
+			  <input type="text" id="leftCnt" name="leftCnt" readonly >
+          </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" id="saveBtn" >출고</button>
@@ -90,6 +94,7 @@
 		var valueCheck;
 		var check = 0;
 		var allCheck = false;
+		var leftCnt2=0;
 		// 오늘날짜 input에 넣기
 		today = new Date();
 		// console.log("today.toISOString() >>>" + today.toISOString());
@@ -119,27 +124,28 @@
 				{
 					header: '주문코드',
 					name: 'orderCode',
+					align: 'center'
 
 				},
 				{
 					header: '업체코드',
 					name: 'bpCode',
-
+					align: 'center'
 				},
 				{
 					header: '업체명',
 					name: 'bpName',
-
+					align: 'left'
 				},
 				{
 					header: '납기일자',
 					name: 'dodDate',
-
+					align: 'center'
 				},
 				{
 					header: '담당자',
 					name: 'orderManager',
-
+					align: 'left'
 				}],
 				
 			
@@ -154,27 +160,27 @@
 				{
 					header: '주문코드',
 					name: 'orderCode',
-
+					align: 'center'
 				},
 				{
 					header: '업체코드',
 					name: 'bpCode',
-
+					align: 'center'
 				},
 				{
 					header: '업체명',
 					name: 'bpName',
-
+					align: 'left'
 				},
 				{
 					header: '납기일자',
 					name: 'dodDate',
-
+					align: 'center'
 				},
 				{
 					header: '담당자',
 					name: 'orderManager',
-
+					align: 'left'
 				}],		
 		})
 		
@@ -188,32 +194,32 @@
 				{
 					header: '주문상세코드',
 					name: 'orderDtCode',
-
+					align: 'center'
 				},
 				{
 					header: '제품코드',
 					name: 'prdtCode',
-
+					align: 'center'
 				},
 				{
 					header: '제품명',
 					name: 'prdtName',
-
+					align: 'center'
 				},
 				{
 					header: '주문수량',
 					name: 'orderDtCnt',
-
+					align: 'right'
 				},
 				{
 					header: '출고수량',
 					name: 'prdtOutCnt',
-
+					align: 'right'
 				},
 				{
 					header: '미납수량',
 					name: 'prdtLeftCnt',
-
+					align: 'right'
 				}],
 			})
 				
@@ -231,23 +237,23 @@
 						{
 							header: 'Lot번호',
 							name: 'prdtLotNo',
-
+							align: 'center'
 						},
 						{
 							header: '제품코드',
 							name: 'prdtCode',
-
+							align: 'center'
 						},
 						{
 							header: '제품명',
 							name: 'prdtName',
-
+							align: 'left'
 						},
 						
 						{
 							header: '재고량',
 							name: 'prdtCnt',
-
+							align: 'right'
 						},
 						{
 				            header: '입고일자',
@@ -257,12 +263,14 @@
 				              options: {
 				                format: 'yyyy-MM-dd'
 				              }
-				            }
+				            },
+				            align: 'center'
 				          },
 				          {
 								header: '수량입력',
 								name: 'prdtOutCnt',
 								editor: 'text',
+								align: 'right'
 							}],
 				         	
 				})
@@ -327,7 +335,7 @@
 							
 							valueCheck = result
 							OrderDtGrid.resetData(result);
-							
+							console.log('dtgrid', result)
 							$('#orderModal').modal('hide')
 								let count=0;
 							for(let i =0 ; i< result.length ; i++){
@@ -365,16 +373,24 @@
 				//주문상세클릭이벤트
 				OrderDtGrid.on('click',function(ev){
 					let data = {};
-					
 					data.prdtCode = OrderDtGrid.getValue(ev.rowKey,'prdtCode');
 					data.orderDtCode = OrderDtGrid.getValue(ev.rowKey,'orderDtCode');
-					console.log('data',data)
 					if(ev.targetType == 'cell'){
 						lotPrdtOutList(data);
 						rowCheck = ev.rowKey
 					}
 				})
-				
+				lotPrdtGrid.on('afterChange',function(){
+					let cnt = lotPrdtGrid.getData();					
+					let allCnt=0;
+					
+					console.log('leftCnt2',leftCnt2);
+					for(let i = 0 ; i<cnt.length;i++){
+						allCnt+= Number(cnt[i].prdtOutCnt);
+					}
+					let beforeCnt= leftCnt2 - allCnt;
+					$('#leftCnt').val(beforeCnt);
+				})
 				function lotPrdtOutList(data){
 					console.log(OrderDtGrid.getData());
 						$.ajax({
@@ -382,8 +398,9 @@
 							method:'GET',
 							data:data,
 							success:function(result){
-								console.log('ddd',result)
-							
+								console.log('result',result);
+								$('#leftCnt').val(result[0].orderDtCnt);
+								leftCnt2 = $('#leftCnt').val();
 								lotPrdtGrid.resetData(result);	
 								setTimeout(() => lotPrdtGrid.refreshLayout(), 300);
 								$('#prdtModal').modal('show');

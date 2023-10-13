@@ -177,6 +177,7 @@
 		
 		
 		<script>
+    let manager = `[[${session.loginMember.empName}]]`;
 	$(document).ready(function () {
 	    	  
 		$("#saveInspBtn").on("click",saveEqmInsp);
@@ -615,7 +616,7 @@
 		   			$('#eqmName').val('');   			   		
 		   			$('#y,#n').prop('checked',false)  			  			
 		   			$('#recentInspDate').val('');
-		   			$('#inspManager').val('');
+		   			$('#inspManager').val(manager);
 		   			$('#repairDate').val('');
 		   			$('#inspDt').val('');
 		   			$('#actionDt').val('');

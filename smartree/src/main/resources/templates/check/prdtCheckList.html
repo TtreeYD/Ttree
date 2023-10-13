@@ -32,18 +32,32 @@
 <body>
 	<div layout:fragment="content">
 		<h1>제품품질검사조회</h1>
+		<br>
 		<div style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
 			<div>
-				<button type="button" id="pdfDownload" class="btn btn-info btn-icon-text excelDownload" style="float : right;">
+				<h2>제품검사목록</h2>
+				 <div class="input-group" style="display: flex;justify-content:space-between" >
+					<div style="font-size:20px; margin-top:4px; margin-right:10px;">	
+					    <input type="radio" id="allProcess" name="typeCheck" value="" checked />
+					    <label for="allProcess" class="mr-2">전체</label>
+					 	<input type="radio" id="todayProcess" name="typeCheck" value="MA01" />
+					    <label for="todayProcess" class="mr-2">오늘</label>
+					    <input type="radio" id="sevenProcess" name="typeCheck" value="MA02"/>
+					    <label for="sevenProcess" class="mr-2">일주일</label>
+					    <input type="radio" id="monthProcess" name="typeCheck" value="MA03"/>
+					    <label for="monthProcess" class="mr-2">한달</label>
+					</div>
+				<button type="button" id="pdfDownload" class="btn btn-info btn-icon-text excelDownload" style="margin-bottom:5px;">
 				PDF <i class="bi bi-printer"></i></button>
-				<h3>품질검사목록</h3>
+				</div>  
 				<div id="grid" class="lightgrey" style="width: 800px;"></div>
-			</div> <div>
-				<h3>품질검사상세</h3>
-				<div id="grid2" style="width: 800px;"></div>
+			</div> 
+			<div>
+				<h2>제품검사기준</h2>
+				<div style= "height :42px"></div>
+				<div id="grid2" style="width: 800px; margin-bottom: 50px;"></div>
 			</div>
 		</div>
-		<div id="container" style="width: 800px; height: 400px;"></div>
 		
 <script>
 	window.onload=function(){
@@ -77,12 +91,12 @@
 	        {
 	          header: '제품명',
 	          name: 'prdtName',
-	          align: 'center'
+	          align: 'left'
 	        },
 	        {
 	          header: '검사량',
 	          name: 'prdtChkCnt',
-	          align: 'center'
+	          align: 'right'
 	        },
 	        {
 	          header: '검사결과',
@@ -92,14 +106,15 @@
 	        {
 	          header: '검사날짜',
 	          name: 'prdtChkDate',
-	          align: 'center'
+	          align: 'center',
+	          sortable: true
 	        },
 	        {
 	          header: '담당자',
 	          name: 'prdtManager',
-	          align: 'center'
+	          align: 'left'
 	        },
-	      ]
+	      ],
 	    });
 	    const grid2 = new tui.Grid({
 		      el: document.getElementById('grid2'),
@@ -120,17 +135,17 @@
 		        {
 		          header: '검사명',
 		          name: 'chkName',
-		          align: 'center'
+		          align: 'left'
 		        },
 		        {
 		          header: '검사기준',
 		          name: 'chkStd',
-		          align: 'center'
+		          align: 'right'
 		        },
 		        {
 		          header: '검사값',
 		          name: 'prdtChkVal',
-		          align: 'center'
+		          align: 'right'
 		        },
 		        {
 		          header: '적합여부',
@@ -142,12 +157,11 @@
 	    getprdtCheckList();
 	    
 	 // 제품검사목록 조회
-	    function getprdtCheckList(ev){
-			
+	    function getprdtCheckList(data){
 	    	$.ajax({
 	    		url:'/prdtCheckList',
 	    		method:'get',
-	       	 	dataType:'json',
+	    		data:data,
 	    		success:function(result){
 	    			console.log(result);
 	    			grid.resetData(result);
@@ -190,20 +204,45 @@
 	    				}
 	    			}
 	    			grid2.resetData(result);
-
+	    			allProcess.click();
 	    		},
 	    		error:function(err){
 	    			console.log(err);
 	    		}
 	    	});
 	    });
+	    
 	  //pdf저장
         $('#pdfDownload').on('click', function () {
         	let prdtChkCode = grid2.getValue(0 , "prdtChkCode");
           	window.open("checkPdf1?prdtChkCode="+prdtChkCode,'pdf');
-        	
         });
-
+	  
+         $('#allProcess').on('click',function(){
+        	 getprdtCheckList();
+		});
+        
+		$('#todayProcess').on('click',function(){
+			let data = {
+				searchDate : $('#todayProcess').val()
+			}
+			getprdtCheckList(data);
+		});
+		
+		$('#sevenProcess').on('click',function(){
+			let data = {
+				searchDate : $('#sevenProcess').val()
+			}
+			getprdtCheckList(data);
+		});
+		
+		$('#monthProcess').on('click',function(){
+			let data = {
+				searchDate : $('#monthProcess').val()
+			}
+			getprdtCheckList(data);
+		}); 
+	  
 	};
 	</script>
 	</div>

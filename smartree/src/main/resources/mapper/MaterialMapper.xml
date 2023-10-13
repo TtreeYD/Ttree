@@ -30,6 +30,21 @@
   		FROM mtl_out o JOIN process_result p
         ON o.prcs_rs_code = p.prcs_rs_code
   		WHERE mtl_code = #{mtlCode}
+        <if test="radioDate == 'MA01'">
+            <![CDATA[
+                AND TO_CHAR(p.prcs_edate,'YY/MM/DD') >= TO_CHAR(SYSDATE,'YY/MM/DD') AND TO_CHAR(p.prcs_edate,'YY/MM/DD') < TO_CHAR(TRUNC(SYSDATE) + 1,'YY/MM/DD')
+            ]]>
+        </if>
+        <if test="radioDate == 'MA02'">
+            <![CDATA[
+                AND TO_CHAR(p.prcs_edate,'YY/MM/DD') BETWEEN TO_CHAR(TRUNC(SYSDATE) - 7,'YY/MM/DD') AND TO_CHAR(TRUNC(SYSDATE) + 1,'YY/MM/DD')
+            ]]>
+        </if>
+        <if test="radioDate == 'MA03'">
+            <![CDATA[
+                AND TO_CHAR(p.prcs_edate,'YY/MM/DD') BETWEEN TO_CHAR(TRUNC(SYSDATE) - 30,'YY/MM/DD') AND TO_CHAR(TRUNC(SYSDATE) + 1,'YY/MM/DD')
+            ]]>
+        </if>
   	</select>
   	<!-- 출고목록 조회 왼쪽 -->
   	 <select id="MtlOutList" resultType="MaterialVO">

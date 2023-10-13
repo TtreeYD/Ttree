@@ -37,11 +37,25 @@ float: right;
 				   	<button class="btn btn-outline-secondary" type="button" id="searchCon" style="height:32px; padding: 1px; padding-left: 20px; padding-right: 20px;">검색</button>
 					</div>
 				</div> 
-			<div id="mtlGrid"></div>
+			<div id="mtlGrid" class="lightgrey"></div>
 		</div>
 		<div class="col-7">
-			<h1 style="margin-bottom: 62px">상세 내역</h1>
-			<div id=mtlLotGrid></div>
+			<h1 style="margin-bottom: 19px">상세 내역</h1>
+					<div class="input-group" style="display: flex;justify-content:space-between" >
+					<div style="font-size:20px; margin-right:10px; margin-bottom:15px; margin-top:-10px;">	
+					    <input type="radio" id="allProcess" name="dateCheck" value="" checked />
+					    <label for="allProcess" class="mr-2">전체</label>
+					 	<input type="radio" id="todayProcess" name="dateCheck" value="MA01" />
+					    <label for="todayProcess" class="mr-2">오늘</label>
+					    <input type="radio" id="sevenProcess" name="dateCheck" value="MA02"/>
+					    <label for="sevenProcess" class="mr-2">일주일</label>
+					    <input type="radio" id="monthProcess" name="dateCheck" value="MA03"/>
+					    <label for="monthProcess" class="mr-2">한달</label>
+					</div>
+				<button type="button" id="pdfDownload" class="btn btn-info btn-icon-text excelDownload" style="margin-bottom:5px;">
+				PDF <i class="bi bi-printer"></i></button>
+				</div>
+			<div id=mtlLotGrid class="lightgrey"></div>
 		</div>
 
 
@@ -156,11 +170,12 @@ float: right;
 		        })
 				}
 		        // 자재별 출고량 출력기능
-		        function outFnc(mtlCode){
+		        function outFnc(mtlCode,radioDate){
 		        $.ajax({
 		          url: '/mtlEmpty',
 		          method: 'POST',
-		          data: { mtlCode : mtlCode },
+		          data: { mtlCode : mtlCode,
+		        	  		radioDate : radioDate},
 		          success: function (result) {
 		            //날짜변환
 		            $(result).each(function (idx, obj) {
@@ -200,7 +215,8 @@ float: right;
 					return;
 				}
 				mtlCode = mtlGrid.getValue(ev.rowKey, 'mtlCode')
-				outFnc(mtlCode)
+				outFnc(mtlCode);
+				$('#allProcess').click();
 			})
 		        
 		        //엑셀 다운로드 버튼으로 만드는 기능
@@ -278,7 +294,30 @@ float: right;
 								}
 							})
 						});
-		
+				// 오른쪽그리드 라디오박스
+		               $('#allProcess').on('click',function(){
+		            	   outFnc(mtlCode);
+		      		});
+		              
+		      		$('#todayProcess').on('click',function(){
+
+		      			radioDate = $('#todayProcess').val()
+		      			
+		      			outFnc(mtlCode,radioDate);
+		      		});
+		      		
+		      		$('#sevenProcess').on('click',function(){
+		      			
+		      			radioDate = $('#sevenProcess').val()
+		      		
+		      			outFnc(mtlCode,radioDate);
+		      		});
+		      		
+		      		$('#monthProcess').on('click',function(){
+		      			radioDate = $('#monthProcess').val()
+		      			
+		      			outFnc(mtlCode,radioDate);
+		      		}); 
 			});
 
 		</script>

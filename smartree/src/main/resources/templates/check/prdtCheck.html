@@ -19,12 +19,14 @@
 <body>
 <div layout:fragment="content">
 <h1>제품품질검사</h1>
+<br>
 	<div style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
 		<div>
 			<h3>제품검사목록</h3>
 			<div id="grid" style="width: 800px;"></div>
 		</div> 
 		<div>
+		
 		<button type="button" id="addBtn" class="btn btn-primary" style="float : right;">저장</button>
 			<h3>제품검사기준</h3>
 			<div id="grid2" style="width: 800px;"></div>
@@ -67,25 +69,26 @@
 	        {
 	          header: '생산완료일자',
 	          name: 'prodInstDate',
-	          align: 'center'
+	          align: 'center',
+	          sortable: true,
 	        },
 	        {
 	          header: '검사량',
 	          name: 'prdtChkCnt',
-	          align: 'center',
+	          align: 'right',
 	          editor : 'text',
 	        },
 	        {
 	          header: '제품명',
 	          name: 'prdtName',
+	          align: 'left',
+         	},
+            {
+	          header: '제품코드',
+	          name: 'prdtCode',
 	          align: 'center',
-	          },
-	          {
-		          header: '제품코드',
-		          name: 'prdtCode',
-		          align: 'center',
-		          hidden: true
-		          },
+	          hidden: true
+	        },
 		
 	      ]
 	    });
@@ -103,18 +106,18 @@
 		        {
 		          header: '검사명',
 		          name: 'chkName',
-		          align: 'center'
+		          align: 'left'
 		        },
 		        {
 		          header: '검사기준',
 		          name: 'chkStd',
-		          align: 'center'
+		          align: 'right'
 		        },
 		        {
 		          header: '검사값',
 		          name: 'prdtChkVal',
 		          editor : 'text',
-		          align: 'center'
+		          align: 'right'
 		        },
 		        {
 		          header: '적합여부',
@@ -125,7 +128,7 @@
 		          header: '담당자',
 		          name: 'prdtManager',
 		          editor : 'text',
-		          align: 'center',
+		          align: 'left',
 		         
 		        },
 		      ],
@@ -139,6 +142,7 @@
   	   
   	 	toastr.options = {
   			  positionClass: "toast-top-center",
+  			  preventDuplicates: true,
   			  escapeHtml: true,
   			  closeButton: true,
  			  newestOnTop: false,

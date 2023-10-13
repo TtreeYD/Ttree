@@ -34,7 +34,7 @@ float: right;
 				   	<button class="btn btn-outline-secondary" type="button" id="resetLeftBtn" style="height: 32px; padding: 3px; padding-left: 13px; padding-right: 13px;">초기화</button>
 					</div>
 				</div> 
-			<div id="mtlNeedGrid"></div>
+			<div id="mtlNeedGrid" class="lightgrey"></div>
 		</div>
 		<div class="col-7">
 			<h1 style="margin-bottom: 22px;">발주서</h1>
@@ -44,7 +44,7 @@ float: right;
        		<button type="button" class="btn btn-info btn-icon-text excelDownload" id="pdfBtn">PDF 
 				<i class="bi bi-printer"></i>
        		</button>
-			<div id=mtlNeedListGrid></div>
+			<div id=mtlNeedListGrid class="lightgrey"></div>
 		</div>
 
 
@@ -74,13 +74,13 @@ float: right;
 						header : '거래처명',
 						name : 'bpName',
 						sortable: true,
+					}, {
+						header : '담당자',
+						name : 'mtlManager'
 					},{
 						header : '발주일자',
 						name : 'mtlDate',
 						sortable: true						
-					}, {
-						header : '담당자',
-						name : 'mtlManager'
 					}, {
 						header : '납기요청일',
 						name : 'mtlWishDate'

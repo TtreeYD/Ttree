@@ -52,6 +52,7 @@ public class MaterialVO {
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private Date prcsEdate;							// 출고일
 	
+	private String radioDate;
 	
 	// 발주관리
 													// 거래처이름
@@ -122,4 +123,5 @@ public class MaterialVO {
 	
 	// 프로시져용
 	private String result;
+
 }

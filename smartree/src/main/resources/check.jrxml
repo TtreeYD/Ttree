@@ -192,7 +192,7 @@ WHERE
 			</band>
 		</groupHeader>
 		<groupFooter>
-			<band height="177">
+			<band height="183">
 				<frame>
 					<reportElement mode="Opaque" x="90" y="10" width="460" height="57" forecolor="#CCCCCC" backcolor="#FFFFFF" uuid="a1b12e34-9d2f-4fb0-8965-da1707d7553c"/>
 					<textField>
@@ -265,9 +265,14 @@ WHERE
 					</textElement>
 					<text><![CDATA[예담직업전문학교 품질검사실]]></text>
 				</staticText>
-				<image hAlign="Center" vAlign="Middle">
-					<reportElement x="428" y="94" width="72" height="77" uuid="44bf1d5b-664f-4e80-86eb-daa7b3493273"/>
-					<imageExpression><![CDATA["C:/Users/admin/Downloads/예담직업 (1).png"]]></imageExpression>
+				<image>
+					<reportElement x="428" y="94" width="72" height="77" uuid="e3c369e5-2aec-491b-9fb8-463c5c14a59b">
+						<property name="com.jaspersoft.studio.unit.width" value="px"/>
+						<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						<property name="com.jaspersoft.studio.unit.x" value="px"/>
+						<property name="com.jaspersoft.studio.unit.y" value="px"/>
+					</reportElement>
+					<imageExpression><![CDATA["C:/Users/admin/git/Ttree/smartree/src/main/resources/예담직업 (1).png"]]></imageExpression>
 				</image>
 			</band>
 		</groupFooter>
@@ -370,9 +375,7 @@ WHERE
 				</textField>
 				<textField>
 					<reportElement x="176" y="3" width="100" height="30" uuid="1e161de0-535b-4d67-8f7c-e5d8ad2ceaca"/>
-					<textElement textAlignment="Center" verticalAlignment="Middle">
-						<font fontName="godicjasper"/>
-					</textElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
 					<textFieldExpression><![CDATA[$F{CHK_STD}]]></textFieldExpression>
 				</textField>
 			</frame>
@@ -390,9 +393,7 @@ WHERE
 					<property name="com.jaspersoft.studio.unit.width" value="px"/>
 					<property name="com.jaspersoft.studio.unit.height" value="px"/>
 				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="godicjasper"/>
-				</textElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{PRDT_CHK_NOTE}]]></textFieldExpression>
 			</textField>
 		</band>

@@ -57,9 +57,9 @@ public class EqmRestController {
 	public List<EqmVO> getEqmNameExceptNoper(String eqmName){
 		return eqmservice.searchEqmExceptNoper(eqmName);
 	}
-	@GetMapping("/eqmInpsName")
-	public List<EqmInspVO> getEqmInspName(String eqmName){
-		return eqminspservice.searchEqmInsp(eqmName);
+	@PostMapping("/eqmInpsName")
+	public List<EqmInspVO> getEqmInspName(EqmInspVO eqmInspVO){
+		return eqminspservice.searchEqmInsp(eqmInspVO);
 	}
 	// 설비조회 모달창 더블 클릭시 단건조회
 	@GetMapping("/selectEqm")
