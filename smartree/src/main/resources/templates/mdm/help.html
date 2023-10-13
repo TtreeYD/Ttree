@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	<script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/@ckeditor/ckeditor5-ckfinder@40.0.0/src/index.min.js"></script>
+	<style type="text/css">
+		.ck .ck-content{
+			height: 600px;
+		}
+	</style>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div id="editor">
+	   </div>
+	    
+		<script>
+			ClassicEditor
+				.create( document.querySelector( '#editor' ), {
+					ckfinder: {
+						uploadUrl : '/mdm/upload'
+					}
+				} )
+				.catch( error => {
+				    console.error( error );
+				} );
+			
+			
+		</script>
+	</div>
+</body>
+</html>

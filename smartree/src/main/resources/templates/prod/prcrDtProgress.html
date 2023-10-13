@@ -670,6 +670,14 @@ $(document).ready(function (){
 	$('#startBtn').on('click',function(){
 		cntdata = instDtGrid.getData();
 		console.log(cntdata)
+		if(cntdata[0].prdtCnt==0){
+			Swal.fire({
+				icon: 'error',
+				title: '생산량을 확인하세요',
+				customClass: 'swal-wide'
+			})
+			return
+		}
 		if(eqmdata =='사용중' || eqmdata == '사용불가'){
 			console.log(123);
 			Swal.fire({

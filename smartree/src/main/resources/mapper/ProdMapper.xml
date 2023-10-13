@@ -92,12 +92,18 @@
 		</where>
 		order by prod_plan_date desc
   	</select>
-  	
-  	<select id="selectProd" resultType="ProdVO">
-  		select prod_plan_code, prod_plan_name, prod_name, prod_plan_date, order_code
-  		from prod_plan
+ <!-- select prod_plan_code, prod_plan_name, prod_name, prod_plan_date, order_code
+  		from prod_plan 
   		where prod_inst_yn = 'n'
-  		order by prod_plan_date desc
+  		order by prod_plan_date -->
+  	<select id="selectProd" resultType="ProdVO" fetchSize="1000" >
+  		SELECT DISTINCT prod_plan_code, prod_plan_name, prod_name, prod_plan_date, order_code, prod_plan_cnt, SUM(NVL(prod_inst_cnt,0))
+		FROM dt_prod_inst JOIN prod_inst USING(prod_inst_code) 
+		                  RIGHT JOIN prod_plan USING(prod_plan_code)
+		                  JOIN dt_prod_plan USING(prod_plan_code,prdt_code)
+		GROUP BY prod_plan_code, prod_plan_name, prod_name, prod_plan_date, order_code, prdt_code, prod_plan_cnt
+		HAVING prod_plan_cnt > SUM(NVL(prod_inst_cnt,0))
+		ORDER BY prod_plan_code
   	</select>
   	<!-- 생산지시관리 - 생산지시 modal -->
   	<select id="selectProdInst" resultType="ProdVO">
@@ -178,12 +184,10 @@
   	</select>
   	
   	<select id="selectGetProd" resultType="ProdVO">
-		select p.prod_plan_name, prdt.prdt_name ,dtp.prod_plan_cnt, p.prod_plan_code, prdt.prdt_code, dtp.prod_rank prod_inst_rank, p.prod_plan_sdate, p.prod_plan_edate
-		from prod_plan p join dt_prod_plan dtp
-                 on p.prod_plan_code = dtp.prod_plan_code
-                 join prdt_table prdt
-                 on dtp.prdt_code = prdt.prdt_code
-		where p.prod_plan_code = #{prodPlanCode}
+	  	SELECT DISTINCT dt_prod_plan_code, prod_plan_code, prdt_code, prod_rank,(prod_plan_cnt - get_prod_inst_cnt(prod_plan_code,prdt_code)) prod_plan_cnt, get_prdt_name(prdt_code) prdt_name
+	       	 , prod_plan_sdate, prod_plan_edate, prod_plan_name
+		FROM dt_prod_plan  join prod_plan using(prod_plan_code)
+		WHERE prod_plan_code= #{prodPlanCode}	
   	</select>
   	
   	<select id="getMtlNeed" resultType="MtlNeedVO">
@@ -215,7 +219,7 @@
   	<select id="selectGetProdInst" resultType="ProdVO">
 		select p.prod_plan_name, 
 		       prdt.prdt_name,
-		       dtp.prod_plan_cnt, 
+		       (dtp.prod_plan_cnt - get_prod_inst_cnt(p.prod_plan_code, dpi.prdt_code) + dpi.prod_inst_cnt) prod_plan_cnt, 
 		       p.prod_plan_code, 
 		       prdt.prdt_code, 
 		       dpi.prod_inst_cnt, 
@@ -332,9 +336,9 @@
   	
   	<!-- 지시상세조회 -->
   	<select id="selectDtInstList" resultType="ProdVO">
-		select dt_prod_inst_code, prdt_code, prod_inst_cnt, prod_inst_rank, get_prdt_name(prdt_code) prdt_name
-		from dt_prod_inst
-	   where prod_inst_code = #{prodInstCode}
+		SELECT d.*, get_prdt_name(prdt_code) prdt_name
+		FROM dt_prod_inst d
+	   WHERE prod_inst_code = #{prodInstCode}
   	</select>
   	
   	<!-- 키오스크 :생산지시불러오기 -->
