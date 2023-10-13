@@ -272,7 +272,7 @@ WHERE
 						<property name="com.jaspersoft.studio.unit.x" value="px"/>
 						<property name="com.jaspersoft.studio.unit.y" value="px"/>
 					</reportElement>
-					<imageExpression><![CDATA["C:/Users/admin/git/Ttree/smartree/src/main/resources/예담직업 (1).png"]]></imageExpression>
+					<imageExpression><![CDATA[예담직업.png]]></imageExpression>
 				</image>
 			</band>
 		</groupFooter>
