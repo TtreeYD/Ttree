@@ -52,6 +52,12 @@ public class EqmRestController {
 	public List<EqmVO> getEqmName(String eqmName){
 		return eqmservice.searchEqm(eqmName);
 	}
+	//  설비 이름 , 사용여부, 구분 조회
+	@GetMapping("/eqmAllCodition") 
+	public List<EqmVO> getEqmList(EqmVO eqmVO){
+		return eqmservice.searchEqmAllCondition(eqmVO);
+	}
+	
 	// 설비 이름으로 조회 - 비가동제외
 	@GetMapping("/eqmNameExceptNoper")
 	public List<EqmVO> getEqmNameExceptNoper(String eqmName){

@@ -71,6 +71,12 @@ public class EqmServiceImpl implements EqmService {
 		return eqmmapper.searchEqmExceptNoper(eqmName);
 	}
 
+	@Override
+	public List<EqmVO> searchEqmAllCondition(EqmVO eqmVO) {
+		
+		return eqmmapper.searchEqmAllCondition(eqmVO);
+	}
+
 	
 
 

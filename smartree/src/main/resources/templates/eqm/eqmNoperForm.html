@@ -240,7 +240,83 @@
                 document.getElementById("noperLdate").value = endTime;
               });
 
-              //공정구분으로 설비조회
+              //공정구분으로 설비조회 - 사용여부
+              $("#eqmDivision").on("change", function () {
+                if ($("#searchName").val()) {
+                  $("#searchName").val("");
+                }
+
+                data = $("#eqmDivision").val();
+
+                if (data == "") {
+                  getEqmList();
+                }
+                console.log(data);
+
+                $.ajax({
+                  url: "/eqmAllCodition",
+                  data: {
+                    eqmDivision: data,
+                    eqmUcheck: "Y"
+                  },
+                  success: (result) => {
+                    console.log(result);
+
+                    //
+                    for (let item of result) {
+                      if (item.eqmState == "사용대기") {
+                        item._attributes = {
+                          className: {
+                            column: {
+                              eqmState: ["green"],
+                            },
+                          },
+                        };
+                      } else if (item.eqmState == "사용중") {
+                        item._attributes = {
+                          className: {
+                            column: {
+                              eqmState: ["red"],
+                            },
+                          },
+                        };
+                      } else if(item.eqmState == "비가동"){
+                        item._attributes = {
+                          className: {
+                            column: {
+                              eqmState: ["blue"],
+                            },
+                          },
+                        };
+                      }else {
+                          item._attributes = {
+                                  className: {
+                                    column: {
+                                      eqmState: ["yellow"],
+                                    },
+                                  },
+                                };
+                              }
+
+                    }
+
+                    //
+
+                    grid.resetData(result);
+
+                    //  grid.resetData(eval(result));
+
+                    /* 	grid2.resetData(result);
+          	   	      			$("#searchEqmModal").modal('show');
+          	   	      			setTimeout(() => grid2.refreshLayout(), 200); */
+                  },
+                  error: (err) => console.log(err),
+                });
+              });
+
+              
+              
+     /*          //공정구분으로 설비조회
               $("#eqmDivision").on("change", function () {
                 if ($("#searchName").val()) {
                   $("#searchName").val("");
@@ -305,14 +381,73 @@
 
                     //  grid.resetData(eval(result));
 
-                    /* 	grid2.resetData(result);
-          	   	      			$("#searchEqmModal").modal('show');
-          	   	      			setTimeout(() => grid2.refreshLayout(), 200); */
+               
                   },
                   error: (err) => console.log(err),
                 });
               });
+               */
+              
+              // 전체설비 조회 - 사용여부
+              function getEqmList() {
+                $.ajax({
+                  url: "/eqmAllCodition",
+                  method: "get",
+                  data:{eqmUcheck: "Y" },
+                  success: function (result) {
+                    //console.log(result);
 
+                    //
+                    for (let item of result) {
+                      if (item.eqmState == "사용대기") {
+                        item._attributes = {
+                          className: {
+                            column: {
+                              eqmState: ["green"],
+                            },
+                          },
+                        };
+                      } else if (item.eqmState == "사용중") {
+                        item._attributes = {
+                          className: {
+                            column: {
+                              eqmState: ["red"],
+                            },
+                          },
+                        };
+                      } else if(item.eqmState == "비가동"){
+                          item._attributes = {
+                                  className: {
+                                    column: {
+                                      eqmState: ["blue"],
+                                    },
+                                  },
+                                };
+                          }else {
+                                  item._attributes = {
+                                          className: {
+                                            column: {
+                                              eqmState: ["yellow"],
+                                            },
+                                          },
+                                        };
+                                      }
+                    }
+
+                    //
+
+                    //	grid.resetData(eval(result));
+                    grid.resetData(result);
+                  },
+                  error: function (err) {
+                    console.log(err);
+                  },
+                });
+              }
+              
+              
+              
+              /* 
               // 전체설비 조회
               function getEqmList() {
                 $.ajax({
@@ -368,9 +503,11 @@
                     console.log(err);
                   },
                 });
-              }
+              } */
 
-              // 설비 구분으로 조회
+         
+              
+/*                // 설비 구분으로 조회
               function searcheqmDivision(eqmDivison) {
                 $.ajax({
                   url: "/eqmDivision",
@@ -381,15 +518,73 @@
                     console.log(result);
                     grid.resetData(eval(result));
 
-                    /* 	grid2.resetData(result);
-          	      			$("#searchEqmModal").modal('show');
-          	      			setTimeout(() => grid2.refreshLayout(), 200); */
+     
+                  },
+                  error: (err) => console.log(err),
+                });
+              }  */
+              
+              
+
+              // 설비 이름 조회 - 사용여부
+              function getEqmName(eqmName) {
+                $.ajax({
+                  url: "/eqmAllCodition",
+                  data: {
+                    eqmName: eqmName,
+                    eqmUcheck: "Y"
+                  },
+                  success: (result) => {
+                    console.log(result);
+
+                    //
+                    for (let item of result) {
+                      if (item.eqmState == "사용대기") {
+                        item._attributes = {
+                          className: {
+                            column: {
+                              eqmState: ["green"],
+                            },
+                          },
+                        };
+                      } else if (item.eqmState == "사용중") {
+                        item._attributes = {
+                          className: {
+                            column: {
+                              eqmState: ["red"],
+                            },
+                          },
+                        };
+                      } else if(item.eqmState == "비가동"){
+                          item._attributes = {
+                                  className: {
+                                    column: {
+                                      eqmState: ["blue"],
+                                    },
+                                  },
+                                };
+                              }else {
+                                  item._attributes = {
+                                          className: {
+                                            column: {
+                                              eqmState: ["yellow"],
+                                            },
+                                          },
+                                        };
+                                      }
+                    }
+
+                    //
+                    grid.resetData(result);
+                    //grid.resetData(eval(result));
                   },
                   error: (err) => console.log(err),
                 });
               }
-
-              // 설비 이름 조회
+              
+              
+              
+   /*            // 설비 이름 조회
               function getEqmName(eqmName) {
                 $.ajax({
                   url: "/eqmName",
@@ -442,7 +637,9 @@
                   },
                   error: (err) => console.log(err),
                 });
-              }
+              } */
+              
+              
               // 설비 이름 조회 : input에 값
               function searchEqmName() {
                 $("#eqmDivision").val("");
@@ -476,7 +673,7 @@
             	   let eqmState='E';
             	   getEqmNoperEqm(data, eqmState);
             	   return
-               }else if(data2 == '사용가능'){
+               }else if(data2 == '사용대기'){
             	   getEqm(data);
                }else{
             	   reset();
@@ -733,9 +930,7 @@
               const TIME_ZONE = 9 * 60 * 60 * 1000; // 9시간
               const d = new Date();
 
-              const date = new Date(d.getTime() + TIME_ZONE)
-                .toISOString()
-                .split("T")[0];
+              const date = new Date(d.getTime() + TIME_ZONE).toISOString().split("T")[0];
               const time = d.toTimeString().split(" ")[0];
 
               return date + " " + time;
