@@ -78,13 +78,19 @@
   <script th:inline="javascript">
   let msg = [[${param.error}]]
   if(msg != null){
+	  let container = document.getElementById('container')
+	  container.classList.add('sign-in')
 	  Swal.fire({
 			title: '아이디 또는 비밀번호가 맞지 않습니다. 다시 확인해 주세요.',
 			icon: 'error',
-			confirmButtonText: '확인'
+			confirmButtonText: '확인',
+			/* onClose: function () {
+		        // 경고(alert) 창이 닫힌 후 실행할 코드
+		        window.location.href = '/'; 
+		      } */
 		})
   }
-	  let container = document.getElementById('container')
+	  container = document.getElementById('container')
 	
 	  setTimeout(() => {
 	    container.classList.add('sign-in')
