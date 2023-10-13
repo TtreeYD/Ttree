@@ -2,6 +2,8 @@ package com.yedam.smartree.business.service;
 
 import java.util.List;
 
+import com.yedam.smartree.check.service.CheckVO;
+
 public interface BusinessService {
 	//주문서목록
 	public List<BusinessVO> selectOrderList(BusinessVO businessVO);
@@ -65,6 +67,18 @@ public interface BusinessService {
 	
 	//메인페이지 업무현황 전부가져오기
 	public ChartDataVO getAllChartData();
+	//메인 제품별 주문
+	public List<BusinessVO> getOrderChartData();
+	//메인 제품이름 가져오기
+	public List<BusinessVO> getPrdtNameChartData();
+	//검사끝난 입고대기품목
+	public List<CheckVO> prdtFinAfterChkList();
+	//제품별 재고현황
+	public List<FinPrdtVO> getPrdtChartData();
+	//모니터링
+	public String monitoring();
+	//습도 현황 모니터링
+	public String monitoringHumidity();
 	
 	
 	

@@ -11,7 +11,9 @@ import com.yedam.smartree.business.service.BusinessService;
 import com.yedam.smartree.business.service.BusinessVO;
 import com.yedam.smartree.business.service.ChartDataVO;
 import com.yedam.smartree.business.service.FinPrdtVO;
+import com.yedam.smartree.business.service.MonitoringVO;
 import com.yedam.smartree.business.service.ReqVO;
+import com.yedam.smartree.check.service.CheckVO;
 
 @Service
 public class BusinessServiceImpl implements BusinessService{
@@ -227,6 +229,47 @@ public class BusinessServiceImpl implements BusinessService{
 		return businessmapper.getTodayProdData();
 
 		
+	}
+	//메인 제품별주문
+	@Override
+	public List<BusinessVO> getOrderChartData() {
+		return businessmapper.getOrderChartData();
+	}
+	//메인제품이름
+	@Override
+	public List<BusinessVO> getPrdtNameChartData() {
+		return businessmapper.getPrdtNameChartData();
+	}
+	//검사끝난 입고대기품목
+	@Override
+	public List<CheckVO> prdtFinAfterChkList() {
+		return businessmapper.prdtFinAfterChkList();
+	}
+	@Override
+	public List<FinPrdtVO> getPrdtChartData() {
+		return businessmapper.getPrdtChartData();
+	}
+	//모니터링
+	@Override
+	public String monitoring() {
+		List<MonitoringVO> list =businessmapper.monitoring();
+		String str="time,Value\n";
+		for(int i=0;i<list.size();i++) {
+			str+=list.get(i).getTime()+","+list.get(i).getTemperature()+"\n";
+		}
+		
+		return str;
+	}
+	//습도현황모니터링
+	@Override
+	public String monitoringHumidity() {
+		List<MonitoringVO> list =businessmapper.monitoringHumidity();
+		String str="time,Value\n";
+		for(int i=0;i<list.size();i++) {
+			str+=list.get(i).getTime()+","+list.get(i).getHumidity()+"\n";
+		}
+		
+		return str;
 	}
 
 }

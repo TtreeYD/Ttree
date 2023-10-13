@@ -236,9 +236,11 @@
         		
         	})
         })
-		
+		const options = {
+	  		fileName: '주문서상세조회'
+		};
         $('#ExcelBtn').on('click',function(){
-        	grid2.export('xlsx');
+        	grid2.export('xlsx',options);
         })
 
 		$('#resetBtn').on('click',function(){

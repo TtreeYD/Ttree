@@ -204,7 +204,7 @@ const recieveListGrid = new tui.Grid({
 	// 제품검사목록 조회
 	function getprdtCheckList(){
 		$.ajax({
-			url:'/prdtFinChkList',
+			url:'/prdtFinAfterChkList',
 			method:'get',
 	   	 	dataType:'json',
 			success:function(result){

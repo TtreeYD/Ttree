@@ -169,8 +169,11 @@
 			}
 			
 		})
+		const options = {
+	  		fileName: '출고목록'
+		};
 		$('#ExcelBtn').on('click',function(){
-			prdtDtOutGrid.export('xlsx');
+			prdtDtOutGrid.export('xlsx',options);
         })
 		
 		

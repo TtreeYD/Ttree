@@ -13,7 +13,9 @@ import com.yedam.smartree.business.service.BusinessService;
 import com.yedam.smartree.business.service.BusinessVO;
 import com.yedam.smartree.business.service.ChartDataVO;
 import com.yedam.smartree.business.service.FinPrdtVO;
+import com.yedam.smartree.business.service.MonitoringVO;
 import com.yedam.smartree.business.service.ReqVO;
+import com.yedam.smartree.check.service.CheckVO;
 /*
 개발자:정호현
 개발일자:23/09/14
@@ -142,7 +144,11 @@ public class BusinessRestController {
 		System.out.println(fpv);
 		return businessService.prdtOutDtList(fpv);
 	}
-	
+	//검사끝난 입고대기품목
+	@GetMapping("/prdtFinAfterChkList")
+	public List<CheckVO> prdtFinAfterChkList(){
+		return businessService.prdtFinAfterChkList();
+	}
 	//입고처리
 	@PostMapping("/recievePrdt")
 	public int recievePrdt(@RequestBody ReqVO<FinPrdtVO> fpv){
@@ -177,5 +183,19 @@ public class BusinessRestController {
 	public ChartDataVO getAllChartData() {
 		return businessService.getAllChartData();
 	}
-	
+	//메인페이지 제품별주문
+	@GetMapping("/getOrderChartData")
+	public List<BusinessVO> getOrderChartData(){
+		return businessService.getOrderChartData();
+	}
+	//온도현황모니터링
+	@GetMapping("/monitoringTemperature")
+	public String monitoring(){
+		return businessService.monitoring();
+	}
+	//습도현황모니터링
+	@GetMapping("/monitoringHumidity")
+	public String monitoringHumidity(){
+		return businessService.monitoringHumidity();
+	}
 }
