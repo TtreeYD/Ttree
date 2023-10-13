@@ -60,6 +60,8 @@ public interface ProdMapper {
 	
 	int updateInstYn(String prodPlanCode);
 	
+	List<ProdVO> selectDtInstList(ProdVO vo);
+	
 	//생산지시조회
 	public List<ProdVO> selectGetDtInst(ProdVO vo);
 	//키오스크 :생산지시불러오기

@@ -311,28 +311,32 @@
   	</delete>
   	<!-- 생산지시조회 -->
   	<select id="selectGetDtInst" resultType="ProdVO">
-  		select p.prod_inst_code , d.dt_prod_inst_code , p.prod_plan_code , p.prod_inst_name , d.prdt_code , pt.prdt_name, d.prod_inst_cnt , d.prod_inst_rank , p.prod_inst_edate , p.prod_inst_sdate , p.prcs_start_yn
-  				 , p.prod_inst_manager
-		  from dt_prod_inst d join prod_inst p 
-                on d.prod_inst_code  = p.prod_inst_code
-                join prdt_table pt
-                on d.prdt_code = pt.prdt_code
+  		select i.prod_inst_code, i.prod_inst_name, i.prod_inst_manager, i.prod_inst_sdate, i.prod_inst_sdate, i.prod_inst_edate, i.prcs_start_yn, p.prod_plan_name
+		from 	 prod_inst i join prod_plan p on i.prod_plan_code = p.prod_plan_code
          <where>
 			<if test="prodInstName != null and !prodInstName.equals('')">
-				p.prod_inst_name like '%' || #{prodInstName} || '%'
+				i.prod_inst_name like '%' || #{prodInstName} || '%'
 			</if> 
 			<if test="prodInstManager != null and !prodInstManager.equals('')">
-				or p.prod_inst_manager like '%' || #{prodInstManager} || '%'
+				or i.prod_inst_manager like '%' || #{prodInstManager} || '%'
 			</if>
 			<if test="prcsStartYn == 'MA01'">
-				or p.prcs_start_yn = 'n'
+				or i.prcs_start_yn = 'n'
 			</if> 
 			<if test="prcsStartYn == 'MA02'">
-				or p.prcs_start_yn = 'y'
+				or i.prcs_start_yn = 'y'
 			</if>
 		</where>
-		order by p.prod_inst_code desc
+		order by i.prod_inst_code desc
   	</select>
+  	
+  	<!-- 지시상세조회 -->
+  	<select id="selectDtInstList" resultType="ProdVO">
+		select dt_prod_inst_code, prdt_code, prod_inst_cnt, prod_inst_rank, get_prdt_name(prdt_code) prdt_name
+		from dt_prod_inst
+	   where prod_inst_code = #{prodInstCode}
+  	</select>
+  	
   	<!-- 키오스크 :생산지시불러오기 -->
   	<select id="selectGetProcess" resultType="ProdVO">
   		select p.prcs_code , d.dt_prod_inst_code , d.prdt_code , pt.prdt_name , p.prcs_order , p.prdt_total , pi.prod_inst_edate, d.prod_inst_rank , p.prdt_prod_cnt

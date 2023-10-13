@@ -252,6 +252,11 @@ public class ProdServiceImpl implements ProdService {
 		return prodMapper.getChartData();
 	}
 
+	@Override
+	public List<ProdVO> selectDtInstList(ProdVO vo) {
+		return prodMapper.selectDtInstList(vo);
+	}
+
 
 	
 	
