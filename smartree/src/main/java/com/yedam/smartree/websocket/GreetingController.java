@@ -11,6 +11,7 @@ public class GreetingController {
 	@SendTo("/topic/greetings")
 	  public Greeting greeting(HelloMessage message) throws Exception {
 	    Thread.sleep(1000);
+	    System.out.println("==================================");
 	    return new Greeting("Hello, " + HtmlUtils.htmlEscape(message.getName()) + "!");
 	  }
 	
