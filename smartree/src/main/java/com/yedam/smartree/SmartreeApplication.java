@@ -23,8 +23,4 @@ public class SmartreeApplication {
 	public String main() {
 		return "main";
 	}
-	@GetMapping("/index")
-	public String index() {
-		return "index";
-	}
 }

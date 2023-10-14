@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<meta charset="UTF-8">
+    <meta charset="UTF-8" />
+   
+    <title>thymeleaf layout</title>
   <nav th:fragment="header">
 <!-- commit -->
 	<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -47,6 +49,9 @@
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <!-- Nav Item - User Information -->
+                        <button type="button" id="chatBtn" class="btn btn-outline-dark" data-toggle="modal" data-target="#chatModal">chat
+                        <span id="cnt" class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                        </button>
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -71,6 +76,133 @@
                     </ul>
 
                 </nav>
-</nav> 
+                <div id="chatModal" class="modal fade" tabindex="-1" role="dialog">
+			<div class="modal-dialog modal-sm" role="document" >
+				<div class="modal-content" style=" height: 700px; width:500px;">
+					<div class="modal-body" id="mbody" style="max-height: 80vh; overflow-y: auto;">
+						<div class="row">
+					        <div class="col-md-12">
+					            <table id="conversation" class="table table-striped">
+					                <thead>
+					                <tr>
+					                    <th>예담단톡</th>
+					                </tr>
+					                </thead>
+					                <tbody id="greetings">
+					                
+					                </tbody>
+					            </table>
+					        </div>
+					    </div>
+					</div>
+					<div class="modal-footer">
+						<input type="text" placeholder="보낼 메세지를 입력하세요." id="sendMessage" autocomplete="off" style="width:402px"/>
+						<button type="button" id="sendModalBtn" class="btn btn-default">전송</button>
+						<!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>  -->
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal --> 
+<script th:inline="javascript">
+		let userName = [[${session.loginMember.empName}]]; 
+		let userText = $("#sendMessage").val()
+		const message = {
+				sender : userName,
+				text: userText
+		}
+	$(document).ready(function() {
+		  
+		function updateBadge() {
+		    const cnt = $("#cnt");
+		    let currentValue = parseInt(cnt.text());
+		    cnt.text(currentValue + 1);
+		}
+		
+		$('#chatBtn').on('click', function() {
+	        $('#chatModal').modal('show');
+	        console.log(userName);
+	      
+	    });
+		const stompClient = new StompJs.Client({
+		    brokerURL: 'ws://localhost:8090/chatserver'
+		});
+		connect();
+		
+		stompClient.onConnect = (frame) => {
+		    setConnected(true);
+		    console.log('Connected: ' + frame);
+		    
+		    stompClient.subscribe('/topic/greetings', (greeting) => {
+		        showGreeting(JSON.parse(greeting.body).content);
+		       // if (message.sender !== userName) {
+		            updateBadge();
+		       // }
+		    });
+		    stompClient.subscribe('/topic/cust', (greeting) => {
+		        $(document.body).append(greeting.body);
+		    });
+		};
 
+		stompClient.onWebSocketError = (error) => {
+		    console.error('Error with websocket', error);
+		};
+
+		stompClient.onStompError = (frame) => {
+		    console.error('Broker reported error: ' + frame.headers['message']);
+		    console.error('Additional details: ' + frame.body);
+		};
+
+		function setConnected(connected) {
+		    $("#connect").prop("disabled", connected);
+		    if (connected) {
+		        $("#conversation").show();
+		    }
+		    else {
+		        $("#conversation").hide();
+		    }
+		    $("#greetings").html("");
+		}
+
+		function connect() {
+		    stompClient.activate();
+		}
+		
+		function sendName() {
+			let userText = $("#sendMessage").val();
+		    if (userName && userText) {
+		    let message = {sender: userName, name: userText};
+		        stompClient.publish({
+		            destination: "/app/hello",
+		            body: JSON.stringify(message)
+		        });
+		    }
+		}
+
+		function showGreeting(message) {
+			let div = $('#mbody');
+			let tr = $('<tr id="chatDiv" />');
+			let td = $('<td class="message" />');
+			 if(message.sender === userName){
+				td.addClass("my-message");
+			} else {
+				td.addClass("other-message");
+			} 
+			console.log(message.sender)
+			td.text(message);
+		    tr.append(td)
+		    $("#greetings").append(tr);
+		    div.scrollTop = div.scrollHeight;
+		}
+		
+		$(function () {
+		    $("form").on('submit', (e) => e.preventDefault());
+		    $( "#sendModalBtn" ).click(() => sendName());
+		});
+	}
+	)
+</script>
+</nav>
 </html>
