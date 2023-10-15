@@ -108,7 +108,8 @@
 		<!-- /.modal --> 
 <script th:inline="javascript">
 		let userName = [[${session.loginMember.empName}]]; 
-		let userText = $("#sendMessage").val()
+		let userText = $("#sendMessage").val();
+		const cnt = $("#cnt");
 		const message = {
 				sender : userName,
 				text: userText
@@ -116,16 +117,17 @@
 	$(document).ready(function() {
 		  
 		function updateBadge() {
-		    const cnt = $("#cnt");
 		    let currentValue = parseInt(cnt.text());
 		    cnt.text(currentValue + 1);
 		}
 		
 		$('#chatBtn').on('click', function() {
+			let mbody = $('#mbody');
 	        $('#chatModal').modal('show');
-	        console.log(userName);
-	      
+	        cnt.text(0);
+	        mbody.scrollTop(mbody[0].scrollHeight);
 	    });
+		
 		const stompClient = new StompJs.Client({
 		    brokerURL: 'ws://localhost:8090/chatserver'
 		});
@@ -178,11 +180,12 @@
 		            destination: "/app/hello",
 		            body: JSON.stringify(message)
 		        });
+		       // $("#sendMessage").val('');
 		    }
 		}
 
 		function showGreeting(message) {
-			let div = $('#mbody');
+			mbody = $('#mbody');
 			let tr = $('<tr id="chatDiv" />');
 			let td = $('<td class="message" />');
 			 if(message.sender === userName){
@@ -194,7 +197,7 @@
 			td.text(message);
 		    tr.append(td)
 		    $("#greetings").append(tr);
-		    div.scrollTop = div.scrollHeight;
+		    mbody.scrollTop(mbody[0].scrollHeight);
 		}
 		
 		$(function () {
