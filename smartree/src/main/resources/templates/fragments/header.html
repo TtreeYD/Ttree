@@ -110,12 +110,29 @@
 		let userName = [[${session.loginMember.empName}]]; 
 		let userText = $("#sendMessage").val();
 		const cnt = $("#cnt");
+		const date = new Date();
+		
+		const year = date.getFullYear();
+		const month = ('0' + (date.getMonth() + 1)).slice(-2);
+		const day = ('0' + date.getDate()).slice(-2);
+		const hours = ('0' + date.getHours()).slice(-2);
+		const minutes = ('0' + date.getMinutes()).slice(-2);
+		const seconds = ('0' + date.getSeconds()).slice(-2);
+		
+		const dateStr = year + '-' + month + '-' + day + " " + hours + ':' + minutes + ':' + seconds;
+		const formattedDate = date.toISOString().slice(0, 19).replace("T", " ");
+		console.log(dateStr);
+		
+		
 		const message = {
 				sender : userName,
-				text: userText
+				content : userText,
+				sendTime : dateStr
 		}
 	$(document).ready(function() {
-		  
+		
+		$( "#sendModalBtn" ).click(() => sendName());
+		
 		function updateBadge() {
 		    let currentValue = parseInt(cnt.text());
 		    cnt.text(currentValue + 1);
@@ -124,6 +141,30 @@
 		$('#chatBtn').on('click', function() {
 			let mbody = $('#mbody');
 	        $('#chatModal').modal('show');
+	         $.ajax({
+	        	url : '/message',
+	        	method: 'get',
+	        	success : function(result){
+	        		console.log(result);
+	        		$("#greetings").empty();
+	        		result.forEach(function(item){
+	        			let tr = $('<tr id="chatDiv" />');
+	        			let td = $('<td class="message" />');
+	        			 if(item.sender === userName){
+	        				td.addClass("my-message");
+	        			} else {
+	        				td.addClass("other-message");
+	        			} 
+	        			td.html(item.sender + ": " + item.content + "<br>" + "<span>" + item.sendTime +"</span>");
+	        		    tr.append(td)
+	        		    
+	        		    $("#greetings").append(tr);
+	        		})
+	        	},
+	         	error : function(error){
+	         		console.log(error);
+	         	}
+	        }) 
 	        cnt.text(0);
 	        mbody.scrollTop(mbody[0].scrollHeight);
 	    });
@@ -138,10 +179,8 @@
 		    console.log('Connected: ' + frame);
 		    
 		    stompClient.subscribe('/topic/greetings', (greeting) => {
-		        showGreeting(JSON.parse(greeting.body).content);
-		       // if (message.sender !== userName) {
-		            updateBadge();
-		       // }
+		        showGreeting(JSON.parse(greeting.body));
+		        
 		    });
 		    stompClient.subscribe('/topic/cust', (greeting) => {
 		        $(document.body).append(greeting.body);
@@ -175,17 +214,20 @@
 		function sendName() {
 			let userText = $("#sendMessage").val();
 		    if (userName && userText) {
-		    let message = {sender: userName, name: userText};
+		    let message = { 
+		    		sender: userName,
+		    	    content : userText,
+		    	    sendTime : dateStr
+		    	   };
 		        stompClient.publish({
 		            destination: "/app/hello",
 		            body: JSON.stringify(message)
 		        });
-		       // $("#sendMessage").val('');
+		        $("#sendMessage").val('');
 		    }
 		}
 
 		function showGreeting(message) {
-			mbody = $('#mbody');
 			let tr = $('<tr id="chatDiv" />');
 			let td = $('<td class="message" />');
 			 if(message.sender === userName){
@@ -194,18 +236,18 @@
 				td.addClass("other-message");
 			} 
 			console.log(message.sender)
-			td.text(message);
+			td.html(message.sender + ": " + message.content + "<br>" + "<span>" + message.sendTime +"</span>");
 		    tr.append(td)
+		    
 		    $("#greetings").append(tr);
+			mbody = $('#mbody');
 		    mbody.scrollTop(mbody[0].scrollHeight);
+		    if (message.sender != userName) {
+	            updateBadge();
+	        }
 		}
 		
-		$(function () {
-		    $("form").on('submit', (e) => e.preventDefault());
-		    $( "#sendModalBtn" ).click(() => sendName());
-		});
-	}
-	)
+	})
 </script>
 </nav>
 </html>
