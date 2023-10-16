@@ -2,81 +2,86 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="com.yedam.smartree.prod.mapper.ProdMapper">
-  	<select id="selectProdList" resultType="ProdVO">
-  		select p.*, o.dod_date
-		from prod_plan p left join orders o on p.order_code = o.order_code
-		  
-  	</select>
-  	<select id="selectDtPlanList" resultType="ProdVO">
-  		select d.*, get_prdt_name(prdt_code) prdt_name
-  		from dt_prod_plan d
-  		where prod_plan_code = #{prodPlanCode}
-  	</select>
-  	<select id="selectAllOrderAndPrdt" resultType="BusinessVO">
-  		select o.order_code , 
-  		       o.order_date , 
-  		       o.dod_date , 
-  		       o.dod_state , 
-  		       o.order_manager,
-  		       b.bp_code , 
-  		       b.bp_name 
-  		from orders o join business_partner b
- 		  				on o.bp_code = b.bp_code
-	    where o.prod_plan_yn = 'n'
-	    
-  	</select>
-  	
-  	
-	<insert id="insertProdPlan" parameterType="ProdVO" statementType="CALLABLE">
-    <selectKey keyProperty="prodPlanCode" resultType="String" order="BEFORE">
-        select 'PPN' || LPAD(prod_plan_seq.NEXTVAL, 7, '0') as prodPlanCode from dual
-    </selectKey>
-    {call in_prod_up_order(
-        #{orderCode},
-        #{prodPlanCode},
-        #{prodPlanName},
-        NVL(#{prodPlanDate},sysdate),
-        #{prodName},
-        #{prodPlanSdate},
-        #{prodPlanEdate},
-        #{result , mode=OUT, jdbcType=VARCHAR, javaType=string}
-    )}
-	</insert>
-	
-	<insert id="insertDtProdPlan" parameterType="ProdVO">
-	    insert into dt_prod_plan 
-	    values(
-	        'PPD' || LPAD(dt_prod_plan_seq.NEXTVAL, 7, '0'),
-	        #{prodPlanCode},
-	        #{prdtCode},
-	        #{prodPlanCnt},
-	        #{prodPlanNote},
-	        #{prodRank}
-	    )
-	</insert> 
-	 <insert id="insertAndUpdateDtProd" parameterType="ProdVO">
-		{call in_dtProd_up_dtProd(
-			#{prodPlanCode},
-			#{prdtCode},
-			#{prodPlanCnt},
-			#{prodPlanNote},
-			#{prodRank},
-			#{dtProdPlanCode},
-			#{prodPlanName},
-  		    #{prodName},
-  		    #{prodPlanDate},
-  		    #{prodPlanSdate},
-  		    #{prodPlanEdate}
+<mapper namespace="com.yedam.smartree.prod.mapper.ProdMapper">
+	<select id="selectProdList" resultType="ProdVO">
+		select p.*, o.dod_date
+		from prod_plan p left join orders o on p.order_code =
+		o.order_code
+
+	</select>
+	<select id="selectDtPlanList" resultType="ProdVO">
+		select d.*, get_prdt_name(prdt_code) prdt_name
+		from dt_prod_plan d
+		where prod_plan_code = #{prodPlanCode}
+	</select>
+	<select id="selectAllOrderAndPrdt" resultType="BusinessVO">
+		select o.order_code ,
+		o.order_date ,
+		o.dod_date ,
+		o.dod_state ,
+		o.order_manager,
+		b.bp_code ,
+		b.bp_name
+		from orders o join business_partner b
+		on o.bp_code = b.bp_code
+		where o.prod_plan_yn = 'n'
+
+	</select>
+
+
+	<insert id="insertProdPlan" parameterType="ProdVO"
+		statementType="CALLABLE">
+		<selectKey keyProperty="prodPlanCode" resultType="String"
+			order="BEFORE">
+			select 'PPN' || LPAD(prod_plan_seq.NEXTVAL, 7, '0') as prodPlanCode from dual
+		</selectKey>
+		{call in_prod_up_order(
+		#{orderCode},
+		#{prodPlanCode},
+		#{prodPlanName},
+		NVL(#{prodPlanDate},sysdate),
+		#{prodName},
+		#{prodPlanSdate},
+		#{prodPlanEdate},
+		#{result , mode=OUT, jdbcType=VARCHAR, javaType=string}
 		)}
-	</insert> 
-  	<select id="searchProdPlan" resultType="ProdVO">
-  		select p.*, o.dod_date
-		from prod_plan p left join orders o on p.order_code = o.order_code
+	</insert>
+
+	<insert id="insertDtProdPlan" parameterType="ProdVO">
+		insert into dt_prod_plan
+		values(
+		'PPD' || LPAD(dt_prod_plan_seq.NEXTVAL, 7, '0'),
+		#{prodPlanCode},
+		#{prdtCode},
+		#{prodPlanCnt},
+		#{prodPlanNote},
+		#{prodRank}
+		)
+	</insert>
+	<insert id="insertAndUpdateDtProd" parameterType="ProdVO">
+		{call
+		in_dtProd_up_dtProd(
+		#{prodPlanCode},
+		#{prdtCode},
+		#{prodPlanCnt},
+		#{prodPlanNote},
+		#{prodRank},
+		#{dtProdPlanCode},
+		#{prodPlanName},
+		#{prodName},
+		#{prodPlanDate},
+		#{prodPlanSdate},
+		#{prodPlanEdate}
+		)}
+	</insert>
+	<select id="searchProdPlan" resultType="ProdVO">
+		select p.*, o.dod_date
+		from prod_plan p left join orders o on p.order_code =
+		o.order_code
 		<where>
 			<if test="prodName != null and !prodName.equals('')">
 				p.prod_name like '%' || #{prodName} || '%'
-			</if> 
+			</if>
 			<if test="prodPlanName != null and !prodPlanName.equals('')">
 				or p.prod_plan_name like '%' || #{prodPlanName} || '%'
 			</if>
@@ -88,457 +93,496 @@
 			</if>
 		</where>
 		order by prod_plan_date desc
-  	</select>
- <!-- select prod_plan_code, prod_plan_name, prod_name, prod_plan_date, order_code
-  		from prod_plan 
-  		where prod_inst_yn = 'n'
-  		order by prod_plan_date -->
-  	<select id="selectProd" resultType="ProdVO" fetchSize="1000" >
-  		SELECT DISTINCT prod_plan_code, prod_plan_name, prod_name, prod_plan_date, order_code <!--, prod_plan_cnt, SUM(NVL(prod_inst_cnt,0))-->
-		FROM prod_plan   JOIN dt_prod_plan USING(prod_plan_code)
-                         left JOIN prod_inst USING(prod_plan_code) 
-                         left JOIN dt_prod_inst USING(prod_inst_code,prdt_code)
-		GROUP BY prod_plan_code, prod_plan_name, prod_name, prod_plan_date, order_code, prdt_code, prod_plan_cnt
+	</select>
+	<!-- select prod_plan_code, prod_plan_name, prod_name, prod_plan_date, order_code 
+		from prod_plan where prod_inst_yn = 'n' order by prod_plan_date -->
+	<select id="selectProd" resultType="ProdVO" fetchSize="1000">
+		SELECT DISTINCT prod_plan_code, prod_plan_name, prod_name, prod_plan_date,
+		order_code <!--, prod_plan_cnt, SUM(NVL(prod_inst_cnt,0)) -->
+		FROM prod_plan JOIN dt_prod_plan USING(prod_plan_code)
+		left JOIN prod_inst USING(prod_plan_code)
+		left JOIN dt_prod_inst USING(prod_inst_code,prdt_code)
+		GROUP BY prod_plan_code,
+		prod_plan_name, prod_name, prod_plan_date, order_code, prdt_code,
+		prod_plan_cnt
 		HAVING prod_plan_cnt > SUM(NVL(prod_inst_cnt,0))
-		ORDER BY prod_plan_code
-  	</select>
-  	<!-- 생산지시관리 - 생산지시 modal -->
-  	<select id="selectProdInst" resultType="ProdVO">
-  		select prod_inst_name
-  			  ,prod_plan_code
-  			  ,prod_inst_code
-  		      ,prod_inst_manager
-  		      ,prod_inst_date
-  		      ,prod_inst_sdate
-  		      ,prod_inst_edate
-		  from prod_inst
-		  where prcs_start_yn = 'n'
-		  order by prod_inst_date desc
-		  
-  	</select>
-  	
-  	<select id="selectProdListView" resultType="ProdVO">
-  		SELECT dtp.dt_prod_plan_code, dtp.prod_plan_cnt, dtp.prod_rank, dtp.prod_plan_note
-  		     , p.prod_plan_code , p.prod_plan_name, p.prod_name, p.prod_plan_date, p.prod_plan_sdate, p.prod_plan_edate
-  		     , pt.prdt_name , pt.prdt_code, get_prdt_total(dtp.prdt_code) as prdt_total
+		ORDER BY
+		prod_plan_code
+	</select>
+	<!-- 생산지시관리 - 생산지시 modal -->
+	<select id="selectProdInst" resultType="ProdVO">
+		select prod_inst_name
+		,prod_plan_code
+		,prod_inst_code
+		,prod_inst_manager
+		,prod_inst_date
+		,prod_inst_sdate
+		,prod_inst_edate
+		from prod_inst
+		where prcs_start_yn = 'n'
+		order by prod_inst_date desc
+
+	</select>
+
+	<select id="selectProdListView" resultType="ProdVO">
+		SELECT dtp.dt_prod_plan_code, dtp.prod_plan_cnt, dtp.prod_rank,
+		dtp.prod_plan_note
+		, p.prod_plan_code , p.prod_plan_name, p.prod_name, p.prod_plan_date,
+		p.prod_plan_sdate, p.prod_plan_edate
+		, pt.prdt_name , pt.prdt_code, get_prdt_total(dtp.prdt_code) as prdt_total
 		<if test="orderCode != null and !orderCode.equals('')">
-	  		, nvl(dto.order_dt_cnt, 0) order_dt_cnt, o.dod_date
-        </if>
-		FROM dt_prod_plan dtp JOIN prod_plan p 
+			, nvl(dto.order_dt_cnt, 0) order_dt_cnt, o.dod_date
+		</if>
+		FROM dt_prod_plan dtp JOIN prod_plan p
 		ON dtp.prod_plan_code = p.prod_plan_code
-		JOIN  prdt_table pt 
+		JOIN prdt_table pt
 		ON dtp.prdt_code = pt.prdt_code
 		<if test="orderCode != null and !orderCode.equals('')">
-	        LEFT OUTER JOIN dt_order dto
-	        ON p.order_code = dto.order_code AND dtp.prdt_code = dto.prdt_code
-	        LEFT OUTER JOIN orders o
-	        on p.order_code = o.order_code
+			LEFT OUTER JOIN dt_order dto
+			ON p.order_code = dto.order_code AND dtp.prdt_code = dto.prdt_code
+			LEFT OUTER JOIN orders o
+			on p.order_code = o.order_code
 
-        </if>
+		</if>
 		WHERE p.prod_plan_code = #{prodPlanCode}
-  	</select>
-  	
-  	<update id="updateProd" parameterType="ProdVO">
-  		update prod_plan
-  		set prod_plan_name = #{prodPlanName},
-  		    prod_name = #{prodName},
-  		    prod_plan_date = #{prodPlanDate},
-  		    prod_plan_sdate = #{prodPlanSdate},
-  		    prod_plan_edate = #{prodPlanEdate}
-  		where prod_plan_code = #{prodPlanCode}
-  	</update>
-  	
-  	<update id="updateDtProd" parameterType="ProdVO">
-  		update dt_prod_plan
-  		set prod_plan_cnt = #{prodPlanCnt},
-  		    prod_rank = #{prodRank},
-  		    prod_plan_note = #{prodPlanNote}
-  		where dt_prod_plan_code = #{dtProdPlanCode}
-  	</update>
-  	
-  	<delete id="deleteProd" parameterType="ProdVO">
-  		delete from prod_plan
-  		where prod_plan_code = #{prodPlanCode}
-  	</delete>
-  	
-  	<delete id="deleteDtProd" parameterType="ProdVO">
-  		delete from dt_prod_plan
-  		where dt_prod_plan_code = #{dtProdPlanCode}
-  	</delete>
-  	
-  	<select id="selectPrdt" resultType="PrdtProdVO">
-  		select p.prod_plan_code , pt.prdt_code , pt.prdt_name , pt.prdt_type 
-  		from prdt_table pt join dt_prod_plan p
-  		                     on pt.prdt_code = p.prdt_code
-  		<where>
-  			<if test="prdtCode != null">
-  				pt.prdt_code = #{prdtCode}
-  			</if>
-  			<if test="prodPlanCode != null and !prodPlanCode.equals('')">
-  				AND p.prod_plan_code = #{prodPlanCode}
-  			</if>
-  		</where>
-  	</select>
-  	
-  	<select id="selectGetProd" resultType="ProdVO">
-	  	SELECT DISTINCT dt_prod_plan_code, prod_plan_code, prdt_code, prod_rank,(prod_plan_cnt - get_prod_inst_cnt(prod_plan_code,prdt_code)) prod_plan_cnt, get_prdt_name(prdt_code) prdt_name
-	       	 , prod_plan_sdate, prod_plan_edate, prod_plan_name
-		FROM dt_prod_plan  join prod_plan using(prod_plan_code)
-		WHERE prod_plan_code= #{prodPlanCode}	
-  	</select>
-  	
-  	<select id="getMtlNeed" resultType="MtlNeedVO">
-  		SELECT prdt_code, mtl_code, get_mtl_name(mtl_code) mtl_name, SUM(mtl_cnt) mtl_need
+	</select>
+
+	<update id="updateProd" parameterType="ProdVO">
+		update prod_plan
+		set prod_plan_name = #{prodPlanName},
+		prod_name = #{prodName},
+		prod_plan_date = #{prodPlanDate},
+		prod_plan_sdate = #{prodPlanSdate},
+		prod_plan_edate = #{prodPlanEdate}
+		where prod_plan_code = #{prodPlanCode}
+	</update>
+
+	<update id="updateDtProd" parameterType="ProdVO">
+		update dt_prod_plan
+		set prod_plan_cnt = #{prodPlanCnt},
+		prod_rank = #{prodRank},
+		prod_plan_note = #{prodPlanNote}
+		where dt_prod_plan_code = #{dtProdPlanCode}
+	</update>
+
+	<delete id="deleteProd" parameterType="ProdVO">
+		delete from prod_plan
+		where prod_plan_code = #{prodPlanCode}
+	</delete>
+
+	<delete id="deleteDtProd" parameterType="ProdVO">
+		delete from dt_prod_plan
+		where dt_prod_plan_code = #{dtProdPlanCode}
+	</delete>
+
+	<select id="selectPrdt" resultType="PrdtProdVO">
+		select p.prod_plan_code , pt.prdt_code , pt.prdt_name , pt.prdt_type
+		from prdt_table pt join dt_prod_plan p
+		on pt.prdt_code = p.prdt_code
+		<where>
+			<if test="prdtCode != null">
+				pt.prdt_code = #{prdtCode}
+			</if>
+			<if test="prodPlanCode != null and !prodPlanCode.equals('')">
+				AND p.prod_plan_code = #{prodPlanCode}
+			</if>
+		</where>
+	</select>
+
+	<select id="selectGetProd" resultType="ProdVO">
+		SELECT DISTINCT dt_prod_plan_code, prod_plan_code, prdt_code,
+		prod_rank,(prod_plan_cnt - get_prod_inst_cnt(prod_plan_code,prdt_code))
+		prod_plan_cnt, get_prdt_name(prdt_code) prdt_name
+		, prod_plan_sdate, prod_plan_edate, prod_plan_name
+		FROM dt_prod_plan join
+		prod_plan using(prod_plan_code)
+		WHERE prod_plan_code= #{prodPlanCode}
+	</select>
+
+	<select id="getMtlNeed" resultType="MtlNeedVO">
+		SELECT prdt_code, mtl_code, get_mtl_name(mtl_code) mtl_name, SUM(mtl_cnt)
+		mtl_need
 		FROM bom_detail JOIN bom_table USING(bom_code)
-							 <choose>
-							 	<when test="prodInstCode != null and !prodInstCode.equals('')">
-							 	JOIN dt_prod_inst USING(prdt_code)
-							 	JOIN prod_inst USING(prod_inst_code)
-							 	</when>
-							 	<otherwise>
-							 	JOIN dt_prod_plan USING(prdt_code)
-		               	 JOIN prod_plan USING(prod_plan_code)
-							 	</otherwise>
-							 </choose>
-      <choose>	
-		  	<when test="prodInstCode != null and !prodInstCode.equals('')">
-		  		WHERE prod_inst_code = #{prodInstCode}
-		  	</when>
-		  	<otherwise>
-		  		WHERE prod_plan_code = #{prodPlanCode}
-		  	</otherwise>
-      </choose>
+		<choose>
+			<when test="prodInstCode != null and !prodInstCode.equals('')">
+				JOIN dt_prod_inst USING(prdt_code)
+				JOIN prod_inst USING(prod_inst_code)
+			</when>
+			<otherwise>
+				JOIN dt_prod_plan USING(prdt_code)
+				JOIN prod_plan USING(prod_plan_code)
+			</otherwise>
+		</choose>
+		<choose>
+			<when test="prodInstCode != null and !prodInstCode.equals('')">
+				WHERE prod_inst_code = #{prodInstCode}
+			</when>
+			<otherwise>
+				WHERE prod_plan_code = #{prodPlanCode}
+			</otherwise>
+		</choose>
 		AND mtl_cnt is not null
 		GROUP BY prdt_code, mtl_code
 		ORDER BY prdt_code
-  	</select>
-  	
-  	<select id="selectGetProdInst" resultType="ProdVO">
-		select p.prod_plan_name, 
-		       prdt.prdt_name,
-		       (dtp.prod_plan_cnt - get_prod_inst_cnt(p.prod_plan_code, dpi.prdt_code) + dpi.prod_inst_cnt) prod_plan_cnt, 
-		       p.prod_plan_code, 
-		       prdt.prdt_code, 
-		       dpi.prod_inst_cnt, 
-		       dpi.prod_inst_rank,
-		       dtp.prod_plan_cnt - dpi.prod_inst_cnt as prod_inst_incomp_cnt,
-		       pi.prod_inst_name,
-		       pi.prod_inst_manager,
-		       pi.prod_inst_date,
-		       pi.prod_inst_sdate,
-		       pi.prod_inst_edate,
-		       pi.prod_inst_code,
-		       dpi.dt_prod_inst_code
+	</select>
+
+	<select id="selectGetProdInst" resultType="ProdVO">
+		select p.prod_plan_name,
+		prdt.prdt_name,
+		(dtp.prod_plan_cnt - get_prod_inst_cnt(p.prod_plan_code, dpi.prdt_code) + dpi.prod_inst_cnt)
+		prod_plan_cnt,
+		p.prod_plan_code,
+		prdt.prdt_code,
+		dpi.prod_inst_cnt,
+		dpi.prod_inst_rank,
+		dtp.prod_plan_cnt - dpi.prod_inst_cnt as prod_inst_incomp_cnt,
+		pi.prod_inst_name,
+		pi.prod_inst_manager,
+		pi.prod_inst_date,
+		pi.prod_inst_sdate,
+		pi.prod_inst_edate,
+		pi.prod_inst_code,
+		dpi.dt_prod_inst_code
 		from prod_plan p join dt_prod_plan dtp
-				         on p.prod_plan_code = dtp.prod_plan_code
-				         join prdt_table prdt
-				         on dtp.prdt_code = prdt.prdt_code
-				         join prod_inst pi  
-				         on pi.prod_plan_code  = p.prod_plan_code
-				         join dt_prod_inst dpi
-				         on pi.prod_inst_code = dpi.prod_inst_code and dpi.prdt_code = dtp.prdt_code
+		on p.prod_plan_code = dtp.prod_plan_code
+		join prdt_table prdt
+		on dtp.prdt_code = prdt.prdt_code
+		join prod_inst pi
+		on pi.prod_plan_code = p.prod_plan_code
+		join dt_prod_inst dpi
+		on pi.prod_inst_code = dpi.prod_inst_code and dpi.prdt_code = dtp.prdt_code
 		where pi.prod_inst_code = #{prodInstCode}
-  	</select>
-  	<!-- 생산지시등록 -->
-	<insert id="insertProdInst" parameterType="ProdVO" statementType="CALLABLE">
-    <selectKey keyProperty="prodInstCode" resultType="String" order="BEFORE">
-        select 'PIN' || LPAD(prod_inst_seq.NEXTVAL, 7, '0') as prodInstCode from dual
-    </selectKey>
-    {call in_inst_up_plan(
-    	#{prodInstCode},
-    	#{prodPlanCode},
-        #{prodInstName},
-        #{prodInstManager},
-       	#{prodInstDate},
-        #{prodInstSdate},
-        #{prodInstEdate}
-    )}
+	</select>
+	<!-- 생산지시등록 -->
+	<insert id="insertProdInst" parameterType="ProdVO"
+		statementType="CALLABLE">
+		<selectKey keyProperty="prodInstCode" resultType="String"
+			order="BEFORE">
+			select 'PIN' || LPAD(prod_inst_seq.NEXTVAL, 7, '0') as prodInstCode from dual
+		</selectKey>
+		{call in_inst_up_plan(
+		#{prodInstCode},
+		#{prodPlanCode},
+		#{prodInstName},
+		#{prodInstManager},
+		#{prodInstDate},
+		#{prodInstSdate},
+		#{prodInstEdate}
+		)}
 	</insert>
 	<!-- 생산지시상세등록 -->
 	<insert id="insertDtProdInst" parameterType="ProdVO">
-		 <selectKey keyProperty="dtProdInstCode" resultType="String" order="BEFORE">
-        	select 'PID' || LPAD(dt_prod_inst_seq.NEXTVAL, 7, '0') as dtProdInstCode from dual
-    	</selectKey>
-	    insert into dt_prod_inst (dt_prod_inst_code, prod_inst_rank, prod_inst_cnt, prod_inst_code, prdt_code)
-	    values(
-	        #{dtProdInstCode},
-	        #{prodInstRank},
-	        #{prodInstCnt},
-	        #{prodInstCode},
-	        #{prdtCode}
-	    )
-	</insert> 
+		<selectKey keyProperty="dtProdInstCode" resultType="String"
+			order="BEFORE">
+			select 'PID' || LPAD(dt_prod_inst_seq.NEXTVAL, 7, '0') as dtProdInstCode from dual
+		</selectKey>
+		insert into dt_prod_inst (dt_prod_inst_code, prod_inst_rank, prod_inst_cnt,
+		prod_inst_code, prdt_code)
+		values(
+		#{dtProdInstCode},
+		#{prodInstRank},
+		#{prodInstCnt},
+		#{prodInstCode},
+		#{prdtCode}
+		)
+	</insert>
 	<!-- 공정흐름도 등록 -->
 	<insert id="insertProcess" parameterType="ProdVO">
 		{call insert_process(
-			#{dtProdInstCode},
-			#{prdtCode},
-			#{prodInstCnt}
+		#{dtProdInstCode},
+		#{prdtCode},
+		#{prodInstCnt}
 		)}
 	</insert>
 	<!-- 공정흐름 업데이트 -->
 	<update id="updateProcess" parameterType="ProdVO">
-		UPDATE	process
-		SET 		prdt_total = #{prodInstCnt}
-		WHERE 	dt_prod_inst_code = #{dtProdInstCode}
-		AND 		prcs_order = 1		
+		UPDATE process
+		SET prdt_total =
+		#{prodInstCnt}
+		WHERE dt_prod_inst_code = #{dtProdInstCode}
+		AND prcs_order = 1
 	</update>
 
 	<update id="updateProdInst" parameterType="ProdVO">
-  		update prod_inst
-  		set prod_inst_name = #{prodInstName},
-  		    prod_inst_manager = #{prodInstManager},
-  		    prod_inst_date = #{prodInstDate},
-  		    prod_inst_sdate = #{prodInstSdate},
-  		    prod_inst_edate = #{prodInstEdate}
-  		where prod_inst_code = #{prodInstCode}
-  	</update>
-  	
-  	<update id="updateDtProdInst" parameterType="ProdVO">
-  		update dt_prod_inst
-  		set prod_inst_rank = #{prodInstRank},
-  		    prod_inst_cnt = #{prodInstCnt}
-  		where dt_prod_inst_code = #{dtProdInstCode}
-  	</update>
-  	
-  	<delete id="deleteProdInst" parameterType="ProdVO">
-  		delete from prod_inst
-  		where prod_inst_code = #{prodInstCode}
-  	</delete>
-  	
-  	<delete id="deleteDtProdInst" parameterType="ProdVO">
-  		delete from dt_prod_inst
-  		where dt_prod_inst_code = #{dtProdInstCode}
-  	</delete>
-  	<!-- 생산지시조회 -->
-  	<select id="selectGetDtInst" resultType="ProdVO">
-  		select i.prod_inst_code, i.prod_inst_name, i.prod_inst_manager, i.prod_inst_sdate, i.prod_inst_sdate, i.prod_inst_edate, i.prcs_start_yn, p.prod_plan_name
-		from 	 prod_inst i join prod_plan p on i.prod_plan_code = p.prod_plan_code
-         <where>
+		update prod_inst
+		set prod_inst_name = #{prodInstName},
+		prod_inst_manager = #{prodInstManager},
+		prod_inst_date = #{prodInstDate},
+		prod_inst_sdate = #{prodInstSdate},
+		prod_inst_edate = #{prodInstEdate}
+		where prod_inst_code = #{prodInstCode}
+	</update>
+
+	<update id="updateDtProdInst" parameterType="ProdVO">
+		update dt_prod_inst
+		set prod_inst_rank = #{prodInstRank},
+		prod_inst_cnt = #{prodInstCnt}
+		where dt_prod_inst_code = #{dtProdInstCode}
+	</update>
+
+	<delete id="deleteProdInst" parameterType="ProdVO">
+		delete from prod_inst
+		where prod_inst_code = #{prodInstCode}
+	</delete>
+
+	<delete id="deleteDtProdInst" parameterType="ProdVO">
+		delete from dt_prod_inst
+		where dt_prod_inst_code = #{dtProdInstCode}
+	</delete>
+	<!-- 생산지시조회 -->
+	<select id="selectGetDtInst" resultType="ProdVO">
+		select i.prod_inst_code, i.prod_inst_name, i.prod_inst_manager,
+		i.prod_inst_sdate, i.prod_inst_sdate, i.prod_inst_edate, i.prcs_start_yn,
+		p.prod_plan_name
+		from prod_inst i join prod_plan p on i.prod_plan_code =
+		p.prod_plan_code
+		<where>
 			<if test="prodInstName != null and !prodInstName.equals('')">
 				i.prod_inst_name like '%' || #{prodInstName} || '%'
-			</if> 
+			</if>
 			<if test="prodInstManager != null and !prodInstManager.equals('')">
 				or i.prod_inst_manager like '%' || #{prodInstManager} || '%'
 			</if>
 			<if test="prcsStartYn == 'MA01'">
 				or i.prcs_start_yn = 'n'
-			</if> 
+			</if>
 			<if test="prcsStartYn == 'MA02'">
 				or i.prcs_start_yn = 'y'
 			</if>
 		</where>
 		order by i.prod_inst_code desc
-  	</select>
-  	
-  	<!-- 지시상세조회 -->
-  	<select id="selectDtInstList" resultType="ProdVO">
-		SELECT d.*, get_prdt_name(prdt_code) prdt_name
+	</select>
+
+	<!-- 지시상세조회 -->
+	<select id="selectDtInstList" resultType="ProdVO">
+		SELECT d.*,
+		get_prdt_name(prdt_code) prdt_name
 		FROM dt_prod_inst d
-	   WHERE prod_inst_code = #{prodInstCode}
-  	</select>
-  	
-  	<!-- 키오스크 :생산지시불러오기 -->
-  	<select id="selectGetProcess" resultType="ProdVO">
-  		select p.prcs_code , d.dt_prod_inst_code , d.prdt_code , pt.prdt_name , p.prcs_order , p.prdt_total , pi.prod_inst_edate, d.prod_inst_rank , p.prdt_prod_cnt
-		  from dt_prod_inst d join process p
-                        on d.dt_prod_inst_code = p.dt_prod_inst_code
-                    join prod_inst pi
-                        on pi.prod_inst_code = d.prod_inst_code
-                    join prdt_table pt
-                        on pt.prdt_code = d.prdt_code
-           where p.prdt_total != p.prdt_prod_cnt
-           order by  d.dt_prod_inst_code ,  d.prdt_code,p.prcs_order 
-  	</select>
+		WHERE prod_inst_code = #{prodInstCode}
+	</select>
 
-  	<!-- 키오스크: 공정흐름상세보기 -->
-  	<select id="getProcess" resultType="ProdVO">
-  		select p.prcs_code , d.dt_prod_inst_code , d.prdt_code , pt.prdt_name ,p.prdt_prod_err_cnt, p.prcs_order , p.prdt_total , GET_PRDT_SUM(#{prcsCode}) prdtProdSum
-		  from dt_prod_inst d join process p
-                        on d.dt_prod_inst_code = p.dt_prod_inst_code
-                    join prod_inst pi
-                        on pi.prod_inst_code = d.prod_inst_code
-                    join prdt_table pt
-                        on pt.prdt_code = d.prdt_code
-          where p.prcs_code = #{prcsCode}
-  	</select>
-  	<!-- aaa -->
-  	<select id="selectPrcsCode" resultType="MdmPrcsVO">
-		select prcs_type, prcs_std_code, eqm_code, eqm_name, eqm_state
-		from prcs_table JOIN bom_detail using(prcs_std_code)
-		                JOIN bom_table using(bom_code)
-		                JOIN prdt_table using(prdt_code)
-		                JOIN eqm ON eqm.eqm_division = prcs_table.prcs_type
+	<!-- 키오스크 :생산지시불러오기 -->
+	<select id="selectGetProcess" resultType="ProdVO">
+		select p.prcs_code , d.dt_prod_inst_code , d.prdt_code , pt.prdt_name , p.prcs_order
+		, p.prdt_total , pi.prod_inst_edate, d.prod_inst_rank , p.prdt_prod_cnt
+		from dt_prod_inst d join process p
+		on d.dt_prod_inst_code = p.dt_prod_inst_code
+		join prod_inst pi
+		on pi.prod_inst_code = d.prod_inst_code
+		join prdt_table pt
+		on pt.prdt_code = d.prdt_code
+		where p.prdt_total != p.prdt_prod_cnt
+		order by d.dt_prod_inst_code , d.prdt_code,p.prcs_order
+	</select>
+
+	<!-- 키오스크: 공정흐름상세보기 -->
+	<select id="getProcess" resultType="ProdVO">
+		select p.prcs_code , d.dt_prod_inst_code , d.prdt_code , pt.prdt_name
+		,p.prdt_prod_err_cnt, p.prcs_order , p.prdt_total , GET_PRDT_SUM(#{prcsCode})
+		prdtProdSum
+		from dt_prod_inst d join process p
+		on d.dt_prod_inst_code = p.dt_prod_inst_code
+		join prod_inst pi
+		on pi.prod_inst_code = d.prod_inst_code
+		join prdt_table pt
+		on pt.prdt_code = d.prdt_code
+		where p.prcs_code = #{prcsCode}
+	</select>
+	<!-- aaa -->
+	<select id="selectPrcsCode" resultType="MdmPrcsVO">
+		select prcs_type, prcs_std_code,
+		eqm_code, eqm_name, eqm_state
+		from prcs_table JOIN bom_detail
+		using(prcs_std_code)
+		JOIN bom_table using(bom_code)
+		JOIN prdt_table using(prdt_code)
+		JOIN eqm ON eqm.eqm_division = prcs_table.prcs_type
 		where bom_use = 'Y'
-		AND   prcs_order = #{prcsOrder}
-		AND   prdt_code = #{prdtCode}
-		AND   eqm_ucheck = 'Y'
-		group by prcs_type, prcs_std_code, eqm_code, eqm_name, eqm_state
-  	</select>
-  	
-  	
+		AND
+		prcs_order = #{prcsOrder}
+		AND prdt_code = #{prdtCode}
+		AND eqm_ucheck = 'Y'
+		group
+		by prcs_type, prcs_std_code, eqm_code, eqm_name, eqm_state
+	</select>
 
-  	<!-- 실적조회 -->
-  	<select id="selectPrcsResult" resultType="PrcsResultVO">
-  		SELECT 	prod_inst_code
-					, prod_inst_name
-					, process_result.prdt_code
-					, prcs_std_code
-					, get_prcs_name(prcs_std_code) prcs_name
-					, manager
-					, prcs_sdate
-					, prcs_edate
-					, prdt_cnt
-					, err_cnt
-					, pass_cnt
-  		FROM process_result JOIN process USING(prcs_code)
-  								  JOIN dt_prod_inst USING(dt_prod_inst_code)
-  								  JOIN prod_inst USING(prod_inst_code)
-  		<where>
-        <if test="searchDate == 'MA01'">
+
+
+	<!-- 실적조회 -->
+	<select id="selectPrcsResult" resultType="PrcsResultVO">
+		SELECT prod_inst_code
+		, prod_inst_name
+		, get_prdt_name(process_result.prdt_code) prdt_name
+		, prcs_std_code
+		, get_prcs_name(prcs_std_code) prcs_name
+		, manager
+		, prcs_sdate
+		, prcs_edate
+		, prdt_cnt
+		, err_cnt
+		, pass_cnt
+		FROM process_result JOIN process USING(prcs_code)
+		JOIN dt_prod_inst USING(dt_prod_inst_code)
+		JOIN prod_inst USING(prod_inst_code)
+		<where>
+			<if test="searchDate == 'MA01'">
             <![CDATA[
-                prcs_sdate >= TRUNC(SYSDATE) AND prcs_sdate < TRUNC(SYSDATE) + 1
+                AND prcs_sdate >= TRUNC(SYSDATE) AND prcs_sdate < TRUNC(SYSDATE) + 1
             ]]>
-        </if>
-        <if test="searchDate == 'MA02'">
+			</if>
+			<if test="searchDate == 'MA02'">
             <![CDATA[
-                prcs_sdate BETWEEN TRUNC(SYSDATE) - 7 AND TRUNC(SYSDATE)+1
+                AND prcs_sdate BETWEEN TRUNC(SYSDATE) - 7 AND TRUNC(SYSDATE)+1
             ]]>
-        </if>
-        <if test="searchDate == 'MA03'">
+			</if>
+			<if test="searchDate == 'MA03'">
             <![CDATA[
-                prcs_sdate BETWEEN TRUNC(SYSDATE) - 30 AND TRUNC(SYSDATE)+1
+                AND prcs_sdate BETWEEN TRUNC(SYSDATE) - 30 AND TRUNC(SYSDATE)+1
             ]]>
-        </if>
-        
-    	</where>
-    	order by prcs_sdate desc
-  	</select>
-	
-	
+			</if>
+			<if test="searchName != null and !searchName.equals('')">
+				AND upper(manager) LIKE '%' || upper(#{searchName}) || '%'
+				OR upper(prod_inst_name) LIKE '%' || upper(#{searchName}) || '%'
+			</if>
+		</where>
+		order by prcs_sdate desc
+	</select>
+
+
 	<!-- 공정시작 -->
 	<insert id="insertDtProgress" parameterType="ProdVO">
-		<selectKey keyProperty="prcsRsCode" resultType="String" order="BEFORE">
-        	select 'PRCR' || LPAD(PROCESS_RESULT_SEQ.NEXTVAL, 6, '0') as prcsRsCode from dual
-    	</selectKey>
-		insert into process_result( PRCS_RS_CODE , PRDT_CODE , PRCS_STD_CODE , EQM_CODE , PRCS_CODE , PRDT_CNT , MANAGER)
+		<selectKey keyProperty="prcsRsCode" resultType="String"
+			order="BEFORE">
+			select 'PRCR' || LPAD(PROCESS_RESULT_SEQ.NEXTVAL, 6, '0') as prcsRsCode from dual
+		</selectKey>
+		insert into process_result( PRCS_RS_CODE , PRDT_CODE , PRCS_STD_CODE ,
+		EQM_CODE , PRCS_CODE , PRDT_CNT , MANAGER)
 		values(
-				#{prcsRsCode}
-			   ,#{prdtCode}
-			   ,#{prcsStdCode}
-			   ,#{eqmCode}
-			   ,#{prcsCode}
-			   ,#{prdtCnt}
-			   ,#{manager}
-				
-				)
-		
+		#{prcsRsCode}
+		,#{prdtCode}
+		,#{prcsStdCode}
+		,#{eqmCode}
+		,#{prcsCode}
+		,#{prdtCnt}
+		,#{manager}
+
+		)
+
 	</insert>
-	
-	<!--생산지시 상태변경  -->
+
+	<!--생산지시 상태변경 -->
 	<update id="updateInst" parameterType="ProdVO">
 		update prod_inst
-		   set prcs_start_yn = 'y'
-		 where prod_inst_code = (select prod_inst_code
-		                        from prod_inst join dt_prod_inst using(prod_inst_code)
-		                                        join process using(dt_prod_inst_code)
-		                        where prcs_code = #{prcsCode})
+		set prcs_start_yn = 'y'
+		where prod_inst_code = (select prod_inst_code
+		from prod_inst join dt_prod_inst using(prod_inst_code)
+		join process using(dt_prod_inst_code)
+		where prcs_code = #{prcsCode})
 	</update>
 	<!-- 설비상태변경 -->
 	<update id="updateEqmState" parameterType="ProdVO">
 		update eqm
-		   set  EQM_STATE = 'N'
-		 where eqm_code = #{eqmCode}
+		set EQM_STATE = 'N'
+		where eqm_code = #{eqmCode}
 	</update>
 	<!-- 자재홀딩 -->
 	<insert id="insertHolding" parameterType="ProdVO">
-	<selectKey keyProperty="holdingCode" resultType="String" order="BEFORE">
-		SELECT LPAD(NVL(max(holding_code)+1,1),10,'0') FROM holding
-	</selectKey>
+		<selectKey keyProperty="holdingCode" resultType="String"
+			order="BEFORE">
+			SELECT LPAD(NVL(max(holding_code)+1,1),10,'0') FROM holding
+		</selectKey>
 		INSERT INTO holding(holding_code
-							, prod_inst_code
-							, mtl_lot_num
-							, holding_cnt)
+		, prod_inst_code
+		, mtl_lot_num
+		, holding_cnt)
 		VALUES(#{holdingCode}
-				 ,	#{prodInstCode}
-				 , #{mtlLotNum}
-				 ,	#{holdingCnt})
+		, #{prodInstCode}
+		, #{mtlLotNum}
+		, #{holdingCnt})
 	</insert>
-	
+
 	<select id="selectHolding" resultType="HoldingVO">
 		SELECT h.*, m.mtl_code
-		FROM holding h JOIN mtl_container m ON h.mtl_lot_num = m.mtl_lot_num
-		WHERE prod_inst_code = #{prodInstCode}
+		FROM holding
+		h JOIN mtl_container m ON h.mtl_lot_num = m.mtl_lot_num
+		WHERE prod_inst_code =
+		#{prodInstCode}
 	</select>
 
 	<!-- 공정종료List불러오기 -->
 	<select id="getProcessResult" resultType="ProdVO">
-		select  a.* , p.prdt_name , pr.prcs_name , e.eqm_name , pro.prcs_order , pro.prcs_maxnum
-		  from process_result a  join prdt_table p
-			                    		on a.prdt_code = p.prdt_code
-			                        join prcs_table pr
-			                   			 on a.prcs_std_code = pr.prcs_std_code
-			                        join eqm e
-			                    		on a.eqm_code = e.eqm_code 
-			                        join process pro
-			                    		on a.prcs_code = pro.prcs_code 
-			<where>
-  			<if test="prcsRsCode != null">
-  				a.prcs_rs_code = #{prcsRsCode}
-  			</if>
-  				and a.prcs_edate is null 
-  		</where>
+		select a.* , p.prdt_name , pr.prcs_name , e.eqm_name , pro.prcs_order ,
+		pro.prcs_maxnum
+		from process_result a join prdt_table p
+		on a.prdt_code = p.prdt_code
+		join prcs_table pr
+		on a.prcs_std_code = pr.prcs_std_code
+		join eqm e
+		on a.eqm_code = e.eqm_code
+		join process pro
+		on a.prcs_code = pro.prcs_code
+		<where>
+			<if test="prcsRsCode != null">
+				a.prcs_rs_code = #{prcsRsCode}
+			</if>
+			and a.prcs_edate is null
+		</where>
 	</select>
 	<!-- 생산종료Process - update Eqm -->
 	<update id="updateEqm" parameterType="ProdVO">
-		update eqm 
-		   set eqm_state = 'Y'
-		 where eqm_code = #{eqmCode} 
+		update eqm
+		set eqm_state = 'Y'
+		where eqm_code = #{eqmCode}
 	</update>
-	
+
 	<!-- 생산종료 프로시저 -->
 	<insert id="updateProcessResult" parameterType="ProdVO">
-		{call update_process_result(
-			#{prcsRsCode},
-			#{prcsEdate},
-			#{prdtCnt},
-			#{errCnt},
-			#{passCnt},
-			#{prcsOrder},
-			#{prcsMaxnum},
-			#{prcsCode},
-			#{prdtCode}
+		{call
+		update_process_result(
+		#{prcsRsCode},
+		#{prcsEdate},
+		#{prdtCnt},
+		#{errCnt},
+		#{passCnt},
+		#{prcsOrder},
+		#{prcsMaxnum},
+		#{prcsCode},
+		#{prdtCode}
 		)}
 	</insert>
 
 
 	<delete id="delHolding" parameterType="String">
 		DELETE holding
-		WHERE prod_inst_code = #{prodInstCode}
+		WHERE prod_inst_code
+		= #{prodInstCode}
 	</delete>
 
 	<update id="updateInstYn" parameterType="String">
 		UPDATE prod_plan
-		SET prod_inst_yn = 'n'
+		SET prod_inst_yn
+		= 'n'
 		WHERE prod_plan_code = #{prodPlanCode}
 	</update>
-	
+
 	<delete id="delProcess" parameterType="ProdVO">
 		DELETE process
-		WHERE dt_prod_inst_code = #{dtProdInstCode}
+		WHERE
+		dt_prod_inst_code = #{dtProdInstCode}
 	</delete>
-	
+
 	<!-- 차트데이터: 제품별 생산현황 -->
 	<select id="getChartData" resultType="ProdVO">
-	select p.prdt_code, p.prdt_name, nvl(a.prdt_prod_cnt,0) as prdt_prod_cnt
-	  from prdt_table p left outer join (select p.prdt_code, p.prdt_name, sum(pp.prdt_prod_cnt) prdt_prod_cnt
-                                            from prdt_table p join process_result r 
-                                                                on p.prdt_code = r.prdt_code
-                                                                join process pp on r.prcs_code = pp.prcs_code 
-                                            where trunc(prcs_sdate) = trunc(SYSDATE) and prcs_maxnum = prcs_order  
-                                            group by  p.prdt_code, p.prdt_name,pp.prdt_prod_cnt 
-                                            order by  p.prdt_code) a 
-                                   on p.prdt_code = a.prdt_code
-                                   order by p.prdt_code
+		select p.prdt_code, p.prdt_name, nvl(a.prdt_prod_cnt,0) as prdt_prod_cnt
+		from prdt_table p left outer join (select p.prdt_code, p.prdt_name,
+		sum(pp.prdt_prod_cnt) prdt_prod_cnt
+		from prdt_table p join process_result r
+		on p.prdt_code = r.prdt_code
+		join process pp on r.prcs_code = pp.prcs_code
+		where trunc(prcs_sdate) = trunc(SYSDATE) and prcs_maxnum = prcs_order
+		group by p.prdt_code, p.prdt_name,pp.prdt_prod_cnt
+		order by p.prdt_code) a
+		on p.prdt_code = a.prdt_code
+		order by p.prdt_code
 	</select>
-  </mapper>
+</mapper>
