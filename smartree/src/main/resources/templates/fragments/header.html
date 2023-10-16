@@ -7,16 +7,11 @@
 <!-- commit -->
 	<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-
-                    
-
+                    <!-- 도움말 -->
+							<i class="bi bi-question-circle fa-2x" id="showHelp"></i>
+							
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
-
                         <!-- Nav Item - Search Dropdown (Visible Only XS) -->
                         <li class="nav-item dropdown no-arrow d-sm-none">
                             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
@@ -107,6 +102,31 @@
 			<!-- /.modal-dialog -->
 		</div>
 		<!-- /.modal --> 
+		
+		<div class="modal fade" tabindex="-1" role="dialog" id="helpModal">
+			<div class="modal-dialog modal-dialog-centered modal-xl"
+				role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title ml-3">도움말</h4>
+						<button type="button" class="close" data-dismiss="modal"
+							aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div id="helpModalText">
+						</div>
+					</div>
+					<div class="modal-footer">
+					</div>
+				</div>
+				<!-- /.modal-content -->
+			</div>
+			<!-- /.modal-dialog -->
+		</div>
+		<!-- /.modal -->
+		
 <script th:inline="javascript">
 		let userName = [[${session.loginMember.empName}]]; 
 		let userText = $("#sendMessage").val();
@@ -132,6 +152,35 @@
 		}
 	$(document).ready(function() {
 		
+		DecoupledEditor
+		.create(document.querySelector('#helpModalText'))
+		.then(editor => {
+			editor.enableReadOnlyMode('helpModalText');
+
+			$('#showHelp').on('click', function () {
+				console.log(111)
+				let path = window.location.pathname
+				$.ajax({
+					url: "/mdm/selectHelp",
+					data:{
+							path: path
+					},
+					success: result => {
+						if(result){
+							$('#helpModal').modal('show')
+							editor.setData(`${result.editorText}`)
+						} else {
+							toastr.warning('등록된 도움말이 없습니다.')
+						}
+					}
+				})
+			})
+		})
+		.catch(error => {
+			console.error(error);
+		});
+		  
+
 		 $("#sendModalBtn").click(function() {
 		        sendName();
 		        $("#sendMessage").focus();

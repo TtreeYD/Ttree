@@ -1,86 +1,269 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{layout/layout}">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
+
 <head>
 	<meta charset="UTF-8">
 	<title>Insert title here</title>
-	<script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/@ckeditor/ckeditor5-ckfinder@40.0.0/src/index.min.js"></script>
+	<!-- <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/decoupled-document/ckeditor.js"></script> -->
 	<style type="text/css">
-		.ck .ck-content{
+		.ck.ck-editor__editable_inline {
 			height: 600px;
+			border: 1px solid var(--ck-color-toolbar-border);
 		}
 	</style>
 </head>
+
 <body>
 	<div layout:fragment="content">
-		<div id="editor">
-	   </div>
-	    
+		<div class="row">
+			<h1 class="col-6">도움말 관리</h1>
+			<div class="input-group col-6 mb-4">
+				<select class="custom-select col-3 ml-auto" id="select1" name="select1">
+					<option value="mdm">기준정보관리</option>
+					<option value="business">영업관리</option>
+					<option value="check">품질관리</option>
+					<option value="prod">생산관리</option>
+					<option value="material">자재관리</option>
+					<option value="eqm">설비관리</option>
+				</select>
+				<select class="custom-select col-3" id="select2" name="select2">
+					<option value="commonCode">공통코드관리</option>
+					<option value="emp">사원관리</option>
+					<option value="prdt">제품정보관리</option>
+					<option value="mtl">자재정보관리</option>
+					<option value="bp">거래처정보관리</option>
+					<option value="prcs">공정기준관리</option>
+					<option value="bom">BOM관리</option>
+					<option value="chkStd">품질검사기준관리</option>
+				</select>
+				<div class="input-group-append">
+					<button class="btn btn-primary" id="get-data">등록</button>
+				</div>
+			</div>
+		</div>
+		<div id="toolbar-container"></div>
+		<div id="editor"></div>
 		<script>
-			ClassicEditor
-				.create( document.querySelector( '#editor' ), {
-					extraPlugins: [MyCustomUploadAdapterPlugin]
-				} )
-				.catch( error => {
-				    console.error( error );
-				} );
-			
-			
+			DecoupledEditor
+				.create(document.querySelector('#editor'), {
+					fontSize: {
+					         options: [
+					             8,
+					             10,
+					             12,
+					             15,
+					             17,
+					             19,
+					             21
+					         ]
+					     },
+					extraPlugins: [MyCustomUploadAdapterPlugin],
+				})
+				.then(editor => {
+					const toolbarContainer = document.querySelector('#toolbar-container');
+
+					toolbarContainer.appendChild(editor.ui.view.toolbar.element);
+
+					document.querySelector('#get-data').addEventListener('click', () => {
+						const editorText = editor.data.get();
+						if(!editorText){
+							toastr.warning('내용을 입력해 주세요')
+							return
+						} else {
+							Swal.fire({
+								icon: 'question',
+								title: '등록하시겠습니까?',
+								showCancelButton: false,
+								showDenyButton: true,
+								confirmButtonText: '등록',
+								denyButtonText: '취소',
+							}).then((result) => {
+								/* Read more about isConfirmed, isDenied below */
+								if (result.isConfirmed) {
+									let sel1 = "/"+$('#select1').val()
+									let sel2 = "/"+$('#select2').val()
+									let vo = {}
+									vo.path = sel1+sel2;
+									vo.editorText = editorText
+									
+									$.ajax({
+										url: "/mdm/insertHelp",
+										method: 'post',
+										contentType : 'application/json',
+										data: JSON.stringify(vo),
+										success: result => {
+											if(result){
+												Swal.fire({
+													icon: 'success',
+													title: '성공적으로 등록되었습니다.'
+												})
+												editor.setData("")
+											}else{
+												Swal.fire({
+													icon: 'error',
+													title: '등록에 실패했습니다.'
+												})
+											}
+										},
+										error: err => console.log(err)
+									})
+								} else if (result.isDenied) {
+								  Swal.fire('취소되었습니다.', '', 'info')
+								}
+							})
+						}
+						
+					});
+					
+					$('#set-data').on('click', function () {
+						let path = window.location.pathname
+						$.ajax({
+							url: "/mdm/selectHelp",
+							data:{
+ 								path: path
+							},
+							success: result => {
+								if(result){
+									editor.setData(`${result.editorText}`)
+								} else {
+									toastr.warning('등록된 도움말이 없습니다.')
+								}
+							}
+						})
+					})
+				})
+				.catch(error => {
+					console.error(error);
+				});
+
 			function MyCustomUploadAdapterPlugin(editor) {
-			    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-			        return new UploadAdapter(loader)
-			    }
+				editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+					return new UploadAdapter(loader)
+				}
 			}
-			
+
 			class UploadAdapter {
-			    constructor(loader) {
-			        this.loader = loader;
-			    }
+				constructor(loader) {
+					this.loader = loader;
+				}
 
-			    upload() {
-			        return this.loader.file.then( file => new Promise(((resolve, reject) => {
-			            this._initRequest();
-			            this._initListeners( resolve, reject, file );
-			            this._sendRequest( file );
-			        })))
-			    }
+				upload() {
+					return this.loader.file.then(file => new Promise(((resolve, reject) => {
+						this._initRequest();
+						this._initListeners(resolve, reject, file);
+						this._sendRequest(file);
+					})))
+				}
 
-			    _initRequest() {
-			        const xhr = this.xhr = new XMLHttpRequest();
-			        xhr.open('POST', '/mdm/upload', true);
-			        xhr.responseType = 'json';
-			    }
+				_initRequest() {
+					const xhr = this.xhr = new XMLHttpRequest();
+					xhr.open('POST', '/mdm/upload', true);
+					xhr.responseType = 'json';
+				}
 
-			    _initListeners(resolve, reject, file) {
-			        const xhr = this.xhr;
-			        const loader = this.loader;
-			        const genericErrorText = '파일을 업로드 할 수 없습니다.'
+				_initListeners(resolve, reject, file) {
+					const xhr = this.xhr;
+					const loader = this.loader;
+					const genericErrorText = '파일을 업로드 할 수 없습니다.'
 
-			        xhr.addEventListener('error', () => {reject(genericErrorText)})
-			        xhr.addEventListener('abort', () => reject())
-			        xhr.addEventListener('load', () => {
-			            const response = xhr.response
-			            if(!response || response.error) {
-			                return reject( response && response.error ? response.error.message : genericErrorText );
-			            }
+					xhr.addEventListener('error', () => {
+						reject(genericErrorText)
+					})
+					xhr.addEventListener('abort', () => reject())
+					xhr.addEventListener('load', () => {
+						const response = xhr.response
+						if (!response || response.error) {
+							return reject(response && response.error ? response.error.message : genericErrorText);
+						}
 
-			            resolve({
-			                default: response.url //업로드된 파일 주소
-			            })
-			        })
-			    }
+						resolve({
+							default: response.url //업로드된 파일 주소
+						})
+					})
+				}
 
-			    _sendRequest(file) {
-			        const data = new FormData()
-			        data.append('upload',file)
-			        this.xhr.send(data)
-			    }
+				_sendRequest(file) {
+					const data = new FormData()
+					data.append('upload', file)
+					this.xhr.send(data)
+				}
 			}
+	
+			let sel2List = []
+			
+			sel2List.dd = [
+				{value:'dd', text:'--'}
+			]
+			
+			sel2List.mdm = [
+				{value: 'commonCode', text: '공통코드관리'},
+				{value: 'emp', text: '사원관리'},
+				{value: 'prdt', text: '제품정보관리'},
+				{value: 'mtl', text: '자재정보관리'},
+				{value: 'bp', text: '거래처정보관리'},
+				{value: 'prcs', text: '공정기준관리'},
+				{value: 'bom', text: 'BOM관리'},
+				{value: 'chkStd', text: '품질검사기준관리'}
+			]
+			
+			sel2List.business = [
+				{value: 'orderForm', text: '주문서관리'},
+				{value: 'orderList', text: '주문서조회'},
+				{value: 'finPrdt', text: '완재품재고조회'},
+				{value: 'prdtRecieve', text: '완제품입고관리'},
+				{value: 'prdtRecieveList', text: '완제품입고조회'},
+				{value: 'prdtOut', text: '완제품출고관리'},
+				{value: 'prdtOutCheck', text: '완제품출고조회'}
+			]
+			
+			sel2List.check = [
+				{value: 'mtlCheck', text: '자재검사'},
+				{value: 'check', text: '자재검사조회'},
+				{value: 'prdtStd', text: '품질검사기준관리'},
+				{value: 'prdtCheck', text: '제품품질검사'},
+				{value: 'prdtCheckList', text: '제품품질검사조회'}
+				
+			]
+			
+			sel2List.prod = [
+				{value: 'prodPlanMng', text: '생산계획관리'},
+				{value: 'prodPlanList', text: '생산계획조회'},
+				{value: 'prodInstMng', text: '생산지시관리'},
+				{value: 'prodInstList', text: '생산지시조회'},
+				{value: 'prodPrcsResult', text: '공정실적조회'}
+			]
+			
+			sel2List.material = [
+				{value: 'mtlNeedControl', text: '발주관리'},
+				{value: 'mtlNeedList', text: '발주조회'},
+				{value: 'mtlList', text: '재고조회'},
+				{value: 'mtlInControl', text: '입고관리'},
+				{value: 'mtlOutList', text: '출고조회'},
+			]
+			
+			sel2List.eqm = [
+				{value: 'eqmForm', text: '설비관리'},
+				{value: 'eqmList', text: '설비조회'},
+				{value: 'eqmNoperForm', text: '비가동등록'},
+				{value: 'eqmInspForm', text: '설비점검관리'},
+				{value: 'eqmInspList', text: '설비점검조회'}
+			]
+			
+			$('#select1').on('change', function() {
+				$('#select2 option').remove()
+				let sel1Val = $('#select1').val()
+				for(let obj of sel2List[sel1Val]){
+					let optTag = $('<option/>');
+					optTag.val(obj.value);
+					optTag.text(obj.text);
+					$('#select2').append(optTag);
+				}
+				
+			})
 			
 		</script>
 	</div>
 </body>
+
 </html>

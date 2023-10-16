@@ -68,4 +68,8 @@ public interface MdmService {
 	List<MdmBomVO> selectBomDetail(String prdtCode,String bomCode);
 	List<MdmBomVO> selectBomList(String prdtCode);
 	int bomProcess(RequestVO<MdmBomVO> vo);
+	
+	// 도움말 작성
+	int insertHelp(HelpVO vo);
+	HelpVO selectHelp(HelpVO vo);
 }
