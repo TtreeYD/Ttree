@@ -150,6 +150,10 @@ WHERE b.bp_name = $P{P_BP_NAME}
 				</textElement>
 				<text><![CDATA[YD가구]]></text>
 			</staticText>
+			<image>
+				<reportElement x="701" y="-10" width="92" height="87" uuid="d9645eac-b3a5-4da0-9dbe-ca56a817eea2"/>
+				<imageExpression><![CDATA["C:/Users/admin/Desktop/ttreeQr.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>

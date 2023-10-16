@@ -52,6 +52,8 @@ public class MaterialVO {
 	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private Date prcsEdate;							// 출고일
 	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd",timezone = "Asia/Seoul")
 	private String radioDate;
 	
 	// 발주관리
