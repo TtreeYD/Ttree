@@ -89,6 +89,7 @@ input::-webkit-inner-spin-button {
 						<td>
 						<label for="y" style="margin-left: 10px; margin-right: 40px"><input type="radio" id="y"  name="eqmUcheck" value="Y" checked/> Yes </label> 
 						<label for="n"><input type="radio" id="n" name="eqmUcheck" value="N" /> No</label>
+				
 						</td>
 						<th>공정구분</th>
 						<td><select   id="eqmDivision" name="eqmDivision">
@@ -203,6 +204,8 @@ input::-webkit-inner-spin-button {
 		
 		
 		function saveEqm(){
+	 		
+	 		 
 			//설비명 테스트
 			if(infoForm.eqmName.value==''){
 				swal("설비명을 입력하세요", "", "warning");
@@ -367,15 +370,44 @@ input::-webkit-inner-spin-button {
                   },
                   success: function (result) {
 					console.log(result);
+				
                     $("#searchEqmModal").modal("hide");
                     $("#eqmCode").val(result.eqmCode);
                     $("#eqmName").val(result.eqmName);
 
-                    if (result.eqmUcheck == "Y") {
+                    
+                    console.log(result.eqmState)
+                   if(result.eqmState == "Y"){
+                                        
+                	   $("input[type='radio']").unbind('click').click();  
+                	   
+                	   
+                    	 if (result.eqmUcheck == "Y") {
+                             $("#y").prop("checked", true);
+                           } else {
+                             $("#n").prop("checked", true);
+                           }
+                    	 
+                    }else{
+                    
+                    //	$("input[type='radio']").attr("onclick", "return(false);");
+                     	$("input[type='radio']").on('click',function(){
+                    		swal("현재 생산 또는 점검 중 변경불가", "", "warning");
+                    		return(false);
+                    	//e.preventDefault()
+                    	
+                    	}) 
+                    	
+                    }
+               
+            	   
+                     
+                  /*   if (result.eqmUcheck == "Y") {
                       $("#y").prop("checked", true);
                     } else {
                       $("#n").prop("checked", true);
-                    }
+                    }  */
+                    
                     //$('#eqmUcheck').val(result.eqmUcheck);
                      $("#eqmDivision").val(result.eqmDivision);
                     // $("#eqmDivision").val(result.eqmDivision).prop("selected",true);
@@ -387,6 +419,8 @@ input::-webkit-inner-spin-button {
                   //$('#eqmImg').val(result.eqmImg);
                     $("#mfgComp").val(result.mfgComp);
                     $("#mfgDate").val(result.mfgDate);
+                    
+                  
                    
                     // 삭제버튼 활성화
                     $('#deleteBtn').prop('disabled', false);
@@ -415,6 +449,8 @@ input::-webkit-inner-spin-button {
             $("#mfgDate").val("");
             $("#eqmDivision").val("");
             
+           
+            
             // 삭제버튼 비활성화
             $('#deleteBtn').prop('disabled', true);
           });
@@ -432,6 +468,8 @@ input::-webkit-inner-spin-button {
               $("#mfgComp").val("");
               $("#mfgDate").val("");
               $("#eqmDivision").val("");
+              
+             
               
               // 삭제버튼 비활성화
               $('#deleteBtn').prop('disabled', true);

@@ -52,7 +52,7 @@
   	<!-- 설비점검 등록 -->
   	<insert id="insertEqmInsp" parameterType="EqmInspVO">
   		<selectKey keyProperty="inspCode" resultType="String" order="BEFORE">
-  			select 'ein' || LPAD(eqm_insp_code_seq.NEXTVAL, 7, '0') as inspCode from dual
+  			select 'EIN' || LPAD(eqm_insp_code_seq.NEXTVAL, 7, '0') as inspCode from dual
   	    </selectKey>
   	    INSERT INTO EQM_INSP
   			 ( 
@@ -90,7 +90,7 @@
   	  	<!-- 비가동 등록 -->
   	<insert id="insertEqmNoper" parameterType="EqmNoperVO">
   		<selectKey keyProperty="noperCode" resultType="String" order="BEFORE">
-  			select 'eno' || LPAD(noper_code_seq.NEXTVAL, 7, '0') as noperCode from dual
+  			select 'ENO' || LPAD(noper_code_seq.NEXTVAL, 7, '0') as noperCode from dual
   	    </selectKey>
   	    INSERT INTO EQM_NOPER
   			 ( 
