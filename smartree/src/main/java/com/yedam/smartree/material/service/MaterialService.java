@@ -2,6 +2,8 @@ package com.yedam.smartree.material.service;
 
 import java.util.List;
 
+import com.yedam.smartree.mdm.service.MdmBpVO;
+
 public interface MaterialService {
 	// 1. <전체조회들> 시작
 	
@@ -39,6 +41,8 @@ public interface MaterialService {
 	public List<MaterialVO> selectMtlOutList(MaterialVO vo);
 	// 출고조회 조건검색
 	public List<MaterialVO> searchOut(MaterialVO vo);
+	// 거래처 목록조회
+	public List<MaterialVO> mtlBpList(MaterialVO vo);
 	// <검색 및 단건조회들> 끝
 	
 	

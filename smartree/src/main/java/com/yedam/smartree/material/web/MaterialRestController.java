@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.material.service.MaterialService;
 import com.yedam.smartree.material.service.MaterialVO;
+import com.yedam.smartree.mdm.service.MdmBpVO;
 /*
 개발자   : 남태원
 개발일자  : 2023/09/13
@@ -126,4 +127,11 @@ public class MaterialRestController {
 	public List<MaterialVO> searchOut(MaterialVO vo){
 		return materialService.searchOut(vo);
 	}	
+	
+	// 거래처 출력
+	@GetMapping("/mtlBpList")
+	public List<MaterialVO> mtlBpList(MaterialVO vo){
+		return materialService.mtlBpList(vo);
+	}
+	
 }
