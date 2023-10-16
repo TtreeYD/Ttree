@@ -185,6 +185,7 @@
 		LEFT JOIN holding h
 		ON c.mtl_lot_num = h.mtl_lot_num
 		WHERE c.mtl_code = #{mtlCode}
+		AND c.mtl_lot_cnt != 0
 		GROUP BY c.mtl_lot_num, mtl_type, c.mtl_code, t.mtl_name, c.mtl_in_date, c.mtl_in_cnt, c.mtl_lot_cnt
 		ORDER BY mtl_lot_num
   	</select>
