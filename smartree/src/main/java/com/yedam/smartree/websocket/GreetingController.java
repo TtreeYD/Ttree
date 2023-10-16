@@ -1,23 +1,32 @@
 package com.yedam.smartree.websocket;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.ArrayList;
+import java.util.List;
+
+
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.util.HtmlUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class GreetingController {
 	
+	List<HelloMessage> messageList = new ArrayList<HelloMessage>();
+	
 	@MessageMapping("/hello")
 	@SendTo("/topic/greetings")
-	  public Greeting greeting(HelloMessage message) throws Exception {
-		String sender = message.getSender();
-		System.out.println("==============" + sender);
+	  public HelloMessage greeting(HelloMessage message) throws Exception {
+		messageList.add(message);
 	    Thread.sleep(300);
-	    return new Greeting(HtmlUtils.htmlEscape(sender + ": " + message.getName()));
+	    return message;
 	  }
 	
+	@GetMapping("/message")
+	@ResponseBody
+		public List<HelloMessage> message(){
+		
+		return messageList;
+	}
 }
