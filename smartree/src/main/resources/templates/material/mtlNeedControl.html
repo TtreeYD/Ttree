@@ -628,7 +628,7 @@ margin : 10px;
 				mtlNeedGrid.on('click', (ev)=>{
 		          if (ev.columnName === 'bpName') {
 						$.ajax({
-							url:'/mdm/selectBpList',
+							url:'/mtlBpList',
 				            method: 'get',
 				            data:[],
 							success: function (result) {
