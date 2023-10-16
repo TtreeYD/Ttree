@@ -58,7 +58,19 @@
 					             21
 					         ]
 					     },
+					fontFamily: {
+						options: [
+							'default',
+							'Arial',
+							'궁서체',
+							'바탕',
+							'돋움',
+							'맑은바탕'
+						],
+						supportAllValues: true
+					},
 					extraPlugins: [MyCustomUploadAdapterPlugin],
+					language: 'ko'
 				})
 				.then(editor => {
 					const toolbarContainer = document.querySelector('#toolbar-container');
