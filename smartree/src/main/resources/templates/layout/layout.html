@@ -84,33 +84,78 @@
 			font-weight: bold;
 		}
 		
-		#chatDiv{
+		#chatBtn{
+			border : 0;
+			background-color : white;
+		}
+		
+		.chatDiv{
 			background-color: white;
 		}
 		
 		.message {
-		    padding: 5px;
-	    	margin: 5px;
-		    border: 1px solid #ccc;
-		    max-width: 70%;
-		    word-wrap: break-word;
-		    
+		 	 position: relative;
+			  border: 1px solid #ececec;
+			  border-radius: 1.4em;
+			  box-shadow: 2px 5px 8px 0px #e7e7e794;
+			  font-size: 14px;
+			  padding: 10px;
 		}
-		
+		.message:after {
+			 content: '';
+			  position: absolute;
+			  width: 0;
+			  height: 0;
+			  border: 0.625em solid transparent;
+			  margin-right: -0.625em;
+		}
+	
 		.my-message {
-		    background-color: #e1f7d5;
-		    text-align: right;
-		    float: right;
+			  float: right;
+			  text-align: right;
+			  background-color: lightblue; 
+			  margin: 5px; 
 		}
 		
+		.my-message:after{
+			  right: 0;
+			  top: 50%;
+			  border-left-color: lightblue;
+			  border-right: 0;
+			  border-bottom: 0;
+			  margin-top: -0.312em;
+		}
+
 		.other-message {
-		    background-color: #f2f2f2;
-		    text-align: left;
-		    float: left;
+			  float: left;
+			  text-align: left;
+			  background-color: lightgreen; 
+			  margin: 5px; 
+		}
+		.other-message:after{
+			  content: '';
+			  position: absolute;
+			  left: 0;
+			  top: 50%;
+			  width: 0;
+			  height: 0;
+			  border: 0.625em solid transparent;
+			  border-right-color: lightgreen;
+			  border-left: 0;
+			  border-bottom: 0;
+			  margin-top: -0.312em;
+			  margin-left: -0.625em;
 		}
 		
 		td > span{
 			font-size : 10px;
+		}
+		
+		thead   {
+		 	background-color: white;
+			top: 0;
+			z-index: 1;
+			position: sticky;
 		}
 		
 	</style>
