@@ -6,18 +6,99 @@
       
 <head>
 <meta charset="UTF-8">
-
-<link rel="stylesheet" href="https://uicdn.toast.com/chart/latest/toastui-chart.min.css" />
-<script src="https://uicdn.toast.com/chart/latest/toastui-chart.min.js"></script>
-<title>생산현황모니터링</title>
+<script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/data.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<title>공장온도습도현황모니터링</title>
 </head>
 <body>
 <div layout:fragment="content">
-<h1>생산현황모니터링</h1>
+<h1>공장온도습도현황모니터링</h1>
+    <figure class="highcharts-figure">
+        <div id="container"></div>
+        <div id="container2"></div>
+    </figure>
 
-	
-	
-	
+<script>
+var defaultData = '/monitoringTemperature';	
+var urlInput = document.getElementById('fetchURL');
+var pollingCheckbox = document.getElementById('enablePolling');
+var pollingInput = document.getElementById('pollingTime');
+
+
+
+function createChart() {
+    Highcharts.chart('container', {
+        chart: {
+            type: 'spline',
+            height: 320
+        },
+        title: {
+            text: '공장 온도'
+        },
+        accessibility: {
+            announceNewData: {
+                enabled: true,
+                minAnnounceInterval: 15000,
+                announcementFormatter: function (allSeries, newSeries, newPoint) {
+                    if (newPoint) {
+                        return 'New point added. Value: ' + newPoint.y;
+                    }
+                    return false;
+                }
+            }
+        },
+        data: {
+            csvURL: defaultData,
+            enablePolling: true,
+            dataRefreshRate: 2
+        }
+    });
+
+}
+
+createChart();
+
+
+var defaultData = '/monitoringHumidity';
+var urlInput = document.getElementById('fetchURL');
+var pollingCheckbox = document.getElementById('enablePolling');
+var pollingInput = document.getElementById('pollingTime');
+
+function createChart2() {
+    Highcharts.chart('container2', {
+        chart: {
+            type: 'spline',
+            height: 320
+        },
+        title: {
+            text: '공장 습도'
+        },
+        accessibility: {
+            announceNewData: {
+                enabled: true,
+                minAnnounceInterval: 15000,
+                announcementFormatter: function (allSeries, newSeries, newPoint) {
+                    if (newPoint) {
+                        return 'New point added. Value: ' + newPoint.y;
+                    }
+                    return false;
+                }
+            }
+        },
+        data: {
+            csvURL: defaultData,
+            enablePolling: true,
+            dataRefreshRate: 2
+        }
+    });
+
+}
+
+createChart2();
 </script>
 </div>
 </body>

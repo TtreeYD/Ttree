@@ -71,13 +71,13 @@ float: right;
 			            useClient: true,
 			          },
 					columns : [ {
-						header : '자재코드',
-						name : 'mtlCode',
-						sortable: true,
-					},{
 						header : '분류',
 						name : 'mtlType',
 						sortable: true
+					}, {
+						header : '자재코드',
+						name : 'mtlCode',
+						sortable: true,
 					}, {
 						header : '자재이름',
 						name : 'mtlName'
@@ -208,10 +208,17 @@ float: right;
 				})
 		        
 		        //엑셀 다운로드 버튼으로 만드는 기능
+		        let today = new Date();
+				let year = today.getFullYear(); // 년도
+				let month = today.getMonth() + 1;  // 월
+				let date = today.getDate();  // 날짜
+     		    const options = {
+				     fileName: (year + '-' + month + '-' + date) + ' 자재LOT목록'
+				   };
 		        const excelDownload = document.querySelector(".excelDownload");
 	               excelDownload.addEventListener("click",
 	                    function (e) {
-	            	   		mtlGrid.export("xlsx");
+	            	   		mtlGrid.export("xlsx",options);
 	                    }
 	               );
 	               

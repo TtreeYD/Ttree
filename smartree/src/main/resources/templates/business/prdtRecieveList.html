@@ -94,8 +94,11 @@
 				}
 			})
 		}
+		const options = {
+			fileName: '입고목록'
+		};
 		$('#ExcelBtn').on('click',function(){
-			recieveListGrid.export('xlsx');
+			recieveListGrid.export('xlsx',options);
         })
         $('#resetBtn').on('click',function(){
         	$('#prdtName').val('');

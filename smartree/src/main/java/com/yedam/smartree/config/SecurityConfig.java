@@ -1,5 +1,6 @@
 package com.yedam.smartree.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,13 +19,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SecurityConfig {
 	
-	 private final AuthenticationFailureHandler customAuthFailureHandler;
 	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			 .authorizeHttpRequests((requests) -> requests	
-		     .antMatchers("/", "/login/**","/common/**","/font/**","/startbootstrap/**").permitAll()
+		     .antMatchers("/", "/login/**","/common/**","/font/**","/startbootstrap/**","/app/**").permitAll()
 		     .anyRequest().authenticated()                    // .authenticated 인증된 사용자의 접근을 허용
 			 //.anyRequest().permitAll()
 			)	
@@ -32,6 +32,7 @@ public class SecurityConfig {
 				.loginPage("/")
 				.loginProcessingUrl("/login")
 				.successHandler(customLoginSuccessHandler())
+				//.failureHandler(customAuthenticationFailureHandler())
 				.permitAll()
 			)
 			.logout(logout -> logout
@@ -65,6 +66,11 @@ public class SecurityConfig {
 	@Bean
 	public AuthenticationSuccessHandler customLoginSuccessHandler() {
 		return new CustomLoginSuccessHandler();
+	}
+	
+	@Bean
+	public AuthenticationFailureHandler customAuthenticationFailureHandler() {
+		return new CustomAuthenticationFailureHandler();
 	}
 }
 

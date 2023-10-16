@@ -37,7 +37,7 @@ margin : 10px;
 					<br>
 						<h2>입고관리</h2>
 						<div class="modal-header row justify-content-evenly">
-							<div class="col-6">
+							<div class="col-4">
 								<div class="d-flex flex-column align-items-center">
 									<div class="mb-3">
 									<span>검사완료일</span>
@@ -49,12 +49,18 @@ margin : 10px;
 									</div>
 								</div>
 							</div>
-							<div class="col-6">
+							<div class="col-4">
 								<div class="d-flex flex-column align-items-center">
 									<div class="mb-3">
 									<span>자재이름</span> <input class="form-control mb-3" id="mtlName" type="text" style="width: 300px;">
-									<span>담당자</span> <input class="form-control" id="mtlManager" type="text" style="width: 300px;">
 									</div>
+								</div>
+							</div>
+							<div class="col-4">
+								<div class="d-flex flex-column align-items-center">
+									<div class="mb-3">
+										<span>담당자</span> <input class="form-control" id="mtlManager" type="text" style="width: 300px;">
+									</div>			
 								</div>
 							</div>
 						</div>
@@ -135,7 +141,7 @@ margin : 10px;
 					scrollY : false,
 					rowHeaders : ["rowNum"],
 					pageOptions: {
-			            perPage: 5,
+			            perPage: 4,
 			            useClient: true,
 			          },
 					columns : [ {
@@ -231,7 +237,7 @@ margin : 10px;
 					scrollY : false,
 					rowHeaders : [ "rowNum" ],
 					pageOptions: {
-			            perPage: 5,
+			            perPage: 4,
 			            useClient: true,
 			          },
 					columns : [ {

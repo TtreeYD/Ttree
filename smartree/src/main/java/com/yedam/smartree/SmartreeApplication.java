@@ -15,7 +15,7 @@ public class SmartreeApplication {
 	}
 	
 	@GetMapping("/")
-	public String index() {
+	public String home() {
 		return "home";
 	}
 	

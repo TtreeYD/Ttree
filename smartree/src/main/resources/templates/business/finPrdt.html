@@ -170,8 +170,11 @@
 						}
 					})
 				}
+				const options = {
+					fileName: '제품별재고현황'
+				};
 				$('#ExcelBtn').on('click',function(){
-					finPrdt.export('xlsx');
+					finPrdt.export('xlsx',options);
 		        })
 			});
 

@@ -412,6 +412,7 @@
         </if>
         
     	</where>
+    	order by prcs_sdate desc
   	</select>
 	
 	
@@ -446,7 +447,7 @@
 	<!-- 설비상태변경 -->
 	<update id="updateEqmState" parameterType="ProdVO">
 		update eqm
-		   set  EQM_STATE = 'Y'
+		   set  EQM_STATE = 'N'
 		 where eqm_code = #{eqmCode}
 	</update>
 	<!-- 자재홀딩 -->
@@ -491,7 +492,7 @@
 	<!-- 생산종료Process - update Eqm -->
 	<update id="updateEqm" parameterType="ProdVO">
 		update eqm 
-		   set eqm_state = 'N'
+		   set eqm_state = 'Y'
 		 where eqm_code = #{eqmCode} 
 	</update>
 	
