@@ -388,7 +388,7 @@
   		select pt.prdt_code , nvl(a.order_dt_cnt,0) as order_dt_cnt
 	  		  from prdt_table pt left outer join (select sum(order_dt_cnt) as order_dt_cnt , prdt_code
 			  										from prdt_out join dt_order using(order_dt_code)
-                                                    where  prdt_out_date BETWEEN TRUNC(SYSDATE) - 90 AND TRUNC(SYSDATE)-30
+                                                    where  prdt_out_date BETWEEN TRUNC(SYSDATE) - 90 AND TRUNC(SYSDATE)
 			 										group by prdt_code) a on pt.prdt_code = a.prdt_code
 			 order by pt.prdt_code
   	</select>
@@ -400,9 +400,8 @@
 		   and p.prcs_maxnum = p.prcs_order) as today_prod_cnt , 
 
   		(select count(*)as today_inst_cnt 
-  		  from prod_inst
-	     where trunc(prod_inst_sdate) = TRUNC(SYSDATE) 
-         and prcs_start_yn = 'n') as today_inst_cnt , 
+  		  from dt_prod_inst join prod_inst using(prod_inst_code)
+	     where trunc(prod_inst_sdate) = TRUNC(SYSDATE) ) as today_inst_cnt , 
 
 
   		(select count(*) as today_order_cnt  from orders

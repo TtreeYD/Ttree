@@ -678,8 +678,7 @@ $(document).ready(function (){
 			})
 			return
 		}
-		if(eqmdata =='사용중' || eqmdata == '사용불가'){
-			console.log(123);
+		if(eqmdata =='사용중' || eqmdata == '사용불가' || eqmdata == null){
 			Swal.fire({
 				  icon: 'error',
 				  title: '설비를 확인하세요',
