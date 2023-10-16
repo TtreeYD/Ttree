@@ -518,5 +518,24 @@
 		WHERE bom_code = #{bomCode}
 	</delete>
 	
+	<!-- 도움말 작성 -->
+	<insert id="insertHelp" parameterType="HelpVO">
+		INSERT INTO help_table(path, editor_text)
+		VALUES(#{path}, #{editorText})
+	</insert>
+	
+	<!-- 도움말 삭제 -->
+	<delete id="deleteHelp" parameterType="HelpVO">
+		DELETE help_table
+		WHERE path = #{path}
+	</delete>
+	
+	<!-- 도움말 조회 -->
+	<select id="selectHelp" resultType="HelpVO">
+		SELECT *
+		FROM help_table
+		WHERE path = #{path}
+		
+	</select>
 	
 </mapper>

@@ -21,7 +21,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.min.css"/>
 	<link rel="stylesheet" href="https://uicdn.toast.com/tui.pagination/latest/tui-pagination.css" />
-    
+	<!-- ckeditor -->    
+   <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/decoupled-document/ckeditor.js"></script>
+   <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/decoupled-document/translations/ko.js"></script>
 	<style>
 		#toast-container > .toast-error { 
 		  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAHOSURBVEhLrZa/SgNBEMZzh0WKCClSCKaIYOED+AAKeQQLG8HWztLCImBrYadgIdY+gIKNYkBFSwu7CAoqCgkkoGBI/E28PdbLZmeDLgzZzcx83/zZ2SSXC1j9fr+I1Hq93g2yxH4iwM1vkoBWAdxCmpzTxfkN2RcyZNaHFIkSo10+8kgxkXIURV5HGxTmFuc75B2RfQkpxHG8aAgaAFa0tAHqYFfQ7Iwe2yhODk8+J4C7yAoRTWI3w/4klGRgR4lO7Rpn9+gvMyWp+uxFh8+H+ARlgN1nJuJuQAYvNkEnwGFck18Er4q3egEc/oO+mhLdKgRyhdNFiacC0rlOCbhNVz4H9FnAYgDBvU3QIioZlJFLJtsoHYRDfiZoUyIxqCtRpVlANq0EU4dApjrtgezPFad5S19Wgjkc0hNVnuF4HjVA6C7QrSIbylB+oZe3aHgBsqlNqKYH48jXyJKMuAbiyVJ8KzaB3eRc0pg9VwQ4niFryI68qiOi3AbjwdsfnAtk0bCjTLJKr6mrD9g8iq/S/B81hguOMlQTnVyG40wAcjnmgsCNESDrjme7wfftP4P7SP4N3CJZdvzoNyGq2c/HWOXJGsvVg+RA/k2MC/wN6I2YA2Pt8GkAAAAASUVORK5CYII=") !important; 
@@ -83,26 +85,86 @@
 			background-color: lightgray;
 			font-weight: bold;
 		}
+		
+		#chatBtn{
+			border : 0;
+			background-color : white;
+		}
+		
+		.chatDiv{
+			background-color: white;
+		}
+		
 		.message {
-		    padding: 5px;
-	    	margin: 5px;
-		    border: 1px solid #ccc;
-		    max-width: 70%;
-		    word-wrap: break-word;
+		 	 position: relative;
+			  border: 1px solid #ececec;
+			  border-radius: 1.4em;
+			  box-shadow: 2px 5px 8px 0px #e7e7e794;
+			  font-size: 14px;
+			  padding: 10px;
 		}
-		
+		.message:after {
+			 content: '';
+			  position: absolute;
+			  width: 0;
+			  height: 0;
+			  border: 0.625em solid transparent;
+			  margin-right: -0.625em;
+			  left: auto;
+		}
+	
 		.my-message {
-		    background-color: #e1f7d5;
-		    text-align: right;
-		    float: right;
+			  float: right;
+			  text-align: right;
+			  background-color: lightblue; 
+			  margin: 5px; 
 		}
 		
+		.my-message:after{
+			  right: 0;
+			  top: 50%;
+			  border-left-color: lightblue;
+			  border-right: 0;
+			  border-bottom: 0;
+			  margin-top: -0.312em;
+			  margin-left: -0.625em;
+		}
+
 		.other-message {
-		    background-color: #f2f2f2;
-		    text-align: left;
-		    float: left;
+			  float: left;
+			  text-align: left;
+			  background-color: lightgreen; 
+			  margin: 5px; 
+		}
+		.other-message:after{
+			  content: '';
+			  position: absolute;
+			  left: 0;
+			  top: 50%;
+			  width: 0;
+			  height: 0;
+			  border: 0.625em solid transparent;
+			  border-right-color: lightgreen;
+			  border-left: 0;
+			  border-bottom: 0;
+			  margin-top: -0.312em;
+			  margin-left: -0.625em;
 		}
 		
+		td > span{
+			font-size : 10px;
+		}
+		
+		thead   {
+		 	background-color: white;
+			top: 0;
+			z-index: 1;
+			position: sticky;
+		}
+		
+		.ck.ck-editor__editable_inline p {
+        line-height: 0.7em;
+    }
 	</style>
     <!-- content script -->
     <th:block layout:fragment="css"></th:block>

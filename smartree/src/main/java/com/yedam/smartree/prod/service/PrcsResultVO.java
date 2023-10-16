@@ -13,6 +13,7 @@ public class PrcsResultVO {
 	String prodInstCode;
 	String prodInstName;
 	String prdtCode;
+	String prdtName;
 	String prcsStdCode;
 	String prcsName;
 	String manager;
@@ -26,5 +27,6 @@ public class PrcsResultVO {
 	int errCnt;
 	int passCnt;
 	//오늘,한달,일주일 조건
-		private String searchDate;
+	private String searchDate;
+	String searchName;
 }

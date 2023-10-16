@@ -43,7 +43,30 @@
 	                        <a class="collapse-item" href="/mdm/prcs">공정기준관리</a>
 	                        <a class="collapse-item" href="/mdm/bom">BOM관리</a>
 	                        <a class="collapse-item" href="/mdm/chkStd">품질검사기준관리</a>
+	                        <a class="collapse-item" href="/mdm/help">도움말관리</a>
                         </div>
+                    </div>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFive"
+                    aria-expanded="true" aria-controls="collapseFive">
+                    <i class="fa-solid fa-truck-ramp-box"></i>
+                    <span>자재관리</span>
+                </a>
+                <div id="collapseFive" class="collapse" aria-labelledby="headingUtilities"
+                    data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                              <h6 class="collapse-header">자재관리</h6>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST05')">
+                        <a class="collapse-item" href="/material/mtlNeedControl">발주관리</a>
+                        </div>
+                        <a class="collapse-item" href="/material/mtlNeedList">발주조회</a>
+                        <a class="collapse-item" href="/material/mtlList">재고조회</a>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST05')">
+                        <a class="collapse-item" href="/material/mtlInControl">입고관리</a>
+                        </div>
+                        <a class="collapse-item" href="/material/mtlOutList">출고조회</a>
                     </div>
                 </div>
             </li>
@@ -73,31 +96,7 @@
                     </div>
                 </div>
             </li>
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"
-                    aria-expanded="true" aria-controls="collapseThree">
-                    <i class="fa-solid fa-check-to-slot"></i>
-                    <span>품질관리</span>
-                </a>
-                <div id="collapseThree" class="collapse" aria-labelledby="headingUtilities"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">품질관리</h6>
-                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST04')">
-                        <a class="collapse-item" href="/check/mtlCheck">자재검사</a>
-                        </div>
-                        <a class="collapse-item" href="/check/check">자재검사조회</a>
-                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST04')">
-                        <a class="collapse-item" href="/check/prdtStd">품질검사기준관리</a>
-                        </div>
-                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST04')">
-                        <a class="collapse-item" href="/check/prdtCheck">제품품질검사</a>
-                        </div>
-                        <a class="collapse-item" href="/check/prdtCheckList">제품품질검사조회</a>
-                    </div>
-                </div>
-            </li>
-            <!-- commit -->
+            
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFour"
                     aria-expanded="true" aria-controls="collapseFour">
@@ -124,27 +123,32 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFive"
-                    aria-expanded="true" aria-controls="collapseFive">
-                    <i class="fa-solid fa-truck-ramp-box"></i>
-                    <span>자재관리</span>
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"
+                    aria-expanded="true" aria-controls="collapseThree">
+                    <i class="fa-solid fa-check-to-slot"></i>
+                    <span>품질관리</span>
                 </a>
-                <div id="collapseFive" class="collapse" aria-labelledby="headingUtilities"
+                <div id="collapseThree" class="collapse" aria-labelledby="headingUtilities"
                     data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                              <h6 class="collapse-header">자재관리</h6>
-                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST05')">
-                        <a class="collapse-item" href="/material/mtlNeedControl">발주관리</a>
+                        <h6 class="collapse-header">품질관리</h6>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST04')">
+                        <a class="collapse-item" href="/check/mtlCheck">자재검사</a>
                         </div>
-                        <a class="collapse-item" href="/material/mtlNeedList">발주조회</a>
-                        <a class="collapse-item" href="/material/mtlList">재고조회</a>
-                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST05')">
-                        <a class="collapse-item" href="/material/mtlInControl">입고관리</a>
+                        <a class="collapse-item" href="/check/check">자재검사조회</a>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST04')">
+                        <a class="collapse-item" href="/check/prdtStd">품질검사기준관리</a>
                         </div>
-                        <a class="collapse-item" href="/material/mtlOutList">출고조회</a>
+                        <div sec:authorize="hasAnyRole('ROLE_ST01','ROLE_ST04')">
+                        <a class="collapse-item" href="/check/prdtCheck">제품품질검사</a>
+                        </div>
+                        <a class="collapse-item" href="/check/prdtCheckList">제품품질검사조회</a>
                     </div>
                 </div>
             </li>
+            <!-- commit -->
+            
+            
             <li class="nav-item">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSix"
                     aria-expanded="true" aria-controls="collapseSix">

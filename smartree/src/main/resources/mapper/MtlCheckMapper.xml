@@ -18,6 +18,7 @@
 		JOIN    business_partner p
 		  ON    n.bp_code = p.bp_code
         WHERE   mtl_where = 'MT01'
+        ORDER BY n.mtl_date desc
   	</select>
   	
   	<select id="getMtl" resultType="MtlCheckVO">

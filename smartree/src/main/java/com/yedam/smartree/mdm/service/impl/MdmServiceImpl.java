@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.yedam.smartree.mdm.mapper.MdmMapper;
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
+import com.yedam.smartree.mdm.service.HelpVO;
 import com.yedam.smartree.mdm.service.MdmBomVO;
 import com.yedam.smartree.mdm.service.MdmBpVO;
 import com.yedam.smartree.mdm.service.MdmChkVO;
@@ -301,6 +302,18 @@ public class MdmServiceImpl implements MdmService {
 			cnt += mdmMapper.upEmp(vo);
 		}
 		return cnt;
+	}
+
+	@Override
+	public int insertHelp(HelpVO vo) {
+		mdmMapper.deleteHelp(vo);
+		return mdmMapper.insertHelp(vo);
+	}
+
+
+	@Override
+	public HelpVO selectHelp(HelpVO vo) {
+		return mdmMapper.selectHelp(vo);
 	}
 
 	

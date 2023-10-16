@@ -5,7 +5,7 @@
 	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>공정실적조회</title>
 </head>
 <body>
 	<div layout:fragment="content">
@@ -15,7 +15,7 @@
 				<div style="font-size:20px; margin-top:4px; margin-right:10px;">	
 					    <input type="radio" id="allProcess" name="typeCheck" value="" checked />
 					    <label for="allProcess" class="mr-2">전체</label>
-					 	<input type="radio" id="todayProcess" name="typeCheck" value="MA01" />
+					 	 <input type="radio" id="todayProcess" name="typeCheck" value="MA01" />
 					    <label for="todayProcess" class="mr-2">오늘</label>
 					    <input type="radio" id="sevenProcess" name="typeCheck" value="MA02"/>
 					    <label for="sevenProcess" class="mr-2">일주일</label>
@@ -23,9 +23,9 @@
 					    <label for="monthProcess" class="mr-2">한달</label>
 				</div>
 				<div class="form-outline">
-					<input type="search" id="form1" class="form-control" placeholder="상세코드 또는 제품명"/> 
+					<input type="search" id="form1" class="form-control" placeholder="계획명 또는 담당자" />
 				</div>
-				<button type="button" class="btn btn-primary" id="searchBtn">
+				<button type="button" class="btn btn-primary mb-2" id="searchBtn">
 					<i class="fas fa-search"></i>
 				</button>
 			</div>
@@ -54,7 +54,9 @@
 					},
 					{
 					  header: '제품명',
-					  name: 'prdtCode'
+					  name: 'prdtName',
+					  width: 220,
+					  align: 'center'
 					},
 					{
 					  header: '공정기준코드',
@@ -62,37 +64,57 @@
 					  hidden: true
 					},
 					{
-					  header: '공정명',
-					  name: 'prcsName'
+					  header: '담당자',
+					  name: 'manager',
+					  width: 170
 					},
 					{
-					  header: '담당자',
-					  name: 'manager'
+					  header: '공정명',
+					  name: 'prcsName',
+					  width: 150,
+					  align: 'center'
 					},
 					{
 					  header: '시작일시',
-					  name: 'prcsSdate'
+					  name: 'prcsSdate',
+					  align: 'center'
 					},
 					{
 					  header: '종료일시',
-					  name: 'prcsEdate'
+					  name: 'prcsEdate',
+					  align: 'center'
 					},
 					{
 					  header: '생산량',
-					  name: 'prdtCnt'
+					  name: 'prdtCnt',
+					  width: 120,
+					  align: 'right'
 					},
 					{
 					  header: '불량량',
-					  name: 'errCnt'
+					  name: 'errCnt',
+					  width: 120,
+					  align: 'right'
 					},
 					{
 					  header: '합격량',
-					  name: 'passCnt'
+					  name: 'passCnt',
+					  width: 120,
+					  align: 'right'
 					}
 				]
 			});
 			selectPrcsResult();
-			function selectPrcsResult(data){
+			
+			function selectPrcsResult(){
+				let searchDate = $('input[name="typeCheck"]:checked').val()
+				let searchName = $('#form1').val()
+				
+				let data ={
+					searchDate : searchDate,
+					searchName : searchName
+				}
+				
 				$.ajax({
 					url:'/selectPrcsResult',
 					method:'GET',
@@ -110,23 +132,26 @@
 			selectPrcsResult();
 		});
 		$('#todayProcess').on('click',function(){
-			let data = {
-					searchDate : $('#todayProcess').val()
-			}
-			selectPrcsResult(data);
+			selectPrcsResult();
 		});
 		$('#sevenProcess').on('click',function(){
-			let data = {
-					searchDate : $('#sevenProcess').val()
-			}
-			selectPrcsResult(data);
+			selectPrcsResult();
 		});
 		$('#monthProcess').on('click',function(){
-			let data = {
-					searchDate : $('#monthProcess').val()
-			}
-			selectPrcsResult(data);
+			selectPrcsResult();
 		});
+		
+		$('#searchBtn').on('click', function(){
+			selectPrcsResult();
+		})
+		
+		$('#form1').on('keypress', function (ev) {
+				if (ev.which == 13) {
+					event.preventDefault();
+					
+					selectPrcsResult();
+				}
+			})
 		</script>
 	</div>
 </body>

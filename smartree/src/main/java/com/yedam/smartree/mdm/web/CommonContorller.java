@@ -103,13 +103,23 @@ public class CommonContorller {
 
 		// 이미지를 현재 경로와 연관된 파일에 저장하기 위해 현재 경로를 알아냄
 		String realPath = request.getServletContext().getRealPath("/");
-
+		System.out.println(realPath);
+		
+		File uploadPathFolder = new File(uploadPath, "image");
+		
+		if (uploadPathFolder.exists() == false) {
+			uploadPathFolder.mkdirs();
+			// 만약 uploadPathFolder가 존재하지않는다면 makeDirectory하라는 의미입니다.
+			// mkdir(): 디렉토리에 상위 디렉토리가 존재하지 않을경우에는 생성이 불가능한 함수
+			// mkdirs(): 디렉토리의 상위 디렉토리가 존재하지 않을 경우에는 상위 디렉토리까지 모두 생성하는 함수
+		}
+		
 		// 현재경로/upload/파일명이 저장 경로
-		String savePath = realPath+ "/" + newFileName;
+		String savePath = uploadPathFolder+ "/" + newFileName;
 
 		// 브라우저에서 이미지 불러올 때 절대 경로로 불러오면 보안의 위험 있어 상대경로를 쓰거나 이미지 불러오는 jsp 또는 클래스 파일을 만들어 가져오는 식으로 우회해야 함
 		// 때문에 savePath와 별개로 상대 경로인 uploadPath 만들어줌
-		String uploadPath = "./upload/" + newFileName; 
+		String uploadPath = "/mdm/help/" + newFileName; 
 
 		// 저장 경로로 파일 객체 생성
 		File file = new File(savePath);

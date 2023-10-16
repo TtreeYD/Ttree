@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
+import com.yedam.smartree.mdm.service.HelpVO;
 import com.yedam.smartree.mdm.service.MdmBomVO;
 import com.yedam.smartree.mdm.service.MdmBpVO;
 import com.yedam.smartree.mdm.service.MdmChkVO;
@@ -82,4 +83,10 @@ public interface MdmMapper {
 	int insertBom(MdmBomVO vo);
 	int insertBomDt(MdmBomVO vo);
 	int deleteBomDt(MdmBomVO vo);
+	
+	// 도움말 관리
+	int insertHelp(HelpVO vo);
+	int deleteHelp(HelpVO vo);
+	HelpVO selectHelp(HelpVO vo);
+	
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.yedam.smartree.mdm.service.CommonCodeVO;
 import com.yedam.smartree.mdm.service.EmpVO;
+import com.yedam.smartree.mdm.service.HelpVO;
 import com.yedam.smartree.mdm.service.MdmBomVO;
 import com.yedam.smartree.mdm.service.MdmBpVO;
 import com.yedam.smartree.mdm.service.MdmChkVO;
@@ -405,4 +406,15 @@ public class CommonRestController {
 	public int bomProcess(@RequestBody RequestVO<MdmBomVO> reqVO) {
 		return mdmService.bomProcess(reqVO);
 	}
+	
+	@PostMapping("/insertHelp")
+	public int insertHelp(@RequestBody HelpVO vo) {
+		return mdmService.insertHelp(vo);
+	}
+	
+	@GetMapping("/selectHelp")
+	public HelpVO selectHelp(HelpVO vo) {
+		return mdmService.selectHelp(vo);
+	}
+	
 }

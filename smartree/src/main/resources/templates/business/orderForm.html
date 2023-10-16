@@ -90,7 +90,8 @@
 		</div><!-- /.modal -->
 
 
-		<script>
+		<script th:inline="javascript">
+			let manager = [[${session.loginMember.empName}]];
 			let searchModalData = [];
 			let newOrder =[];
 			let newDtOrder =[];
@@ -170,14 +171,14 @@
 			          },
 					columns: [
 						{
-							header: '제품명',
-							name: 'prdtName',
-							align: 'left'
-						},
-						{
 							header: '제품코드',
 							name: 'prdtCode',
 							align: 'center'
+						},
+						{
+							header: '제품명',
+							name: 'prdtName',
+							align: 'left'
 						},
 						{
 							header: '단가',
@@ -307,7 +308,9 @@
 						
 					]
 				})
-				
+				today = new Date();
+				console.log("today.toISOString() >>>" + today.toISOString());
+				today = today.toISOString().slice(0, 10);
 				//검색 클릭이벤트-모달띄우기
 				$('#searchOrder').on('click', function () {
 					$('#ordercd').val('');
@@ -458,7 +461,6 @@
 								return;
 							} 
 							 for(let i =0 ; i<newOrderData.orderDtList.length; i++){
-								 console.log('aa')
 								if(newOrderData.orderDtList[i].prdtCode == null||newOrderData.orderDtList[i].orderDtPrice == null || newOrderData.orderDtList[i].orderDtCnt == null ){
 									console.log(123)
 									toastr.warning('빈값을 확인해주세요');
@@ -562,6 +564,8 @@
 							codeType:'',
 							typeName:''					
 						})
+						newOrder[0].orderDate = today;
+						newOrder[0].orderManager = manager;
 						order.resetData(newOrder);
 					})
 					$('#insertDtBtn').on('click',function(){

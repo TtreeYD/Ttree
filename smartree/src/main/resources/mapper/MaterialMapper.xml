@@ -187,6 +187,7 @@
 		LEFT JOIN holding h
 		ON c.mtl_lot_num = h.mtl_lot_num
 		WHERE c.mtl_code = #{mtlCode}
+		AND c.mtl_lot_cnt != 0
 		GROUP BY c.mtl_lot_num, mtl_type, c.mtl_code, t.mtl_name, c.mtl_in_date, c.mtl_in_cnt, c.mtl_lot_cnt
 		ORDER BY mtl_lot_num
   	</select>
@@ -240,6 +241,14 @@
 			AND mtl_type = #{mtlType}
 		</if>
 	</select>
+  	
+  	<!-- 거래처목록 출력기능 -->
+  	<select id="mtlBpList" parameterType="MaterialVO">
+  		SELECT bp_code, bp_name, get_common(bp_type, '005') bp_type, bp_main, bp_tell
+		FROM business_partner
+		WHERE bp_type = 'BP01'
+		ORDER BY bp_code
+  	</select>
   	
   	<!-- 출고자재를 자재목록에서 빼주는 procedure -->
   	

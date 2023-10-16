@@ -331,6 +331,11 @@ margin : 10px;
                         let day = (
                             "0" + now.getDate()
                         ).substr(-2);
+                        let day2 = (
+                                "0" + (now.getDate()+14) 
+                            ).substr(-2);
+                        let mtlWishDate =
+                        	year + "-" + month + "-" + day2;
                         let mtlDate =
                             year + "-" + month + "-" + day;
 
@@ -342,7 +347,8 @@ margin : 10px;
                             	mtlType: mtlType,
                             	mtlCnt: (-1)*mtlNow,
                             	mtlUnit: mtlUnit,
-                            	mtlManager: manager
+                            	mtlManager: manager,
+                            	mtlWishDate: mtlWishDate
                             },
                             { at: 0 }
                         );
@@ -622,7 +628,7 @@ margin : 10px;
 				mtlNeedGrid.on('click', (ev)=>{
 		          if (ev.columnName === 'bpName') {
 						$.ajax({
-							url:'/mdm/selectBpList',
+							url:'/mtlBpList',
 				            method: 'get',
 				            data:[],
 							success: function (result) {
@@ -764,9 +770,13 @@ margin : 10px;
                         let day = (
                             "0" + now.getDate()
                         ).substr(-2);
+                        let day2 = (
+                                "0" + (now.getDate()+14) 
+                            ).substr(-2);
+                        let mtlWishDate =
+                        	year + "-" + month + "-" + day2;
                         let mtlDate =
                             year + "-" + month + "-" + day;
-                        
 					 	let datas = matGrid.getCheckedRows();
 					 	
 					 	let mtlCode = matGrid.getValue("mtlCode");
@@ -777,6 +787,7 @@ margin : 10px;
 					 		data.mtlManager = manager;
 					 		data.mtlWhere = mtlWhere;
 					 		data.needCode = needCode;
+					 		data.mtlWishDate= mtlWishDate;
 					 		delete data.rowKey;
 					 		delete data._attributes;
 							mtlNeedGrid.appendRow(data);
@@ -838,10 +849,6 @@ margin : 10px;
                                 rowKey,
                                 "bpCode"
                         );
-                        let mtlWishDate = needModalGrid.getValue(
-                                rowKey,
-                                "mtlWishDate"
-                        );
                         let mtlUnit = needModalGrid.getValue(
                                 rowKey,
                                 "mtlUnit"
@@ -869,6 +876,12 @@ margin : 10px;
                         let day = (
                             "0" + now.getDate()
                         ).substr(-2);
+                        let day2 = (
+                                "0" + (now.getDate()+14) 
+                            ).substr(-2);
+                        let mtlWishDate =
+                        	year + "-" + month + "-" + day2;
+                        
                         let mtlDate =
                             year + "-" + month + "-" + day;
 

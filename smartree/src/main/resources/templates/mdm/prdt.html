@@ -181,7 +181,7 @@ input::-webkit-inner-spin-button {
 						contentType : 'application/json',
 						data: JSON.stringify(vo),
 						success: result =>{
-							alert(result);
+							toastr.success(result);
 							selectPrdtList();
 						}
 					})
@@ -193,7 +193,7 @@ input::-webkit-inner-spin-button {
 						contentType : 'application/json',
 						data: JSON.stringify(vo),
 						success: result =>{
-							alert(result);
+							toastr.success(result);
 							selectPrdtList();
 						}
 					})

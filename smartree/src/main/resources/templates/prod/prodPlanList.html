@@ -26,9 +26,9 @@
 				<div class="form-outline">
 					<input type="search" id="form1" class="form-control" placeholder="계획명 또는 담당자" />
 				</div>
-					<button type="button" class="btn btn-primary mb-2" id="searchBtn">
-						<i class="fas fa-search"></i>
-					</button>
+				<button type="button" class="btn btn-primary mb-2" id="searchBtn">
+					<i class="fas fa-search"></i>
+				</button>
 			</div>
 		</div>
 		<div id="planGrid"></div>
@@ -80,11 +80,13 @@
 						},
 						{
 							header: '계획명',
-							name: 'prodName'
+							name: 'prodPlanName',
+							width: 300
 						},
 						{
 							header: '계획담당자',
-							name: 'prodPlanName'
+							name: 'prodName',
+							width: 100
 						},
 
 						{
@@ -139,7 +141,8 @@
 						},
 						{
 							header: '제품명',
-							name: 'prdtName'
+							name: 'prdtName',
+						   align: 'center'
 						},
 						{
 							header: '계획량',
