@@ -71,11 +71,8 @@
 		)}
 	</insert> 
   	<select id="searchProdPlan" resultType="ProdVO">
-  		select *
-		  from dt_prod_plan dtp join prod_plan p 
-		                          on dtp.prod_plan_code = p.prod_plan_code
-		                        join prdt_table pt
-		                          on dtp.prdt_code = pt.prdt_code
+  		select p.*, o.dod_date
+		from prod_plan p left join orders o on p.order_code = o.order_code
 		<where>
 			<if test="prodName != null and !prodName.equals('')">
 				p.prod_name like '%' || #{prodName} || '%'
@@ -97,10 +94,10 @@
   		where prod_inst_yn = 'n'
   		order by prod_plan_date -->
   	<select id="selectProd" resultType="ProdVO" fetchSize="1000" >
-  		SELECT DISTINCT prod_plan_code, prod_plan_name, prod_name, prod_plan_date, order_code, prod_plan_cnt, SUM(NVL(prod_inst_cnt,0))
-		FROM dt_prod_inst JOIN prod_inst USING(prod_inst_code) 
-		                  RIGHT JOIN prod_plan USING(prod_plan_code)
-		                  JOIN dt_prod_plan USING(prod_plan_code,prdt_code)
+  		SELECT DISTINCT prod_plan_code, prod_plan_name, prod_name, prod_plan_date, order_code <!--, prod_plan_cnt, SUM(NVL(prod_inst_cnt,0))-->
+		FROM prod_plan   JOIN dt_prod_plan USING(prod_plan_code)
+                         left JOIN prod_inst USING(prod_plan_code) 
+                         left JOIN dt_prod_inst USING(prod_inst_code,prdt_code)
 		GROUP BY prod_plan_code, prod_plan_name, prod_name, prod_plan_date, order_code, prdt_code, prod_plan_cnt
 		HAVING prod_plan_cnt > SUM(NVL(prod_inst_cnt,0))
 		ORDER BY prod_plan_code

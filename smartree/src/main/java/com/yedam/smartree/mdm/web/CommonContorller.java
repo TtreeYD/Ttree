@@ -105,11 +105,11 @@ public class CommonContorller {
 		String realPath = request.getServletContext().getRealPath("/");
 
 		// 현재경로/upload/파일명이 저장 경로
-		String savePath = realPath+ "/" + newFileName;
+		String savePath = uploadPath+ "/image/" + newFileName;
 
 		// 브라우저에서 이미지 불러올 때 절대 경로로 불러오면 보안의 위험 있어 상대경로를 쓰거나 이미지 불러오는 jsp 또는 클래스 파일을 만들어 가져오는 식으로 우회해야 함
 		// 때문에 savePath와 별개로 상대 경로인 uploadPath 만들어줌
-		String uploadPath = "./upload/" + newFileName; 
+		String uploadPath = "/mdm/help/" + newFileName; 
 
 		// 저장 경로로 파일 객체 생성
 		File file = new File(savePath);
