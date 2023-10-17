@@ -5,7 +5,7 @@
 	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>SMARTREE</title>
 <style type="text/css">
 .input-group {
 	margin-bottom: 10px;
@@ -233,7 +233,7 @@ input::-webkit-inner-spin-button {
 			
 			$('#searchBpName').on('keypress', function (ev) {
 				if (ev.which == 13) {
-					event.preventDefault();
+					ev.preventDefault();
 					searchBp();
 				}
 			})
