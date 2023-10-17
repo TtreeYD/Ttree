@@ -156,7 +156,7 @@
         ON n.mtl_code = t.mtl_code
         JOIN business_partner b
         ON n.bp_code = b.bp_code
-        WHERE t.mtl_name like '%'||#{mtlName}||'%' AND n.mtl_manager like '%'||#{mtlManager}||'%'
+        WHERE t.mtl_name like '%'||#{mtlName}||'%' AND n.mtl_manager like '%'||#{mtlManager}||'%' AND n.mtl_where = 'MT01'
           <if test="startMtlNeedDate != null and endMtlNeedDate != null">
     		AND TO_CHAR(n.mtl_date,'YY/MM/DD') BETWEEN TO_CHAR(#{startMtlNeedDate},'YY/MM/DD') AND TO_CHAR(#{endMtlNeedDate},'YY/MM/DD')
   		  </if>
