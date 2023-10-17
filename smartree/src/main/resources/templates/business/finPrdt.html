@@ -14,8 +14,8 @@
 		<hr>
 			<div class="row">
 				<div class="col-6">
-					<h2 class="mb-4">제품별 수량</h2>
-					<div id="prdtGrid"></div>
+					<h2 class="mb-4">제품별 재고</h2>
+					<div id="prdtGrid" class="lightgrey"></div>
 				</div>
 				<div class="col-6">
 					<div style="display:flex; justify-content: space-between;">
@@ -163,6 +163,7 @@
 						},
 						success:function(result){
 							lotPrdtGrid.resetData(result);
+							finPrdt.restore()
 						},
 						error:function(err){
 							console.log(err);
