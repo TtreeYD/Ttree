@@ -62,7 +62,7 @@
 							<div class="input-group-prepend  col-4">
 								<span class="input-group-text col">비밀번호*</span>
 							</div>
-							<input class="col-8" id="empPw" name="empPw">
+							<input type="password" class="col-8" id="empPw" name="empPw">
 						</div>
 						<div class="input-group mb-3">
 							<div class="input-group-prepend  col-4">
@@ -113,6 +113,7 @@
 							
 							
 							<div class="btn-group ml-auto" role="group">
+								<button id="reuseEmpBtn" class="btn btn-primary">활성</button>
 								<button id="delEmpBtn" class="btn btn-primary">삭제</button>
 							</div>
 						</div>
@@ -405,6 +406,11 @@
 					success: result => {
 						toastr.success('성공적으로 등록되었습니다.')
 						$('#empAddModal').modal('hide')
+						$('#empName').val('');
+						$('#empPw').val('');
+						$('#empDept').val('');
+						$('#empClass').val('');
+						$('#empPhone').val('');
 						getEmpList();
 					},
 					error: err => console.log(err)
@@ -523,6 +529,15 @@
 					error: err => console.log(err)
 				})
 			}
+			
+			// 활성전환
+			$('#reuseEmpBtn').on('click',function() {
+				if (grid2.getCheckedRows().length == 0) {
+					toastr.warning('선택된 값이 없습니다.')
+					return
+				}
+				let vo = grid2.getCheckedRows()
+			})
 			
 			//비활성 삭제
 			$('#delEmpBtn').on('click', function () {

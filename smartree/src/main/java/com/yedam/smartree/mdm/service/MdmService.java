@@ -22,6 +22,7 @@ public interface MdmService {
 	int delEmp(List<EmpVO> list);
 	int unUseEmp(List<EmpVO> list);
 	int upEmp(List<EmpVO> list);
+	int reuseEmp(List<EmpVO> list);
 	
 	
 	// 제품관리
