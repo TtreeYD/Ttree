@@ -114,7 +114,7 @@
    
     // 엑셀버튼 다운
     const options = {
-	  fileName: 'check'
+	  fileName: '자재관리'+getToday()
 	};
     $('#ExcelBtn').on('click',function(){
     	grid.export('xlsx',options);

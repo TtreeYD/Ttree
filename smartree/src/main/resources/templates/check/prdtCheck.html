@@ -23,7 +23,7 @@
 	<div style="display: flex; flex-wrap: nowrap; justify-content: space-around; margin-top: 30px;">
 		<div>
 			<h3>제품검사목록</h3>
-			<div id="grid" style="width: 800px;"></div>
+			<div id="grid" class="lightgrey" style="width: 800px;"></div>
 		</div> 
 		<div>
 		
@@ -233,7 +233,17 @@
 	   	$('#addBtn').on('click',function(){
 		   	grid.blur();
 			grid2.blur();
-	   	 if (selectedRowKey != null) {
+			let noData = false;
+			let grid2Data = grid2.getData();
+			  for (let row of grid2Data) {
+			        if (!row.prdtChkVal || row.prdtChkVal.trim() === "") {
+			        	noData = true;
+			            break; 
+			        }
+			    }
+			  if (noData) {
+				  toastr.warning('검사값을 입력해야 합니다.');
+			    } else if(selectedRowKey != null) {
 	         chkList.chkData = [grid.getRow(selectedRowKey)];
 	         chkList.chkDtData = grid2.getData();
 	         console.log('123123', chkList);
