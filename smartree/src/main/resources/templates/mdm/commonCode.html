@@ -227,17 +227,6 @@
 				})
 			}
 
-			// 변경사항 저장
-			grid.on('afterChange', ev => {
-				let change = ev.changes
-				commonCode[change[0].rowKey][change[0].columnName] = change[0].value
-			})
-
-			grid2.on('afterChange', ev => {
-				let change = ev.changes
-				codeDetail[change[0].rowKey][change[0].columnName] = change[0].value
-			})
-
 			// 공통코드등록
 			$('#insertCommonCode').on('click', insertCommonCode)
 
@@ -247,15 +236,16 @@
 					toastr.warning('변경사항이 없습니다.');
 					return
 				}
+				let vo = grid.getData()
 				$.ajax({
 					url: '/mdm/insertCommonCode',
 					type: 'post',
 					headers: {
 						'Content-Type': 'application/json'
 					},
-					data: JSON.stringify(commonCode),
+					data: JSON.stringify(vo),
 					success: result => {
-						alert("등록완료")
+						toastr.success("등록완료")
 						selCommonCode();
 					},
 					error: err => console.log(err)
@@ -272,17 +262,17 @@
 					toastr.warning('변경사항이 없습니다.');
 					return
 				}
+				let vo = grid2.getData()
 				$.ajax({
 					url: '/mdm/insertCodeDetail',
 					type: 'post',
 					headers: {
 						'Content-Type': 'application/json'
 					},
-					data: JSON.stringify(codeDetail),
+					data: JSON.stringify(vo),
 					success: result => {
-						alert("등록완료")
+						toastr.success("등록완료")
 						selCodeDetail(codeType)
-						
 					},
 					error: err => console.log(err)
 				})
@@ -291,11 +281,10 @@
 			// 공통코드추가
 			$(addCommonCode).on('click', function () {
 				grid.blur()
-				commonCode.push({
+				grid.appendRow({
 					codeType: '',
 					typeName: ''
 				})
-				grid.resetData(commonCode)
 			})
 
 			// 상세코드추가
@@ -305,13 +294,12 @@
 					toastr.warning('공통코드를 선택해주세요');
 					return;
 				}
-				codeDetail.push({
+				grid2.appendRow({
 					codeId: '',
 					codeType: codeType,
 					codeName: '',
 					codeUse: 'Y'
 				})
-				grid2.resetData(codeDetail)
 			})
 			
 			// 공통코드삭제
@@ -319,6 +307,7 @@
 
 			function deleteCommonCode() {
 				let delData = grid.getCheckedRows()
+				let delKey = grid.getCheckedRowKeys()
 				if(delData.length==0) {
 					toastr.warning('선택된 값이 없습니다.')
 					return
@@ -336,7 +325,8 @@
 						} else{
 							toastr.success(result+ '건 삭제완료');	
 						}
-						selCommonCode();
+						grid.removeRows(delKey)
+						codeType = '';
 					},
 					error: err => console.log(err)
 				})
