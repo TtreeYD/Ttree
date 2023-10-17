@@ -316,6 +316,15 @@ public class MdmServiceImpl implements MdmService {
 		return mdmMapper.selectHelp(vo);
 	}
 
+	@Override
+	public int reuseEmp(List<EmpVO> list) {
+		int cnt = 0;
+		for(EmpVO vo : list) {
+			cnt += mdmMapper.reuseEmp(vo);
+		}
+		return cnt;
+	}
+
 	
 
 

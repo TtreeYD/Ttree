@@ -123,6 +123,13 @@
 		where emp_id = #{empId}
 	</update>
 	
+	<!-- 사원 활성 -->
+	<update id="reuseEmp" parameterType="EmpVO">
+		update emp_list
+		set emp_use = 'Y'
+		where emp_id = #{empId}
+	</update>
+	
 	<!-- 사원삭제 -->
 	<delete id="delEmp" parameterType="EmpVO">
 		DELETE emp_list

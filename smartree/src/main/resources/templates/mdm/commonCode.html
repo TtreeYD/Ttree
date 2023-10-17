@@ -306,29 +306,42 @@
 			$('#deleteCommonCode').on('click', deleteCommonCode)
 
 			function deleteCommonCode() {
+				grid.blur()
 				let delData = grid.getCheckedRows()
 				let delKey = grid.getCheckedRowKeys()
 				if(delData.length==0) {
 					toastr.warning('선택된 값이 없습니다.')
 					return
 				}
-				$.ajax({
-					url: '/mdm/deleteCommonCode',
-					type: 'post',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					data: JSON.stringify(delData),
-					success: result => {
-						if(result==0){
-							toastr.warning('상세코드가 비어있지 않습니다.')
-						} else{
-							toastr.success(result+ '건 삭제완료');	
-						}
-						grid.removeRows(delKey)
-						codeType = '';
-					},
-					error: err => console.log(err)
+				Swal.fire({
+					title: '삭제하시겠습니까?',
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: '확인',
+					cancelButtonText: '취소'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$.ajax({
+							url: '/mdm/deleteCommonCode',
+							type: 'post',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							data: JSON.stringify(delData),
+							success: result => {
+								if(result==0){
+									toastr.warning('상세코드가 비어있지 않습니다.')
+								} else{
+									toastr.success(result+ '건 삭제완료');	
+									selCommonCode()
+								}
+								codeType = '';
+							},
+							error: err => console.log(err)
+						})
+					}
 				})
 			}
 			
@@ -336,6 +349,7 @@
 			$('#deleteCodeDetail').on('click', deleteCodeDetail)
 			
 			function deleteCodeDetail() {
+				grid.blur()
 				let delData = grid2.getCheckedRows()
 				if(delData.length == 0) {
 					toastr.warning('선택된 값이 없습니다.')
@@ -349,18 +363,30 @@
 					toastr.warning('사용중인 코드가 있습니다.')
 					return
 				}
-				$.ajax({
-					url: '/mdm/deleteCodeDetail',
-					type: 'post',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					data: JSON.stringify(delData),
-					success: result => {
-						toastr.success(result+ '건 삭제완료');	
-						selCodeDetail(codeType)
-					},
-					error: err => console.log(err)
+				Swal.fire({
+					title: '삭제하시겠습니까?',
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: '확인',
+					cancelButtonText: '취소'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$.ajax({
+							url: '/mdm/deleteCodeDetail',
+							type: 'post',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							data: JSON.stringify(delData),
+							success: result => {
+								toastr.success(result+ '건 삭제완료');	
+								selCodeDetail(codeType)
+							},
+							error: err => console.log(err)
+						})
+					}
 				})
 			}		</script>
 	</div>
