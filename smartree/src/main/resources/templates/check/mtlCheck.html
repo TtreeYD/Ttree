@@ -121,6 +121,12 @@
 		            useClient: true,
 	              },
 			      columns: [
+			    	 {
+        	          header: '검사코드',
+        	          name: 'mtlChkCode',
+        	          align: 'center',
+        	          hidden : true
+        	        },
 	 	    	    {
         	          header: '발주일자',
         	          name: 'mtlDate',
@@ -350,6 +356,7 @@
 					
 					let data = grid2.getData();
 					let datas = grid2.getCheckedRows();
+					let searchOption = $('#searchOption').val();
 					console.log(datas);
 					if(datas.length ==0 ){
 						toastr.warning("체크 후 저장하세요.");
@@ -367,7 +374,7 @@
 						console.log(datas);
 						toastr.success('저장완료');
 						unsavedChanges = false;
-						mtlChkNO();
+					    mtlChkOK();
 					},
 					error: function(err) {
 						console.log(err);
@@ -377,7 +384,7 @@
 				
 				//검색옵션 값
 				$('#searchBtn').on('click', function() {
-				    const searchOption = $('#searchOption').val();
+					 searchOption = $('#searchOption').val();
 				    if (searchOption == 'mtlChkOK') {
 				    	mtlChkOK();
 				    } else if (searchOption == 'mtlChkNO'){

@@ -24,7 +24,7 @@
 	<div class="row">
 		<div class="col-6">
 			<h2>제품목록</h2>
-			<div id="grid"></div>
+			<div id="grid" class="lightgrey"></div>
 		</div>
 		<div class="col-6">
 		<div>
@@ -230,9 +230,9 @@
 				 
 				// 모달창 저장버튼이벤트
 				 $('#addModalBtn').on('click', function (ev) {
-					 if(!ev.rowKey==undefined){
+					 if(ev.rowKey==undefined){
 							// 체크여부확인 경고창
-							alert("체크하세요");
+							toastr.warning('검사를 선택 후 저장하세요.');
 			        		return; 
 			        }
 					 	let datas = prdtStdModalGrid.getCheckedRows();
