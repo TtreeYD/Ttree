@@ -337,9 +337,6 @@
 					orderCode : data.list[0].orderCode,
 					prodPlanCode : $('#prodPlanCode').val()
 				}
-				console.log(data);
-				console.log(data.vo.prodPlanCode);
-				console.log(data.vo.prodPlanCode != '');
 				
 			if(data.vo.prodPlanCode != ''){
 				$.ajax({
@@ -549,8 +546,25 @@
 		today = today.toISOString().slice(0, 10);
 		bir = document.getElementById("prodPlanDate");
 		bir.value = today;
-		
-		
+		//숫자
+		grid.on('afterChange',(ev)=>{
+			let rowKey = ev.changes[0].rowKey
+			let colName = ev.changes[0].columnName
+			let check1 = isNaN(grid.getValue(rowKey ,'prodPlanCnt' ));
+			let check2 = isNaN(grid.getValue(rowKey ,'prodRank' ));
+			let check3 = grid.getValue(rowKey ,'prodPlanCnt')
+			let check4 = grid.getValue(rowKey ,'prodRank')
+			if(check1||check2){
+				 toastr.warning('숫자를 입력해주세요')
+				 grid.setValue(rowKey, colName, 0)
+				 return;
+			 }
+			if(check3 < 0||check4<0){
+				 toastr.warning('0이상의 값을 넣어주세요.')
+				 grid.setValue(rowKey, colName, 0)
+				 return;
+			 }
+		})
 	};
 	  
     </script>

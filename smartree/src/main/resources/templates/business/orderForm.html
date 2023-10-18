@@ -709,7 +709,26 @@
             	   dtOrder.setRows(datas)
                	   }
 			         
+				dtOrder.on('afterChange',(ev)=>{
+					let rowKey = ev.changes[0].rowKey
+					let colName = ev.changes[0].columnName
+					let check1 = isNaN(dtOrder.getValue(rowKey ,'orderDtCnt' ));
+					let check2 = isNaN(dtOrder.getValue(rowKey ,'orderDtPrice' ));
+					
+					let check3 = dtOrder.getValue(rowKey ,'orderDtCnt' )
+					let check4 = dtOrder.getValue(rowKey ,'orderDtPrice' )
+					if(check1||check2){
+						 toastr.warning('숫자를 입력해주세요')
+						 dtOrder.setValue(rowKey, colName, 0)
+						 return;
+					 }
+					if(check3 < 0||check4<0){
+						 toastr.warning('0이상의 값을 넣어주세요.')
+						 dtOrder.setValue(rowKey, colName, 0)
+						 return;
+					 }
 				})
+			})
 				
 			
 		</script>
