@@ -162,7 +162,7 @@ public class CommonRestController {
 		return mdmService.unUseEmp(list);
 	}
 	
-// 비활성화
+   // 활성전환
 	@PostMapping("/reuseEmp")
 	public int reuseEmp(@RequestBody List<EmpVO> list) {
 		return mdmService.reuseEmp(list);

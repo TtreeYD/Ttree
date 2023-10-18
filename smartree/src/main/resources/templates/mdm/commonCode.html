@@ -269,6 +269,16 @@
 					return
 				}
 				let vo = grid2.getData()
+				let lengthChk = false
+				for(let obj of vo){
+					if(obj.codeId.length != 4){
+						lengthChk = true
+					} 
+				}
+				if(lengthChk){
+					toastr.warning('상세코드의 길이를 확인해 주세요.')
+					return
+				}
 				$.ajax({
 					url: '/mdm/insertCodeDetail',
 					type: 'post',
