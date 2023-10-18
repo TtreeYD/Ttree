@@ -252,6 +252,7 @@ public class EqmController {
 	@GetMapping("/display")
 	@ResponseBody
 	public ResponseEntity<byte[]> getFile(String fileName) {
+		System.out.println(fileName+"111111111111111111111111");
 		File file = new File(uploadPath + fileName);
 		ResponseEntity<byte[]> result = null;
 
