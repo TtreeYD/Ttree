@@ -1,6 +1,8 @@
 package com.yedam.smartree.mdm.web;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -102,8 +105,6 @@ public class CommonContorller {
 		String newFileName = UUID.randomUUID() + ext;
 
 		// 이미지를 현재 경로와 연관된 파일에 저장하기 위해 현재 경로를 알아냄
-		String realPath = request.getServletContext().getRealPath("/");
-		System.out.println(realPath);
 		
 		File uploadPathFolder = new File(uploadPath, "image");
 		
@@ -119,13 +120,11 @@ public class CommonContorller {
 
 		// 브라우저에서 이미지 불러올 때 절대 경로로 불러오면 보안의 위험 있어 상대경로를 쓰거나 이미지 불러오는 jsp 또는 클래스 파일을 만들어 가져오는 식으로 우회해야 함
 		// 때문에 savePath와 별개로 상대 경로인 uploadPath 만들어줌
-		String uploadPath = "/mdm/help/" + newFileName; 
-
-		// 저장 경로로 파일 객체 생성
-		File file = new File(savePath);
+		String uploadPath = "/eqm/display?fileName=/image/" + newFileName; 
 
 		// 파일 업로드
-		uploadFile.transferTo(file);
+		Path filePath = Paths.get(savePath);
+		uploadFile.transferTo(filePath);
 
 		// uploaded, url 값을 modelandview를 통해 보냄
 		mav.addObject("uploaded", true); // 업로드 완료
@@ -135,3 +134,4 @@ public class CommonContorller {
 	}
 	
 }
+
