@@ -16,6 +16,7 @@
 
 <body>
 	<div layout:fragment="content">
+		<div class="mx-auto" style="width: 1400px;">
 		<div class="row">
 			<h1 class="col-6">도움말 관리</h1>
 			<div class="input-group col-6 mb-4">
@@ -42,8 +43,9 @@
 				</div>
 			</div>
 		</div>
-		<div id="toolbar-container"></div>
-		<div id="editor"></div>
+			<div id="toolbar-container"></div>
+			<div id="editor"></div>
+		</div>
 		<script>
 			DecoupledEditor
 				.create(document.querySelector('#editor'), {

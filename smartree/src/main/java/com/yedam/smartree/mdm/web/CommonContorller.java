@@ -102,8 +102,6 @@ public class CommonContorller {
 		String newFileName = UUID.randomUUID() + ext;
 
 		// 이미지를 현재 경로와 연관된 파일에 저장하기 위해 현재 경로를 알아냄
-		String realPath = request.getServletContext().getRealPath("/");
-		System.out.println(realPath);
 		
 		File uploadPathFolder = new File(uploadPath, "image");
 		
