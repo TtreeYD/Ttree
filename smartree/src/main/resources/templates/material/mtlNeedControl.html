@@ -519,15 +519,21 @@ margin : 10px;
 					toastr.warning("발주할 내역이 없습니다");
 					return;
 				}
-				mtlNeedGrid.needList = mtlNeedGrid.getData();
-			    if (mtlNeedGrid.needList[0].bpName == null) {
-			        toastr.warning("거래처를 입력해주세요");
-			        return;
-			    }
-			    if (mtlNeedGrid.needList[0].mtlCnt == 0) {
-			        toastr.warning("수량을 입력해주세요");
-			        return;
-			    }
+				let needList = mtlNeedGrid.getData();
+				let chk = true
+				for(let need of needList){
+					if (need.bpName == null) {
+				        toastr.warning("거래처를 입력해주세요");
+				        chk = false;
+				        break;
+				    }
+				    if (need.mtlCnt <= 0 || isNaN(need.mtlCnt)) {
+				        toastr.warning("수량을 바르게 입력해주세요");
+				        chk = false;
+				        break;
+				    }
+				}
+				if(!chk) return;
 				$.ajax({
 					url: '/insertNeedMtl',
 					type: 'POST',
