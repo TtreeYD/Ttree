@@ -48,7 +48,6 @@ public class ProdServiceImpl implements ProdService {
 			return 0 ;
 		}
 		String prodPlanCode = vo.getVo().getProdPlanCode();
-		System.out.println();
 		// 계획 상세 저장하는 for문
 		for(ProdVO pvo : vo.getList()) {
 			pvo.setProdPlanCode(prodPlanCode);
