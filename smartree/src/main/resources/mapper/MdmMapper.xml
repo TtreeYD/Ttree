@@ -160,9 +160,11 @@
 			   emp_class,
 			   emp_pw,
 			   emp_phone,
+			   emp_use,
 			   'ROLE_'||UPPER(emp_dept) emp_auth
 		FROM   emp_list
 		WHERE emp_id = #{empId}
+		AND emp_use = 'Y'
 	</select>
 	
 	
