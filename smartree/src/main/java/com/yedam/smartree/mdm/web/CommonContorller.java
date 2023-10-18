@@ -1,6 +1,8 @@
 package com.yedam.smartree.mdm.web;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -119,11 +121,9 @@ public class CommonContorller {
 		// 때문에 savePath와 별개로 상대 경로인 uploadPath 만들어줌
 		String uploadPath = "/mdm/help/" + newFileName; 
 
-		// 저장 경로로 파일 객체 생성
-		File file = new File(savePath);
-
 		// 파일 업로드
-		uploadFile.transferTo(file);
+		Path filePath = Paths.get(savePath);
+		uploadFile.transferTo(filePath);
 
 		// uploaded, url 값을 modelandview를 통해 보냄
 		mav.addObject("uploaded", true); // 업로드 완료
