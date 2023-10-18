@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -119,7 +120,7 @@ public class CommonContorller {
 
 		// 브라우저에서 이미지 불러올 때 절대 경로로 불러오면 보안의 위험 있어 상대경로를 쓰거나 이미지 불러오는 jsp 또는 클래스 파일을 만들어 가져오는 식으로 우회해야 함
 		// 때문에 savePath와 별개로 상대 경로인 uploadPath 만들어줌
-		String uploadPath = "/mdm/help/" + newFileName; 
+		String uploadPath = "/eqm/display?fileName=/image/" + newFileName; 
 
 		// 파일 업로드
 		Path filePath = Paths.get(savePath);
@@ -133,3 +134,4 @@ public class CommonContorller {
 	}
 	
 }
+

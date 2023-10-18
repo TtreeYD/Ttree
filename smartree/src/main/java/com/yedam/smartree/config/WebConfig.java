@@ -14,17 +14,5 @@ public class WebConfig implements WebMvcConfigurer {
 	MappingJackson2JsonView jsonView() {
 		return new MappingJackson2JsonView();
 	}
-	
-	@Value("${resource.handler}")
-   private String resourceHandler;
-
-   @Value("${resource.location}")
-   private String resourceLocation;
-
-   @Override
-   public void addResourceHandlers(ResourceHandlerRegistry registry) {
-       registry.addResourceHandler(resourceHandler)
-               .addResourceLocations(resourceLocation);
-   }
-   
+	   
 }
