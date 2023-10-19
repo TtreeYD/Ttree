@@ -6,6 +6,8 @@
 <head>
     <meta charset="UTF-8" />
     <title>SMARTREE</title>
+    <link rel="shortcut icon" href="../startbootstrap/img/dotory.png" type="image/x-icon"> 
+
     <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1, user-scalable=yes,initial-scale=1.0" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" integrity="sha512-3pIirOrwegjM6erE5gPSwkUzO+3cTjpnV9lexlNZqvupR64iZBnOOTiiLPb9M36zpMScbmUNIcHUqKD47M719g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/tui-grid@4.21.16/dist/tui-grid.min.css" rel="stylesheet">
@@ -81,7 +83,7 @@
 			font-family: 'Ariado', sans-serif;
 			font-size: 18px;
 		} 
-		.lightgrey .tui-grid-cell-current-row td{
+		.lightgrey .tui-grid-cell-current-row td:not(.tui-grid-cell.red, .tui-grid-cell.green){
 			background-color: lightgray;
 			font-weight: bold;
 		}
@@ -299,6 +301,34 @@
     let newPassword = $('#newPasswordInput').val();
     let newPassword2 = $('#newPasswordInput2').val();
     let pw = [[${session.loginMember.empPw}]];
+    
+    function getToday(){
+		const date = new Date();
+		
+		const year = date.getFullYear();
+		const month = ('0' + (date.getMonth() + 1)).slice(-2);
+		const day = ('0' + date.getDate()).slice(-2);
+		const hours = ('0' + date.getHours()).slice(-2);
+		const minutes = ('0' + date.getMinutes()).slice(-2);
+		const seconds = ('0' + date.getSeconds()).slice(-2);
+		
+		return year + month + day;
+	}
+	
+	function getNow(){
+		const date = new Date();
+		
+		const year = date.getFullYear();
+		const month = ('0' + (date.getMonth() + 1)).slice(-2);
+		const day = ('0' + date.getDate()).slice(-2);
+		const hours = ('0' + date.getHours()).slice(-2);
+		const minutes = ('0' + date.getMinutes()).slice(-2);
+		const seconds = ('0' + date.getSeconds()).slice(-2);
+		
+		return year + '-' + month + '-' + day + " " + hours + ':' + minutes + ':' + seconds;
+	}
+    
+    
     
     toastr.options = {
 			  positionClass: "toast-top-center",

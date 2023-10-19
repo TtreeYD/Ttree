@@ -200,7 +200,7 @@
                   {
                     header: "설비명",
                     name: "eqmName",
-                    align: "center",
+                    align: "left",
                   },
                   {
                     header: "설비상태",
@@ -661,8 +661,9 @@
                // console.log(ev.rowKey)
                 let data = grid.getValue(ev.rowKey, "eqmCode");
                 let data2 = grid.getValue(ev.rowKey, "eqmState");
+              
             //   console.log(data);
-               console.log(data2);
+               
 
                if(data2 =='비가동'){
             	   let eqmState ='S';

@@ -112,7 +112,7 @@
                 from eqm_insp i
                 WHERE e.eqm_code = i.eqm_code ) as NEXT_INSP_DATE
         from eqm e
-        where  EQM_STATE != 'E' and EQM_STATE != 'S'
+        where  EQM_STATE = 'Y'
         ORDER BY eqm_code
   	</select>
   	
@@ -246,7 +246,7 @@
   			<if test="eqmName != null and !eqmName.equals('')">
   				e.eqm_name LIKE '%'||#{eqmName}||'%'
   			</if>
-  			and EQM_STATE != 'E' and EQM_STATE != 'S'
+  			and EQM_STATE = 'Y'
   		</where>  				
   		 
   		ORDER BY eqm_code
@@ -264,7 +264,7 @@
   	<!-- 설비등록  -->
   	<insert id="insertEqm" parameterType="EqmVO">
   	<selectKey keyProperty="eqmCode" resultType="String" order="BEFORE">
-  		select 'eqm' || LPAD(eqm_code_seq.NEXTVAL, 7, '0') as eqmCode from dual
+  		select 'EQM' || LPAD(eqm_code_seq.NEXTVAL, 7, '0') as eqmCode from dual
   	</selectKey>
   	INSERT INTO EQM
   			 ( 

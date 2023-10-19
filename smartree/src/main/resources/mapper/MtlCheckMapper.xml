@@ -18,6 +18,7 @@
 		JOIN    business_partner p
 		  ON    n.bp_code = p.bp_code
         WHERE   mtl_where = 'MT01'
+        ORDER BY n.mtl_date desc
   	</select>
   	
   	<select id="getMtl" resultType="MtlCheckVO">
@@ -113,7 +114,7 @@
 	<select id="selectChkAll" resultType="MtlCheckVO">
 		SELECT *
 		FROM mtl_chk c JOIN mtl_table t using(mtl_code)
-		ORDER BY mtl_chk_code
+		ORDER BY mtl_date desc
   	</select>
   	
   	<select id="chkAll">
@@ -121,6 +122,7 @@
            n.mtl_date,
            n.mtl_name,
            n.mtl_code,
+           c.mtl_chk_code,
            c.mtl_cnt,
            c.mtl_error_cnt,
            c.mtl_pass_cnt,

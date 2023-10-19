@@ -81,7 +81,7 @@
 					            <table id="conversation" class="table">
 					                <thead>
 					                <tr>
-					                    <th>예담단톡</th>
+					                    <th>TTREE</th>
 					                </tr>
 					                </thead>
 					                <tbody id="greetings">
@@ -131,6 +131,7 @@
 		let userName = [[${session.loginMember.empName}]]; 
 		let userText = $("#sendMessage").val();
 		const cnt = $("#cnt");
+		
 		const date = new Date();
 		
 		const year = date.getFullYear();
@@ -141,7 +142,6 @@
 		const seconds = ('0' + date.getSeconds()).slice(-2);
 		
 		const dateStr = year + '-' + month + '-' + day + " " + hours + ':' + minutes + ':' + seconds;
-		const formattedDate = date.toISOString().slice(0, 19).replace("T", " ");
 		console.log(dateStr);
 		
 		
@@ -150,6 +150,9 @@
 				content : userText,
 				sendTime : dateStr
 		}
+		
+		
+		
 	$(document).ready(function() {
 		
 		DecoupledEditor
@@ -238,8 +241,8 @@
 			});
 		
 		const stompClient = new StompJs.Client({
-			 brokerURL: 'ws://localhost:8090/chatserver'
-		   // brokerURL: 'ws://dotoryman.store/chatserver'
+			// brokerURL: 'ws://localhost:8090/chatserver'
+		    brokerURL: 'ws://dotoryman.store/chatserver'
 		});
 		connect();
 		

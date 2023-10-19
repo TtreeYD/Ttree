@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css">
 <script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <meta charset="UTF-8">
-<title>자재-발주관리</title>
+<title>SMARTREE</title>
 <style>
 .selec {
 background-color: cadetblue;
@@ -331,6 +331,11 @@ margin : 10px;
                         let day = (
                             "0" + now.getDate()
                         ).substr(-2);
+                        let day2 = (
+                                "0" + (now.getDate() + 3)
+                            ).substr(-2);
+                        let mtlWishDate =
+                        	year + "-" + month + "-" + day2;
                         let mtlDate =
                             year + "-" + month + "-" + day;
 
@@ -342,7 +347,8 @@ margin : 10px;
                             	mtlType: mtlType,
                             	mtlCnt: (-1)*mtlNow,
                             	mtlUnit: mtlUnit,
-                            	mtlManager: manager
+                            	mtlManager: manager,
+                            	mtlWishDate: mtlWishDate
                             },
                             { at: 0 }
                         );
@@ -513,6 +519,21 @@ margin : 10px;
 					toastr.warning("발주할 내역이 없습니다");
 					return;
 				}
+				let needList = mtlNeedGrid.getData();
+				let chk = true
+				for(let need of needList){
+					if (need.bpName == null) {
+				        toastr.warning("거래처를 입력해주세요");
+				        chk = false;
+				        break;
+				    }
+				    if (need.mtlCnt <= 0 || isNaN(need.mtlCnt)) {
+				        toastr.warning("수량을 바르게 입력해주세요");
+				        chk = false;
+				        break;
+				    }
+				}
+				if(!chk) return;
 				$.ajax({
 					url: '/insertNeedMtl',
 					type: 'POST',
@@ -622,7 +643,7 @@ margin : 10px;
 				mtlNeedGrid.on('click', (ev)=>{
 		          if (ev.columnName === 'bpName') {
 						$.ajax({
-							url:'/mdm/selectBpList',
+							url:'/mtlBpList',
 				            method: 'get',
 				            data:[],
 							success: function (result) {
@@ -764,9 +785,13 @@ margin : 10px;
                         let day = (
                             "0" + now.getDate()
                         ).substr(-2);
+                        let day2 = (
+                                "0" + now.getDate()+14
+                            ).substr(-2);
+                        let mtlWishDate =
+                        	year + "-" + month + "-" + day2;
                         let mtlDate =
                             year + "-" + month + "-" + day;
-                        
 					 	let datas = matGrid.getCheckedRows();
 					 	
 					 	let mtlCode = matGrid.getValue("mtlCode");
@@ -777,6 +802,7 @@ margin : 10px;
 					 		data.mtlManager = manager;
 					 		data.mtlWhere = mtlWhere;
 					 		data.needCode = needCode;
+					 		data.mtlWishDate= mtlWishDate;
 					 		delete data.rowKey;
 					 		delete data._attributes;
 							mtlNeedGrid.appendRow(data);
@@ -838,10 +864,6 @@ margin : 10px;
                                 rowKey,
                                 "bpCode"
                         );
-                        let mtlWishDate = needModalGrid.getValue(
-                                rowKey,
-                                "mtlWishDate"
-                        );
                         let mtlUnit = needModalGrid.getValue(
                                 rowKey,
                                 "mtlUnit"
@@ -869,6 +891,12 @@ margin : 10px;
                         let day = (
                             "0" + now.getDate()
                         ).substr(-2);
+                        let day2 = (
+                                "0" + (now.getDate()+3) 
+                            ).substr(-2);
+                        let mtlWishDate =
+                        	year + "-" + month + "-" + day2;
+                        
                         let mtlDate =
                             year + "-" + month + "-" + day;
 

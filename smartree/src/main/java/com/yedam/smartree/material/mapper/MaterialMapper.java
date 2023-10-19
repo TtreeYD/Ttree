@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.yedam.smartree.material.service.MaterialVO;
+import com.yedam.smartree.mdm.service.MdmBpVO;
 
 @Mapper
 public interface MaterialMapper {
@@ -54,4 +55,6 @@ public interface MaterialMapper {
 	public List<MaterialVO> selectMtlOutList(MaterialVO vo);
 	// 출고조회 조건검색
 	public List<MaterialVO> searchOut(MaterialVO vo);
+	// 거래처목록 출력
+	public List<MaterialVO> mtlBpList(MaterialVO vo);
 }

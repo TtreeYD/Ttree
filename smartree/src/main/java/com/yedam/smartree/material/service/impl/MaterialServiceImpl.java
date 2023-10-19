@@ -128,5 +128,10 @@ public class MaterialServiceImpl implements MaterialService {
 	public List<MaterialVO> searchOut(MaterialVO vo) {
 		return materialMapper.searchOut(vo);
 	}
+	// 거래처 리스트
+	@Override
+	public List<MaterialVO> mtlBpList(MaterialVO vo) {
+		return materialMapper.mtlBpList(vo);
+	}
 
 }

@@ -167,6 +167,26 @@
 	    		data:data,
 	    		success:function(result){
 	    			console.log(result);
+	    			for(let item of result){
+	    				console.log(item)
+	    				if(item.prdtChkResult==='적합'){
+	    					item._attributes= {
+	    	            			className:{
+	    	            				column : {
+	    	            					prdtChkResult : ['green']
+	    	            				}
+	    	            			}
+	    		            	}
+	    				} else {
+	    					item._attributes= {
+	    	            			className:{
+	    	            				column : {
+	    	            					prdtChkResult : ['red']
+	    	            				}
+	    	            			}
+	    		            	}
+	    				}
+	    			}
 	    			grid.resetData(result);
 	    		},
 	    		error:function(err){
@@ -207,7 +227,7 @@
 	    				}
 	    			}
 	    			grid2.resetData(result);
-	    			allProcess.click();
+	    			//allProcess.click();
 	    		},
 	    		error:function(err){
 	    			console.log(err);
