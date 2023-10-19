@@ -126,6 +126,7 @@
 			</div>
 		</div>
 		<script>
+			var Grid = tui.Grid;
 			var deptList = []
 			
 			class lengthChk {
@@ -241,7 +242,7 @@
 				error: err => console.log(err)
 			})
 
-			var Grid = tui.Grid;
+		
 
 			// 사원테이블 헤더
 			const grid = new Grid({
@@ -262,12 +263,12 @@
 					{
 						header: '이름',
 						name: 'empName',
-						editor:{
-							type: lengthChk,
-							option: {
-								maxLength: 12
-							}
-						}
+						editor: {
+					       	type: lengthChk,
+					         options: {
+					           maxLength: 12
+					         }
+					       }
 					},
 					{
 						header: '부서',
@@ -299,7 +300,7 @@
 						align: 'center',
 						editor:{
 							type: lengthChk,
-							option: {
+							options: {
 								maxLength: 18
 							}
 						}
