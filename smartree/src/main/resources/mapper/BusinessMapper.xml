@@ -23,7 +23,7 @@
   	</select>
   	<!-- 출고 전 주문서조회 -->
   		<select id="selectOrderBfOutList" resultType="BusinessVO">
-  			select o.order_code , b.bp_code , b.bp_name , o.order_date , o.dod_date , o.dod_state , o.order_manager
+  			select o.order_code , b.bp_code , b.bp_name , o.order_date , o.dod_date , o.dod_state , o.order_manager,o.prod_plan_yn
   		  	  from orders o join business_partner b
   		  				on o.bp_code = b.bp_code  	
   		  <where>
@@ -144,7 +144,8 @@
 		   set bp_code = #{bpCode},
 	    		order_date = #{orderDate},
 	    		dod_date = #{dodDate},
-	    		order_manager = #{orderManager}
+	    		order_manager = #{orderManager},
+	    		prod_plan_yn = #{prodPlanYn}
 		 where order_code = #{orderCode}
   	</update>
   	
@@ -164,7 +165,8 @@
 	  		#{orderDtCode},
 	  		#{prdtCode},
 	  		#{orderDtCnt},
-	  		#{orderCode}
+	  		#{orderCode},
+	  		#{orderDtPrice}
 	  	)}
   	</insert> 
   	
