@@ -141,13 +141,13 @@ float: right;
 		          dataType: 'json',
 		          success: function (result) {
 		            //날짜변환
-		            $(result).each(function (idx, obj) {
+/* 		            $(result).each(function (idx, obj) {
 		              for (let head of header) {
 		                if (head.slice(-4).toLowerCase() == 'date') {
 		                  obj[head] = getDate(obj[head]);
 		                }
 		              }
-		            });
+		            }); */
 		            mtlGrid.resetData(eval(result));
 		          },
 		          error: function (err) {
