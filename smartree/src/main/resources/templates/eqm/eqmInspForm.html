@@ -381,7 +381,7 @@
 	})
 	
 	
-	// 비가동 모달창 더블 클릭 후 폼에 값넣기
+	//// 비가동 모달창 더블 클릭 후 폼에 값넣기
 	function getEqmNoper(data){
 			   		   $.ajax({
 			   			   url:'/selectEqmNoper',
@@ -598,7 +598,7 @@
 		   	   }
 		   	   
 		   	   
-		   	// 저장 완료 후에도 input 채워보이게하는 함수
+		   	//// 저장 완료 후에도 input 채워보이게하는 함수
 		   	   function getEqm(data){
 		   		   $.ajax({
 		   			   url:'/selectEqm',
@@ -613,7 +613,7 @@
 		   			$('#eqmCode').val(result.eqmCode);
 		   			$('#eqmName').val(result.eqmName);
 		   			$('#noperCode').val('');
-		   	
+		   			
 		   		   },
 		      		error:function(err){	      			
 		          		console.log(err)
