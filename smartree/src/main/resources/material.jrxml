@@ -9,6 +9,7 @@
 	<style name="Detail" fontName="Arial" fontSize="12"/>
 	<parameter name="P_BP_NAME" class="java.lang.String"/>
 	<parameter name="P_MTL_DATE" class="java.lang.String"/>
+	<parameter name="pdfEncUrl" class="java.lang.String"/>
 	<queryString language="SQL">
 		<![CDATA[SELECT b.bp_code, b.bp_name, get_common(t.mtl_type, '003') AS mtl_type, n.mtl_code, t.mtl_name, t.mtl_unit, n.mtl_cnt, n.mtl_date , get_common(n.mtl_where, '009')mtl_where, n.need_code, n.mtl_wish_date, n.mtl_manager
 FROM mtl_need n JOIN mtl_table t ON n.mtl_code = t.mtl_code
@@ -152,7 +153,7 @@ WHERE b.bp_name = $P{P_BP_NAME}
 			</staticText>
 			<image>
 				<reportElement x="701" y="-10" width="100" height="100" uuid="d9645eac-b3a5-4da0-9dbe-ca56a817eea2"/>
-				<imageExpression><![CDATA["https://chart.googleapis.com/chart?cht=qr&chs=100x100&chl=http%3A%2F%2Fdotoryman.store%2Fmaterial%2FmtlPdf1%3FbpName%3DMacWood%26mtlDate%3D2023-10-18"]]></imageExpression>
+				<imageExpression><![CDATA[$P{pdfEncUrl}]]></imageExpression>
 			</image>
 		</band>
 	</title>
