@@ -280,17 +280,18 @@
 								listItems: deptList
 							}
 						},
+						
 					},
 					{
 						header: '직급',
 						name: 'empClass',
 						align: 'center',
-						editor:{
-							type: lengthChk,
-							option: {
-								maxLength: 10
-							}
-						}
+						editor: {
+					       	type: lengthChk,
+					         options: {
+					           maxLength: 10
+					         }
+					       }
 					},
 					{
 						header: '연락처',
