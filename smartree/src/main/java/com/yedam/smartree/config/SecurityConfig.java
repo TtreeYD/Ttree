@@ -23,7 +23,7 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			 .authorizeHttpRequests((requests) -> requests	
-		     .antMatchers("/","/main/**","/login/**","/common/**","/font/**","/startbootstrap/**","/app/**").permitAll()
+		     .antMatchers("/","/main/**","/material/mtlPdf**","/login/**","/common/**","/font/**","/startbootstrap/**","/app/**").permitAll()
 		     .anyRequest().authenticated()                    // .authenticated 인증된 사용자의 접근을 허용
 			 
 			)	
