@@ -325,7 +325,7 @@
 				})
 
 				// 모달창 저장버튼이벤트
-				 $('#addModalBtn').on('click', function (ev) {
+				/*  $('#addModalBtn').on('click', function (ev) {
 					 if(!ev.rowKey==undefined){
 							// 체크여부확인 경고창
 							alert("체크하세요");
@@ -335,7 +335,7 @@
 					 	let datas = grid3.getCheckedRows();
 						grid2.appendRows(datas);
 						$("#myModal").modal('hide');
-		        });
+		        }); */
 
 				let unsavedChanges = false;
 				
@@ -374,7 +374,11 @@
 						console.log(datas);
 						toastr.success('저장완료');
 						unsavedChanges = false;
-					    mtlChkOK();
+						if (searchOption == 'mtlChkOK') {
+					    	mtlChkOK();
+					    } else if (searchOption == 'mtlChkNO'){
+					    	mtlChkNO();
+					    }
 					},
 					error: function(err) {
 						console.log(err);
