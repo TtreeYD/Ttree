@@ -224,7 +224,8 @@
 						{
 							header: '주문코드',
 							name: 'orderCode',
-							align: 'center'
+							align: 'center',
+							sortable:true	
 						},
 						{
 							header: '업체코드',
@@ -692,7 +693,7 @@
 			         })
 			          order.on('afterChange', ev=>{
 			            let change = ev.changes
-			            newOrder[change[0].rowKey][change[0].columnName]=change[0].value
+			           // newOrder[change[0].rowKey][change[0].columnName]=change[0].value
 			         }) 
 					
 			       function calc() {

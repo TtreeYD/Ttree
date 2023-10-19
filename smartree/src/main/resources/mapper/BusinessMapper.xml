@@ -212,11 +212,12 @@
   	
   	<!-- 완제품재고조회 -->
   	<select id="selectFinPrdt" resultType="FinPrdtVO">
-  		select p.prdt_name , p.prdt_code  , sum(f.prdt_cnt) prdt_sum , p.prdt_ss
-		  from fin_prdt f join prdt_table p 
-		        on f.prdt_code = p.prdt_code
-	  group by p.prdt_name, p.prdt_code,  p.prdt_ss
-	  order by p.prdt_code
+  		select pt.prdt_code , nvl(a.prdt_cnt , 0) as prdt_sum , pt.prdt_ss , pt.prdt_name
+		  from prdt_table pt left outer join (select  prdt_code, sum(prdt_cnt) prdt_cnt
+                                    			from fin_prdt 
+                                     		   group by prdt_code) a
+                						on pt.prdt_code = a.prdt_code
+		  order by pt.prdt_code
   	</select>
   	
   	<!-- lot별 완제품조회 -->
@@ -306,6 +307,7 @@
   				and trunc(prdt_out_date) =trunc(#{prdtOutDate})
   			</if>
   		</where>
+  		order by prdt_out_date desc
   	</select>
   	<!-- 출고상세조회 -->
   	<select id="prdtOutDtList" resultType="FinPrdtVO">

@@ -307,7 +307,7 @@
 			$('#prodPlanSdate').val('');
 			$('#prodPlanEdate').val('');
 			$('#prodName').val(manager);
-
+			$('#dodDate').val('');
 			bir.value = today;
 		}
 		
@@ -443,6 +443,7 @@
 	      			orderCode : data1
 	      		},
 	      		success:function(result){
+	      			console.log(result);
 					$('#dodDate').val(result[0].dodDate);
 
   	            $("#orderModal").modal('hide');
