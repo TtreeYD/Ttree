@@ -9,39 +9,49 @@
 <title>SMARTREE</title>
 <style>
 #equipTable {
-	width: 1100px;
+	width: 1500px;
 	height: 400px;
 	border-collapse: collapse;
-	margin-left: 10px;
+	margin-left: 50px;
 	margin-top: 30px;
+	 
+  border-collapse: collapse;
+  border-radius: 10px;
+  
+  box-shadow: 0 0 0 1px #ddd;
+	
 }
 
 #equipTable th, td {
-	padding: 10px;
+	padding: 30px;
 	text-align: left;
 	border-bottom: 1px solid #ddd;
 }
 
 #equipTable th {
 	background-color: #f2f2f2;
+	font-size: 25px;
+	 
 }
 
 #equipTable input[type="text"] {
 	
-	padding: 8px;
+	padding: 4px;
+	width: 200px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	box-sizing: border-box;
 }
 #equipTable input[type="number"] {
-	width: 80px;
+	width: 150px;
 	padding: 4px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	box-sizing: border-box;
 }
+
 #selectBtn, #buttons {
-	margin-right: 300px;
+	margin-right: 90px;
 	float: right;
 }
 
@@ -49,14 +59,18 @@
 
 #im {
 	position: relative;
-	left: 800px;
-	bottom: 110px;
+	left: 1050px;
+	bottom: 180px;
+	border: 0px;
+}
+#preview{
+	border : 0;
 }
 
 #buttons {
 	position: relative;
 	left: 40px;
-	bottom: 100px;
+	bottom: 140px;
 }
 
 input::-webkit-outer-spin-button,
@@ -68,8 +82,8 @@ input::-webkit-inner-spin-button {
 </head>
 <body>
 	<div layout:fragment="content">
-		<h2>설비관리</h2>
-		<button type="button" id="selectBtn" class="btn btn-primary"
+		<h1>설비관리</h1>
+		<button type="button" id="selectBtn" class="btn btn-primary mb-3"
 			data-toggle="modal" data-target="#searchEqmModal">설비조회</button>
 		<div id="form">
 			<form name="infoForm" action="eqmForm" method="post"
@@ -87,8 +101,11 @@ input::-webkit-inner-spin-button {
 					<tr>
 						<th>사용여부 *</th>
 						<td>
-						<label for="y" style="margin-left: 10px; margin-right: 40px"><input type="radio" id="y"  name="eqmUcheck" value="Y" checked/> Yes </label> 
-						<label for="n"><input type="radio" id="n" name="eqmUcheck" value="N" /> No</label>
+
+						<label for="y" style="margin-left: 10px; margin-right: 40px; font-size: 20px;"><input type="radio" id="y"  name="eqmUcheck" value="Y" checked/> Yes </label> 
+						<label for="n" style="font-size: 20px; margin-right: 40px;"><input type="radio" id="n" name="eqmUcheck" value="N" /> No</label>
+						
+
 				
 						</td>
 						<th>공정구분</th>
@@ -112,13 +129,13 @@ input::-webkit-inner-spin-button {
 					<tr>
 						<th>점검주기</th>
 						<td><input type="number" class="text-right" maxlength="5" oninput="maxLengthChk(this)" name="inspCycle" id="inspCycle" value=0 />일</td>
-						<th>이미지</th>
+						<th rowspan="3">이미지</th>
 						<td><input class="form-control-file"  type="file" name="file" id="eqmImg" accept="image/*" /></td>
 					</tr>
 					<tr>
 						<th>제조업체 *</th>
-						<td><input type="text" id="mfgComp" name="mfgComp"
-							 /></td>
+						<td><input type="text" id="mfgComp" name="mfgComp" /></td>
+						
 					</tr>
 
 					<tr>
@@ -128,7 +145,7 @@ input::-webkit-inner-spin-button {
 				</table>
 
 				<div id="im">
-					<img id="preview" style="width: 120px; height: 120px; " />
+					<img id="preview" style="width: 220px; height: 170px; " />
 				</div>
 
 				<div id="buttons">
@@ -204,7 +221,7 @@ input::-webkit-inner-spin-button {
 		
 		
 		function saveEqm(){
-	 		
+
 	 		 
 			//설비명 테스트
 			if(infoForm.eqmName.value==''){
@@ -362,6 +379,7 @@ input::-webkit-inner-spin-button {
           
           // 단건조회 - 화면에 보이게한다
           function getEqm(data){
+
         	  $.ajax({
                   url: "/selectEqm",
                   method: "get",
