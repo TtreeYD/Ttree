@@ -225,7 +225,7 @@ float: right;
 	            	let bpName = mtlNeedListGrid.getValue(0 , "bpName");
 	            	let mtlDate = mtlNeedListGrid.getValue(0 , "mtlDate");
 	    			let pdfUrl = "http://dotoryman.store/material/mtlPdf1?bpName="+bpName+"&mtlDate="+mtlDate; 
-	            	let pdfEncUrl = "https://chart.googleapis.com/chart?cht=qr&chs=100x100&chl=" + encodeURIComponent(pdfUrl);
+	            	let pdfEncUrl =  encodeURIComponent(pdfUrl);
 	              	window.open("mtlPdf1?bpName="+bpName+"&mtlDate="+mtlDate,'pdf');
 	            	console.log(pdfEncUrl);
 	            	console.log(window.location.href);

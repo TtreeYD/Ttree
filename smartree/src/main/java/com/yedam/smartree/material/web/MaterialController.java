@@ -66,7 +66,7 @@ public class MaterialController {
 	}
 	// PDF 출력기능
 	@GetMapping(value="mtlPdf1")
-	public ResponseEntity<byte[]> generateStatus(String bpName, String mtlDate, String pdfEncUrl) throws Exception, JRException {
+	public ResponseEntity<byte[]> generateStatus(String bpName, String mtlDate ,String pdfEncUrl) throws Exception, JRException {
 		Connection conn = datasource.getConnection();
         
         // jasper 컴파일할 양식 설정 - 만들어둔 jrxml 파일 경로 설정
@@ -76,7 +76,8 @@ public class MaterialController {
         HashMap<String, Object> map =new HashMap<>();
         map.put("P_BP_NAME", bpName);
         map.put("P_MTL_DATE", mtlDate);
-        map.put("pdfEncUrl", pdfEncUrl);
+		/* map.put("pdfEncUrl", pdfEncUrl); */
+        System.out.println(pdfEncUrl);
 		JasperPrint report = JasperFillManager.fillReport(compileReport, map, conn);
         
         // return 방식1. 컴파일된 pdf파일을 현재 폴더에 생성
