@@ -4,7 +4,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>주문서관리</title>
+	<title>SMARTREE</title>
 </head>
 
 <body>
@@ -224,7 +224,8 @@
 						{
 							header: '주문코드',
 							name: 'orderCode',
-							align: 'center'
+							align: 'center',
+							sortable:true	
 						},
 						{
 							header: '업체코드',
@@ -393,10 +394,7 @@
 						order.blur();
 						dtOrder.blur();
 						
-						if(dtOrder.getCheckedRows().length == 0 ){
-							toastr.warning('주문상세정보를 선택해주세요');
-							return;
-						}else{
+						
 							
 						let editdata={};
 						editdata.vo = order.getData();
@@ -406,7 +404,7 @@
 					 	if(editdata.vo[0].orderCode != null){//수정중 상세주문 추가한경우
 								console.log('수정등록');
 					 			 newOrderData.orderList = order.getData();
-								 newOrderData.orderDtList = dtOrder.getCheckedRows() ;
+								 newOrderData.orderDtList = dtOrder.getData() ;
 								 
 							 	
 							 
@@ -454,7 +452,7 @@
 						 else {//등록
 							
 							newOrderData.orderList = order.getData();
-							newOrderData.orderDtList = dtOrder.getCheckedRows();
+							newOrderData.orderDtList = dtOrder.getData();
 							 console.log(newOrderData.orderDtList);
 							if(newOrderData.orderList[0].orderDate == null || newOrderData.orderList[0].dodDate== null || newOrderData.orderList[0].orderManager == null || newOrderData.orderList[0].prodPlanYn==null ){
 								toastr.warning('빈값을 확인해주세요');
@@ -487,7 +485,7 @@
 							
 						} 
 						
-						}
+						
 					});
 					//주문서삭제
 					$('#deleteBtn').on('click',function(){
@@ -695,7 +693,7 @@
 			         })
 			          order.on('afterChange', ev=>{
 			            let change = ev.changes
-			            newOrder[change[0].rowKey][change[0].columnName]=change[0].value
+			           // newOrder[change[0].rowKey][change[0].columnName]=change[0].value
 			         }) 
 					
 			       function calc() {
@@ -709,7 +707,26 @@
             	   dtOrder.setRows(datas)
                	   }
 			         
+				dtOrder.on('afterChange',(ev)=>{
+					let rowKey = ev.changes[0].rowKey
+					let colName = ev.changes[0].columnName
+					let check1 = isNaN(dtOrder.getValue(rowKey ,'orderDtCnt' ));
+					let check2 = isNaN(dtOrder.getValue(rowKey ,'orderDtPrice' ));
+					
+					let check3 = dtOrder.getValue(rowKey ,'orderDtCnt' )
+					let check4 = dtOrder.getValue(rowKey ,'orderDtPrice' )
+					if(check1||check2){
+						 toastr.warning('숫자를 입력해주세요')
+						 dtOrder.setValue(rowKey, colName, 0)
+						 return;
+					 }
+					if(check3 < 0||check4<0){
+						 toastr.warning('0이상의 값을 넣어주세요.')
+						 dtOrder.setValue(rowKey, colName, 0)
+						 return;
+					 }
 				})
+			})
 				
 			
 		</script>

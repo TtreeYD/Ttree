@@ -35,6 +35,7 @@ public interface MdmMapper {
 	int delEmp(EmpVO vo);
 	int unUseEmp(EmpVO vo);
 	int upEmp(EmpVO vo);
+	int reuseEmp(EmpVO vo);
 	
 	// 제품관리
 	List<MdmPrdtVO> selectPrdtList();

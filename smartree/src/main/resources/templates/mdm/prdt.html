@@ -5,7 +5,7 @@
 	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>SMARTREE</title>
 <style type="text/css">
 .input-group {
 	margin-bottom: 10px;
@@ -120,13 +120,15 @@ input::-webkit-inner-spin-button {
 				rowHeaders: ['rowNum'],
 				columns: [{
 					header: '제품코드',
-					name: 'prdtCode'
+					name: 'prdtCode',
+					align: 'center'
 				}, {
 					header: '제품명',
 					name: 'prdtName'					
 				}, {
 					header: '분류',
-					name: 'prdtType'					
+					name: 'prdtType',
+					align: 'center'					
 				}, {
 					header: '안전재고',
 					name: 'prdtSs'	,
@@ -240,7 +242,7 @@ input::-webkit-inner-spin-button {
 							data: {prdtCode : prdtCode},
 							success: result => {
 								Swal.fire({
-									title: '삭제완료',
+									title: '해당제품이 삭제되었습니다.',
 									icon: 'success',
 									confirmButtonText: '확인'
 								})
@@ -259,7 +261,7 @@ input::-webkit-inner-spin-button {
 			
 			$('#searchPrdtName').on('keypress', function (ev) {
 				if (ev.which == 13) {
-					event.preventDefault();
+					ev.preventDefault();
 					searchPrdt();
 				}
 			})
@@ -278,7 +280,6 @@ input::-webkit-inner-spin-button {
 					success: result => {
 						console.log(result)
 						prdtGrid.resetData(result)
-						resetPrdt();
 					},
 					error: err => console.log(err)
 				})

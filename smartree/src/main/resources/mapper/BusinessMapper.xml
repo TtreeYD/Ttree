@@ -15,15 +15,15 @@
 		 	<if test="orderDate != null ">
 		       	and trunc(o.order_date) = trunc(#{orderDate})
 		 	</if>
-		       <if test="dodDate!= null ">
-		       	and trunc(o.dod_date) = trunc(#{dodDate}) 
-		       </if>	
+	       <if test="dodDate!= null ">
+	       	and trunc(o.dod_date) = trunc(#{dodDate}) 
+	       </if>	
 		</where>
 		order by o.order_date desc
   	</select>
   	<!-- 출고 전 주문서조회 -->
   		<select id="selectOrderBfOutList" resultType="BusinessVO">
-  			select o.order_code , b.bp_code , b.bp_name , o.order_date , o.dod_date , o.dod_state , o.order_manager
+  			select o.order_code , b.bp_code , b.bp_name , o.order_date , o.dod_date , o.dod_state , o.order_manager,o.prod_plan_yn
   		  	  from orders o join business_partner b
   		  				on o.bp_code = b.bp_code  	
   		  <where>
@@ -144,7 +144,8 @@
 		   set bp_code = #{bpCode},
 	    		order_date = #{orderDate},
 	    		dod_date = #{dodDate},
-	    		order_manager = #{orderManager}
+	    		order_manager = #{orderManager},
+	    		prod_plan_yn = #{prodPlanYn}
 		 where order_code = #{orderCode}
   	</update>
   	
@@ -164,7 +165,8 @@
 	  		#{orderDtCode},
 	  		#{prdtCode},
 	  		#{orderDtCnt},
-	  		#{orderCode}
+	  		#{orderCode},
+	  		#{orderDtPrice}
 	  	)}
   	</insert> 
   	
@@ -210,11 +212,12 @@
   	
   	<!-- 완제품재고조회 -->
   	<select id="selectFinPrdt" resultType="FinPrdtVO">
-  		select p.prdt_name , p.prdt_code  , sum(f.prdt_cnt) prdt_sum , p.prdt_ss
-		  from fin_prdt f join prdt_table p 
-		        on f.prdt_code = p.prdt_code
-	  group by p.prdt_name, p.prdt_code,  p.prdt_ss
-	  order by p.prdt_code
+  		select pt.prdt_code , nvl(a.prdt_cnt , 0) as prdt_sum , pt.prdt_ss , pt.prdt_name
+		  from prdt_table pt left outer join (select  prdt_code, sum(prdt_cnt) prdt_cnt
+                                    			from fin_prdt 
+                                     		   group by prdt_code) a
+                						on pt.prdt_code = a.prdt_code
+		  order by pt.prdt_code
   	</select>
   	
   	<!-- lot별 완제품조회 -->
@@ -304,6 +307,7 @@
   				and trunc(prdt_out_date) =trunc(#{prdtOutDate})
   			</if>
   		</where>
+  		order by prdt_out_date desc
   	</select>
   	<!-- 출고상세조회 -->
   	<select id="prdtOutDtList" resultType="FinPrdtVO">
@@ -316,10 +320,12 @@
   	</select>
   	<!-- 검사끝난 입고대기목록 -->
   	<select id="prdtFinAfterChkList" resultType="CheckVO">
-		  select *
+		  select c.*, t.prdt_name , dpc.prdt_manager
 		  	from prdt_chk c
 		  	JOIN prdt_table t 
 		  	  ON c.prdt_code = t.prdt_code
+		  	JOIN dt_prdt_chk dpc
+		  	  ON dpc.prdt_chk_code = c.prdt_chk_code
 		   WHERE c.prdt_chk_result = '적합'
 		  		and c.prdt_fin_chk = '입고전'
 		  		and c.prdt_chk_sit = 'y'	 

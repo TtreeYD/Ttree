@@ -130,5 +130,7 @@ public class MaterialVO {
 	private String bpType;
 	private String bpMain;
 	private String bpTell;
+	//pdf 출력룡
+	private String pdfEncUrl;
 
 }

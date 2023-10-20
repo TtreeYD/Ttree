@@ -15,9 +15,9 @@
   	
   	<!-- 재고목록 전체조회 -->
   	<select id="selectMtlList" resultType="MaterialVO">
-		WITH c as (SELECT c.mtl_code, MAX(mtl_in_date)mtl_in_date,SUM(mtl_lot_cnt)mtl_lot_cnt 
-		           FROM mtl_container c 
-		      	   GROUP BY c.mtl_code)
+		WITH c as (SELECT t.mtl_code, MAX(mtl_in_date)mtl_in_date,SUM(NVL(mtl_lot_cnt,0))mtl_lot_cnt 
+		           FROM mtl_container c right join mtl_table t on c.mtl_code = t.mtl_code
+		      	   GROUP BY t.mtl_code)
 		SELECT c.mtl_code, get_common(mtl_type, '003') AS mtl_type, t.mtl_name, mtl_in_date, mtl_lot_cnt
 		FROM c
 		JOIN mtl_table t 
@@ -48,24 +48,24 @@
   	</select>
   	<!-- 출고목록 조회 왼쪽 -->
   	 <select id="MtlOutList" resultType="MaterialVO">
-		WITH c as (SELECT c.mtl_code, MAX(p.prcs_edate)prcs_edate, SUM(mtl_out_cnt)mtl_out_cnt 
-		           FROM mtl_out c JOIN process_result p ON c.prcs_rs_code = p.prcs_rs_code 
-		           GROUP BY c.mtl_code)
-		SELECT c.mtl_code, get_common(mtl_type, '003') AS mtl_type, t.mtl_name, prcs_edate, mtl_out_cnt
+     	WITH c as (SELECT c.mtl_code, MAX(p.prcs_edate)prcs_edate, SUM(mtl_out_cnt)mtl_out_cnt 
+        			FROM mtl_out c JOIN process_result p ON c.prcs_rs_code = p.prcs_rs_code 
+        			GROUP BY c.mtl_code)
+		SELECT t.mtl_code, get_common(mtl_type, '003') AS mtl_type, t.mtl_name, prcs_edate, NVL(mtl_out_cnt,0)mtl_out_cnt 
 		FROM c
-		JOIN mtl_table t 
+		RIGHT JOIN mtl_table t 
 		  ON c.mtl_code = t.mtl_code
   	</select>
   	
   	
   	<!-- 발주관리 안전재고 미달목록 출력 -->
   	<select id="selectMinusMtl" resultType="MaterialVO">
-		WITH c as (SELECT c.mtl_code,SUM(mtl_lot_cnt)mtl_lot_cnt 
-		           FROM mtl_container c 
-		      	   GROUP BY c.mtl_code)
+		WITH c as (SELECT t.mtl_code,SUM(nvl(mtl_lot_cnt,0))mtl_lot_cnt 
+		           FROM mtl_container c right join mtl_table t on c.mtl_code = t.mtl_code
+		      	   GROUP BY t.mtl_code)
 		SELECT c.mtl_code, get_common(mtl_type, '003') AS mtl_type, t.mtl_name, mtl_lot_cnt, mtl_ss, (mtl_lot_cnt - mtl_ss)mtl_now, mtl_unit 
 		FROM c
-		JOIN mtl_table t ON c.mtl_code = t.mtl_code
+		LEFT OUTER JOIN mtl_table t ON c.mtl_code = t.mtl_code
 		<![CDATA[
 		WHERE (c.mtl_lot_cnt - t.mtl_ss) < 0
 		]]>
@@ -156,7 +156,7 @@
         ON n.mtl_code = t.mtl_code
         JOIN business_partner b
         ON n.bp_code = b.bp_code
-        WHERE t.mtl_name like '%'||#{mtlName}||'%' AND n.mtl_manager like '%'||#{mtlManager}||'%'
+        WHERE t.mtl_name like '%'||#{mtlName}||'%' AND n.mtl_manager like '%'||#{mtlManager}||'%' AND n.mtl_where = 'MT01'
           <if test="startMtlNeedDate != null and endMtlNeedDate != null">
     		AND TO_CHAR(n.mtl_date,'YY/MM/DD') BETWEEN TO_CHAR(#{startMtlNeedDate},'YY/MM/DD') AND TO_CHAR(#{endMtlNeedDate},'YY/MM/DD')
   		  </if>

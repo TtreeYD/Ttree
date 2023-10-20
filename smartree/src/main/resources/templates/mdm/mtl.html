@@ -5,7 +5,7 @@
 	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>SMARTREE</title>
 <style type="text/css">
 .input-group {
 	margin-bottom: 10px;
@@ -115,13 +115,15 @@ input::-webkit-inner-spin-button {
 				rowHeaders: ['rowNum'],
 				columns: [{
 					header: '자재코드',
-					name: 'mtlCode'
+					name: 'mtlCode',
+					align: 'center'
 				}, {
 					header: '자재명',
 					name: 'mtlName'					
 				}, {
 					header: '분류',
-					name: 'mtlType'					
+					name: 'mtlType',
+					align: 'center'					
 				}, {
 					header: '안전재고',
 					name: 'mtlSs',
@@ -249,7 +251,7 @@ input::-webkit-inner-spin-button {
 			
 			$('#searchMtlName').on('keypress', function (ev) {
 				if (ev.which == 13) {
-					event.preventDefault();
+					ev.preventDefault();
 					searchMtl();
 				}
 			})

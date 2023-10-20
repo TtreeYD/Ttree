@@ -5,7 +5,7 @@
 	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>자재-발주조회</title>
+<title>SMARTREE</title>
 
 <style>
 .excelDownload {
@@ -58,7 +58,8 @@ float: right;
 		document.addEventListener("DOMContentLoaded",() => {
 			let searchData = [];
 			let codeType;
-			let cdl;	
+			let cdl;
+
 			
 			// 발주목록 그리드- 거래처명,발주일자,담당자가 같은경우 한건씩만 나오게
 				const mtlNeedGrid = new tui.Grid({
@@ -223,7 +224,11 @@ float: right;
 	            $('#pdfBtn').on('click', function () {
 	            	let bpName = mtlNeedListGrid.getValue(0 , "bpName");
 	            	let mtlDate = mtlNeedListGrid.getValue(0 , "mtlDate");
+	    			let pdfUrl = "http://dotoryman.store/material/mtlPdf1?bpName="+bpName+"&mtlDate="+mtlDate; 
+	            	let pdfEncUrl =  encodeURIComponent(pdfUrl);
 	              	window.open("mtlPdf1?bpName="+bpName+"&mtlDate="+mtlDate,'pdf');
+	            	console.log(pdfEncUrl);
+	            	console.log(window.location.href);
 	            });
 		
 			});

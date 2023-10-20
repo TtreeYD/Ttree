@@ -5,7 +5,7 @@
 	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>SMARTREE</title>
 <style type="text/css">
 .input-group {
 	margin-bottom: 10px;
@@ -100,13 +100,15 @@ input::-webkit-inner-spin-button {
 				rowHeaders: ['rowNum'],
 				columns: [{
 					header: '품질검사코드',
-					name: 'chkStdCode'
+					name: 'chkStdCode',
+					align: 'center'
 				}, {
 					header: '품질검사명',
 					name: 'chkName'					
 				}, {
 					header: '검사기준',
-					name: 'chkStd'					
+					name: 'chkStd'	,
+					align: 'left'				
 				}, {
 					header: '검사단위',
 					name: 'chkUnit'					
@@ -118,6 +120,7 @@ input::-webkit-inner-spin-button {
 			
 			function resetChk() {
 				$('.text-right').val('')
+				$('#chkDt').val('')
 			}
 			
 			// 품질검사등록
@@ -208,7 +211,7 @@ input::-webkit-inner-spin-button {
 			
 			$('#searchChkName').on('keypress', function (ev) {
 				if (ev.which == 13) {
-					event.preventDefault();
+					ev.preventDefault();
 					searchChk();
 				}
 			})

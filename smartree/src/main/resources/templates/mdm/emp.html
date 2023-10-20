@@ -4,7 +4,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>Insert title here</title>
+	<title>SMARTREE</title>
 	<style type="text/css">
 		input::-webkit-outer-spin-button,
 		input::-webkit-inner-spin-button {
@@ -56,13 +56,13 @@
 							<div class="input-group-prepend col-4">
 								<span class="input-group-text col">이름*</span>
 							</div>
-							<input class="col-8" id="empName" name="empName">
+							<input class="col-8" id="empName" name="empName" maxlength="12">
 						</div>
 						<div class="input-group mb-3">
 							<div class="input-group-prepend  col-4">
 								<span class="input-group-text col">비밀번호*</span>
 							</div>
-							<input class="col-8" id="empPw" name="empPw">
+							<input type="password" class="col-8" id="empPw" name="empPw" maxlength="20">
 						</div>
 						<div class="input-group mb-3">
 							<div class="input-group-prepend  col-4">
@@ -76,13 +76,13 @@
 							<div class="input-group-prepend  col-4">
 								<span class="input-group-text col">직급*</span>
 							</div>
-							<input class="col-8" id="empClass" name="empClass">
+							<input class="col-8" id="empClass" name="empClass" maxlength="10">
 						</div>
 						<div class="input-group mb-3">
 							<div class="input-group-prepend  col-4">
 								<span class="input-group-text col">연락처</span>
 							</div>
-							<input class="col-8" id="empPhone" name="empPhone">
+							<input class="col-8" id="empPhone" name="empPhone" maxlength="18">
 						</div>
 					</div>
 					<div class="modal-footer">
@@ -113,6 +113,7 @@
 							
 							
 							<div class="btn-group ml-auto" role="group">
+								<button id="reuseEmpBtn" class="btn btn-primary">활성</button>
 								<button id="delEmpBtn" class="btn btn-primary">삭제</button>
 							</div>
 						</div>
@@ -125,7 +126,34 @@
 			</div>
 		</div>
 		<script>
+			var Grid = tui.Grid;
 			var deptList = []
+			
+			class lengthChk {
+		        constructor(props) {
+		          const el = document.createElement('input');
+		          const { maxLength } = props.columnInfo.editor.options;
+
+		          el.className = "tui-grid-content-text"
+		          el.type = 'text';
+		          el.maxLength = maxLength;
+		          el.value = String(props.value);
+
+		          this.el = el;
+		        }
+
+		        getElement() {
+		          return this.el;
+		        }
+
+		        getValue() {
+		          return this.el.value;
+		        }
+
+		        mounted() {
+		          this.el.select();
+		        }
+		      }
 			
 			class CustomSliderRenderer {
 				constructor(props) {
@@ -214,7 +242,7 @@
 				error: err => console.log(err)
 			})
 
-			var Grid = tui.Grid;
+		
 
 			// 사원테이블 헤더
 			const grid = new Grid({
@@ -235,9 +263,12 @@
 					{
 						header: '이름',
 						name: 'empName',
-						editor:{
-							type: 'text'
-						}
+						editor: {
+					       	type: lengthChk,
+					         options: {
+					           maxLength: 12
+					         }
+					       }
 					},
 					{
 						header: '부서',
@@ -250,21 +281,28 @@
 								listItems: deptList
 							}
 						},
+						
 					},
 					{
 						header: '직급',
 						name: 'empClass',
 						align: 'center',
-						editor:{
-							type: 'text'
-						}
+						editor: {
+					       	type: lengthChk,
+					         options: {
+					           maxLength: 10
+					         }
+					       }
 					},
 					{
 						header: '연락처',
 						name: 'empPhone',
 						align: 'center',
 						editor:{
-							type: 'text'
+							type: lengthChk,
+							options: {
+								maxLength: 18
+							}
 						}
 					},
 					{
@@ -405,6 +443,11 @@
 					success: result => {
 						toastr.success('성공적으로 등록되었습니다.')
 						$('#empAddModal').modal('hide')
+						$('#empName').val('');
+						$('#empPw').val('');
+						$('#empDept').val('');
+						$('#empClass').val('');
+						$('#empPhone').val('');
 						getEmpList();
 					},
 					error: err => console.log(err)
@@ -523,6 +566,43 @@
 					error: err => console.log(err)
 				})
 			}
+			
+			// 활성전환
+			$('#reuseEmpBtn').on('click',function() {
+				if (grid2.getCheckedRows().length == 0) {
+					toastr.warning('선택된 값이 없습니다.')
+					return
+				}
+				Swal.fire({
+					title: '활성화하시겠습니까?',
+					icon: 'info',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: '확인',
+					cancelButtonText: '취소'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						let vo = grid2.getCheckedRows()
+						$.ajax({
+							url: '/mdm/reuseEmp',
+							method: 'post',
+							contentType: 'application/json',
+							data: JSON.stringify(vo),
+							success: result => {
+								Swal.fire({
+									title: result + '개 계정이 활성전환되었습니다.',
+									icon: 'success',
+									confirmButtonText: '확인'
+								})
+								getUnusedEmp();
+								getEmpList();
+							}
+						})
+						
+					}
+				})
+			})
 			
 			//비활성 삭제
 			$('#delEmpBtn').on('click', function () {

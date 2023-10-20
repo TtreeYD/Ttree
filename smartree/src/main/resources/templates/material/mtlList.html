@@ -5,7 +5,7 @@
 	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>자재-재고조회</title>
+<title>SMARTREE</title>
 <style>
 .excelDownload {
 margin-top: 0px;
@@ -123,8 +123,8 @@ float: right;
 						header : '입고일자',
 						name : 'mtlInDate'
 					}, {
-						header : '입고수량',
-						name : 'mtlInCnt'
+						header : '재고수량',
+						name : 'mtlLotCnt'
 					}, {
 						header : '홀드수량',
 						name : 'holdingSum'
@@ -141,13 +141,13 @@ float: right;
 		          dataType: 'json',
 		          success: function (result) {
 		            //날짜변환
-		            $(result).each(function (idx, obj) {
+/* 		            $(result).each(function (idx, obj) {
 		              for (let head of header) {
 		                if (head.slice(-4).toLowerCase() == 'date') {
 		                  obj[head] = getDate(obj[head]);
 		                }
 		              }
-		            });
+		            }); */
 		            mtlGrid.resetData(eval(result));
 		          },
 		          error: function (err) {

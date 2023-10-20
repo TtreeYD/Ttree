@@ -5,7 +5,7 @@
 	layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>SMARTREE</title>
 <style type="text/css">
 .input-group {
 	margin-bottom: 10px;
@@ -22,7 +22,7 @@ input::-webkit-inner-spin-button {
 <body>
 	<div layout:fragment="content">
 		<div class="row mb-4">
-			<h1>공정기준관리</h1>
+			<h1>공정정보관리</h1>
 		</div>
 		<div class="row">
 			<div class="col-7">
@@ -103,13 +103,15 @@ input::-webkit-inner-spin-button {
 				rowHeaders: ['rowNum'],
 				columns: [{
 					header: '공정코드',
-					name: 'prcsStdCode'
+					name: 'prcsStdCode',
+					align: 'center'
 				}, {
 					header: '공정명',
 					name: 'prcsName'					
 				}, {
 					header: '공정구분',
-					name: 'prcsType'					
+					name: 'prcsType',
+					align: 'center'					
 				}, {
 					header: '비고',
 					name: 'prcsNote'					
@@ -232,7 +234,7 @@ input::-webkit-inner-spin-button {
 			
 			$('#searchPrcsName').on('keypress', function (ev) {
 				if (ev.which == 13) {
-					event.preventDefault();
+					ev.preventDefault();
 					searchPrcs();
 				}
 			})
@@ -251,7 +253,6 @@ input::-webkit-inner-spin-button {
 					success: result => {
 						console.log(result)
 						prcsGrid.resetData(result)
-						resetPrcs();
 					},
 					error: err => console.log(err)
 				})

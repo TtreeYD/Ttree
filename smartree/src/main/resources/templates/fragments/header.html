@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
     <meta charset="UTF-8" />
    
-    <title>thymeleaf layout</title>
+    <title>SMARTREE</title>
   <nav th:fragment="header">
 <!-- commit -->
 	<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -104,8 +104,8 @@
 		<!-- /.modal --> 
 		
 		<div class="modal fade" tabindex="-1" role="dialog" id="helpModal">
-			<div class="modal-dialog modal-dialog-centered modal-xl"
-				role="document">
+			<div class="modal-dialog modal-dialog-centered"
+				role="document" style="max-width: 1400px">
 				<div class="modal-content">
 					<div class="modal-header">
 						<h4 class="modal-title ml-3">도움말</h4>
@@ -131,6 +131,7 @@
 		let userName = [[${session.loginMember.empName}]]; 
 		let userText = $("#sendMessage").val();
 		const cnt = $("#cnt");
+		
 		const date = new Date();
 		
 		const year = date.getFullYear();
@@ -141,7 +142,6 @@
 		const seconds = ('0' + date.getSeconds()).slice(-2);
 		
 		const dateStr = year + '-' + month + '-' + day + " " + hours + ':' + minutes + ':' + seconds;
-		const formattedDate = date.toISOString().slice(0, 19).replace("T", " ");
 		console.log(dateStr);
 		
 		
@@ -150,6 +150,9 @@
 				content : userText,
 				sendTime : dateStr
 		}
+		
+		
+		
 	$(document).ready(function() {
 		
 		DecoupledEditor
@@ -238,8 +241,8 @@
 			});
 		
 		const stompClient = new StompJs.Client({
-			 brokerURL: 'ws://localhost:8090/chatserver'
-		   // brokerURL: 'ws://dotoryman.store/chatserver'
+			// brokerURL: 'ws://localhost:8090/chatserver'
+		    brokerURL: 'ws://dotoryman.store/chatserver'
 		});
 		connect();
 		

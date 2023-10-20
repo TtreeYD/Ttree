@@ -104,7 +104,7 @@
 		<selectKey keyProperty="empId" resultType="String" order="BEFORE">
 			SELECT #{empDept} || NVL( LPAD( MAX(SUBSTR(emp_id, 5)) +1, 4, '0'), '0001')
 			FROM emp_list
-			WHERE emp_dept = #{empDept}			
+			WHERE SUBSTR(emp_id, 1, 4) = #{empDept}			
 		</selectKey>
 			INSERT INTO emp_list(emp_id, emp_pw, emp_name, emp_dept, emp_class, emp_phone)
 			values(
@@ -120,6 +120,13 @@
 	<update id="unUseEmp" parameterType="EmpVO">
 		update emp_list
 		set emp_use = 'N'
+		where emp_id = #{empId}
+	</update>
+	
+	<!-- 사원 활성 -->
+	<update id="reuseEmp" parameterType="EmpVO">
+		update emp_list
+		set emp_use = 'Y'
 		where emp_id = #{empId}
 	</update>
 	
@@ -153,9 +160,11 @@
 			   emp_class,
 			   emp_pw,
 			   emp_phone,
+			   emp_use,
 			   'ROLE_'||UPPER(emp_dept) emp_auth
 		FROM   emp_list
 		WHERE emp_id = #{empId}
+		AND emp_use = 'Y'
 	</select>
 	
 	

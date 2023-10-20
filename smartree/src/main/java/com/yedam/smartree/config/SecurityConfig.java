@@ -1,6 +1,5 @@
 package com.yedam.smartree.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,15 +23,14 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			 .authorizeHttpRequests((requests) -> requests	
-		     .antMatchers("/", "/login/**","/common/**","/font/**","/startbootstrap/**","/app/**").permitAll()
+		     .antMatchers("/","/main/**","/material/mtlPdf**","/login/**","/common/**","/font/**","/startbootstrap/**","/app/**").permitAll()
 		     .anyRequest().authenticated()                    // .authenticated 인증된 사용자의 접근을 허용
-			 //.anyRequest().permitAll()
+			 
 			)	
 			.formLogin((form) -> form
 				.loginPage("/")
 				.loginProcessingUrl("/login")
 				.successHandler(customLoginSuccessHandler())
-				//.failureHandler(customAuthenticationFailureHandler())
 				.permitAll()
 			)
 			.logout(logout -> logout

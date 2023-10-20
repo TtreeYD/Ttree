@@ -44,7 +44,7 @@
 			<!-- <button type="button" id="resetBtn" class="btn btn-primary">초기화</button>
 			<button type="button" id="noChkBtn" class="btn btn-primary"
 				data-toggle="modal" data-target="#myModal">상세조회</button> -->
-			<button type="submit" id="addBtn" class="btn btn-primary">저장</button>
+			<button type="submit" id="addBtn" class="btn btn-primary">검사</button>
 
 		</div>
 
@@ -121,6 +121,12 @@
 		            useClient: true,
 	              },
 			      columns: [
+			    	 {
+        	          header: '검사코드',
+        	          name: 'mtlChkCode',
+        	          align: 'center',
+        	          hidden : true
+        	        },
 	 	    	    {
         	          header: '발주일자',
         	          name: 'mtlDate',
@@ -319,7 +325,7 @@
 				})
 
 				// 모달창 저장버튼이벤트
-				 $('#addModalBtn').on('click', function (ev) {
+				/*  $('#addModalBtn').on('click', function (ev) {
 					 if(!ev.rowKey==undefined){
 							// 체크여부확인 경고창
 							alert("체크하세요");
@@ -329,7 +335,7 @@
 					 	let datas = grid3.getCheckedRows();
 						grid2.appendRows(datas);
 						$("#myModal").modal('hide');
-		        });
+		        }); */
 
 				let unsavedChanges = false;
 				
@@ -350,6 +356,7 @@
 					
 					let data = grid2.getData();
 					let datas = grid2.getCheckedRows();
+					let searchOption = $('#searchOption').val();
 					console.log(datas);
 					if(datas.length ==0 ){
 						toastr.warning("체크 후 저장하세요.");
@@ -367,7 +374,11 @@
 						console.log(datas);
 						toastr.success('저장완료');
 						unsavedChanges = false;
-						mtlChkNO();
+						if (searchOption == 'mtlChkOK') {
+					    	mtlChkOK();
+					    } else if (searchOption == 'mtlChkNO'){
+					    	mtlChkNO();
+					    }
 					},
 					error: function(err) {
 						console.log(err);
@@ -377,7 +388,7 @@
 				
 				//검색옵션 값
 				$('#searchBtn').on('click', function() {
-				    const searchOption = $('#searchOption').val();
+					 searchOption = $('#searchOption').val();
 				    if (searchOption == 'mtlChkOK') {
 				    	mtlChkOK();
 				    } else if (searchOption == 'mtlChkNO'){

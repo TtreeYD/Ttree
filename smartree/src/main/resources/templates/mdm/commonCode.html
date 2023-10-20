@@ -4,19 +4,20 @@
 
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>SMARTREE</title>
 </head>
 
 <body>
 	<div layout:fragment="content">
-		<div class="container-xxl text-center">
+		<div class="container-xxl">
 			<div class="row mb-4">
 				<h1>공통코드관리</h1>
 			</div>
 			<div class="row">
 				<div class="col-4">
-					<div class="btn-group" role="group" aria-label="Basic example"
-						style="float: left;">
+					<h2 style="height: 0px">공통코드</h2>
+					<div class="btn-group mr-2" role="group" aria-label="Basic example"
+						style="float: right;">
 						<button type="button" id="addCommonCode" class="btn btn-primary">추가</button>
 						<button type="button" id="insertCommonCode"
 							class="btn btn-primary">등록</button>
@@ -27,7 +28,8 @@
 					<div id="commonCodeGrid" class="lightgrey"></div>
 				</div>
 				<div class="col-8">
-					<div class="btn-group" role="group" aria-label="Basic example"
+					<h2 style="height: 0px">상세코드</h2>
+					<div class="btn-group mr-2" role="group" aria-label="Basic example"
 						style="float: right;">
 						<button type="button" id="addCodeDetail" class="btn btn-primary">추가</button>
 						<button type="button" id="insertCodeDetail"
@@ -63,6 +65,7 @@
 		          const el = document.createElement('input');
 		          const { maxLength } = props.columnInfo.editor.options;
 		          
+		          el.className = "tui-grid-content-text"
 		          el.value = String(props.value);
 			       el.type = 'text';
 			       if(props.rowKey<cdl) el.readOnly=true;
@@ -89,6 +92,7 @@
 		          const el = document.createElement('input');
 		          const { maxLength } = props.columnInfo.editor.options;
 
+		          el.className = "tui-grid-content-text"
 		          el.type = 'text';
 		          el.maxLength = maxLength;
 		          el.value = String(props.value);
@@ -122,7 +126,8 @@
 				},
 				columns: [{
 					header: '공통코드',
-					name: 'codeType'
+					name: 'codeType',
+					align: 'center'
 				}, {
 					header: '코드명',
 					name: 'typeName',
@@ -150,6 +155,7 @@
 				columns: [{
 					header: '상세코드',
 					name: 'codeId',
+					align: 'center',
 					editor: {
 						type: CustomTextEditor,
 						options: {
@@ -227,17 +233,6 @@
 				})
 			}
 
-			// 변경사항 저장
-			grid.on('afterChange', ev => {
-				let change = ev.changes
-				commonCode[change[0].rowKey][change[0].columnName] = change[0].value
-			})
-
-			grid2.on('afterChange', ev => {
-				let change = ev.changes
-				codeDetail[change[0].rowKey][change[0].columnName] = change[0].value
-			})
-
 			// 공통코드등록
 			$('#insertCommonCode').on('click', insertCommonCode)
 
@@ -247,15 +242,16 @@
 					toastr.warning('변경사항이 없습니다.');
 					return
 				}
+				let vo = grid.getData()
 				$.ajax({
 					url: '/mdm/insertCommonCode',
 					type: 'post',
 					headers: {
 						'Content-Type': 'application/json'
 					},
-					data: JSON.stringify(commonCode),
+					data: JSON.stringify(vo),
 					success: result => {
-						alert("등록완료")
+						toastr.success("등록완료")
 						selCommonCode();
 					},
 					error: err => console.log(err)
@@ -272,17 +268,27 @@
 					toastr.warning('변경사항이 없습니다.');
 					return
 				}
+				let vo = grid2.getData()
+				let lengthChk = false
+				for(let obj of vo){
+					if(obj.codeId.length != 4){
+						lengthChk = true
+					} 
+				}
+				if(lengthChk){
+					toastr.warning('상세코드의 길이를 확인해 주세요.')
+					return
+				}
 				$.ajax({
 					url: '/mdm/insertCodeDetail',
 					type: 'post',
 					headers: {
 						'Content-Type': 'application/json'
 					},
-					data: JSON.stringify(codeDetail),
+					data: JSON.stringify(vo),
 					success: result => {
-						alert("등록완료")
+						toastr.success("등록완료")
 						selCodeDetail(codeType)
-						
 					},
 					error: err => console.log(err)
 				})
@@ -291,11 +297,10 @@
 			// 공통코드추가
 			$(addCommonCode).on('click', function () {
 				grid.blur()
-				commonCode.push({
+				grid.appendRow({
 					codeType: '',
 					typeName: ''
 				})
-				grid.resetData(commonCode)
 			})
 
 			// 상세코드추가
@@ -305,40 +310,54 @@
 					toastr.warning('공통코드를 선택해주세요');
 					return;
 				}
-				codeDetail.push({
+				grid2.appendRow({
 					codeId: '',
 					codeType: codeType,
 					codeName: '',
 					codeUse: 'Y'
 				})
-				grid2.resetData(codeDetail)
 			})
 			
 			// 공통코드삭제
 			$('#deleteCommonCode').on('click', deleteCommonCode)
 
 			function deleteCommonCode() {
+				grid.blur()
 				let delData = grid.getCheckedRows()
+				let delKey = grid.getCheckedRowKeys()
 				if(delData.length==0) {
 					toastr.warning('선택된 값이 없습니다.')
 					return
 				}
-				$.ajax({
-					url: '/mdm/deleteCommonCode',
-					type: 'post',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					data: JSON.stringify(delData),
-					success: result => {
-						if(result==0){
-							toastr.warning('상세코드가 비어있지 않습니다.')
-						} else{
-							toastr.success(result+ '건 삭제완료');	
-						}
-						selCommonCode();
-					},
-					error: err => console.log(err)
+				Swal.fire({
+					title: '삭제하시겠습니까?',
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: '확인',
+					cancelButtonText: '취소'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$.ajax({
+							url: '/mdm/deleteCommonCode',
+							type: 'post',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							data: JSON.stringify(delData),
+							success: result => {
+								if(result==0){
+									toastr.warning('상세코드가 비어있지 않습니다.')
+								} else{
+									toastr.success(result+ '건 삭제완료');	
+									selCommonCode()
+								}
+								codeType = '';
+							},
+							error: err => console.log(err)
+						})
+					}
 				})
 			}
 			
@@ -346,6 +365,7 @@
 			$('#deleteCodeDetail').on('click', deleteCodeDetail)
 			
 			function deleteCodeDetail() {
+				grid.blur()
 				let delData = grid2.getCheckedRows()
 				if(delData.length == 0) {
 					toastr.warning('선택된 값이 없습니다.')
@@ -359,18 +379,30 @@
 					toastr.warning('사용중인 코드가 있습니다.')
 					return
 				}
-				$.ajax({
-					url: '/mdm/deleteCodeDetail',
-					type: 'post',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					data: JSON.stringify(delData),
-					success: result => {
-						toastr.success(result+ '건 삭제완료');	
-						selCodeDetail(codeType)
-					},
-					error: err => console.log(err)
+				Swal.fire({
+					title: '삭제하시겠습니까?',
+					icon: 'warning',
+					showCancelButton: true,
+					confirmButtonColor: '#3085d6',
+					cancelButtonColor: '#d33',
+					confirmButtonText: '확인',
+					cancelButtonText: '취소'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						$.ajax({
+							url: '/mdm/deleteCodeDetail',
+							type: 'post',
+							headers: {
+								'Content-Type': 'application/json'
+							},
+							data: JSON.stringify(delData),
+							success: result => {
+								toastr.success(result+ '건 삭제완료');	
+								selCodeDetail(codeType)
+							},
+							error: err => console.log(err)
+						})
+					}
 				})
 			}		</script>
 	</div>

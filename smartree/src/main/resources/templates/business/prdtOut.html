@@ -3,7 +3,7 @@
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layout/layout}">
 <head>
 <meta charset="UTF-8">
-<title>완제품출고관리</title>
+<title>SMARTREE</title>
 </head>
 
 <body>
@@ -518,6 +518,24 @@
 					$('#bpname').val('');
 					$('#doddate').val('');
 				});
+				//숫자
+				lotPrdtGrid.on('afterChange',(ev)=>{
+					let rowKey = ev.changes[0].rowKey
+					let colName = ev.changes[0].columnName
+					let check1 = isNaN(lotPrdtGrid.getValue(rowKey ,'prdtOutCnt' ));
+					
+					let check3 = lotPrdtGrid.getValue(rowKey ,'prdtOutCnt')
+					if(check1){
+						 toastr.warning('숫자를 입력해주세요')
+						 lotPrdtGrid.setValue(rowKey, colName, 0)
+						 return;
+					 }
+					if(check3 < 0){
+						 toastr.warning('0이상의 값을 넣어주세요.')
+						 lotPrdtGrid.setValue(rowKey, colName, 0)
+						 return;
+					 }
+				})
 			});
 		</script>
 	</div>
