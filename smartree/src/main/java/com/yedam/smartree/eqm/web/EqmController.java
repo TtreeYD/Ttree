@@ -208,6 +208,7 @@ public class EqmController {
 		String eqmCode = eqmInspVO.getEqmCode(); 
 		String eqmUcheck ="N";
 		if(eqmInspVO.getInspJudg().equals("N")) {
+			 eqmvo.setEqmCode(eqmCode);
 			 eqmvo.setEqmUcheck(eqmUcheck);
 			 eqmservice.updateEqm(eqmvo);
 	    }
