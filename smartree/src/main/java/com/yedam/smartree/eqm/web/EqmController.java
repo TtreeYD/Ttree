@@ -202,12 +202,21 @@ public class EqmController {
 	@PostMapping("/eqmInspForm")
 	public String registerEqmInspFormProcess(EqmInspVO eqmInspVO, RedirectAttributes attributes) {
 		eqminspservice.insertEqmInsp(eqmInspVO);
+		
+		 EqmVO eqmvo= new EqmVO();
+		
+		String eqmCode = eqmInspVO.getEqmCode(); 
+		String eqmUcheck ="N";
+		if(eqmInspVO.getInspJudg().equals("N")) {
+			 eqmvo.setEqmUcheck(eqmUcheck);
+			 eqmservice.updateEqm(eqmvo);
+	    }
 		//
 		if(!eqmInspVO.getNoperCode().equals("")) {
 			// 설비상태를 사용가능으로 바꾼다
-			 String eqmCode = eqmInspVO.getEqmCode(); 
+			// String eqmCode = eqmInspVO.getEqmCode(); 
 			 String emqState = "Y"; 
-			 EqmVO eqmvo= new EqmVO();
+			// EqmVO eqmvo= new EqmVO();
 			 //
 				/*
 				 * String eqmUcheck ="N"; if(eqmInspVO.getInspJudg().equals("N")) {
