@@ -190,7 +190,7 @@
 		FROM prdt_table
 		<where>
 			<if test="prdtName != null and !prdtName.equals('')">
-				prdt_name LIKE '%' || #{prdtName} || '%'
+				upper(prdt_name) LIKE '%' || upper(#{prdtName}) || '%'
 			</if>
 			<if test="prdtType != null and !prdtType.equals('')">
 				and prdt_type = #{prdtType}
