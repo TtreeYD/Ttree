@@ -769,7 +769,12 @@
 							//}
 						}
 						
+						
 					})
+					result = result.filter(function(obj,idx){
+						return obj.mtlUse > 0;
+					})
+					
 					$('#mtlModal').modal('show')
 					mtlLotGrid.resetData(eval(result))
 					setTimeout(() => mtlLotGrid.refreshLayout(), 200);
