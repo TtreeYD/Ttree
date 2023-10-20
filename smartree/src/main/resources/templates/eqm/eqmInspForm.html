@@ -13,8 +13,12 @@
             height: 400px;
             border-collapse: collapse; 
             margin-left: 50px;
-    		margin-top: 30px;    
-    		border : 1px solid #ddd;               
+    		margin-top: 30px;
+    		    
+    		border-collapse: collapse;
+ 			border-radius: 10px;
+ 		    border-style: hidden;
+  			box-shadow: 0 0 0 1px #ddd;        
         }
 
         #eqmInspTable th, td {
@@ -25,6 +29,7 @@
 
         #eqmInspTable th {
             background-color: #f2f2f2;
+            font-size: 25px;
         }
        #eqmInspTable input[type="text"],textarea{
             width: 150;
@@ -78,8 +83,8 @@
 						
 						<th>판정 *</th>
 						<td>
-							<label for="y" style="margin-left:10px; margin-right:40px;"  ><input type="radio" id="y" name="inspJudg" value="Y" > 적합 </label>
-							<label for="n"><input type="radio" id="n" name="inspJudg" value="N" > 부적합 </label>
+							<label for="y" style="margin-left:10px; margin-right:40px;  font-size: 20px;"  ><input type="radio" id="y" name="inspJudg" value="Y" > 적합 </label>
+							<label for="n" style=" font-size: 20px;"><input type="radio" id="n" name="inspJudg" value="N" > 부적합 </label>
 						</td>
 					</tr>
 					<tr>

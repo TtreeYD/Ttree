@@ -14,8 +14,12 @@
 	border-collapse: collapse;
 	margin-left: 50px;
 	margin-top: 30px;
-	border : 1px solid #ddd;
-	border-radius: 4px;
+	 
+  border-collapse: collapse;
+  border-radius: 10px;
+  
+  box-shadow: 0 0 0 1px #ddd;
+	
 }
 
 #equipTable th, td {
@@ -26,6 +30,8 @@
 
 #equipTable th {
 	background-color: #f2f2f2;
+	font-size: 25px;
+	 
 }
 
 #equipTable input[type="text"] {
@@ -95,8 +101,8 @@ input::-webkit-inner-spin-button {
 					<tr>
 						<th>사용여부 *</th>
 						<td>
-						<label for="y" style="margin-left: 10px; margin-right: 40px"><input type="radio" id="y"  name="eqmUcheck" value="Y" checked/> Yes </label> 
-						<label for="n"><input type="radio" id="n" name="eqmUcheck" value="N" /> No</label>
+						<label for="y" style="margin-left: 10px; margin-right: 40px; font-size: 20px;"><input type="radio" id="y"  name="eqmUcheck" value="Y" checked/> Yes </label> 
+						<label for="n" style="font-size: 20px; margin-right: 40px;"><input type="radio" id="n" name="eqmUcheck" value="N" /> No</label>
 				
 						</td>
 						<th>공정구분</th>
