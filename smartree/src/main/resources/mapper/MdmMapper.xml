@@ -104,7 +104,7 @@
 		<selectKey keyProperty="empId" resultType="String" order="BEFORE">
 			SELECT #{empDept} || NVL( LPAD( MAX(SUBSTR(emp_id, 5)) +1, 4, '0'), '0001')
 			FROM emp_list
-			WHERE emp_dept = #{empDept}			
+			WHERE SUBSTR(emp_id, 1, 4) = #{empDept}			
 		</selectKey>
 			INSERT INTO emp_list(emp_id, emp_pw, emp_name, emp_dept, emp_class, emp_phone)
 			values(

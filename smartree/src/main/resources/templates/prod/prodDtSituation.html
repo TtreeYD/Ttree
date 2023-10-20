@@ -337,7 +337,7 @@ $(document).ready(function (){
 		})		
 	}
 	
-	$('#endBtn').on('click',function(){
+	$('#endBtn').one('click',function(){
 		let resultData = instDtStopGrid.getData();
 		resultData[0].prcsEdate = getCurrentDate();
 		console.log(resultData)
