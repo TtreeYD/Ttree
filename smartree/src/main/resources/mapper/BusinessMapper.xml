@@ -200,12 +200,11 @@
   	<!-- 제품목록 -->
   	<select id="selectPrdtList" resultType="BpVO">
   		select prdt_code , prdt_name , prdt_type , get_prdt_total(prdt_code) prdt_total
-  		from prdt_table
-  		<where>
-  			<if test="prdtCode != null">
-  				upper(prdt_code) = upper(#{prdtCode})
-  			</if>
-  		</where>
+  		from prdt_table join bom_table using(prdt_code)
+  		where bom_use = 'Y'
+		<if test="prdtCode != null">
+			AND upper(prdt_code) = upper(#{prdtCode})
+		</if>
   	</select>
   	
   	<!-- 완제품재고조회 -->
