@@ -81,6 +81,10 @@
     color:#eee;
     box-shadow: 0 0 10px inset #204c7cc2;
   }
+    .button_box > .calculate:active {
+    color:#eee;
+    box-shadow: 0 0 10px inset #204c7cc2;
+  }
 
   .button_box > button:active > * {
     color:#eee;
