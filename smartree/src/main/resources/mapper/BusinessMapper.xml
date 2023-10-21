@@ -319,7 +319,7 @@
   	</select>
   	<!-- 검사끝난 입고대기목록 -->
   	<select id="prdtFinAfterChkList" resultType="CheckVO">
-		  select c.*, t.prdt_name , dpc.prdt_manager
+		  select distinct c.*, t.prdt_name , dpc.prdt_manager
 		  	from prdt_chk c
 		  	JOIN prdt_table t 
 		  	  ON c.prdt_code = t.prdt_code
