@@ -228,7 +228,7 @@
                 if ($("#noperLdate").val()) {
                   $("#noperLdate").val("");
                 }
-                let startTime = getToday(); //new Date().toLocaleString();
+                let startTime = getToday1(); //new Date().toLocaleString();
                 document.getElementById("noperSdate").value = startTime;
               });
               //종료시간
@@ -236,7 +236,7 @@
                 if (!$("#noperSdate").val()) {
                   return;
                 }
-                let endTime = getToday();
+                let endTime = getToday1();
                 document.getElementById("noperLdate").value = endTime;
               });
 
@@ -927,13 +927,14 @@
               });
             };
 
-            function getToday() {
+            function getToday1() {
               const TIME_ZONE = 9 * 60 * 60 * 1000; // 9시간
               const d = new Date();
 
               const date = new Date(d.getTime() + TIME_ZONE).toISOString().split("T")[0];
               const time = d.toTimeString().split(" ")[0];
-
+					
+              
               return date + " " + time;
             }
       </script>
