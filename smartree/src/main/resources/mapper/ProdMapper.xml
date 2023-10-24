@@ -191,17 +191,16 @@
 
 	<select id="selectGetProd" resultType="ProdVO">
 		SELECT DISTINCT dt_prod_plan_code, prod_plan_code, prdt_code,
-		prod_rank,(prod_plan_cnt - get_prod_inst_cnt(prod_plan_code,prdt_code))
-		prod_plan_cnt, get_prdt_name(prdt_code) prdt_name
-		, prod_plan_sdate, prod_plan_edate, prod_plan_name
-		FROM dt_prod_plan join
-		prod_plan using(prod_plan_code)
+				prod_rank,(prod_plan_cnt - get_prod_inst_cnt(prod_plan_code,prdt_code))
+				prod_plan_cnt, get_prdt_name(prdt_code) prdt_name
+				, prod_plan_sdate, prod_plan_edate, prod_plan_name
+		FROM dt_prod_plan join prod_plan using(prod_plan_code)
 		WHERE prod_plan_code= #{prodPlanCode}
+		AND prod_plan_cnt - get_prod_inst_cnt(prod_plan_code,prdt_code) > 0
 	</select>
 
 	<select id="getMtlNeed" resultType="MtlNeedVO">
-		SELECT prdt_code, mtl_code, get_mtl_name(mtl_code) mtl_name, SUM(mtl_cnt)
-		mtl_need
+		SELECT prdt_code, mtl_code, get_mtl_name(mtl_code) mtl_name, SUM(mtl_cnt) mtl_need
 		FROM bom_detail JOIN bom_table USING(bom_code)
 		<choose>
 			<when test="prodInstCode != null and !prodInstCode.equals('')">
@@ -222,6 +221,7 @@
 			</otherwise>
 		</choose>
 		AND mtl_cnt is not null
+		AND prod_plan_cnt - get_prod_inst_cnt(prod_plan_code,prdt_code) > 0
 		GROUP BY prdt_code, mtl_code
 		ORDER BY prdt_code
 	</select>
