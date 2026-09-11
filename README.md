@@ -1,6 +1,6 @@
 # TTree
 
-## Team
+# Team
 
 Ttree was developed collaboratively by:
 
